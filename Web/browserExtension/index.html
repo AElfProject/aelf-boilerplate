@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>demo</title>
+</head>
+<style>
+    .sub-title {
+        background: #2d0379;
+        color: #FFF;
+        height: 30px;
+        line-height: 30px;
+        text-indent: 8px;
+    }
+
+    .box {
+        border: 1px solid #333;
+    }
+
+    .head {
+        height: 30px;
+        width: 100%;
+        background: #2d0379;
+        color: #FFF;
+        line-height: 30px;
+        text-indent: 2em;
+    }
+    
+    .body {
+        background: #fff;
+        padding: 20px;
+    }
+</style>
+<body>
+
+	<p>connectChain -> login -> initContract -> call contract methods</p>
+
+	<div class="box">
+        <div class="head">Get Chain Information</div>
+        <div class="body">
+            <button type="button" id="get-chain-information">getChainInformation</button>
+            <div>It is not necessary to connectChain, if we want to use getTxResult, etc.</div>
+        </div>
+    </div>
+
+	<div class="box">
+        <div class="head">Login</div>
+        <div class="body">
+            <button type="button" id="login">login</button>
+            <div>The user need login at first to register the app in extension.</div>
+            <div>If the user has logged in, there is no prompt.</div>
+        </div>
+    </div>
+
+	<div class="box">
+        <div class="head">Hello World</div>
+        <div class="body">
+            <button type="button" id="init">init contract</button>
+            <div></div>
+        </div>
+        <div class="body">
+            <button type="button" id="hello">hello</button>
+            <div></div>
+        </div>
+    </div>
+
+	<script type="text/javascript" src="index.js"></script>
+</body>
+</html>
