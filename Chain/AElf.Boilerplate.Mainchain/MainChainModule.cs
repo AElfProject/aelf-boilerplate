@@ -7,6 +7,7 @@ using AElf.Contracts.Dividend;
 using AElf.Contracts.Genesis;
 using AElf.Contracts.MultiToken;
 using AElf.Contracts.MultiToken.Messages;
+using AElf.CrossChain.Grpc;
 //using AElf.Contracts.Resource;
 //using AElf.Contracts.Resource.FeeReceiver;
 using AElf.Kernel;
@@ -16,20 +17,43 @@ using AElf.Kernel.SmartContract;
 using AElf.Kernel.SmartContract.Application;
 using AElf.Kernel.Token;
 using AElf.Modularity;
+using AElf.OS;
+using AElf.OS.Network.Grpc;
 using AElf.OS.Node.Application;
 using AElf.OS.Node.Domain;
+using AElf.OS.Rpc.ChainController;
+using AElf.OS.Rpc.Net;
+using AElf.OS.Rpc.Wallet;
+using AElf.Runtime.CSharp;
+using AElf.RuntimeSetup;
+using AElf.WebApp.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Volo.Abp;
+using Volo.Abp.AspNetCore;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
 
 namespace Aelf.Boilerplate.Mainchain
 {
     [DependsOn(
-        typeof(BasicBaseChainAElfModule)
+        typeof(DPoSConsensusAElfModule),
+        typeof(KernelAElfModule),
+        typeof(OSAElfModule),
+        typeof(AbpAspNetCoreModule),
+        typeof(CSharpRuntimeAElfModule),
+        typeof(GrpcNetworkModule),
+
+        //TODO: should move to OSAElfModule
+        typeof(ChainControllerRpcModule),
+        typeof(WalletRpcModule),
+        typeof(NetRpcAElfModule),
+        typeof(RuntimeSetupAElfModule),
+        
+        //web api module
+        typeof(WebWebAppAElfModule)
     )]
     public class MainChainModule : AElfModule
     {
