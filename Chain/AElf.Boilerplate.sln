@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.Launcher", "src\AElf.Boilerplate.Launcher\AElf.Boilerplate.Launcher.csproj", "{7691E8CC-C427-4361-AF9A-D769A92C2318}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contract", "Contract", "{DF1C0158-BFAC-4200-A00B-24E588A242A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.Mainchain", "AElf.Boilerplate.Mainchain\AElf.Boilerplate.Mainchain.csproj", "{F5B9CE98-80B4-46F0-A040-1BE75C276411}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7691E8CC-C427-4361-AF9A-D769A92C2318}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7691E8CC-C427-4361-AF9A-D769A92C2318}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7691E8CC-C427-4361-AF9A-D769A92C2318}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7691E8CC-C427-4361-AF9A-D769A92C2318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5B9CE98-80B4-46F0-A040-1BE75C276411}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5B9CE98-80B4-46F0-A040-1BE75C276411}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5B9CE98-80B4-46F0-A040-1BE75C276411}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5B9CE98-80B4-46F0-A040-1BE75C276411}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+	EndGlobalSection
+EndGlobal
