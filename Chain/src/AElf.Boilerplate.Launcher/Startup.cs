@@ -17,17 +17,17 @@ namespace AElf.Boilerplate.Launcher
         {
             _configuration = configuration;
         }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-
-           AddApplication<MainChainModule>(services);
+            AddApplication<MainChainModule>(services);
 
             return services.BuildAutofacServiceProvider();
         }
-        
-        private static void AddApplication<T>(IServiceCollection services) where T: IAbpModule
+
+        private static void AddApplication<T>(IServiceCollection services) where T : IAbpModule
         {
             services.AddApplication<T>(options => { options.UseAutofac(); });
         }

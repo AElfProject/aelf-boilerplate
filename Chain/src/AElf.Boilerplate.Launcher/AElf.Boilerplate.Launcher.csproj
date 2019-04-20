@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>Launcher</RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
     <Content Include="appsettings.Development.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -14,46 +12,13 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
-
-  <Target Name="AfterBuildName" AfterTargets="AfterBuild">
-    <Copy SourceFiles="../Sdk/AElf.Cryptography.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
-    <Copy SourceFiles="../Sdk/AElf.CSharp.Core.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
-    <Copy SourceFiles="../Sdk/AElf.Kernel.SmartContract.Sdk.Abstracts.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
-    <Copy SourceFiles="../Sdk/AElf.Kernel.Types.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
-    <Copy SourceFiles="../Sdk/AElf.Sdk.CSharp.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
-    <Copy SourceFiles="../Sdk/AElf.Types.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
-  </Target>
-
-  <!--<Target Name="FilterCopyLocalItems" AfterTargets="ResolveLockFileCopyLocalProjectDeps">-->
-    <!--<ItemGroup>-->
-      <!--<ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)' == 'AElf.Sdk.CSharp.dll'" />-->
-    <!--</ItemGroup>-->
-  <!--</Target>-->
-
-  <!--<Target Name="FilterCopyLocalItems" AfterTargets="ResolveLockFileCopyLocalProjectDeps">-->
-    <!--<ItemGroup>-->
-      <!--<ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)' == 'AElf.Sdk.CSharp.dll'" />-->
-    <!--</ItemGroup>-->
-  <!--</Target>-->
-  
-  <!--<PropertyGroup>-->
-    <!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
-  <!--</PropertyGroup>-->
-
-  <!--<Target Name="AfterBuild">-->
-    <!--<Delete Files="./bin/Debug/netcoreapp2.2/" />-->
-  <!--</Target>-->
-
   <ItemGroup>
-    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-alpha.2-18005" />
+    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-alpha.2-18006" />
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="0.15.0" />
     <PackageReference Include="Volo.Abp.Autofac" Version="0.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-alpha.2-18005" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\..\AElf.Boilerplate.Mainchain\AElf.Boilerplate.Mainchain.csproj" />
+    <ProjectReference Include="..\AElf.Boilerplate.Mainchain\AElf.Boilerplate.Mainchain.csproj" />
   </ItemGroup>
-
 </Project>

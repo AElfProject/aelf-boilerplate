@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>Aelf.Boilerplate.Mainchain</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AElf.Contracts.Consensus.DPoS" Version="0.7.0-alpha.2-18006" />
+    <PackageReference Include="AElf.Blockchains.BasicBaseChain" Version="0.7.0-alpha.2-18006" />
+    <PackageReference Include="AElf.Kernel.Token" Version="0.7.0-alpha.2-18006" />
+    <PackageReference Include="AElf.OS.Core" Version="0.7.0-alpha.2-18006" />
+    <PackageReference Include="AElf.OS.Rpc.ChainController" Version="0.7.0-alpha.2-18006" />
+    <PackageReference Include="AElf.OS.Rpc.Net" Version="0.7.0-alpha.2-18006" />
+    <PackageReference Include="AElf.OS.Rpc.Wallet" Version="0.7.0-alpha.2-18006" />
+    <PackageReference Include="AElf.Runtime.CSharp" Version="0.7.0-alpha.2-18006" />
+    <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="0.7.0-alpha.2-18006" />
+    <PackageReference Include="AElf.RuntimeSetup" Version="0.7.0-alpha.2-18006" />
+    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-alpha.2-18006" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HelloWorldContract\HelloWorldContract.csproj" />
+  </ItemGroup>
+</Project>

@@ -10,7 +10,6 @@ namespace AElf.Boilerplate.Launcher
     {
         public static void Main(string[] args)
         {
-            
             ILogger<Program> logger = NullLogger<Program>.Instance;
             try
             {
