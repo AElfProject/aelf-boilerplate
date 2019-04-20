@@ -16,6 +16,7 @@ using AElf.Kernel.Consensus.DPoS;
 using AElf.Kernel.Infrastructure;
 using AElf.Kernel.SmartContract;
 using AElf.Kernel.SmartContract.Application;
+using AElf.Kernel.SmartContract.Sdk;
 using AElf.Kernel.Token;
 using AElf.Modularity;
 using AElf.OS;
@@ -58,6 +59,8 @@ namespace Aelf.Boilerplate.Mainchain
 
         public OsBlockchainNodeContext OsBlockchainNodeContext { get; set; }
 
+        private const string Symbol = "ELF";
+
         public MainChainModule()
         {
             Logger = NullLogger<MainChainModule>.Instance;
@@ -68,6 +71,11 @@ namespace Aelf.Boilerplate.Mainchain
             var services = context.Services;
             services.AddKeyValueDbContext<BlockchainKeyValueDbContext>(o => o.UseInMemoryDatabase());
             services.AddKeyValueDbContext<StateKeyValueDbContext>(o => o.UseInMemoryDatabase());
+            
+            Configure<HostSmartContractBridgeContextOptions>(options =>
+            {
+                options.ContextVariables[ContextVariableDictionary.NativeSymbolName] = Symbol;
+            });
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
@@ -141,12 +149,11 @@ namespace Aelf.Boilerplate.Mainchain
 
         private SystemTransactionMethodCallList GenerateTokenInitializationCallList(Address issuer, List<string> tokenReceivers)
         {
-            const string symbol = "ELF";
             const int totalSupply = 10_0000_0000;
             var tokenContractCallList = new SystemTransactionMethodCallList();
             tokenContractCallList.Add(nameof(TokenContract.CreateNativeToken), new CreateNativeTokenInput
             {
-                Symbol = symbol,
+                Symbol = Symbol,
                 Decimals = 2,
                 IsBurnable = true,
                 TokenName = "elf token",
@@ -158,7 +165,7 @@ namespace Aelf.Boilerplate.Mainchain
 
             tokenContractCallList.Add(nameof(TokenContract.IssueNativeToken), new IssueNativeTokenInput
             {
-                Symbol = symbol,
+                Symbol = Symbol,
                 Amount = (long) (totalSupply * 0.2),
                 ToSystemContractName = DividendsSmartContractAddressNameProvider.Name,
                 Memo = "Set dividends.",
@@ -168,7 +175,7 @@ namespace Aelf.Boilerplate.Mainchain
             {
                 tokenContractCallList.Add(nameof(TokenContract.Issue), new IssueInput
                 {
-                    Symbol = symbol,
+                    Symbol = Symbol,
                     Amount = (long) (totalSupply * 0.8) / tokenReceivers.Count,
                     To = Address.FromPublicKey(ByteArrayHelpers.FromHexString(tokenReceiver)),
                     Memo = "Set initial miner's balance.",
@@ -176,8 +183,7 @@ namespace Aelf.Boilerplate.Mainchain
             }
 
             // Set fee pool address to dividend contract address.
-            tokenContractCallList.Add(nameof(TokenContract.SetFeePoolAddress),
-                DividendsSmartContractAddressNameProvider.Name);
+            tokenContractCallList.Add(nameof(TokenContract.SetFeePoolAddress), DividendsSmartContractAddressNameProvider.Name);
 
             tokenContractCallList.Add(nameof(TokenContract.InitializeTokenContract), new IntializeTokenContractInput
             {
