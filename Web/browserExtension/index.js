@@ -4,7 +4,7 @@
  * @description How to use the plugin for hello world
 */
 
-const helloWorldAddress = '4QjhKLWacRXrQYpT7rzf74k5XZFCx8yF3X7FXbzKD4wwEo6';
+const helloWorldAddress = '2UEEa5yiFhuh6JDfTGrbAFqoqzbKkY4Vk9YZDXAdw16wkMw';
 
 let wallet;
 const appName = 'hello world';
@@ -51,7 +51,7 @@ nightElfCheck.check.then(message => {
 
     const aelf = new window.NightElf.AElf({
         // Enter your test address in this location
-        httpProvider: 'http://127.0.0.1:1728/chain',
+        httpProvider: 'http://127.0.0.1:1235/chain',
         appName
     });
 
