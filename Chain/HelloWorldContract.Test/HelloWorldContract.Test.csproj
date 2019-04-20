@@ -18,6 +18,15 @@
       <ProjectReference Include="..\HelloWorldContract\HelloWorldContract.csproj" />
     </ItemGroup>
 
+    <Target Name="AfterBuildName" AfterTargets="AfterBuild">
+        <Copy SourceFiles="../src/Sdk/AElf.Cryptography.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
+        <Copy SourceFiles="../src/Sdk/AElf.CSharp.Core.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
+        <Copy SourceFiles="../src/Sdk/AElf.Kernel.SmartContract.Sdk.Abstracts.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
+        <Copy SourceFiles="../src/Sdk/AElf.Kernel.Types.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
+        <Copy SourceFiles="../src/Sdk/AElf.Sdk.CSharp.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
+        <Copy SourceFiles="../src/Sdk/AElf.Types.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
+    </Target>
+
     <ItemGroup>
       <Folder Include="Protobuf\Generated" />
     </ItemGroup>

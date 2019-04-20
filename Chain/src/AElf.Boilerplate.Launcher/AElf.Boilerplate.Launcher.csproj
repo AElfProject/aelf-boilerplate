@@ -15,6 +15,35 @@
     </Content>
   </ItemGroup>
 
+  <Target Name="AfterBuildName" AfterTargets="AfterBuild">
+    <Copy SourceFiles="../Sdk/AElf.Cryptography.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
+    <Copy SourceFiles="../Sdk/AElf.CSharp.Core.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
+    <Copy SourceFiles="../Sdk/AElf.Kernel.SmartContract.Sdk.Abstracts.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
+    <Copy SourceFiles="../Sdk/AElf.Kernel.Types.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
+    <Copy SourceFiles="../Sdk/AElf.Sdk.CSharp.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
+    <Copy SourceFiles="../Sdk/AElf.Types.dll" DestinationFolder="$(OutDir)" ContinueOnError="false" />
+  </Target>
+
+  <!--<Target Name="FilterCopyLocalItems" AfterTargets="ResolveLockFileCopyLocalProjectDeps">-->
+    <!--<ItemGroup>-->
+      <!--<ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)' == 'AElf.Sdk.CSharp.dll'" />-->
+    <!--</ItemGroup>-->
+  <!--</Target>-->
+
+  <!--<Target Name="FilterCopyLocalItems" AfterTargets="ResolveLockFileCopyLocalProjectDeps">-->
+    <!--<ItemGroup>-->
+      <!--<ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)' == 'AElf.Sdk.CSharp.dll'" />-->
+    <!--</ItemGroup>-->
+  <!--</Target>-->
+  
+  <!--<PropertyGroup>-->
+    <!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
+  <!--</PropertyGroup>-->
+
+  <!--<Target Name="AfterBuild">-->
+    <!--<Delete Files="./bin/Debug/netcoreapp2.2/" />-->
+  <!--</Target>-->
+
   <ItemGroup>
     <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-alpha.2-18005" />
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="0.15.0" />
