@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-alpha.2-18005" />
+      <PackageReference Include="Google.Protobuf" Version="3.7.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Protobuf\Generated" />
+    </ItemGroup>
+
+    <!--<Target Name="Gen_proto" BeforeTargets="BeforeBuild">-->
+        <!--<Exec Condition="!$([MSBuild]::IsOsPlatform(Windows))" Command="protoc &#45;&#45;proto_path=Protobuf/Proto &#45;&#45;csharp_out=./Protobuf/Generated &#45;&#45;csharp_opt=file_extension=.g.cs &#45;&#45;contract_out=./Protobuf/Generated &#45;&#45;plugin=protoc-gen-contract=contract_csharp_plugin" />-->
+    <!--</Target>-->
+    <!--<Target Name="UpdateGeneratedFiles" DependsOnTargets="Gen_proto" BeforeTargets="BeforeBuild">-->
+        <!--<ItemGroup>-->
+            <!--<Compile Include="./Protobuf/Generated/*.cs" />-->
+        <!--</ItemGroup>-->
+    <!--</Target>-->
+
+</Project>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AElf;
 using AElf.Blockchains.BasicBaseChain;
 using AElf.Consensus.DPoS;
 using AElf.Contracts.Consensus.DPoS;
@@ -81,9 +82,12 @@ namespace Aelf.Boilerplate.Mainchain
 
             dto.InitializationSmartContracts.AddConsensusSmartContract<ConsensusContract>(
                 GenerateConsensusInitializationCallList(dposOptions));
+            
+            Logger.LogTrace(Hash.FromString("Hash").ToHex());
+            
+            dto.InitializationSmartContracts
+                .AddGenesisSmartContract<HelloWorldContract.HelloWorldContract>(Hash.FromString("Hash"));
 
-//            dto.InitializationSmartContracts.AddGenesisSmartContract<DividendContract>(
-//                DividendsSmartContractAddressNameProvider.Name, GenerateDividendInitializationCallList());
 //            
 //            dto.InitializationSmartContracts.AddGenesisSmartContract<TokenContract>(
 //                TokenSmartContractAddressNameProvider.Name,
