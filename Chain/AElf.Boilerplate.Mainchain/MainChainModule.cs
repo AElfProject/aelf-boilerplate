@@ -83,10 +83,10 @@ namespace Aelf.Boilerplate.Mainchain
             dto.InitializationSmartContracts.AddConsensusSmartContract<ConsensusContract>(
                 GenerateConsensusInitializationCallList(dposOptions));
             
-            Logger.LogTrace(Hash.FromString("Hash").ToHex());
+            Console.WriteLine("ADDRESS: " + Hash.FromString("HelloWorldContract").ToDiagnosticString());
             
             dto.InitializationSmartContracts
-                .AddGenesisSmartContract<HelloWorldContract.HelloWorldContract>(Hash.FromString("Hash"));
+                .AddGenesisSmartContract<HelloWorldContract.HelloWorldContract>(Hash.FromString("HelloWorldContract"));
 
 //            
 //            dto.InitializationSmartContracts.AddGenesisSmartContract<TokenContract>(
