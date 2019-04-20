@@ -8,3 +8,9 @@ set your `helloWorldContractAddress` in the index.js
 npm install
 npm start // You will get the results
 ```
+
+`npm start` will `open the ./index.html` & `node index.js`;
+
+You can get result in the terminal or in the browser dev tools.
+
+
