@@ -4,6 +4,7 @@ using AElf.Contracts.TestKit;
 using AElf.Kernel;
 using AElf.Modularity;
 using AElf.Runtime.CSharp;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Modularity;
 
 namespace HelloWorldContract.Test
@@ -17,6 +18,8 @@ namespace HelloWorldContract.Test
             Console.WriteLine("PATH: " + Path.GetDirectoryName(typeof (RunnerOptions).Assembly.Location));
             
             Configure<RunnerOptions>(o => { o.SdkDir = Path.GetDirectoryName(typeof(HelloWorldContractTestModule).Assembly.Location); });
+
+            context.Services.AddSingleton<IRefBlockInfoProvider, RefBlockInfoProvider>();
         }
     }
 }

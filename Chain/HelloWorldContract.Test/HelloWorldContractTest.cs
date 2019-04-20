@@ -11,7 +11,7 @@ namespace HelloWorldContract.Test
         public async Task Test()
         {
             var result = await HelloWorldContractStub.Hello.CallAsync(new Empty());
-            result.Value.ShouldNotBeNull();
+            result.Value.ShouldBe("Hello world!");
         }
     }
 }
