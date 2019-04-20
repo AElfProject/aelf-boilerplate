@@ -83,7 +83,11 @@ namespace Aelf.Boilerplate.Mainchain
             dto.InitializationSmartContracts.AddConsensusSmartContract<ConsensusContract>(
                 GenerateConsensusInitializationCallList(dposOptions));
             
-            Console.WriteLine("ADDRESS: " + Hash.FromString("HelloWorldContract").ToDiagnosticString());
+            
+            
+            Console.WriteLine("ADDRESS: " + Hash.FromString("HelloWorldContract"));
+            Console.WriteLine("ADDRESS 1: " +  AddressHelper.BuildContractAddress(chainOptions.ChainId, 1));
+            Console.WriteLine("ADDRESS 2: " +  AddressHelper.BuildContractAddress(chainOptions.ChainId, 2));
             
             dto.InitializationSmartContracts
                 .AddGenesisSmartContract<HelloWorldContract.HelloWorldContract>(Hash.FromString("HelloWorldContract"));
@@ -121,6 +125,25 @@ namespace Aelf.Boilerplate.Mainchain
                     IsVerbose = dposOptions.Verbose
                 });
             return consensusMethodCallList;
+        }
+        
+        public static class AddressHelper
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            /// <exception cref="ArgumentOutOfRangeException"></exception>
+            public static Address BuildContractAddress(Hash chainId, ulong serialNumber)
+            {
+                var hash = Hash.FromTwoHashes(chainId, Hash.FromRawBytes(serialNumber.ToBytes()));
+                return Address.FromBytes(Address.TakeByAddressLength(hash.DumpByteArray()));
+            }
+
+            public static Address BuildContractAddress(int chainId, ulong serialNumber)
+            {
+                return BuildContractAddress(chainId.ComputeHash(), serialNumber);
+            }
         }
         
 //        private SystemTransactionMethodCallList GenerateDividendInitializationCallList()
