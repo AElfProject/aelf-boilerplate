@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "aelf_options.proto";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "HelloWorldContract";
+
+service HelloWorldContract {
+
+    option (aelf.csharp_state) = "HelloWorldContractState";
+
+    rpc Hello (google.protobuf.Empty) returns (HelloReturn) { }
+}
+
+message HelloReturn {
+    string Value = 1;
+}

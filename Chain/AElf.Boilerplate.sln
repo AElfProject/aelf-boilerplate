@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.Mainchain"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldContract", "HelloWorldContract\HelloWorldContract.csproj", "{BD5E9A4F-A092-4E64-80E3-83CF3483BC93}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1A525D36-7140-4A6A-8150-4ECF047D0893}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldContract.Test", "HelloWorldContract.Test\HelloWorldContract.Test.csproj", "{742189E9-46D1-40E7-AAE3-F40D289851A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,8 +30,13 @@ Global
 		{BD5E9A4F-A092-4E64-80E3-83CF3483BC93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD5E9A4F-A092-4E64-80E3-83CF3483BC93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD5E9A4F-A092-4E64-80E3-83CF3483BC93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{742189E9-46D1-40E7-AAE3-F40D289851A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{742189E9-46D1-40E7-AAE3-F40D289851A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{742189E9-46D1-40E7-AAE3-F40D289851A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{742189E9-46D1-40E7-AAE3-F40D289851A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BD5E9A4F-A092-4E64-80E3-83CF3483BC93} = {DF1C0158-BFAC-4200-A00B-24E588A242A7}
+		{742189E9-46D1-40E7-AAE3-F40D289851A1} = {1A525D36-7140-4A6A-8150-4ECF047D0893}
 	EndGlobalSection
 EndGlobal
