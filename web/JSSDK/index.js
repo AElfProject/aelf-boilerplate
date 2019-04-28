@@ -4,14 +4,20 @@
  */
 const AElf = require('aelf-sdk');
 const Wallet = AElf.wallet;
-
-const helloWorldContractAddress = '2UEEa5yiFhuh6JDfTGrbAFqoqzbKkY4Vk9YZDXAdw16wkMw';
+const sha256 = require('js-sha256').sha256;
 
 // address: 65dDNxzcd35jESiidFXN5JV8Z7pCwaFnepuYQToNefSgqk9
 const defaultPrivateKey = 'bdb3b39ef4cd18c2697a920eb6d9e8c3cf1a930570beb37d04fb52400092c42b';
 
 const wallet = Wallet.getWalletByPrivateKey(defaultPrivateKey);
 const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235/chain'));
+
+const helloWorldContractName = 'HelloWorldContract';
+const {
+    GenesisContractAddress
+} = aelf.chain.getChainInformation();
+const zeroC = aelf.chain.contractAt(GenesisContractAddress, wallet);
+const helloWorldContractAddress = zeroC.GetContractAddressByName.call(sha256(helloWorldContractName));
 
 const helloWorldC = aelf.chain.contractAt(helloWorldContractAddress, wallet);
 
