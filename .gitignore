@@ -290,3 +290,5 @@ aelf.js
 **/BenchmarkDotNet.Artifacts/*
 
 *.zip
+
+**/package-lock.json

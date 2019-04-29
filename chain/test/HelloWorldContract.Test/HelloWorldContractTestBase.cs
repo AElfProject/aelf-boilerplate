@@ -39,9 +39,9 @@ namespace HelloWorldContract.Test
                     SampleECKeyPairs.KeyPairs[0]);
         }
 
-        private SystemTransactionMethodCallList GenerateTransactionMethodCallList()
+        private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList GenerateTransactionMethodCallList()
         {
-            var callList = new SystemTransactionMethodCallList();
+            var callList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
             callList.Add(nameof(HelloWorldContract.Hello), new Empty());
             return callList;
         }

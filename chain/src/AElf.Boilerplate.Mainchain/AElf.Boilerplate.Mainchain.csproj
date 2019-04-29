@@ -4,17 +4,19 @@
     <RootNamespace>Aelf.Boilerplate.Mainchain</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AElf.Contracts.Consensus.DPoS" Version="0.7.0-alpha.2" />
-    <PackageReference Include="AElf.Blockchains.BasicBaseChain" Version="0.7.0-alpha.2" />
-    <PackageReference Include="AElf.Kernel.Token" Version="0.7.0-alpha.2" />
-    <PackageReference Include="AElf.OS.Core" Version="0.7.0-alpha.2" />
-    <PackageReference Include="AElf.OS.Rpc.ChainController" Version="0.7.0-alpha.2" />
-    <PackageReference Include="AElf.OS.Rpc.Net" Version="0.7.0-alpha.2" />
-    <PackageReference Include="AElf.OS.Rpc.Wallet" Version="0.7.0-alpha.2" />
-    <PackageReference Include="AElf.Runtime.CSharp" Version="0.7.0-alpha.2" />
-    <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="0.7.0-alpha.2" />
-    <PackageReference Include="AElf.RuntimeSetup" Version="0.7.0-alpha.2" />
-    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-alpha.2" />
+    <PackageReference Include="AElf.Contracts.Consensus.DPoS" Version="0.7.0-alpha.3-18015" />
+    <PackageReference Include="AElf.Contracts.MultiToken" Version="0.7.0-alpha.3-18015" />
+    <PackageReference Include="AElf.Contracts.Dividend" Version="0.7.0-alpha.3-18015" />
+    <PackageReference Include="AElf.Blockchains.BasicBaseChain" Version="0.7.0-alpha.3-18015" />
+    <PackageReference Include="AElf.Kernel.Token" Version="0.7.0-alpha.3-18015" />
+    <PackageReference Include="AElf.OS.Core" Version="0.7.0-alpha.3-18015" />
+    <PackageReference Include="AElf.OS.Rpc.ChainController" Version="0.7.0-alpha.3-18015" />
+    <PackageReference Include="AElf.OS.Rpc.Net" Version="0.7.0-alpha.3-18015" />
+    <PackageReference Include="AElf.OS.Rpc.Wallet" Version="0.7.0-alpha.3-18015" />
+    <PackageReference Include="AElf.Runtime.CSharp" Version="0.7.0-alpha.3-18015" />
+    <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="0.7.0-alpha.3-18015" />
+    <PackageReference Include="AElf.RuntimeSetup" Version="0.7.0-alpha.3-18015" />
+    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-alpha.3-18015" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HelloWorldContract\HelloWorldContract.csproj" />
