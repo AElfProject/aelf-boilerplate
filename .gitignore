@@ -284,8 +284,9 @@ results/coverage.opencover.xml
 
 aelf.js
 
-scripts/contract_csharp_plugin
-scripts/contract_csharp_plugin.exe
+**/contract_csharp_plugin
+**/contract_csharp_plugin.exe
 
 **/BenchmarkDotNet.Artifacts/*
 
+*.zip
