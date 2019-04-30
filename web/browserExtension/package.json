@@ -9,7 +9,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js & open http://localhost:3000/"
+    "start": "node open.js"
   },
   "author": "hzz780",
   "license": "MIT"
