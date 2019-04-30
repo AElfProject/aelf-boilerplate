@@ -3,7 +3,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-beta" />
+    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-beta-18016" />
     <PackageReference Include="Google.Protobuf" Version="3.7.0" />
   </ItemGroup>
   <ItemGroup>
