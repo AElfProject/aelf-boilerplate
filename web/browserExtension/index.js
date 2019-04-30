@@ -4,7 +4,7 @@
  * @description How to use the plugin for hello world
 */
 
-const helloWorldAddress = '2UEEa5yiFhuh6JDfTGrbAFqoqzbKkY4Vk9YZDXAdw16wkMw';
+const helloWorldAddress = window.helloWorldContractAddress;
 
 let wallet;
 const appName = 'hello world';
@@ -51,29 +51,45 @@ nightElfCheck.check.then(message => {
 
     const aelf = new window.NightElf.AElf({
         // Enter your test address in this location
-        httpProvider: 'http://127.0.0.1:1235/chain',
+        httpProvider: [
+            'http://127.0.0.1:1235/chain',
+            null,
+            null,
+            null,
+            [{
+                name: 'Accept',
+                value: 'text/plain;v=1.0'
+            }]
+        ],
         appName
     });
 
-    const getChainInformation = document.getElementById('get-chain-information');
-    getChainInformation.onclick = () => {
-        aelf.chain.getChainInformation((error, result) => {
-            console.log('>>>>>>>>>>>>> getChainInformation >>>>>>>>>>>>>');
+    let chainId;
+    const getChainStatus = document.getElementById('get-chain-status');
+    getChainStatus.onclick = () => {
+        aelf.chain.getChainStatus((error, result) => {
+            console.log('>>>>>>>>>>>>> getChainStatus >>>>>>>>>>>>>');
             console.log(error, result);
+            chainId = result.ChainId;
         });
     };
 
     const login = document.getElementById('login');
     login.onclick = () => {
+
+        if (!chainId) {
+            alert('please click getChainStatus at first');
+            return;
+        }
         console.log('login....');
 
         aelf.login({
             appName,
-            chainId: 'AELF',
+            chainId: chainId,
             payload: {
                 method: 'LOGIN',
                 contracts: [{
-                    chainId: 'AELF',
+                    chainId: chainId,
                     contractAddress: helloWorldAddress,
                     contractName: 'hello world',
                     description: 'hello world contract',
@@ -88,6 +104,12 @@ nightElfCheck.check.then(message => {
 
     const initContract = document.getElementById('init');
     initContract.onclick = () => {
+
+        if (!wallet) {
+            alert('please click login at first');
+            return;
+        }
+
         aelf.chain.contractAtAsync(
             helloWorldAddress,
             wallet,
@@ -101,6 +123,12 @@ nightElfCheck.check.then(message => {
 
     const helloDom = document.getElementById('hello');
     helloDom.onclick = () => {
+
+        if (!window.helloWorldC) {
+            alert('please click init contract at first');
+            return;
+        }
+
         window.helloWorldC.Hello.call((err, result) => {
             console.log(err, result);
             alert(result.Value);
