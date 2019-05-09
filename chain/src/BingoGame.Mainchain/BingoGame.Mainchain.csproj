@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>Aelf.Boilerplate.Mainchain</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AElf.Contracts.Consensus.DPoS" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.WebApp.Application.Chain" IncludeAssets="true" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.WebApp.Application.Net" IncludeAssets="true" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.Contracts.MultiToken" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.Contracts.Dividend" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.Blockchains.BasicBaseChain" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.Kernel.Token" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.OS.Core" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.OS.Rpc.ChainController" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.OS.Rpc.Net" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.OS.Rpc.Wallet" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.Runtime.CSharp" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.RuntimeSetup" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-beta.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BingoGameContract\BingoGameContract.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Hosting">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.hosting\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Hosting.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

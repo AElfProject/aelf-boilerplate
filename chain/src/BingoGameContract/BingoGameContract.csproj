@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AElf.Kernel.Types" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-beta.1" />
+    <PackageReference Include="Google.Protobuf" Version="3.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Protobuf\Generated" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\protobuf\aelf_options.proto">
+      <Link>Protobuf/Proto/aelf_options.proto</Link>
+    </None>
+    <None Include="..\..\protobuf\bingo_game.proto">
+      <Link>Protobuf/Proto/bingo_game.proto</Link>
+    </None>
+    <None Include="..\..\protobuf\basic_contract_zero.proto">
+      <Link>Protobuf/Proto/basic_contract_zero.proto</Link>
+    </None>
+    <None Include="..\..\protobuf\vote.proto">
+      <Link>Protobuf/Proto/vote.proto</Link>
+    </None>
+    <None Include="..\..\protobuf\vote_contract.proto">
+      <Link>Protobuf/Proto/vote_contract.proto</Link>
+    </None>
+  </ItemGroup>
+  <Target Name="Gen_proto" BeforeTargets="BeforeBuild">
+    <Exec Condition="!$([MSBuild]::IsOsPlatform(Windows))" Command="../../scripts/generate_contract_reference.sh basic_contract_zero.proto vote.proto vote_contract.proto; ../../scripts/generate_contract_code.sh bingo_game.proto" />
+    <Exec Condition="$([MSBuild]::IsOsPlatform(Windows))" Command="..\..\scripts\generate_contract_reference.bat basic_contract_zero.proto vote.proto vote_contract.proto&amp;  ..\..\scripts\generate_contract_code.bat bingo_game.proto" />
+  </Target>
+  <Target Name="UpdateGeneratedFiles" DependsOnTargets="Gen_proto" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+      <Compile Include="./Protobuf/Generated/*.cs" />
+    </ItemGroup>
+  </Target>
+</Project>

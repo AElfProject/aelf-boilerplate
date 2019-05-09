@@ -1,16 +1,27 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.Launcher", "src\AElf.Boilerplate.Launcher\AElf.Boilerplate.Launcher.csproj", "{7691E8CC-C427-4361-AF9A-D769A92C2318}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.Launcher", "src\AElf.Boilerplate.Launcher\AElf.Boilerplate.Launcher.csproj", "{7691E8CC-C427-4361-AF9A-D769A92C2318}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.Mainchain", "src\AElf.Boilerplate.Mainchain\AElf.Boilerplate.Mainchain.csproj", "{F5B9CE98-80B4-46F0-A040-1BE75C276411}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.Mainchain", "src\AElf.Boilerplate.Mainchain\AElf.Boilerplate.Mainchain.csproj", "{F5B9CE98-80B4-46F0-A040-1BE75C276411}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{21D85A91-5BB8-4912-8107-49435A461AAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldContract", "src\HelloWorldContract\HelloWorldContract.csproj", "{4CD412CC-FA26-4607-A5C3-26016A289761}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorldContract", "src\HelloWorldContract\HelloWorldContract.csproj", "{4CD412CC-FA26-4607-A5C3-26016A289761}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{DBC47323-E6A2-42A2-A624-CE2EE6139567}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldContract.Test", "test\HelloWorldContract.Test\HelloWorldContract.Test.csproj", "{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorldContract.Test", "test\HelloWorldContract.Test\HelloWorldContract.Test.csproj", "{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingoGame.Launcher", "src\BingoGame.Launcher\BingoGame.Launcher.csproj", "{38E07685-FDDB-45C9-A70F-D68B76427157}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingoGame.Mainchain", "src\BingoGame.Mainchain\BingoGame.Mainchain.csproj", "{32D21FF8-303E-4383-920E-A6CCAE61952E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingoGameContract", "src\BingoGameContract\BingoGameContract.csproj", "{35E31DBD-62C3-4765-B72B-AD870B18C3CB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingoGameContract.Test", "test\BingoGameContract.Test\BingoGameContract.Test.csproj", "{E2491309-869C-4422-A7B6-B895C30B7D5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,11 +45,37 @@ Global
 		{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38E07685-FDDB-45C9-A70F-D68B76427157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38E07685-FDDB-45C9-A70F-D68B76427157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38E07685-FDDB-45C9-A70F-D68B76427157}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38E07685-FDDB-45C9-A70F-D68B76427157}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32D21FF8-303E-4383-920E-A6CCAE61952E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32D21FF8-303E-4383-920E-A6CCAE61952E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32D21FF8-303E-4383-920E-A6CCAE61952E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32D21FF8-303E-4383-920E-A6CCAE61952E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35E31DBD-62C3-4765-B72B-AD870B18C3CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35E31DBD-62C3-4765-B72B-AD870B18C3CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35E31DBD-62C3-4765-B72B-AD870B18C3CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35E31DBD-62C3-4765-B72B-AD870B18C3CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2491309-869C-4422-A7B6-B895C30B7D5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2491309-869C-4422-A7B6-B895C30B7D5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2491309-869C-4422-A7B6-B895C30B7D5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2491309-869C-4422-A7B6-B895C30B7D5D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7691E8CC-C427-4361-AF9A-D769A92C2318} = {21D85A91-5BB8-4912-8107-49435A461AAC}
 		{F5B9CE98-80B4-46F0-A040-1BE75C276411} = {21D85A91-5BB8-4912-8107-49435A461AAC}
 		{4CD412CC-FA26-4607-A5C3-26016A289761} = {21D85A91-5BB8-4912-8107-49435A461AAC}
 		{3631B538-C617-4FCE-9C9B-1D1B5F290A7F} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
+		{38E07685-FDDB-45C9-A70F-D68B76427157} = {21D85A91-5BB8-4912-8107-49435A461AAC}
+		{32D21FF8-303E-4383-920E-A6CCAE61952E} = {21D85A91-5BB8-4912-8107-49435A461AAC}
+		{35E31DBD-62C3-4765-B72B-AD870B18C3CB} = {21D85A91-5BB8-4912-8107-49435A461AAC}
+		{E2491309-869C-4422-A7B6-B895C30B7D5D} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7426B41-E959-40E4-9ED8-ED8D9C50F133}
 	EndGlobalSection
 EndGlobal

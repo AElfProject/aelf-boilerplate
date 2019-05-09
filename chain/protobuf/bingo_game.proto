@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+import "aelf_options.proto";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "BingoGameContract";
+
+service BingoGameContract {
+
+    option (aelf.csharp_state) = "BingoGameContractState";
+
+    rpc SendBingoCard (BingoCard) returns (BingoWin) {option (aelf.is_view) = true; }
+}
+
+message BingoCard {
+  bytes Value = 1;
+}
+
+
+message BingoWin {
+  bool Value = 1;
+}
