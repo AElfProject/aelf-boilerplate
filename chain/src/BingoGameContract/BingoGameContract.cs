@@ -221,13 +221,16 @@ namespace BingoGameContract
                 Symbol = BingoGameContractConstants.CardSymbol,
                 Owner = Context.Sender
             }).Balance;
-            State.TokenContract.Transfer.Send(new TransferInput
+            if (balance > BingoGameContractConstants.InitialCards)
             {
-                Symbol = Context.Variables.NativeSymbol,
-                To = Context.Sender,
-                Amount = balance,
-                Memo = "Give elf tokens back."
-            });
+                State.TokenContract.Transfer.Send(new TransferInput
+                {
+                    Symbol = Context.Variables.NativeSymbol,
+                    To = Context.Sender,
+                    Amount = balance - BingoGameContractConstants.InitialCards,
+                    Memo = "Give elf tokens back."
+                });
+            }
             State.TokenContract.TransferFrom.Send(new TransferFromInput
             {
                 Symbol = BingoGameContractConstants.CardSymbol,
