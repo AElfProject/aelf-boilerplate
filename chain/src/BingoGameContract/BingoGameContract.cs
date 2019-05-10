@@ -87,6 +87,8 @@ namespace BingoGameContract
                 return new Empty();
             }
 
+            Context.LogDebug(() => $"Playing with amount {input.Value}");
+
             State.TokenContract.TransferFrom.Send(new TransferFromInput
             {
                 From = Context.Sender,
@@ -102,11 +104,14 @@ namespace BingoGameContract
                 Amount = input.Value,
                 PlayId = Context.TransactionId
             });
+
+            State.PlayerInformation[Context.Sender] = playerInformation;
             return new Empty();
         }
 
         public override BoolOutput Bingo(Hash input)
         {
+            Context.LogDebug(() => $"Bingo with {input.ToHex()}");
             var playerInformation = State.PlayerInformation[Context.Sender];
             Assert(playerInformation != null, "Not registered.");
             if (playerInformation == null)
@@ -117,7 +122,7 @@ namespace BingoGameContract
             Assert(playerInformation.BingoInfos.Count > 0, "No play id.");
 
             var bingoInformation = input == Hash.Empty
-                ? playerInformation.BingoInfos.First()
+                ? playerInformation.BingoInfos.First(i => i.BingoRoundNumber == 0)
                 : playerInformation.BingoInfos.FirstOrDefault(i => i.PlayId == input);
 
             Assert(bingoInformation != null, "Play id not found.");
@@ -146,7 +151,7 @@ namespace BingoGameContract
             var randomHash = previousRoundInformation.RealTimeMinersInformation.Values
                 .First(i => i.Order == targetOrder).PreviousInValue;
             var randomNumber = ConvertHashToLong(randomHash);
-            
+
             // Characteristic number of previous round.
             // This means players choose to call Bingo this round will use a same characteristic number.
             var characteristicHash = GetCharacteristicHash(previousRoundInformation);
@@ -176,6 +181,7 @@ namespace BingoGameContract
             }
 
             bingoInformation.Award = award;
+            bingoInformation.BingoRoundNumber = currentRoundNumber;
 
             State.PlayerInformation[Context.Sender] = playerInformation;
 
@@ -231,6 +237,7 @@ namespace BingoGameContract
                     Memo = "Give elf tokens back."
                 });
             }
+
             State.TokenContract.TransferFrom.Send(new TransferFromInput
             {
                 Symbol = BingoGameContractConstants.CardSymbol,

@@ -48,6 +48,7 @@ message BingoInformation {
     sint64 award = 3;
     bool is_complete = 4;
     Hash play_id = 5;
+    sint64 bingo_round_number = 6;
 }
 
 message BoolOutput {
