@@ -21,11 +21,11 @@
     <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-beta.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BingoGameContract\BingoGameContract.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="Microsoft.AspNetCore.Hosting">
       <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.hosting\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Hosting.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BingoGameContract\BingoGameContract.csproj" />
   </ItemGroup>
 </Project>

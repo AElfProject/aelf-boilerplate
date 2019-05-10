@@ -1,11 +1,15 @@
+using AElf;
 using AElf.Contracts.Genesis;
 using AElf.Sdk.CSharp.State;
 
 namespace BingoGameContract
 {
-    public class BingoGameContractState : ContractState 
+    public partial class BingoGameContractState : ContractState 
     {
-        internal BasicContractZeroContainer.BasicContractZeroReferenceState BasicContractZero { get; set; }
+        public SingletonState<bool> Initialized { get; set; }
+
+        public MappedState<Address, PlayerInformation> PlayerInformation { get; set; }
+        
         
     }
 }

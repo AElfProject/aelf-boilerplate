@@ -25,7 +25,7 @@ using AElf.OS.Rpc.Wallet;
 using AElf.Runtime.CSharp;
 using AElf.RuntimeSetup;
 using AElf.WebApp.Web;
-using BingoGameContract;
+using AElf.Contracts.BingoGameContract;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -106,7 +106,7 @@ namespace BingoGame.Mainchain
                 GenerateDividendInitializationCallList());
 
             dto.InitializationSmartContracts
-                .AddGenesisSmartContract<BingoGameContract.BingoGameContract>(
+                .AddGenesisSmartContract<AElf.Contracts.BingoGameContract.BingoGameContract>(
                 Hash.FromString("BingoGameContract"),
                 GenerateTransactionMethodCallList());
 
@@ -149,7 +149,7 @@ namespace BingoGame.Mainchain
         private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList GenerateTransactionMethodCallList()
         {
             var callList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
-            callList.Add(nameof(BingoGameContract), new BingoCard());
+            callList.Add(nameof(AElf.Contracts.BingoGameContract), new BingoCard());
             return callList;
         }
 

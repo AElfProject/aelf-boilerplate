@@ -14,9 +14,6 @@
     <Folder Include="Protobuf\Generated" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\BingoGameContract\BingoGameContract.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\protobuf\aelf_options.proto">
       <Link>Protobuf/Proto/aelf_options.proto</Link>
     </None>
@@ -32,6 +29,9 @@
     <None Include="..\..\protobuf\kernel.proto">
       <Link>Protobuf/Proto/kernel.proto</Link>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\BingoGameContract\BingoGameContract.csproj" />
   </ItemGroup>
   <Target Name="Gen_proto" BeforeTargets="BeforeBuild">
     <Exec Condition="!$([MSBuild]::IsOsPlatform(Windows))" Command="../../scripts/generate_contract_stub.sh bingo_game.proto basic_contract_zero.proto" />
