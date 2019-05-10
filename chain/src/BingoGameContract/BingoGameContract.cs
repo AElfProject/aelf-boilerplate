@@ -30,6 +30,13 @@ namespace BingoGameContract
                 TotalSupply = BingoGameContractConstants.TotalCards,
                 LockWhiteList = {Context.Self}
             });
+            
+            State.TokenContract.Issue.Send(new IssueInput
+            {
+                Symbol = BingoGameContractConstants.CardSymbol,
+                Amount = BingoGameContractConstants.TotalCards.Div(2),
+                To = Context.Self
+            });
             State.Initialized.Value = true;
             return new Empty();
         }
@@ -80,6 +87,7 @@ namespace BingoGameContract
 
         public override Empty Play(SInt64Value input)
         {
+            Assert(input.Value > 1, "Invalid money.");
             var playerInformation = State.PlayerInformation[Context.Sender];
             Assert(playerInformation != null, "Not registered.");
             if (playerInformation == null)
