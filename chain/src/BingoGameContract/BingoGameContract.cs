@@ -65,7 +65,7 @@ namespace BingoGameContract
                 From = Context.Sender,
                 // TODO: Created a profit item and To = ProfitItemVirtualAddress
                 To = Context.Self,
-                Memo = "Tx for recharging."
+                Memo = "Thanks for recharging."
             });
             State.TokenContract.Issue.Send(new IssueInput
             {
@@ -89,8 +89,8 @@ namespace BingoGameContract
 
             State.TokenContract.TransferFrom.Send(new TransferFromInput
             {
-                From = Context.Self,
-                To = Context.Sender,
+                From = Context.Sender,
+                To = Context.Self,
                 Amount = input.Value,
                 Symbol = BingoGameContractConstants.CardSymbol,
                 Memo = "Play the game."
