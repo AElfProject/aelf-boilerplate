@@ -42,7 +42,7 @@ namespace BingoGameContract
                 Seed = Context.TransactionId
             };
             State.PlayerInformation[Context.Sender] = information;
-            
+
             State.TokenContract.Issue.Send(new IssueInput
             {
                 Symbol = BingoGameContractConstants.CardSymbol,
@@ -50,7 +50,7 @@ namespace BingoGameContract
                 To = Context.Sender,
                 Memo = "Initial Bingo cars to player."
             });
-            
+
             return new Empty();
         }
 
@@ -86,7 +86,7 @@ namespace BingoGameContract
             {
                 return new Empty();
             }
-            
+
             State.TokenContract.TransferFrom.Send(new TransferFromInput
             {
                 From = Context.Self,
@@ -130,63 +130,67 @@ namespace BingoGameContract
             var riskyNumber = currentRoundNumber - bingoInformation.PlayRoundNumber;
             Assert(riskyNumber > 2, "Still preparing your award :)");
 
+            // We use in values of previous round.
             var previousRoundInformation =
                 State.ConsensusContract.GetRoundInformation.Call(new SInt64Value {Value = currentRoundNumber - 1});
+
             var minersCount = previousRoundInformation.RealTimeMinersInformation.Count;
+
+            // The lucky number only decide which miner's previous in value will be used to generate multiplier.
             var luckyHash = Hash.FromTwoHashes(playerInformation.Seed, bingoInformation.PlayId);
             var luckyNumber = ConvertHashToLong(luckyHash);
+            // Order in previous round of chosen miner.
             var targetOrder = Math.Abs((int) luckyNumber % minersCount) + 1;
+
+            // Get random hash (random number).
             var randomHash = previousRoundInformation.RealTimeMinersInformation.Values
                 .First(i => i.Order == targetOrder).PreviousInValue;
             var randomNumber = ConvertHashToLong(randomHash);
+            
+            // Characteristic number of previous round.
+            // This means players choose to call Bingo this round will use a same characteristic number.
             var characteristicHash = GetCharacteristicHash(previousRoundInformation);
             var characteristicNumber = ConvertHashToLong(characteristicHash);
 
-            var result = (randomNumber - characteristicNumber) % 10 + 1;
+            var span = randomNumber.Sub(characteristicNumber);
+
+            var denominator = span % BingoGameContractConstants.MaxAwardMultiplier;
+            denominator = span >= 0 ? denominator.Add(1) : denominator.Sub(1);
+
+            riskyNumber = Math.Min(riskyNumber, BingoGameContractConstants.MaxAwardMultiplier);
+
             var award = bingoInformation.Amount;
-            if (result > 0)
+            if (denominator > 0)
             {
-                award = award.Mul(riskyNumber).Div(result);
+                award = award.Mul(riskyNumber).Div(denominator).Add(bingoInformation.Amount);
             }
 
-            if (result == 0)
+            if (denominator == 0)
             {
                 award = award.Mul(riskyNumber);
             }
 
-            if (result < 0)
+            if (denominator < 0)
             {
-                award = award.Div(-result).Div(riskyNumber);
+                award = award.Div(-denominator).Div(riskyNumber);
             }
 
             bingoInformation.Award = award;
 
             State.PlayerInformation[Context.Sender] = playerInformation;
 
-            if (award > 0)
+            if (award != 0)
             {
                 State.TokenContract.Transfer.Send(new TransferInput
                 {
                     Symbol = BingoGameContractConstants.CardSymbol,
-                    Amount = award,
+                    Amount = Math.Abs(award),
                     To = Context.Sender,
                     Memo = "Well done."
                 });
             }
 
-            if (award < 0)
-            {
-                State.TokenContract.TransferFrom.Send(new TransferFromInput
-                {
-                    From = Context.Sender,
-                    To = Context.Self,
-                    Amount = -award,
-                    Symbol = BingoGameContractConstants.CardSymbol,
-                    Memo = "Thanks for your patronage."
-                });
-            }
-
-            return new BoolOutput {BoolValue = result >= 0};
+            return new BoolOutput {BoolValue = denominator >= 0};
         }
 
         public override SInt64Value GetAward(Hash input)
@@ -197,14 +201,12 @@ namespace BingoGameContract
             {
                 return new SInt64Value {Value = 0};
             }
-            
-            var bingoInformation = playerInformation.BingoInfos.FirstOrDefault(i => i.PlayId == input);
-            if (bingoInformation == null)
-            {
-                return new SInt64Value {Value = 0};
-            }
 
-            return new SInt64Value {Value = bingoInformation.Award};
+            var bingoInformation = playerInformation.BingoInfos.FirstOrDefault(i => i.PlayId == input);
+
+            return bingoInformation == null
+                ? new SInt64Value {Value = 0}
+                : new SInt64Value {Value = bingoInformation.Award};
         }
 
         public override Empty Quit(Empty input)
@@ -253,6 +255,5 @@ namespace BingoGameContract
             return BitConverter.ToInt64(
                 BitConverter.IsLittleEndian ? hash.Value.Reverse().ToArray() : hash.Value.ToArray(), 0);
         }
-        
     }
 }
