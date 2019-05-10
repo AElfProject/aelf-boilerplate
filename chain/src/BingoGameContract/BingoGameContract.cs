@@ -151,11 +151,13 @@ namespace BingoGameContract
             var randomHash = previousRoundInformation.RealTimeMinersInformation.Values
                 .First(i => i.Order == targetOrder).PreviousInValue;
             var randomNumber = ConvertHashToLong(randomHash);
+            randomNumber /= 10;
 
             // Characteristic number of previous round.
             // This means players choose to call Bingo this round will use a same characteristic number.
             var characteristicHash = GetCharacteristicHash(previousRoundInformation);
             var characteristicNumber = ConvertHashToLong(characteristicHash);
+            characteristicNumber /= 10;
 
             var span = randomNumber.Sub(characteristicNumber);
 
