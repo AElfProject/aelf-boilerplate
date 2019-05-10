@@ -50,6 +50,14 @@ namespace BingoGameContract
             };
             State.PlayerInformation[Context.Sender] = information;
             
+            State.TokenContract.Transfer.Send(new TransferInput
+            {
+                Symbol = BingoGameContractConstants.CardSymbol,
+                Amount = BingoGameContractConstants.InitialCards,
+                To = Context.Sender,
+                Memo = "Initial Bingo cars to player."
+            });
+            
             return new Empty();
         }
 
@@ -176,6 +184,20 @@ namespace BingoGameContract
             Assert(State.PlayerInformation[Context.Sender] != null, "Not registered.");
             // TODO: Set to null when support deleting state.
             State.PlayerInformation[Context.Sender] = new PlayerInformation();
+
+            var balance = State.TokenContract.GetBalance.Call(new GetBalanceInput
+            {
+                Symbol = BingoGameContractConstants.CardSymbol,
+                Owner = Context.Sender
+            }).Balance;
+            State.TokenContract.TransferFrom.Send(new TransferFromInput
+            {
+                Symbol = BingoGameContractConstants.CardSymbol,
+                From = Context.Sender,
+                To = Context.Self,
+                Amount = balance,
+                Memo = "Give cards back."
+            });
             return new Empty();
         }
     }

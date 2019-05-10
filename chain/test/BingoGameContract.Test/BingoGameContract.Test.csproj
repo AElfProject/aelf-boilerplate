@@ -4,7 +4,10 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AElf.Contracts.Consensus.DPoS" Version="0.7.0-beta.1" />
     <PackageReference Include="AElf.Contracts.TestKit" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.Kernel.Consensus" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.Kernel.Consensus.DPoS" Version="0.7.0-beta.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
@@ -34,8 +37,8 @@
     <ProjectReference Include="..\..\src\BingoGameContract\BingoGameContract.csproj" />
   </ItemGroup>
   <Target Name="Gen_proto" BeforeTargets="BeforeBuild">
-    <Exec Condition="!$([MSBuild]::IsOsPlatform(Windows))" Command="../../scripts/generate_contract_stub.sh bingo_game.proto basic_contract_zero.proto" />
-    <Exec Condition="$([MSBuild]::IsOsPlatform(Windows))" Command="..\..\scripts\generate_contract_stub.bat bingo_game.proto basic_contract_zero.proto" />
+    <Exec Condition="!$([MSBuild]::IsOsPlatform(Windows))" Command="../../scripts/generate_contract_stub.sh bingo_game_contract.proto basic_contract_zero.proto" />
+    <Exec Condition="$([MSBuild]::IsOsPlatform(Windows))" Command="..\..\scripts\generate_contract_stub.bat bingo_game_contract.proto basic_contract_zero.proto" />
   </Target>
   <Target Name="UpdateGeneratedFiles" DependsOnTargets="Gen_proto" BeforeTargets="BeforeBuild">
     <ItemGroup>
