@@ -25,6 +25,7 @@ using AElf.OS.Rpc.Wallet;
 using AElf.Runtime.CSharp;
 using AElf.RuntimeSetup;
 using AElf.WebApp.Web;
+using BingoGameContract;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -110,10 +111,24 @@ namespace Aelf.Boilerplate.Mainchain
                 GenerateTokenInitializationCallList(zeroContractAddress,
                     context.ServiceProvider.GetService<IOptions<DPoSOptions>>().Value.InitialMiners));
 
+            dto.InitializationSmartContracts.AddGenesisSmartContract<BingoGameContract.BingoGameContract>(
+                Hash.FromString("BingoGameContract"), GenerateBingoGameInitializationCallList());
 
             var osService = context.ServiceProvider.GetService<IOsBlockchainNodeContextService>();
             var that = this;
             AsyncHelper.RunSync(async () => { that.OsBlockchainNodeContext = await osService.StartAsync(dto); });
+        }
+
+        private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList
+            GenerateBingoGameInitializationCallList()
+        {
+            var bingoGameMethodCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
+            bingoGameMethodCallList.Add(nameof(BingoGameContract.BingoGameContract.InitialBingoGame), new InitialBingoGameInput
+            {
+                TokenContractSystemName = TokenSmartContractAddressNameProvider.Name,
+                ConsensusContractSystemName = ConsensusSmartContractAddressNameProvider.Name
+            });
+            return bingoGameMethodCallList;
         }
 
         private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList
