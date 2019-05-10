@@ -236,7 +236,12 @@ namespace BingoGameContract
             });
             return new Empty();
         }
-        
+
+        public override PlayerInformation GetPlayerInformation(Address input)
+        {
+            return State.PlayerInformation[input] ?? new PlayerInformation();
+        }
+
         private Hash GetCharacteristicHash(Round round)
         {
             return round.RealTimeMinersInformation.Values.Where(m => m.OutValue != null).Aggregate(Hash.Empty,

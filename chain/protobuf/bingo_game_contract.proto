@@ -27,6 +27,9 @@ service BingoGameContract {
     rpc GetAward (Hash) returns (SInt64Value) {
         option (aelf.is_view) = true;
     }
+    rpc GetPlayerInformation (Address) returns (PlayerInformation) {
+        option (aelf.is_view) = true;
+    }
 }
 
 message InitialBingoGameInput {
