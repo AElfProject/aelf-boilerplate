@@ -114,7 +114,12 @@ namespace BingoGameContract
                 return new BoolOutput {BoolValue = false};
             }
 
-            var bingoInformation = playerInformation.BingoInfos.FirstOrDefault(i => i.PlayId == input);
+            Assert(playerInformation.BingoInfos.Count > 0, "No play id.");
+
+            var bingoInformation = input == Hash.Empty
+                ? playerInformation.BingoInfos.First()
+                : playerInformation.BingoInfos.FirstOrDefault(i => i.PlayId == input);
+
             Assert(bingoInformation != null, "Play id not found.");
             if (bingoInformation == null)
             {
@@ -165,7 +170,7 @@ namespace BingoGameContract
                     Symbol = BingoGameContractConstants.CardSymbol,
                     Amount = award,
                     To = Context.Sender,
-                    Memo = "Award from Bingo."
+                    Memo = "Well done."
                 });
             }
 
@@ -177,7 +182,7 @@ namespace BingoGameContract
                     To = Context.Self,
                     Amount = -award,
                     Symbol = BingoGameContractConstants.CardSymbol,
-                    Memo = "Play the game."
+                    Memo = "Thanks for your patronage."
                 });
             }
 
