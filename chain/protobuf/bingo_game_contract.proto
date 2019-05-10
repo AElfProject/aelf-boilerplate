@@ -9,19 +9,23 @@ option csharp_namespace = "BingoGameContract";
 service BingoGameContract {
     option (aelf.csharp_state) = "BingoGameContractState";
     
+    // Actions
     rpc InitialBingoGame (InitialBingoGameInput) returns (google.protobuf.Empty) {
     }
-
     rpc Register (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
-    
+    rpc Deposit (SInt64Value) returns (google.protobuf.Empty) {
+    }
     rpc Play (SInt64Value) returns (google.protobuf.Empty) {
     }
-    
     rpc Bingo (Hash) returns (BoolOutput) {
     }
-    
     rpc Quit (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    }
+    
+    // Views
+    rpc GetAward (Hash) returns (SInt64Value) {
+        option (aelf.is_view) = true;
     }
 }
 

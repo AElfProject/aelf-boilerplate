@@ -30,13 +30,6 @@ namespace BingoGameContract
                 TotalSupply = BingoGameContractConstants.TotalCards,
                 LockWhiteList = {Context.Self}
             });
-            State.TokenContract.Issue.Send(new IssueInput
-            {
-                Symbol = BingoGameContractConstants.CardSymbol,
-                To = Context.Self,
-                Amount = BingoGameContractConstants.TotalCards,
-                Memo = "All to owner."
-            });
             State.Initialized.Value = true;
             return new Empty();
         }
@@ -50,7 +43,7 @@ namespace BingoGameContract
             };
             State.PlayerInformation[Context.Sender] = information;
             
-            State.TokenContract.Transfer.Send(new TransferInput
+            State.TokenContract.Issue.Send(new IssueInput
             {
                 Symbol = BingoGameContractConstants.CardSymbol,
                 Amount = BingoGameContractConstants.InitialCards,
@@ -61,11 +54,35 @@ namespace BingoGameContract
             return new Empty();
         }
 
-        public override Empty Play(SInt64Value input)
+        public override Empty Deposit(SInt64Value input)
         {
             var information = State.PlayerInformation[Context.Sender];
             Assert(information != null, "Not registered.");
-            if (information == null)
+            State.TokenContract.TransferFrom.Send(new TransferFromInput
+            {
+                Symbol = Context.Variables.NativeSymbol,
+                Amount = input.Value,
+                From = Context.Sender,
+                // TODO: Created a profit item and To = ProfitItemVirtualAddress
+                To = Context.Self,
+                Memo = "Tx for recharging."
+            });
+            State.TokenContract.Issue.Send(new IssueInput
+            {
+                Symbol = BingoGameContractConstants.CardSymbol,
+                Amount = input.Value,
+                To = Context.Sender,
+                Memo = "Now you are stronger."
+            });
+
+            return new Empty();
+        }
+
+        public override Empty Play(SInt64Value input)
+        {
+            var playerInformation = State.PlayerInformation[Context.Sender];
+            Assert(playerInformation != null, "Not registered.");
+            if (playerInformation == null)
             {
                 return new Empty();
             }
@@ -79,7 +96,7 @@ namespace BingoGameContract
                 Memo = "Play the game."
             });
 
-            information.BingoInfos.Add(new BingoInformation
+            playerInformation.BingoInfos.Add(new BingoInformation
             {
                 PlayRoundNumber = State.ConsensusContract.GetCurrentRoundNumber.Call(new Empty()).Value,
                 Amount = input.Value,
@@ -167,6 +184,54 @@ namespace BingoGameContract
             return new BoolOutput {BoolValue = result >= 0};
         }
 
+        public override SInt64Value GetAward(Hash input)
+        {
+            var playerInformation = State.PlayerInformation[Context.Sender];
+            Assert(playerInformation != null, "Not registered.");
+            if (playerInformation == null)
+            {
+                return new SInt64Value {Value = 0};
+            }
+            
+            var bingoInformation = playerInformation.BingoInfos.FirstOrDefault(i => i.PlayId == input);
+            if (bingoInformation == null)
+            {
+                return new SInt64Value {Value = 0};
+            }
+
+            return new SInt64Value {Value = bingoInformation.Award};
+        }
+
+        public override Empty Quit(Empty input)
+        {
+            var playerInformation = State.PlayerInformation[Context.Sender];
+            Assert(playerInformation != null, "Not registered.");
+            // TODO: Set to null when support deleting state.
+            State.PlayerInformation[Context.Sender] = new PlayerInformation();
+
+            var balance = State.TokenContract.GetBalance.Call(new GetBalanceInput
+            {
+                Symbol = BingoGameContractConstants.CardSymbol,
+                Owner = Context.Sender
+            }).Balance;
+            State.TokenContract.Transfer.Send(new TransferInput
+            {
+                Symbol = Context.Variables.NativeSymbol,
+                To = Context.Sender,
+                Amount = balance,
+                Memo = "Give elf tokens back."
+            });
+            State.TokenContract.TransferFrom.Send(new TransferFromInput
+            {
+                Symbol = BingoGameContractConstants.CardSymbol,
+                From = Context.Sender,
+                To = Context.Self,
+                Amount = balance,
+                Memo = "Return cards back."
+            });
+            return new Empty();
+        }
+        
         private Hash GetCharacteristicHash(Round round)
         {
             return round.RealTimeMinersInformation.Values.Where(m => m.OutValue != null).Aggregate(Hash.Empty,
@@ -178,27 +243,6 @@ namespace BingoGameContract
             return BitConverter.ToInt64(
                 BitConverter.IsLittleEndian ? hash.Value.Reverse().ToArray() : hash.Value.ToArray(), 0);
         }
-
-        public override Empty Quit(Empty input)
-        {
-            Assert(State.PlayerInformation[Context.Sender] != null, "Not registered.");
-            // TODO: Set to null when support deleting state.
-            State.PlayerInformation[Context.Sender] = new PlayerInformation();
-
-            var balance = State.TokenContract.GetBalance.Call(new GetBalanceInput
-            {
-                Symbol = BingoGameContractConstants.CardSymbol,
-                Owner = Context.Sender
-            }).Balance;
-            State.TokenContract.TransferFrom.Send(new TransferFromInput
-            {
-                Symbol = BingoGameContractConstants.CardSymbol,
-                From = Context.Sender,
-                To = Context.Self,
-                Amount = balance,
-                Memo = "Give cards back."
-            });
-            return new Empty();
-        }
+        
     }
 }
