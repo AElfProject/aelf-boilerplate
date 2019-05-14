@@ -34,8 +34,9 @@ namespace BingoGameContract
             State.TokenContract.Issue.Send(new IssueInput
             {
                 Symbol = BingoGameContractConstants.CardSymbol,
-                Amount = BingoGameContractConstants.TotalCards.Div(2),
-                To = Context.Self
+                Amount = BingoGameContractConstants.TotalCards,
+                To = Context.Self,
+                Memo = "All to owner."
             });
             State.Initialized.Value = true;
             return new Empty();
@@ -50,7 +51,7 @@ namespace BingoGameContract
             };
             State.PlayerInformation[Context.Sender] = information;
 
-            State.TokenContract.Issue.Send(new IssueInput
+            State.TokenContract.Transfer.Send(new TransferInput
             {
                 Symbol = BingoGameContractConstants.CardSymbol,
                 Amount = BingoGameContractConstants.InitialCards,
@@ -74,7 +75,7 @@ namespace BingoGameContract
                 To = Context.Self,
                 Memo = "Thanks for recharging."
             });
-            State.TokenContract.Issue.Send(new IssueInput
+            State.TokenContract.Transfer.Send(new TransferInput
             {
                 Symbol = BingoGameContractConstants.CardSymbol,
                 Amount = input.Value,
@@ -262,6 +263,11 @@ namespace BingoGameContract
         public override PlayerInformation GetPlayerInformation(Address input)
         {
             return State.PlayerInformation[input] ?? new PlayerInformation();
+        }
+
+        private long CalculateAward(long randomNumber, long characteristicNumber, int riskyNumber, long bettingAmount)
+        {
+            throw new NotImplementedException();
         }
 
         private Hash GetCharacteristicHash(Round round)
