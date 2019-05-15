@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AElf;
 using AElf.Blockchains;
 using AElf.Blockchains.MainChain;
-using AElf.Contracts.Consensus.AEDPoS;
-using AElf.Contracts.Election;
 using AElf.Contracts.Genesis;
-using AElf.Contracts.MultiToken;
-using AElf.Contracts.MultiToken.Messages;
-using AElf.Contracts.Profit;
-using AElf.Contracts.Vote;
-using AElf.CrossChain;
 using AElf.Database;
 using AElf.Kernel;
 using AElf.Kernel.Account.Application;
@@ -31,8 +23,6 @@ using AElf.OS.Rpc.Wallet;
 using AElf.Runtime.CSharp;
 using AElf.RuntimeSetup;
 using AElf.WebApp.Web;
-using BingoGameContract;
-using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -43,7 +33,7 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
-using ConsensusOptions = AElf.Kernel.Consensus.AEDPoS.ConsensusOptions;
+using ConsensusOptions = AElf.Blockchains.ConsensusOptions;
 
 namespace Aelf.Boilerplate.Mainchain
 {
@@ -79,13 +69,11 @@ namespace Aelf.Boilerplate.Mainchain
             services.AddKeyValueDbContext<BlockchainKeyValueDbContext>(o => o.UseInMemoryDatabase());
             services.AddKeyValueDbContext<StateKeyValueDbContext>(o => o.UseInMemoryDatabase());
             services.AddTransient<IGenesisSmartContractDtoProvider, GenesisSmartContractDtoProvider>();
-
-            var s = context.Services;
-            s.TryAddSingleton<ISmartContractAddressNameProvider, ConsensusSmartContractAddressNameProvider>();
-            s.TryAddSingleton<ISmartContractAddressNameProvider, ElectionSmartContractAddressNameProvider>();
-            s.TryAddSingleton<ISmartContractAddressNameProvider, ProfitSmartContractAddressNameProvider>();
-            s.TryAddSingleton<ISmartContractAddressNameProvider, TokenSmartContractAddressNameProvider>();
-            s.TryAddSingleton<ISmartContractAddressNameProvider, VoteSmartContractAddressNameProvider>();
+            services.TryAddSingleton<ISmartContractAddressNameProvider, ConsensusSmartContractAddressNameProvider>();
+            services.TryAddSingleton<ISmartContractAddressNameProvider, ElectionSmartContractAddressNameProvider>();
+            services.TryAddSingleton<ISmartContractAddressNameProvider, ProfitSmartContractAddressNameProvider>();
+            services.TryAddSingleton<ISmartContractAddressNameProvider, TokenSmartContractAddressNameProvider>();
+            services.TryAddSingleton<ISmartContractAddressNameProvider, VoteSmartContractAddressNameProvider>();
 
             var configuration = context.Services.GetConfiguration();
             Configure<TokenInitialOptions>(configuration.GetSection("TokenInitial"));
@@ -104,6 +92,22 @@ namespace Aelf.Boilerplate.Mainchain
             Configure<HostSmartContractBridgeContextOptions>(options =>
             {
                 options.ContextVariables[ContextVariableDictionary.NativeSymbolName] = Symbol;
+            });
+            
+            Configure<ConsensusOptions>(option =>
+            {
+                configuration.GetSection("Consensus").Bind(option);
+
+                if (option.InitialMiners == null || option.InitialMiners.Count == 0 ||
+                    string.IsNullOrWhiteSpace(option.InitialMiners[0]))
+                {
+                    AsyncHelper.RunSync(async () =>
+                    {
+                        var accountService = context.Services.GetRequiredServiceLazy<IAccountService>().Value;
+                        var publicKey = (await accountService.GetPublicKeyAsync()).ToHex();
+                        option.InitialMiners = new List<string> {publicKey};
+                    });
+                }
             });
         }
         
@@ -133,143 +137,5 @@ namespace Aelf.Boilerplate.Mainchain
             var that = this;
             AsyncHelper.RunSync(() => osService.StopAsync(that.OsBlockchainNodeContext));
         }
-/*
-
-        public override void OnApplicationInitialization(ApplicationInitializationContext context)
-        {
-            var chainOptions = context.ServiceProvider.GetService<IOptionsSnapshot<ChainOptions>>().Value;
-
-            var dto = new OsBlockchainNodeContextStartDto()
-            {
-                ChainId = chainOptions.ChainId,
-                ZeroSmartContract = typeof(BasicContractZero)
-            };
-
-            var consensusOptions = context.ServiceProvider.GetService<IOptionsSnapshot<ConsensusOptions>>().Value;
-            var zeroContractAddress = context.ServiceProvider.GetRequiredService<ISmartContractAddressService>()
-                .GetZeroSmartContractAddress();
-
-            dto.InitializationSmartContracts.AddGenesisSmartContract<ProfitContract>(
-                ProfitSmartContractAddressNameProvider.Name);
-
-            dto.InitializationSmartContracts.AddGenesisSmartContract<VoteContract>(
-                VoteSmartContractAddressNameProvider.Name);
-
-            dto.InitializationSmartContracts.AddGenesisSmartContract<ElectionContract>(
-                ElectionSmartContractAddressNameProvider.Name, new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList
-                {
-                    Value = { new SystemContractDeploymentInput.Types.SystemTransactionMethodCall
-                    {
-                        MethodName = nameof(ElectionContract.InitialElectionContract),
-                        Params = new InitialElectionContractInput
-                        {
-                            ProfitContractSystemName = ProfitSmartContractAddressNameProvider.Name,
-                            VoteContractSystemName = VoteSmartContractAddressNameProvider.Name,
-                            TokenContractSystemName = TokenSmartContractAddressNameProvider.Name,
-                            ConsensusContractSystemName = ConsensusSmartContractAddressNameProvider.Name
-                        }.ToByteString()
-                    }}
-                });
-
-            dto.InitializationSmartContracts.AddGenesisSmartContract<TokenContract>(
-                TokenSmartContractAddressNameProvider.Name,
-                GenerateTokenInitializationCallList(zeroContractAddress,
-                    context.ServiceProvider.GetService<IOptions<ConsensusOptions>>().Value.InitialMiners));
-
-            dto.InitializationSmartContracts.AddGenesisSmartContract<AEDPoSContract>(
-                ConsensusSmartContractAddressNameProvider.Name, GenerateConsensusInitializationCallList(consensusOptions));
-
-            dto.InitializationSmartContracts
-                .AddGenesisSmartContract<HelloWorldContract.HelloWorldContract>(Hash.FromString("HelloWorldContract"));
-
-            dto.InitializationSmartContracts.AddGenesisSmartContract<BingoGameContract.BingoGameContract>(
-                Hash.FromString("BingoGameContract"), GenerateBingoGameInitializationCallList());
-
-            var osService = context.ServiceProvider.GetService<IOsBlockchainNodeContextService>();
-            var that = this;
-            AsyncHelper.RunSync(async () => { that.OsBlockchainNodeContext = await osService.StartAsync(dto); });
-        }
-
-        private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList
-            GenerateBingoGameInitializationCallList()
-        {
-            var bingoGameMethodCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
-            bingoGameMethodCallList.Add(nameof(BingoGameContract.BingoGameContract.InitialBingoGame), new InitialBingoGameInput
-            {
-                TokenContractSystemName = TokenSmartContractAddressNameProvider.Name,
-                ConsensusContractSystemName = ConsensusSmartContractAddressNameProvider.Name
-            });
-            return bingoGameMethodCallList;
-        }
-
-        private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList
-            GenerateConsensusInitializationCallList(ConsensusOptions consensusOptions)
-        {
-            var consensusMethodCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
-            consensusMethodCallList.Add(nameof(AEDPoSContract.InitialAElfConsensusContract),
-                new InitialAElfConsensusContractInput
-                {
-                    IsTermStayOne = true
-                });
-            consensusMethodCallList.Add(nameof(AEDPoSContract.FirstRound),
-                new Miners
-                {
-                    PublicKeys =
-                    {
-                        consensusOptions.InitialMiners.Select(k =>
-                            ByteString.CopyFrom(ByteArrayHelpers.FromHexString(k)))
-                    }
-                }.GenerateFirstRoundOfNewTerm(consensusOptions.MiningInterval,
-                    consensusOptions.StartTimestamp.ToUniversalTime()));
-            return consensusMethodCallList;
-        }
-
-        private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList GenerateTokenInitializationCallList(
-            Address issuer, List<string> tokenReceivers)
-        {
-            const int totalSupply = 10_0000_0000;
-            var tokenContractCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
-            tokenContractCallList.Add(nameof(TokenContract.CreateNativeToken), new CreateNativeTokenInput
-            {
-                Symbol = Symbol,
-                Decimals = 2,
-                IsBurnable = true,
-                TokenName = "elf token",
-                TotalSupply = totalSupply,
-                Issuer = issuer,
-                LockWhiteSystemContractNameList = {ElectionSmartContractAddressNameProvider.Name}
-            });
-
-            tokenContractCallList.Add(nameof(TokenContract.IssueNativeToken), new IssueNativeTokenInput
-            {
-                Symbol = Symbol,
-                Amount = (long) (totalSupply * 0.2),
-                ToSystemContractName = ElectionSmartContractAddressNameProvider.Name,
-                Memo = "Set dividends."
-            });
-
-            foreach (var tokenReceiver in tokenReceivers)
-            {
-                tokenContractCallList.Add(nameof(TokenContract.Issue), new IssueInput
-                {
-                    Symbol = Symbol,
-                    Amount = (long) (totalSupply * 0.8) / tokenReceivers.Count,
-                    To = Address.FromPublicKey(ByteArrayHelpers.FromHexString(tokenReceiver)),
-                    Memo = "Set initial miner's balance.",
-                });
-            }
-
-            // Set fee pool address to dividend contract address.
-            tokenContractCallList.Add(nameof(TokenContract.SetFeePoolAddress),
-                ElectionSmartContractAddressNameProvider.Name);
-            return tokenContractCallList;
-        }
-
-        public override void OnApplicationShutdown(ApplicationShutdownContext context)
-        {
-            var osService = context.ServiceProvider.GetService<IOsBlockchainNodeContextService>();
-            var that = this;
-            AsyncHelper.RunSync(() => osService.StopAsync(that.OsBlockchainNodeContext));
-        }*/
     }
 }

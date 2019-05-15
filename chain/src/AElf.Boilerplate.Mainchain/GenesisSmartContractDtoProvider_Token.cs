@@ -16,12 +16,12 @@ namespace AElf.Blockchains.MainChain
             var l = new List<GenesisSmartContractDto>();
             l.AddGenesisSmartContract<TokenContract>(
                 TokenSmartContractAddressNameProvider.Name,
-                GenerateTokenInitializationCallList(zeroContractAddress));
+                GenerateTokenInitializationCallList(zeroContractAddress, _consensusOptions.InitialMiners));
             return l;
         }
 
         private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList GenerateTokenInitializationCallList(
-            Address issuer)
+            Address issuer, List<string> tokenReceivers)
         {
             const int totalSupply = 10_0000_0000;
             var tokenContractCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
@@ -33,7 +33,12 @@ namespace AElf.Blockchains.MainChain
                 TokenName = "elf token",
                 TotalSupply = totalSupply,
                 Issuer = issuer,
-                LockWhiteSystemContractNameList = {ElectionSmartContractAddressNameProvider.Name}
+                LockWhiteSystemContractNameList =
+                {
+                    ElectionSmartContractAddressNameProvider.Name,
+                    ProfitSmartContractAddressNameProvider.Name,
+                    VoteSmartContractAddressNameProvider.Name
+                }
             });
 
             tokenContractCallList.Add(nameof(TokenContract.IssueNativeToken), new IssueNativeTokenInput
@@ -43,6 +48,17 @@ namespace AElf.Blockchains.MainChain
                 ToSystemContractName = ElectionSmartContractAddressNameProvider.Name,
                 Memo = "Set dividends."
             });
+
+            foreach (var tokenReceiver in tokenReceivers)
+            {
+                tokenContractCallList.Add(nameof(TokenContract.Issue), new IssueInput
+                {
+                    Symbol = Symbol,
+                    Amount = (long) (totalSupply * 0.8) / tokenReceivers.Count,
+                    To = Address.FromPublicKey(ByteArrayHelpers.FromHexString(tokenReceiver)),
+                    Memo = "Set initial miner's balance.",
+                });
+            }
 
             // Set fee pool address to dividend contract address.
             tokenContractCallList.Add(nameof(TokenContract.SetFeePoolAddress),
