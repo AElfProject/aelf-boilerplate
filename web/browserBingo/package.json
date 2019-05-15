@@ -1,0 +1,16 @@
+{
+  "name": "browserbingo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node open.js"
+  },
+  "author": "zmh3788",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "aelf-sdk": "^3.0.5"
+  }
+}

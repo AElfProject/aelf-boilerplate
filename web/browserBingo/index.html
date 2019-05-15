@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BingoGame</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./index.css" >
+</head>
+<body>
+    <div class="bingo-body">
+        <div class="site-header">
+            <div class="site-title" >Bingo Game</div>
+            <div id="register">
+                <button class="register" type="button">Register</button>
+            </div>
+        </div>
+        <div class="site-body" id="site-body">
+            <div class="balance">Your CARD: <span id="balance">0</span> CARD</div>
+            <div class="input-box">
+                <input type="text" id="balance-input" placeholder="下注金额">
+                <span class="input-border bottom"></span>
+                <span class="input-border right"></span>
+                <span class="input-border top"></span>
+                <span class="input-border left"></span>
+            </div>
+            <div class="button-box">
+                <button type="button" class="button" >3000</button>
+                <button type="button" class="button" >5000</button>
+                <button type="button" class="button" >Half</button>
+                <button type="button" class="button" >All-In</button>
+            </div>
+            <div>
+                <button class="play" id="play" type="button">Play</button>
+            </div>
+            <div>
+                <button class="play" id="bingo" type="button">Bingo</button>
+            </div>
+            <div class="loader" id="loader">
+                <div class="outer"></div>
+                <div class="middle"></div>
+                <div class="inner"></div>
+            </div>
+        </div>
+    </div>
+    <script src="./dist/bingo.bundle.js" ></script>
+</body>
+</html>
