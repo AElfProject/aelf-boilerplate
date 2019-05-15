@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AElf;
+using AElf.Contracts.Consensus.AEDPoS;
 using AElf.Contracts.Consensus.DPoS;
 using AElf.Contracts.Dividend;
 using AElf.Contracts.Genesis;
@@ -35,12 +36,9 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
-using DPoSStrategyInput = AElf.Contracts.Consensus.DPoS.DPoSStrategyInput;
-using InitialDividendContractInput = AElf.Contracts.Dividend.InitialDividendContractInput;
-using InitialDPoSContractInput = AElf.Contracts.Consensus.DPoS.InitialDPoSContractInput;
-using MinerInRound = AElf.Contracts.Consensus.DPoS.MinerInRound;
-using Miners = AElf.Contracts.Consensus.DPoS.Miners;
-using Round = AElf.Contracts.Consensus.DPoS.Round;
+using MinerInRound = AElf.Contracts.Dividend.MinerInRound;
+using Miners = AElf.Contracts.Dividend.Miners;
+using Round = AElf.Contracts.Dividend.Round;
 
 namespace Aelf.Boilerplate.Mainchain
 {
@@ -96,7 +94,7 @@ namespace Aelf.Boilerplate.Mainchain
             var zeroContractAddress = context.ServiceProvider.GetRequiredService<ISmartContractAddressService>()
                 .GetZeroSmartContractAddress();
 
-            dto.InitializationSmartContracts.AddGenesisSmartContract<ConsensusContract>(
+            dto.InitializationSmartContracts.AddGenesisSmartContract<AEDPoSContract>(
                 ConsensusSmartContractAddressNameProvider.Name, GenerateConsensusInitializationCallList(dposOptions));
 
             dto.InitializationSmartContracts.AddGenesisSmartContract<DividendContract>(
@@ -135,23 +133,14 @@ namespace Aelf.Boilerplate.Mainchain
             GenerateConsensusInitializationCallList(DPoSOptions dposOptions)
         {
             var consensusMethodCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
-            consensusMethodCallList.Add(nameof(ConsensusContract.InitialDPoSContract),
-                new InitialDPoSContractInput
+            consensusMethodCallList.Add(nameof(AEDPoSContract.InitialAElfConsensusContract),
+                new InitialAElfConsensusContractInput
                 {
-                    TokenContractSystemName = TokenSmartContractAddressNameProvider.Name,
-                    DividendsContractSystemName = DividendSmartContractAddressNameProvider.Name,
-                    LockTokenForElection = 10_0000
+                    IsTermStayOne = true
                 });
-            consensusMethodCallList.Add(nameof(ConsensusContract.InitialConsensus),
+            consensusMethodCallList.Add(nameof(AEDPoSContract.FirstRound),
                 dposOptions.InitialMiners.ToMiners().GenerateFirstRoundOfNewTerm(dposOptions.MiningInterval,
                     dposOptions.StartTimestamp.ToUniversalTime()));
-            consensusMethodCallList.Add(nameof(ConsensusContract.ConfigStrategy),
-                new DPoSStrategyInput
-                {
-                    IsBlockchainAgeSettable = dposOptions.IsBlockchainAgeSettable,
-                    IsTimeSlotSkippable = dposOptions.IsTimeSlotSkippable,
-                    IsVerbose = dposOptions.Verbose
-                });
             return consensusMethodCallList;
         }
 
