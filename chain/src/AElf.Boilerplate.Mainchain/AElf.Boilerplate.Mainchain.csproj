@@ -4,23 +4,23 @@
     <RootNamespace>Aelf.Boilerplate.Mainchain</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AElf.Contracts.Consensus.DPoS" Version="0.7.0-beta.1" />
-    <PackageReference Include="AElf.WebApp.Application.Chain" IncludeAssets="true" Version="0.7.0-beta.1" />
-    <PackageReference Include="AElf.WebApp.Application.Net" IncludeAssets="true"  Version="0.7.0-beta.1" />
-    <PackageReference Include="AElf.Contracts.MultiToken" Version="0.7.0-beta.1" />
-    <PackageReference Include="AElf.Contracts.Dividend" Version="0.7.0-beta.1" />
-    <PackageReference Include="AElf.Blockchains.BasicBaseChain" Version="0.7.0-beta.1" />
-    <PackageReference Include="AElf.Kernel.Token" Version="0.7.0-beta.1" />
-    <PackageReference Include="AElf.OS.Core" Version="0.7.0-beta.1" />
-    <PackageReference Include="AElf.OS.Rpc.ChainController" Version="0.7.0-beta.1" />
-    <PackageReference Include="AElf.OS.Rpc.Net" Version="0.7.0-beta.1" />
-    <PackageReference Include="AElf.OS.Rpc.Wallet" Version="0.7.0-beta.1" />
-    <PackageReference Include="AElf.Runtime.CSharp" Version="0.7.0-beta.1" />
-    <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="0.7.0-beta.1" />
-    <PackageReference Include="AElf.RuntimeSetup" Version="0.7.0-beta.1" />
-    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-beta.1" />
+    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.WebApp.Application.Chain" IncludeAssets="true" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.WebApp.Application.Net" IncludeAssets="true" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.Contracts.MultiToken" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.Blockchains.BasicBaseChain" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.Kernel.Token" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.OS.Core" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.OS.Rpc.ChainController" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.OS.Rpc.Net" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.OS.Rpc.Wallet" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.Runtime.CSharp" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.RuntimeSetup" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-beta.2-18031" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BingoGameContract\BingoGameContract.csproj" />
     <ProjectReference Include="..\HelloWorldContract\HelloWorldContract.csproj" />
   </ItemGroup>
 </Project>
