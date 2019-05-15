@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using AElf;
-using AElf.Contracts.Consensus.AEDPoS;
+using AElf.Blockchains;
+using AElf.Blockchains.MainChain;
 using AElf.Contracts.Consensus.AEDPoS;
 using AElf.Contracts.Election;
 using AElf.Contracts.Genesis;
 using AElf.Contracts.MultiToken;
 using AElf.Contracts.MultiToken.Messages;
+using AElf.Contracts.Profit;
+using AElf.Contracts.Vote;
+using AElf.CrossChain;
 using AElf.Database;
 using AElf.Kernel;
+using AElf.Kernel.Account.Application;
 using AElf.Kernel.Consensus.AEDPoS;
 using AElf.Kernel.Infrastructure;
 using AElf.Kernel.SmartContract;
@@ -28,8 +33,9 @@ using AElf.RuntimeSetup;
 using AElf.WebApp.Web;
 using BingoGameContract;
 using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -37,6 +43,7 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
+using ConsensusOptions = AElf.Kernel.Consensus.AEDPoS.ConsensusOptions;
 
 namespace Aelf.Boilerplate.Mainchain
 {
@@ -71,12 +78,62 @@ namespace Aelf.Boilerplate.Mainchain
             var services = context.Services;
             services.AddKeyValueDbContext<BlockchainKeyValueDbContext>(o => o.UseInMemoryDatabase());
             services.AddKeyValueDbContext<StateKeyValueDbContext>(o => o.UseInMemoryDatabase());
+            services.AddTransient<IGenesisSmartContractDtoProvider, GenesisSmartContractDtoProvider>();
+
+            var s = context.Services;
+            s.TryAddSingleton<ISmartContractAddressNameProvider, ConsensusSmartContractAddressNameProvider>();
+            s.TryAddSingleton<ISmartContractAddressNameProvider, ElectionSmartContractAddressNameProvider>();
+            s.TryAddSingleton<ISmartContractAddressNameProvider, ProfitSmartContractAddressNameProvider>();
+            s.TryAddSingleton<ISmartContractAddressNameProvider, TokenSmartContractAddressNameProvider>();
+            s.TryAddSingleton<ISmartContractAddressNameProvider, VoteSmartContractAddressNameProvider>();
+
+            var configuration = context.Services.GetConfiguration();
+            Configure<TokenInitialOptions>(configuration.GetSection("TokenInitial"));
+            Configure<ChainOptions>(option =>
+            {
+                option.ChainId =
+                    ChainHelpers.ConvertBase58ToChainId(context.Services.GetConfiguration()["ChainId"]);
+            });
+
+            Configure<HostSmartContractBridgeContextOptions>(options =>
+            {
+                options.ContextVariables[ContextVariableDictionary.NativeSymbolName] = context.Services
+                    .GetConfiguration().GetValue("TokenInitial:Symbol", Symbol);
+            });
 
             Configure<HostSmartContractBridgeContextOptions>(options =>
             {
                 options.ContextVariables[ContextVariableDictionary.NativeSymbolName] = Symbol;
             });
         }
+        
+        public override void OnApplicationInitialization(ApplicationInitializationContext context)
+        {
+            var chainOptions = context.ServiceProvider.GetService<IOptionsSnapshot<ChainOptions>>().Value;
+            var dto = new OsBlockchainNodeContextStartDto()
+            {
+                ChainId = chainOptions.ChainId,
+                ZeroSmartContract = typeof(BasicContractZero)
+            };
+
+            var zeroContractAddress = context.ServiceProvider.GetRequiredService<ISmartContractAddressService>()
+                .GetZeroSmartContractAddress();
+            var dtoProvider = context.ServiceProvider.GetRequiredService<IGenesisSmartContractDtoProvider>();
+
+            dto.InitializationSmartContracts = dtoProvider.GetGenesisSmartContractDtos(zeroContractAddress).ToList();
+
+            var osService = context.ServiceProvider.GetService<IOsBlockchainNodeContextService>();
+            var that = this;
+            AsyncHelper.RunSync(async () => { that.OsBlockchainNodeContext = await osService.StartAsync(dto); });
+        }
+
+        public override void OnApplicationShutdown(ApplicationShutdownContext context)
+        {
+            var osService = context.ServiceProvider.GetService<IOsBlockchainNodeContextService>();
+            var that = this;
+            AsyncHelper.RunSync(() => osService.StopAsync(that.OsBlockchainNodeContext));
+        }
+/*
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
         {
@@ -92,8 +149,27 @@ namespace Aelf.Boilerplate.Mainchain
             var zeroContractAddress = context.ServiceProvider.GetRequiredService<ISmartContractAddressService>()
                 .GetZeroSmartContractAddress();
 
+            dto.InitializationSmartContracts.AddGenesisSmartContract<ProfitContract>(
+                ProfitSmartContractAddressNameProvider.Name);
+
+            dto.InitializationSmartContracts.AddGenesisSmartContract<VoteContract>(
+                VoteSmartContractAddressNameProvider.Name);
+
             dto.InitializationSmartContracts.AddGenesisSmartContract<ElectionContract>(
-                ElectionSmartContractAddressNameProvider.Name);
+                ElectionSmartContractAddressNameProvider.Name, new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList
+                {
+                    Value = { new SystemContractDeploymentInput.Types.SystemTransactionMethodCall
+                    {
+                        MethodName = nameof(ElectionContract.InitialElectionContract),
+                        Params = new InitialElectionContractInput
+                        {
+                            ProfitContractSystemName = ProfitSmartContractAddressNameProvider.Name,
+                            VoteContractSystemName = VoteSmartContractAddressNameProvider.Name,
+                            TokenContractSystemName = TokenSmartContractAddressNameProvider.Name,
+                            ConsensusContractSystemName = ConsensusSmartContractAddressNameProvider.Name
+                        }.ToByteString()
+                    }}
+                });
 
             dto.InitializationSmartContracts.AddGenesisSmartContract<TokenContract>(
                 TokenSmartContractAddressNameProvider.Name,
@@ -194,6 +270,6 @@ namespace Aelf.Boilerplate.Mainchain
             var osService = context.ServiceProvider.GetService<IOsBlockchainNodeContextService>();
             var that = this;
             AsyncHelper.RunSync(() => osService.StopAsync(that.OsBlockchainNodeContext));
-        }
+        }*/
     }
 }

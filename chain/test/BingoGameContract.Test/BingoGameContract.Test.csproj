@@ -40,6 +40,9 @@
     <Reference Include="AElf.Kernel.Consensus.AEDPoS, Version=0.7.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\..\..\..\.nuget\packages\aelf.kernel.consensus.aedpos\0.7.1-alpha.1\lib\netstandard2.0\AElf.Kernel.Consensus.AEDPoS.dll</HintPath>
     </Reference>
+    <Reference Include="AElf.Kernel.Consensus.AEDPoS, Version=0.7.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\.nuget\packages\aelf.kernel.consensus.aedpos\0.7.1-alpha.1\lib\netstandard2.0\AElf.Kernel.Consensus.AEDPoS.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Target Name="Gen_proto" BeforeTargets="BeforeBuild">
     <Exec Condition="!$([MSBuild]::IsOsPlatform(Windows))" Command="../../scripts/generate_contract_stub.sh bingo_game_contract.proto basic_contract_zero.proto" />
