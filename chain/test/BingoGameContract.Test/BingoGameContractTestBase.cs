@@ -1,15 +1,14 @@
 using System.IO;
 using AElf;
-using AElf.Contracts.Consensus.DPoS;
+using AElf.Contracts.Consensus.AEDPoS;
 using AElf.Contracts.Genesis;
 using AElf.Contracts.MultiToken;
 using AElf.Contracts.TestKit;
 using AElf.Cryptography.ECDSA;
 using AElf.Kernel;
-using AElf.Kernel.Consensus.DPoS;
+using AElf.Kernel.Consensus.AEDPoS;
 using AElf.OS.Node.Application;
 using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using Volo.Abp.Threading;
 
 namespace BingoGameContract.Test 
@@ -39,7 +38,7 @@ namespace BingoGameContract.Test
                     new SystemContractDeploymentInput
                     {
                         Category = KernelConstants.CodeCoverageRunnerCategory,
-                        Code = ByteString.CopyFrom(File.ReadAllBytes(typeof(ConsensusContract).Assembly.Location)),
+                        Code = ByteString.CopyFrom(File.ReadAllBytes(typeof(AEDPoSContract).Assembly.Location)),
                         Name = ConsensusSmartContractAddressNameProvider.Name
                     }));
 

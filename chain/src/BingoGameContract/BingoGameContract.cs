@@ -2,7 +2,7 @@ using AElf;
 using Google.Protobuf.WellKnownTypes;
 using System;
 using System.Linq;
-using AElf.Contracts.Consensus.DPoS;
+using AElf.Contracts.Consensus.AEDPoS;
 using AElf.Contracts.MultiToken.Messages;
 using AElf.Sdk.CSharp;
 

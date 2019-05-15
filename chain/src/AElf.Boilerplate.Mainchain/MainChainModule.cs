@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using AElf;
 using AElf.Contracts.Consensus.AEDPoS;
-using AElf.Contracts.Consensus.DPoS;
-using AElf.Contracts.Dividend;
+using AElf.Contracts.Consensus.AEDPoS;
+using AElf.Contracts.Election;
 using AElf.Contracts.Genesis;
 using AElf.Contracts.MultiToken;
 using AElf.Contracts.MultiToken.Messages;
 using AElf.Database;
 using AElf.Kernel;
-using AElf.Kernel.Consensus.DPoS;
+using AElf.Kernel.Consensus.AEDPoS;
 using AElf.Kernel.Infrastructure;
 using AElf.Kernel.SmartContract;
 using AElf.Kernel.SmartContract.Application;
@@ -27,6 +27,7 @@ using AElf.Runtime.CSharp;
 using AElf.RuntimeSetup;
 using AElf.WebApp.Web;
 using BingoGameContract;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -36,14 +37,11 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
-using MinerInRound = AElf.Contracts.Dividend.MinerInRound;
-using Miners = AElf.Contracts.Dividend.Miners;
-using Round = AElf.Contracts.Dividend.Round;
 
 namespace Aelf.Boilerplate.Mainchain
 {
     [DependsOn(
-        typeof(DPoSConsensusAElfModule),
+        typeof(AEDPoSAElfModule),
         typeof(KernelAElfModule),
         typeof(OSAElfModule),
         typeof(AbpAspNetCoreModule),
@@ -90,24 +88,23 @@ namespace Aelf.Boilerplate.Mainchain
                 ZeroSmartContract = typeof(BasicContractZero)
             };
 
-            var dposOptions = context.ServiceProvider.GetService<IOptionsSnapshot<DPoSOptions>>().Value;
+            var consensusOptions = context.ServiceProvider.GetService<IOptionsSnapshot<ConsensusOptions>>().Value;
             var zeroContractAddress = context.ServiceProvider.GetRequiredService<ISmartContractAddressService>()
                 .GetZeroSmartContractAddress();
 
-            dto.InitializationSmartContracts.AddGenesisSmartContract<AEDPoSContract>(
-                ConsensusSmartContractAddressNameProvider.Name, GenerateConsensusInitializationCallList(dposOptions));
-
-            dto.InitializationSmartContracts.AddGenesisSmartContract<DividendContract>(
-                DividendSmartContractAddressNameProvider.Name,
-                GenerateDividendInitializationCallList());
-
-            dto.InitializationSmartContracts
-                .AddGenesisSmartContract<HelloWorldContract.HelloWorldContract>(Hash.FromString("HelloWorldContract"));
+            dto.InitializationSmartContracts.AddGenesisSmartContract<ElectionContract>(
+                ElectionSmartContractAddressNameProvider.Name);
 
             dto.InitializationSmartContracts.AddGenesisSmartContract<TokenContract>(
                 TokenSmartContractAddressNameProvider.Name,
                 GenerateTokenInitializationCallList(zeroContractAddress,
-                    context.ServiceProvider.GetService<IOptions<DPoSOptions>>().Value.InitialMiners));
+                    context.ServiceProvider.GetService<IOptions<ConsensusOptions>>().Value.InitialMiners));
+
+            dto.InitializationSmartContracts.AddGenesisSmartContract<AEDPoSContract>(
+                ConsensusSmartContractAddressNameProvider.Name, GenerateConsensusInitializationCallList(consensusOptions));
+
+            dto.InitializationSmartContracts
+                .AddGenesisSmartContract<HelloWorldContract.HelloWorldContract>(Hash.FromString("HelloWorldContract"));
 
             dto.InitializationSmartContracts.AddGenesisSmartContract<BingoGameContract.BingoGameContract>(
                 Hash.FromString("BingoGameContract"), GenerateBingoGameInitializationCallList());
@@ -130,7 +127,7 @@ namespace Aelf.Boilerplate.Mainchain
         }
 
         private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList
-            GenerateConsensusInitializationCallList(DPoSOptions dposOptions)
+            GenerateConsensusInitializationCallList(ConsensusOptions consensusOptions)
         {
             var consensusMethodCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
             consensusMethodCallList.Add(nameof(AEDPoSContract.InitialAElfConsensusContract),
@@ -139,22 +136,16 @@ namespace Aelf.Boilerplate.Mainchain
                     IsTermStayOne = true
                 });
             consensusMethodCallList.Add(nameof(AEDPoSContract.FirstRound),
-                dposOptions.InitialMiners.ToMiners().GenerateFirstRoundOfNewTerm(dposOptions.MiningInterval,
-                    dposOptions.StartTimestamp.ToUniversalTime()));
-            return consensusMethodCallList;
-        }
-
-        private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList
-            GenerateDividendInitializationCallList()
-        {
-            var dividendMethodCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
-            dividendMethodCallList.Add(nameof(DividendContract.InitializeDividendContract),
-                new InitialDividendContractInput
+                new Miners
                 {
-                    ConsensusContractSystemName = ConsensusSmartContractAddressNameProvider.Name,
-                    TokenContractSystemName = TokenSmartContractAddressNameProvider.Name
-                });
-            return dividendMethodCallList;
+                    PublicKeys =
+                    {
+                        consensusOptions.InitialMiners.Select(k =>
+                            ByteString.CopyFrom(ByteArrayHelpers.FromHexString(k)))
+                    }
+                }.GenerateFirstRoundOfNewTerm(consensusOptions.MiningInterval,
+                    consensusOptions.StartTimestamp.ToUniversalTime()));
+            return consensusMethodCallList;
         }
 
         private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList GenerateTokenInitializationCallList(
@@ -170,14 +161,14 @@ namespace Aelf.Boilerplate.Mainchain
                 TokenName = "elf token",
                 TotalSupply = totalSupply,
                 Issuer = issuer,
-                LockWhiteSystemContractNameList = {ConsensusSmartContractAddressNameProvider.Name}
+                LockWhiteSystemContractNameList = {ElectionSmartContractAddressNameProvider.Name}
             });
 
             tokenContractCallList.Add(nameof(TokenContract.IssueNativeToken), new IssueNativeTokenInput
             {
                 Symbol = Symbol,
                 Amount = (long) (totalSupply * 0.2),
-                ToSystemContractName = DividendSmartContractAddressNameProvider.Name,
+                ToSystemContractName = ElectionSmartContractAddressNameProvider.Name,
                 Memo = "Set dividends."
             });
 
@@ -193,7 +184,8 @@ namespace Aelf.Boilerplate.Mainchain
             }
 
             // Set fee pool address to dividend contract address.
-            tokenContractCallList.Add(nameof(TokenContract.SetFeePoolAddress),DividendSmartContractAddressNameProvider.Name);
+            tokenContractCallList.Add(nameof(TokenContract.SetFeePoolAddress),
+                ElectionSmartContractAddressNameProvider.Name);
             return tokenContractCallList;
         }
 
@@ -202,63 +194,6 @@ namespace Aelf.Boilerplate.Mainchain
             var osService = context.ServiceProvider.GetService<IOsBlockchainNodeContextService>();
             var that = this;
             AsyncHelper.RunSync(() => osService.StopAsync(that.OsBlockchainNodeContext));
-        }
-    }
-
-    static class Extensions
-    {
-        public static Miners ToMiners(this List<string> minerPublicKeys, long termNumber = 0)
-        {
-            return new Miners
-            {
-                PublicKeys = {minerPublicKeys},
-                Addresses = {minerPublicKeys.Select(p => Address.FromPublicKey(ByteArrayHelpers.FromHexString(p)))},
-                TermNumber = termNumber
-            };
-        }
-
-        public static Round GenerateFirstRoundOfNewTerm(this Miners miners, int miningInterval,
-            DateTime currentBlockTime, long currentRoundNumber = 0, long currentTermNumber = 0)
-        {
-            var dict = new Dictionary<string, int>();
-
-            foreach (var miner in miners.PublicKeys)
-            {
-                dict.Add(miner, miner[0]);
-            }
-
-            var sortedMiners =
-                (from obj in dict
-                    orderby obj.Value descending
-                    select obj.Key).ToList();
-
-            var round = new Round();
-
-            for (var i = 0; i < sortedMiners.Count; i++)
-            {
-                var minerInRound = new MinerInRound();
-
-                // The first miner will be the extra block producer of first round of each term.
-                if (i == 0)
-                {
-                    minerInRound.IsExtraBlockProducer = true;
-                }
-
-                minerInRound.PublicKey = sortedMiners[i];
-                minerInRound.Order = i + 1;
-                minerInRound.ExpectedMiningTime =
-                    currentBlockTime.AddMilliseconds((i * miningInterval) + miningInterval).ToTimestamp();
-                minerInRound.PromisedTinyBlocks = 1;
-                // Should be careful during validation.
-                minerInRound.PreviousInValue = Hash.Empty;
-
-                round.RealTimeMinersInformation.Add(sortedMiners[i], minerInRound);
-            }
-
-            round.RoundNumber = currentRoundNumber + 1;
-            round.TermNumber = currentTermNumber + 1;
-
-            return round;
         }
     }
 }

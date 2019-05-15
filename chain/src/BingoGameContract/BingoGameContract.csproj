@@ -4,9 +4,9 @@
     <RootNamespace>BingoGameContract</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AElf.Contracts.MultiToken" Version="0.7.0-beta.2-18030" />
-    <PackageReference Include="AElf.Kernel.Types" Version="0.7.0-beta.2-18030" />
-    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-beta.2-18030" />
+    <PackageReference Include="AElf.Contracts.MultiToken" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.Kernel.Types" Version="0.7.0-beta.2-18031" />
+    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.0-beta.2-18031" />
     <PackageReference Include="Google.Protobuf" Version="3.7.0" />
   </ItemGroup>
   <ItemGroup>
