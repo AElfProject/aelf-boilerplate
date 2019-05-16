@@ -5,10 +5,7 @@
 */
 
 import AElf from 'aelf-sdk';
-
-const multiTokenAddress = '2LGAipMpkWxGmDikAZm4CCib2AmTZCgG1soyNGoAJ2hxkHmCdR';
-const bingoGameAddress = 'jekAhSX9fLohFDBWyqoyxQeob4qUgczSfFxNTiXdY2dwoZ7Lm';
-
+const sha256 = AElf.utils.sha256;
 const defaultPrivateKey = 'a59c14882c023d63e84e5faf36558fdc8dbf1063eed45ce7e507f1cd9bcde1d9';
 const wallet = AElf.wallet.getWalletByPrivateKey(defaultPrivateKey);
 
@@ -22,6 +19,14 @@ const aelf = new AElf(new AElf.providers.HttpProvider(
         value: 'text/plain;v=1.0'
     }]
 ));
+
+const {
+    GenesisContractAddress
+} = aelf.chain.getChainStatus();
+const zeroC = aelf.chain.contractAt(GenesisContractAddress, wallet);
+
+const multiTokenAddress = zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.Token'));
+const bingoGameAddress = 'jekAhSX9fLohFDBWyqoyxQeob4qUgczSfFxNTiXdY2dwoZ7Lm';
 
 // if (!aelf.isConnected()) {
 //     alert('Blockchain Node is not running.');

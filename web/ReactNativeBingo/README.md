@@ -38,3 +38,8 @@
 # 无法运行
 
 如果您第一次无法运行，请删除 node_modules 重新运行 ```bash build.sh run-xxx``` 如果依旧无法使用，您可以到我们的git上发起 [Issues](https://github.com/AElfProject/aelf-boilerplate/issues) 或者使用 ```broserBingo```
+
+
+# 配置真机测试环境
+
+## [Link Android](./docs/android.md)

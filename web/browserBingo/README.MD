@@ -1,7 +1,9 @@
 # BingoGame
 
-you can run 
+1.open the index.html manually in the browser.
 
-```shell
+2.you can run 
+
+```bash
     npm run start
 ```
