@@ -26,7 +26,7 @@ const {
 const zeroC = aelf.chain.contractAt(GenesisContractAddress, wallet);
 
 const multiTokenAddress = zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.Token'));
-const bingoGameAddress = 'jekAhSX9fLohFDBWyqoyxQeob4qUgczSfFxNTiXdY2dwoZ7Lm';
+const bingoGameAddress = zeroC.GetContractAddressByName.call(sha256('BingoGameContract'));
 
 // if (!aelf.isConnected()) {
 //     alert('Blockchain Node is not running.');
