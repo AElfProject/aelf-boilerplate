@@ -6,6 +6,7 @@ using AElf.Kernel;
 using AElf.Kernel.Consensus.AEDPoS;
 using AElf.Kernel.Token;
 using AElf.OS.Node.Application;
+using AElf.Sdk.CSharp;
 
 namespace AElf.Blockchains.MainChain
 {
@@ -44,7 +45,7 @@ namespace AElf.Blockchains.MainChain
             tokenContractCallList.Add(nameof(TokenContract.IssueNativeToken), new IssueNativeTokenInput
             {
                 Symbol = Symbol,
-                Amount = (long) (totalSupply * 0.2),
+                Amount = totalSupply.Mul(2).Div(10),
                 ToSystemContractName = ElectionSmartContractAddressNameProvider.Name,
                 Memo = "Set dividends."
             });
@@ -60,7 +61,7 @@ namespace AElf.Blockchains.MainChain
                 });
             }
 
-            // Set fee pool address to dividend contract address.
+            // Set fee pool address to the address of contract in charge of profit item of tx fee.
             tokenContractCallList.Add(nameof(TokenContract.SetFeePoolAddress),
                 ElectionSmartContractAddressNameProvider.Name);
             return tokenContractCallList;

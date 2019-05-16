@@ -22,8 +22,8 @@ namespace AElf.Blockchains.MainChain
         private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList
             GenerateConsensusInitializationCallList()
         {
-            var aelfConsensusMethodCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
-            aelfConsensusMethodCallList.Add(nameof(AEDPoSContract.InitialAElfConsensusContract),
+            var consensusMethodCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
+            consensusMethodCallList.Add(nameof(AEDPoSContract.InitialAElfConsensusContract),
                 new InitialAElfConsensusContractInput
                 {
                     ElectionContractSystemName = ElectionSmartContractAddressNameProvider.Name,
@@ -31,7 +31,7 @@ namespace AElf.Blockchains.MainChain
                     TokenContractSystemName = TokenSmartContractAddressNameProvider.Name,
                     TimeEachTerm = int.MaxValue
                 });
-            aelfConsensusMethodCallList.Add(nameof(AEDPoSContract.FirstRound),
+            consensusMethodCallList.Add(nameof(AEDPoSContract.FirstRound),
                 new Miners
                 {
                     PublicKeys =
@@ -41,7 +41,7 @@ namespace AElf.Blockchains.MainChain
                     }
                 }.GenerateFirstRoundOfNewTerm(_consensusOptions.MiningInterval,
                     _consensusOptions.StartTimestamp.ToUniversalTime()));
-            return aelfConsensusMethodCallList;
+            return consensusMethodCallList;
         }
     }
 }
