@@ -6,7 +6,7 @@
 
 import AElf from 'aelf-sdk';
 
-const multiTokenAddress = '2LGAipMpkWxGmDikAZm4CCib2AmTZCgG1soyNGoAJ2hxkHmCdR';
+const multiTokenAddress = 'VdNxUfhYpezkTS6XJE636yWtJHfjwu8xmeVCUhrfqwN4esJNS';
 const bingoGameAddress = 'jekAhSX9fLohFDBWyqoyxQeob4qUgczSfFxNTiXdY2dwoZ7Lm';
 
 const defaultPrivateKey = 'a59c14882c023d63e84e5faf36558fdc8dbf1063eed45ce7e507f1cd9bcde1d9';

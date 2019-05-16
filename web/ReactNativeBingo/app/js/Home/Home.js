@@ -6,31 +6,17 @@
 
 import React, {Component} from 'react';
 import {Actions} from 'react-native-router-flux';
-import {View, Text, StyleSheet, DeviceEventEmitter} from 'react-native';
+import {View, Text} from 'react-native';
 import {Button, WhiteSpace, Toast, Provider} from '@ant-design/react-native';
 import config from '../../config/config';
 import aelf from '../../utils/initAElf';
-
-const styles = StyleSheet.create({
-    title: {
-        fontSize: 30,
-        color: '#AE00F4',
-        textAlign: 'center',
-        paddingTop: 200,
-        paddingBottom: 200
-    },
-    button: {
-        marginLeft: 40,
-        marginRight: 40
-    }
-});
+import styles from './home.style';
 
 export default class Home extends Component {
 
     constructor(props) {
         super(props);
-        const defaultPrivateKey = 'a59c14882c023d63e84e5faf36558fdc8dbf1063eed45ce7e507f1cd9bcde1d9';
-        this.wallet = aelf.wallet.getWalletByPrivateKey(defaultPrivateKey);
+        this.wallet = aelf.wallet.getWalletByPrivateKey(config.userPrivateKey);
         this.state = {
             bingoGameContract: null
         };
