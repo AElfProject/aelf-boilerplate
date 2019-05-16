@@ -27,7 +27,8 @@ const {
 } = aelf.chain.getChainStatus();
 const zeroC = aelf.chain.contractAt(GenesisContractAddress, wallet);
 const helloWorldContractAddress = zeroC.GetContractAddressByName.call(sha256(helloWorldContractName));
-
+const tokenContractAddress = zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.Token'));
+console.log(tokenContractAddress);
 const helloWorldC = aelf.chain.contractAt(helloWorldContractAddress, wallet);
 
 // 1.Good Way; async
