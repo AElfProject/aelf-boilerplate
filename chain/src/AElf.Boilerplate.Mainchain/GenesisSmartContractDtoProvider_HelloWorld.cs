@@ -10,7 +10,7 @@ namespace AElf.Blockchains.MainChain
         {
             var l = new List<GenesisSmartContractDto>();
 
-            l.AddGenesisSmartContract<BingoGameContract.BingoGameContract>(
+            l.AddGenesisSmartContract<HelloWorldContract.HelloWorldContract>(
                 Hash.FromString("HelloWorldContract"), GenerateHelloWorldInitializationCallList());
 
             return l;

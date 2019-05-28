@@ -26,8 +26,8 @@
     <None Include="..\..\protobuf\common.proto">
       <Link>Protobuf/Proto/common.proto</Link>
     </None>
-    <None Include="..\..\protobuf\bingo_game.proto">
-      <Link>Protobuf/Proto/bingo_game.proto</Link>
+    <None Include="..\..\protobuf\bingo_game_contract.proto">
+      <Link>Protobuf/Proto/bingo_game_contract.proto</Link>
     </None>
     <None Include="..\..\protobuf\kernel.proto">
       <Link>Protobuf/Proto/kernel.proto</Link>
