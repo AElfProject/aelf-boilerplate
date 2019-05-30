@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.7.1-alpha.1" />
+    <PackageReference Include="AElf.Contracts.TestKit" Version="0.7.1-alpha.1" />
+    <PackageReference Include="AElf.Kernel.Consensus" Version="0.7.1-alpha.1" />
+    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.7.1-alpha.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+    <PackageReference Include="Shouldly" Version="3.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Protobuf\Generated" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\protobuf\aelf_options.proto">
+      <Link>Protobuf/Proto/aelf_options.proto</Link>
+    </None>
+    <None Include="..\..\protobuf\basic_contract_zero.proto">
+      <Link>Protobuf/Proto/basic_contract_zero.proto</Link>
+    </None>
+    <None Include="..\..\protobuf\common.proto">
+      <Link>Protobuf/Proto/common.proto</Link>
+    </None>
+    <None Include="..\..\protobuf\bingo_game_contract.proto">
+      <Link>Protobuf/Proto/bingo_game_contract.proto</Link>
+    </None>
+    <None Include="..\..\protobuf\kernel.proto">
+      <Link>Protobuf/Proto/kernel.proto</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\BingoGameContract\BingoGameContract.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="AElf.Kernel.Consensus.AEDPoS, Version=0.7.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\.nuget\packages\aelf.kernel.consensus.aedpos\0.7.1-alpha.1\lib\netstandard2.0\AElf.Kernel.Consensus.AEDPoS.dll</HintPath>
+    </Reference>
+    <Reference Include="AElf.Kernel.Consensus.AEDPoS, Version=0.7.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\.nuget\packages\aelf.kernel.consensus.aedpos\0.7.1-alpha.1\lib\netstandard2.0\AElf.Kernel.Consensus.AEDPoS.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Target Name="Gen_proto" BeforeTargets="BeforeBuild">
+    <Exec Condition="!$([MSBuild]::IsOsPlatform(Windows))" Command="../../scripts/generate_contract_stub.sh bingo_game_contract.proto basic_contract_zero.proto" />
+    <Exec Condition="$([MSBuild]::IsOsPlatform(Windows))" Command="..\..\scripts\generate_contract_stub.bat bingo_game_contract.proto basic_contract_zero.proto" />
+  </Target>
+  <Target Name="UpdateGeneratedFiles" DependsOnTargets="Gen_proto" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+      <Compile Include="./Protobuf/Generated/*.cs" />
+    </ItemGroup>
+  </Target>
+</Project>
