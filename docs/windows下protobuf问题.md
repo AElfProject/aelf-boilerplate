@@ -27,7 +27,7 @@
 google/protobuf/timestamp.proto: File not found.
 ```
 
-通常是因为protobuf下载后，解压缩出来后，protoc文件夹有个两个文件件，一个bin 一个include
+通常是因为protobuf下载后，解压缩出来后，protoc文件夹内有个两个文件夹，一个bin 一个include
 
 当仅把 bin\protoc.exe 放到 C:\WINDOWS\ 时，会找不到include对应的依赖，自然就报File not found的错误了。将include文件夹也复制过去即可。
 
