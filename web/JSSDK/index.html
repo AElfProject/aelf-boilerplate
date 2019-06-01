@@ -41,6 +41,10 @@
 
         const helloWorldC = aelf.chain.contractAt(helloWorldContractAddress, wallet);
 
+        // helloWorldC.Fibonacci.call({Value: 24}, (err, result) => {
+        //     alert(result);
+        // });
+
 		// 1.Good Way; async
 		// use `call` to get information is always a good way.
 		helloWorldC.Hello.call((err, result) => {
