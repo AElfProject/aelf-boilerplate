@@ -22,7 +22,7 @@ https://github.com/microsoft/terminal
 
 ### 2、直接获取编译后文件安装（可直接安装）
 
-下载链接:`https://pan.baidu.com/s/1FXPB_IlVFN6MkxMw-ckdkQ`  密码:`zgus` 下载 Windows Terminal 安装包。
+下载链接: `https://pan.baidu.com/s/1FXPB_IlVFN6MkxMw-ckdkQ` 密码:`zgus` 下载 Windows Terminal 安装包。
 
 下载解压缩后，右键点击 `CascadiaPackage_2019.5.6.0_x86_x64_arm64.msixbundle` 文件，然后按顺序执行以下操作，如遇到需要选择证书的情况，选择同路径下的证书即可。
 
