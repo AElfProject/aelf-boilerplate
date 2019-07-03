@@ -30,31 +30,6 @@ namespace HelloWorldContract
 
             return new HelloReturn {Value = "Hello world!"};
         }
-        public override HelloReturn HelloLei(Empty input)
-        {
-            return new HelloReturn { Value = "Hello Lei!" };
-        }
 
-        public override TestOutput HelloSun(TestInput input)
-        {
-            return new TestOutput { A = input.A };
-        }
-
-        public override TestOutput Test(TestInput input)
-        {
-            
-            return new TestOutput { A = input.A };
-        }
-
-        public override Fib Fibonacci(Fib index)
-        {
-            if (index.Value == 1 || index.Value == 2)
-            {
-                return new Fib { Value = 1 };
-            }
-            else
-                return new Fib { Value = Fibonacci(new Fib { Value = index.Value - 1 }).Value + Fibonacci(new Fib { Value = index.Value - 2 }).Value };
-
-        }
     }
 }
