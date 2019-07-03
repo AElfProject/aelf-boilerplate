@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using AElf.Kernel;
+using AElf.Kernel.Token;
 using AElf.OS.Node.Application;
+using HelloWorldContract;
 
 namespace AElf.Blockchains.MainChain
 {
@@ -18,8 +20,15 @@ namespace AElf.Blockchains.MainChain
 
         private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList GenerateHelloWorldInitializationCallList()
         {
-            var profitContractMethodCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
-            return profitContractMethodCallList;
+            var helloContractMethodCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
+            
+            // 作为系统合约自动部署。
+            helloContractMethodCallList.Add("InitializeHelloContract", new InitializeHelloContractInput
+            {
+                TokenContractSystemName = TokenSmartContractAddressNameProvider.Name
+            });
+            
+            return helloContractMethodCallList;
         }
     }
 }

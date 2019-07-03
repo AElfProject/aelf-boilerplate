@@ -2,6 +2,7 @@ syntax = "proto3";
 
 import "aelf_options.proto";
 import "google/protobuf/empty.proto";
+import "common.proto";
 
 option csharp_namespace = "HelloWorldContract";
 
@@ -9,9 +10,35 @@ service HelloWorldContract {
 
     option (aelf.csharp_state) = "HelloWorldContractState";
 
+    rpc InitializeHelloContract (InitializeHelloContractInput) returns (google.protobuf.Empty) {}
+
     rpc Hello (google.protobuf.Empty) returns (HelloReturn) { }
+
+    rpc HelloLei (google.protobuf.Empty) returns (HelloReturn) { }
+
+    rpc HelloSun (TestInput) returns (TestOutput) { }
+
+    rpc Test (TestInput) returns (TestOutput) { }
+
+    rpc Fibonacci  (Fib) returns (Fib) { };
+}
+
+message InitializeHelloContractInput {
+    Hash token_contract_system_name = 1;
+}
+
+message Fib{
+    sint32 Value = 1;
 }
 
 message HelloReturn {
     string Value = 1;
+}
+
+message TestInput {
+    sint64 A = 1;
+}
+
+message TestOutput {
+    sint64 A = 1;
 }
