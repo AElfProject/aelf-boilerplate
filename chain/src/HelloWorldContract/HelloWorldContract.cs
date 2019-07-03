@@ -1,3 +1,4 @@
+using System.Text;
 using AElf;
 using Google.Protobuf.WellKnownTypes;
 
@@ -22,7 +23,7 @@ namespace HelloWorldContract
                 Symbol = Context.Variables.NativeSymbol
             });
             State.TokenContract.Transfer.Send(new AElf.Contracts.MultiToken.Messages.TransferInput{
-                To = Address.FromString("e0b40ddc3520d0b5363bd9775014d77e4b8fe832946d0e3825731d89127b813a"), // 不能给自己转
+                To = Address.FromBytes(ByteArrayHelpers.FromHexString("e0b40ddc3520d0b5363bd9775014d77e4b8fe832946d0e3825731d89127b813a")), // 不能给自己转
                 Symbol = "BTC",
                 Amount = 1, // 必须大于0
                 Memo = "Test"

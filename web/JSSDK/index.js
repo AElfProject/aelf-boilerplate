@@ -6,7 +6,10 @@ const AElf = require('aelf-sdk');
 const Wallet = AElf.wallet;
 const sha256 = AElf.utils.sha256;
 
-// address: 2hxkDg6Pd2d4yU1A16PTZVMMrEDYEPR8oQojMDwWdax5LsBaxX
+// 标准的address: 2hxkDg6Pd2d4yU1A16PTZVMMrEDYEPR8oQojMDwWdax5LsBaxX
+// AElf.utils.decodeAddressRep('2hxkDg6Pd2d4yU1A16PTZVMMrEDYEPR8oQojMDwWdax5LsBaxX')
+// C#中交易用的 address'
+// e0b40ddc3520d0b5363bd9775014d77e4b8fe832946d0e3825731d89127b813a
 // sha256(Buffer.from(sha256(wallet.keyPair.pub.encode()), 'hex')).slice(0, 64);
 // e0b40ddc3520d0b5363bd9775014d77e4b8fe832946d0e3825731d89127b813a
 const defaultPrivateKey = 'bdb3b39ef4cd18c2697a920eb6d9e8c3cf1a930570beb37d04fb52400092c42b';
@@ -49,6 +52,11 @@ let createTxId = tokenContract.Create({
 
 aelf.chain.getTxResult(createTxId.TransactionId);
 
+tokenContract.GetBalance.call({
+    symbol: 'BTC',
+    owner: helloWorldContractAddress
+});
+
 // 发行token 给对应地址
 tokenContract.Issue({
     symbol: 'BTC',
@@ -60,6 +68,12 @@ tokenContract.Issue({
 tokenContract.GetBalance.call({
     symbol: 'BTC',
     owner: helloWorldContractAddress
+});
+
+tokenContract.GetBalance.call({
+    symbol: 'BTC',
+    // owner: helloWorldContractAddress
+    owner: '2hxkDg6Pd2d4yU1A16PTZVMMrEDYEPR8oQojMDwWdax5LsBaxX'
 });
 
 helloWorldC.Hello();
