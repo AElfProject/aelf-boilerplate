@@ -5,7 +5,7 @@ using AElf.Contracts.MultiToken.Messages;
 using AElf.Sdk.CSharp.State;
 using AElf.Types;
 
-namespace BingoGameContract
+namespace AElf.Contracts.BingoGameContract
 {
     public partial class BingoGameContractState
     {

@@ -3,7 +3,7 @@ using AElf.Contracts.Genesis;
 using AElf.Sdk.CSharp.State;
 using AElf.Types;
 
-namespace BingoGameContract
+namespace AElf.Contracts.BingoGameContract
 {
     public partial class BingoGameContractState : ContractState 
     {

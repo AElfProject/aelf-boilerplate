@@ -4,10 +4,10 @@ import "aelf/core.proto";
 import "aelf/options.proto";
 import "google/protobuf/empty.proto";
 
-option csharp_namespace = "BingoGameContract";
+option csharp_namespace = "AElf.Contracts.BingoGameContract";
 
 service BingoGameContract {
-    option (aelf.csharp_state) = "BingoGameContractState";
+    option (aelf.csharp_state) = "AElf.Contracts.BingoGameContract.BingoGameContractState";
     
     // Actions
     rpc InitialBingoGame (InitialBingoGameInput) returns (google.protobuf.Empty) {

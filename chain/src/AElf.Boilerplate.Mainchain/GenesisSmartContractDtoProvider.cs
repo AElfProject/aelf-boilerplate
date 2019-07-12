@@ -12,19 +12,18 @@ namespace AElf.Blockchains.MainChain
 {
     public partial class GenesisSmartContractDtoProvider : IGenesisSmartContractDtoProvider
     {
-        private readonly IReadOnlyDictionary<string, byte[]> _codes =
-            ContractsDeployer.GetContractCodes<GenesisSmartContractDtoProvider>();
+        private readonly IReadOnlyDictionary<string, byte[]> _codes;
         
         private readonly ConsensusOptions _consensusOptions;
         private readonly TokenInitialOptions _tokenInitialOptions;
-        private readonly ContractOptions _contractOptions;
 
         public GenesisSmartContractDtoProvider(IOptionsSnapshot<ConsensusOptions> dposOptions,
-            IOptionsSnapshot<TokenInitialOptions> tokenInitialOptions, IOptionsSnapshot<ContractOptions> contractOptions)
+            IOptionsSnapshot<TokenInitialOptions> tokenInitialOptions, ContractsDeployer contractsDeployer)
         {
             _consensusOptions = dposOptions.Value;
             _tokenInitialOptions = tokenInitialOptions.Value;
-            _contractOptions = contractOptions.Value;
+            
+            _codes = contractsDeployer.GetContractCodes<GenesisSmartContractDtoProvider>();
         }
 
         public IEnumerable<GenesisSmartContractDto> GetGenesisSmartContractDtos(Address zeroContractAddress)

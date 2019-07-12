@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RootNamespace>Aelf.Boilerplate.Mainchain</RootNamespace>
+    <RootNamespace>AElf.Boilerplate.MainChain</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.2-beta.1-18089" />
@@ -20,25 +20,23 @@
     <PackageReference Include="AElf.Kernel.Token" Version="0.7.2-beta.1-18089" />
     <PackageReference Include="AElf.OS" Version="0.7.2-beta.1-18089" />
     <PackageReference Include="AElf.OS.Core" Version="0.7.2-beta.1-18089" />
+    
+    <ProjectReference Include="..\..\contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>Contract</OutputItemType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="..\..\contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>Contract</OutputItemType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ProjectReference>
 
-    <ProjectReference Include="..\AElf.Contracts.Deployer\AElf.Contracts.Deployer.csproj"/>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\..\contract\BingoGameContract\BingoGameContract.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Contract</OutputItemType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </ProjectReference>
-    <ProjectReference Include="..\..\contract\HelloWorldContract\HelloWorldContract.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Contract</OutputItemType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </ProjectReference>
     <ProjectReference Include="..\AElf.Contracts.Deployer\AElf.Contracts.Deployer.csproj" />
   </ItemGroup>
   
   <ItemGroup>
+
     <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.7.2-beta.1-18089">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>

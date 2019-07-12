@@ -1,6 +1,6 @@
 using AElf.Sdk.CSharp.State;
 
-namespace HelloWorldContract
+namespace AElf.Contracts.HelloWorldContract
 {
     public class HelloWorldContractState : ContractState
     {

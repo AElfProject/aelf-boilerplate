@@ -1,6 +1,7 @@
 using System.IO;
 using Acs0;
 using AElf;
+using AElf.Contracts.BingoGameContract;
 using AElf.Contracts.Consensus.AEDPoS;
 using AElf.Contracts.Genesis;
 using AElf.Contracts.TestKit;

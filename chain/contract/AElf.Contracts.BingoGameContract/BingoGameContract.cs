@@ -1,4 +1,3 @@
-using AElf;
 using Google.Protobuf.WellKnownTypes;
 using System;
 using System.Linq;
@@ -7,18 +6,17 @@ using AElf.Contracts.MultiToken.Messages;
 using AElf.Sdk.CSharp;
 using AElf.Types;
 
-namespace BingoGameContract
+namespace AElf.Contracts.BingoGameContract
 {
     public class BingoGameContract : BingoGameContractContainer.BingoGameContractBase
     {
         public override Empty InitialBingoGame(InitialBingoGameInput input)
         {
             Assert(!State.Initialized.Value, "Already initialized.");
-            State.BasicContractZero.Value = Context.GetZeroSmartContractAddress();
             State.TokenContract.Value =
-                State.BasicContractZero.GetContractAddressByName.Call(input.TokenContractSystemName);
+                Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
             State.ConsensusContract.Value =
-                State.BasicContractZero.GetContractAddressByName.Call(input.ConsensusContractSystemName);
+                Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
 
             // Create and issue token of this contract.
             State.TokenContract.Create.Send(new CreateInput
@@ -155,19 +153,19 @@ namespace BingoGameContract
             var luckyHash = Hash.FromTwoHashes(playerInformation.Seed, bingoInformation.PlayId);
             var luckyNumber = ConvertHashToLong(luckyHash);
             // Order in previous round of chosen miner.
-            var targetOrder = Math.Abs((int) luckyNumber % minersCount) + 1;
+            var targetOrder = Math.Abs((int) luckyNumber % minersCount).Add(1);
 
             // Get random hash (random number).
             var randomHash = previousRoundInformation.RealTimeMinersInformation.Values
                 .First(i => i.Order == targetOrder).PreviousInValue;
             var randomNumber = ConvertHashToLong(randomHash);
-            randomNumber /= 10;
+            randomNumber = randomNumber.Div(10);
 
             // Characteristic number of previous round.
             // This means players choose to call Bingo this round will use a same characteristic number.
             var characteristicHash = GetCharacteristicHash(previousRoundInformation);
             var characteristicNumber = ConvertHashToLong(characteristicHash);
-            characteristicNumber /= 10;
+            characteristicNumber = characteristicNumber.Div(10);
 
             var span = randomNumber.Sub(characteristicNumber);
 

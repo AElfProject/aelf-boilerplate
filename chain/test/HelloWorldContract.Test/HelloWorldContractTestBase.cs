@@ -1,6 +1,7 @@
 using System.IO;
 using Acs0;
 using AElf.Contracts.Genesis;
+using AElf.Contracts.HelloWorldContract;
 using AElf.Contracts.TestKit;
 using AElf.Kernel;
 using AElf.Types;

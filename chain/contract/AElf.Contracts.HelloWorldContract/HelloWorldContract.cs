@@ -1,6 +1,6 @@
 using Google.Protobuf.WellKnownTypes;
 
-namespace HelloWorldContract
+namespace AElf.Contracts.HelloWorldContract
 {
     public partial class HelloWorldContract : HelloWorldContractContainer.HelloWorldContractBase
     {

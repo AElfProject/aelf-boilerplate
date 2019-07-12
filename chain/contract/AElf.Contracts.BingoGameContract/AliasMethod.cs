@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BingoGameContract
+namespace AElf.Contracts.BingoGameContract
 {
     /// <summary>
     /// Inspired by http://www.keithschwarz.com/darts-dice-coins/

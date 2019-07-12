@@ -17,7 +17,7 @@
     <Folder Include="Protobuf\Generated" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\contract\BingoGameContract\BingoGameContract.csproj">
+    <ProjectReference Include="..\..\contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

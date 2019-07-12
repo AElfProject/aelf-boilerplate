@@ -2,8 +2,13 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="0.7.2-beta.1-18089" />
+    <PackageReference Include="AElf.Runtime.CSharp" Version="0.7.2-beta.1-18089" />
+    <PackageReference Include="AElf.RuntimeSetup" Version="0.7.2-beta.1-18089" />
+    
     <Content Include="appsettings.Development.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
@@ -14,13 +19,14 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
+  
   <ItemGroup>
-    <ProjectReference Include="..\..\contract\BingoGameContract\BingoGameContract.csproj">
+    <ProjectReference Include="..\..\contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="..\..\contract\HelloWorldContract\HelloWorldContract.csproj">
+    <ProjectReference Include="..\..\contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -53,7 +59,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.2-beta.1-18089" />
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="0.15.0" />
     <PackageReference Include="Volo.Abp.Autofac" Version="0.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />

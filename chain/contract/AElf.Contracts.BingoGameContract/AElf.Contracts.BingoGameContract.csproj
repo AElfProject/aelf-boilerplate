@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RootNamespace>BingoGameContract</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <ContractCode Include="..\..\protobuf\bingo_game_contract.proto">

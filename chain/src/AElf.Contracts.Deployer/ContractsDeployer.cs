@@ -5,9 +5,16 @@ using System.Reflection;
 
 namespace AElf.Contracts.Deployer
 {
-    public static class ContractsDeployer
+    public class ContractsDeployer
     {
-        public static IReadOnlyDictionary<string, byte[]> GetContractCodes<T>()
+        private readonly ISystemContractProvider _systemContractProvider;
+
+        public ContractsDeployer(ISystemContractProvider systemContractProvider)
+        {
+            _systemContractProvider = systemContractProvider;
+        }
+
+        public IReadOnlyDictionary<string, byte[]> GetContractCodes<T>()
         {
             var contractNames = GetContractNames(typeof(T).Assembly).ToList();
             if (contractNames.Count == 0)
@@ -15,12 +22,18 @@ namespace AElf.Contracts.Deployer
                 throw new NoContractDllFoundInManifestException();
             }
 
-            return contractNames.Select(n => (n, GetCode(n))).ToDictionary(x => x.Item1, x => x.Item2);
+            var codes = contractNames.Select(n => (n, GetCode(n))).ToDictionary(x => x.Item1, x => x.Item2);
+            foreach (var systemContractDllPath in _systemContractProvider.GetSystemContractDllPaths())
+            {
+                codes.Add(systemContractDllPath.Split('.').Reverse().Skip(1).First(),
+                    File.ReadAllBytes(Assembly.LoadFile(systemContractDllPath).Location));
+            }
+            return codes;
         }
 
         private static byte[] GetCode(string dllName)
         {
-            return File.ReadAllBytes(Assembly.Load(dllName).Location);
+            return File.ReadAllBytes(Assembly.LoadFile(dllName).Location);
         }
 
         private static IEnumerable<string> GetContractNames(Assembly assembly)

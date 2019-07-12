@@ -20,9 +20,9 @@ ProjectSection(SolutionItems) = preProject
 	contract\Directory.Build.props = contract\Directory.Build.props
 EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingoGameContract", "contract\BingoGameContract\BingoGameContract.csproj", "{7E447902-B15C-4629-B147-24FD88D309BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.BingoGameContract", "contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj", "{7E447902-B15C-4629-B147-24FD88D309BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldContract", "contract\HelloWorldContract\HelloWorldContract.csproj", "{313F77AA-1EEC-4C7C-BAF7-326C8EE5759D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.HelloWorldContract", "contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj", "{313F77AA-1EEC-4C7C-BAF7-326C8EE5759D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.Deployer", "src\AElf.Contracts.Deployer\AElf.Contracts.Deployer.csproj", "{9484A7A9-CA57-4FF4-9FD8-27BFEF92EDBC}"
 EndProject

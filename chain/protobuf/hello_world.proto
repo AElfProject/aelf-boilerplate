@@ -4,11 +4,11 @@ import "aelf/core.proto";
 import "aelf/options.proto";
 import "google/protobuf/empty.proto";
 
-option csharp_namespace = "HelloWorldContract";
+option csharp_namespace = "AElf.Contracts.HelloWorldContract";
 
 service HelloWorldContract {
 
-    option (aelf.csharp_state) = "HelloWorldContractState";
+    option (aelf.csharp_state) = "AElf.Contracts.HelloWorldContract.HelloWorldContractState";
 
     rpc Hello (google.protobuf.Empty) returns (HelloReturn) { }
 }
