@@ -3,6 +3,7 @@ using AElf.Contracts.Consensus.AEDPoS;
 using AElf.Contracts.Genesis;
 using AElf.Contracts.MultiToken.Messages;
 using AElf.Sdk.CSharp.State;
+using AElf.Types;
 
 namespace BingoGameContract
 {

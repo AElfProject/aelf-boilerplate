@@ -4,6 +4,8 @@ package aelf;
 
 import "google/protobuf/descriptor.proto";
 
+option csharp_namespace = "AElf";
+
 // All aelf custom options field numbers are like 50yxxx
 // where y stands for the custom options type:
 // 0 - FileOptions

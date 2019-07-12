@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using AElf;
 using AElf.Blockchains.MainChain;
 using AElf.Contracts.Genesis;
 using AElf.Database;
 using AElf.Kernel;
+using AElf.Kernel.Consensus;
 using AElf.Kernel.Consensus.AEDPoS;
 using AElf.Kernel.Infrastructure;
 using AElf.Kernel.SmartContract;
@@ -16,7 +16,6 @@ using AElf.OS.Node.Application;
 using AElf.OS.Node.Domain;
 using AElf.OS.Rpc.ChainController;
 using AElf.OS.Rpc.Net;
-using AElf.OS.Rpc.Wallet;
 using AElf.Runtime.CSharp;
 using AElf.RuntimeSetup;
 using AElf.WebApp.Web;
@@ -30,7 +29,7 @@ using Volo.Abp.AspNetCore;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
 
-namespace Aelf.Boilerplate.Mainchain
+namespace AElf.Boilerplate.MainChain
 {
     [DependsOn(
         typeof(AEDPoSAElfModule),
@@ -40,7 +39,6 @@ namespace Aelf.Boilerplate.Mainchain
         typeof(CSharpRuntimeAElfModule),
         typeof(GrpcNetworkModule),
         typeof(ChainControllerRpcModule),
-        typeof(WalletRpcModule),
         typeof(NetRpcAElfModule),
         typeof(RuntimeSetupAElfModule),
         typeof(WebWebAppAElfModule)
@@ -74,7 +72,7 @@ namespace Aelf.Boilerplate.Mainchain
             Configure<ChainOptions>(options =>
             {
                 options.ChainId =
-                    ChainHelpers.ConvertBase58ToChainId(context.Services.GetConfiguration()["ChainId"]);
+                    ChainHelper.ConvertBase58ToChainId(context.Services.GetConfiguration()["ChainId"]);
             });
 
             Configure<HostSmartContractBridgeContextOptions>(options =>

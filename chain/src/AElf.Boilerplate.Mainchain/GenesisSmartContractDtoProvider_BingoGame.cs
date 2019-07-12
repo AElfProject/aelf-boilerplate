@@ -1,9 +1,13 @@
 using System.Collections.Generic;
+using System.Linq;
+using Acs0;
 using AElf;
 using AElf.Kernel;
+using AElf.Kernel.Consensus;
 using AElf.Kernel.Consensus.AEDPoS;
 using AElf.Kernel.Token;
 using AElf.OS.Node.Application;
+using AElf.Types;
 using BingoGameContract;
 
 namespace AElf.Blockchains.MainChain
@@ -14,16 +18,20 @@ namespace AElf.Blockchains.MainChain
         {
             var l = new List<GenesisSmartContractDto>();
 
-            l.AddGenesisSmartContract<BingoGameContract.BingoGameContract>(
+            l.AddGenesisSmartContract(
+                _codes.Single(kv => kv.Key.Contains("Bingo")).Value,
                 Hash.FromString("BingoGameContract"), GenerateBingoGameInitializationCallList());
 
             return l;
         }
 
-        private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList GenerateBingoGameInitializationCallList()
+        private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList
+            GenerateBingoGameInitializationCallList()
         {
-            var bingoGameContractMethodCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
-            bingoGameContractMethodCallList.Add(nameof(BingoGameContract.BingoGameContract.InitialBingoGame),
+            var bingoGameContractMethodCallList =
+                new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
+            bingoGameContractMethodCallList.Add(
+                nameof(BingoGameContractContainer.BingoGameContractStub.InitialBingoGame),
                 new InitialBingoGameInput
                 {
                     TokenContractSystemName = TokenSmartContractAddressNameProvider.Name,

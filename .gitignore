@@ -292,3 +292,5 @@ aelf.js
 *.zip
 
 **/package-lock.json
+
+Contracts.manifest

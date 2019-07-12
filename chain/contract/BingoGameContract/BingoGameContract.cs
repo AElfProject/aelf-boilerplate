@@ -5,6 +5,7 @@ using System.Linq;
 using AElf.Contracts.Consensus.AEDPoS;
 using AElf.Contracts.MultiToken.Messages;
 using AElf.Sdk.CSharp;
+using AElf.Types;
 
 namespace BingoGameContract
 {

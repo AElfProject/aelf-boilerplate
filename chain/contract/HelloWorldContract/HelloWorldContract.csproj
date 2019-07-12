@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ContractCode Include="..\..\protobuf\hello_world.proto">
+      <Link>Protobuf/Proto/hello_world.proto</Link>
+    </ContractCode>
+  </ItemGroup>
+</Project>

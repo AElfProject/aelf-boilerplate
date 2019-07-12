@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using Acs0;
 using AElf.Contracts.MultiToken;
 using AElf.Contracts.MultiToken.Messages;
 using AElf.CrossChain;
@@ -7,6 +9,7 @@ using AElf.Kernel.Consensus.AEDPoS;
 using AElf.Kernel.Token;
 using AElf.OS.Node.Application;
 using AElf.Sdk.CSharp;
+using AElf.Types;
 
 namespace AElf.Blockchains.MainChain
 {
@@ -15,54 +18,58 @@ namespace AElf.Blockchains.MainChain
         public IEnumerable<GenesisSmartContractDto> GetGenesisSmartContractDtosForToken(Address zeroContractAddress)
         {
             var l = new List<GenesisSmartContractDto>();
-            l.AddGenesisSmartContract<TokenContract>(
+//            l.AddGenesisSmartContract<TokenContract>(
+            l.AddGenesisSmartContract(
+                _codes.Single(kv=>kv.Key.Contains("MultiToken")).Value,
                 TokenSmartContractAddressNameProvider.Name,
-                GenerateTokenInitializationCallList(zeroContractAddress, _consensusOptions.InitialMiners));
+                GenerateTokenInitializationCallList(zeroContractAddress));
             return l;
         }
 
         private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList GenerateTokenInitializationCallList(
-            Address issuer, List<string> tokenReceivers)
+            Address issuer)
         {
-            const int totalSupply = 10_0000_0000;
             var tokenContractCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
-            tokenContractCallList.Add(nameof(TokenContract.CreateNativeToken), new CreateNativeTokenInput
+            tokenContractCallList.Add(nameof(TokenContractContainer.TokenContractStub.CreateNativeToken), new CreateNativeTokenInput
             {
-                Symbol = Symbol,
-                Decimals = 2,
-                IsBurnable = true,
-                TokenName = "elf token",
-                TotalSupply = totalSupply,
+                Symbol = _tokenInitialOptions.Symbol,
+                Decimals = _tokenInitialOptions.Decimals,
+                IsBurnable = _tokenInitialOptions.IsBurnable,
+                TokenName = _tokenInitialOptions.Name,
+                TotalSupply = _tokenInitialOptions.TotalSupply,
+                // Set the contract zero address as the issuer temporarily.
                 Issuer = issuer,
                 LockWhiteSystemContractNameList =
                 {
                     ElectionSmartContractAddressNameProvider.Name,
+                    VoteSmartContractAddressNameProvider.Name,
                     ProfitSmartContractAddressNameProvider.Name,
-                    VoteSmartContractAddressNameProvider.Name
                 }
             });
 
-            tokenContractCallList.Add(nameof(TokenContract.IssueNativeToken), new IssueNativeTokenInput
+            tokenContractCallList.Add(nameof(TokenContractContainer.TokenContractStub.IssueNativeToken), new IssueNativeTokenInput
             {
-                Symbol = Symbol,
-                Amount = totalSupply.Mul(2).Div(10),
+                Symbol = _tokenInitialOptions.Symbol,
+                Amount = (long) (_tokenInitialOptions.TotalSupply * _tokenInitialOptions.DividendPoolRatio),
                 ToSystemContractName = ElectionSmartContractAddressNameProvider.Name,
-                Memo = "Set dividends."
+                Memo = "Set dividends.",
             });
 
-            foreach (var tokenReceiver in tokenReceivers)
+            //TODO: Maybe should be removed after testing.
+            foreach (var tokenReceiver in _consensusOptions.InitialMiners)
             {
-                tokenContractCallList.Add(nameof(TokenContract.Issue), new IssueInput
+                tokenContractCallList.Add(nameof(TokenContractContainer.TokenContractStub.Issue), new IssueInput
                 {
-                    Symbol = Symbol,
-                    Amount = (long) (totalSupply * 0.8) / tokenReceivers.Count,
-                    To = Address.FromPublicKey(ByteArrayHelpers.FromHexString(tokenReceiver)),
-                    Memo = "Set initial miner's balance.",
+                    Symbol = _tokenInitialOptions.Symbol,
+                    Amount = (long) (_tokenInitialOptions.TotalSupply * (1 - _tokenInitialOptions.DividendPoolRatio)) /
+                             _consensusOptions.InitialMiners.Count,
+                    To = Address.FromPublicKey(ByteArrayHelper.FromHexString(tokenReceiver)),
+                    Memo = "Set initial miner's balance."
                 });
             }
 
-            // Set fee pool address to the address of contract in charge of profit item of tx fee.
-            tokenContractCallList.Add(nameof(TokenContract.SetFeePoolAddress),
+            // Set fee pool address to election contract address.
+            tokenContractCallList.Add(nameof(TokenContractContainer.TokenContractStub.SetFeePoolAddress),
                 ElectionSmartContractAddressNameProvider.Name);
             return tokenContractCallList;
         }

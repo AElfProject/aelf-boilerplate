@@ -1,5 +1,5 @@
 ﻿using System;
-using Aelf.Boilerplate.Mainchain;
+using AElf.Boilerplate.MainChain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

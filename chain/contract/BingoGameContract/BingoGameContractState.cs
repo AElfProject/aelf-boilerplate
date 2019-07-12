@@ -1,6 +1,7 @@
 using AElf;
 using AElf.Contracts.Genesis;
 using AElf.Sdk.CSharp.State;
+using AElf.Types;
 
 namespace BingoGameContract
 {

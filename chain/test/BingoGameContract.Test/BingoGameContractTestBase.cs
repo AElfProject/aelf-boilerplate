@@ -1,13 +1,14 @@
 using System.IO;
+using Acs0;
 using AElf;
 using AElf.Contracts.Consensus.AEDPoS;
 using AElf.Contracts.Genesis;
-using AElf.Contracts.MultiToken;
 using AElf.Contracts.TestKit;
 using AElf.Cryptography.ECDSA;
 using AElf.Kernel;
-using AElf.Kernel.Consensus.AEDPoS;
+using AElf.Kernel.Consensus;
 using AElf.OS.Node.Application;
+using AElf.Types;
 using Google.Protobuf;
 using Volo.Abp.Threading;
 
@@ -24,33 +25,6 @@ namespace BingoGameContract.Test
 
         public BingoGameContractTestBase()
         {
-            AsyncHelper.RunSync(() => GetContractZeroTester(BootMinerKeyPair)
-                .DeploySystemSmartContract.SendAsync(
-                    new SystemContractDeploymentInput
-                    {
-                        Category = KernelConstants.CodeCoverageRunnerCategory,
-                        Code = ByteString.CopyFrom(File.ReadAllBytes(typeof(TokenContract).Assembly.Location)),
-                        Name = TokenConverterSmartContractAddressNameProvider.Name
-                    }));
-
-            AsyncHelper.RunSync(() => GetContractZeroTester(BootMinerKeyPair)
-                .DeploySystemSmartContract.SendAsync(
-                    new SystemContractDeploymentInput
-                    {
-                        Category = KernelConstants.CodeCoverageRunnerCategory,
-                        Code = ByteString.CopyFrom(File.ReadAllBytes(typeof(AEDPoSContract).Assembly.Location)),
-                        Name = ConsensusSmartContractAddressNameProvider.Name
-                    }));
-
-            BingoGameContractAddress = AsyncHelper.RunSync(() => GetContractZeroTester(BootMinerKeyPair)
-                .DeploySystemSmartContract.SendAsync(
-                    new SystemContractDeploymentInput
-                    {
-                        Category = KernelConstants.CodeCoverageRunnerCategory,
-                        Code = ByteString.CopyFrom(File.ReadAllBytes(typeof(BingoGameContract).Assembly.Location)),
-                        Name = ConsensusSmartContractAddressNameProvider.Name,
-                        TransactionMethodCallList = GenerateBingoContractMethodCallList()
-                    })).Output;
             BingoContractStub = GetBingoContractTester(BootMinerKeyPair);
         }
         
@@ -67,7 +41,7 @@ namespace BingoGameContract.Test
         private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList GenerateBingoContractMethodCallList()
         {
             var callList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
-            callList.Add(nameof(BingoGameContract.InitialBingoGame), new InitialBingoGameInput
+            callList.Add(nameof(BingoGameContractContainer.BingoGameContractStub.InitialBingoGame), new InitialBingoGameInput
             {
                 ConsensusContractSystemName = ConsensusSmartContractAddressNameProvider.Name,
                 TokenContractSystemName = TokenConverterSmartContractAddressNameProvider.Name

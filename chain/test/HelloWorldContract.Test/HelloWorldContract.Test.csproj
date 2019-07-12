@@ -4,42 +4,27 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AElf.Contracts.TestKit" Version="0.7.1-alpha.1" />
+    <PackageReference Include="AElf.Contracts.TestKit" Version="0.7.2-beta.1-18089" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="Shouldly" Version="3.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Protobuf\Generated" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\HelloWorldContract\HelloWorldContract.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\protobuf\aelf_options.proto">
-      <Link>Protobuf/Proto/aelf_options.proto</Link>
-    </None>
-    <None Include="..\..\protobuf\basic_contract_zero.proto">
+    <ProjectReference Include="..\..\contract\HelloWorldContract\HelloWorldContract.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>Contract</OutputItemType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ProjectReference>
+    
+    <ContractStub Include="..\..\protobuf\acs0.proto">
+      <Link>Protobuf/Proto/acs0.proto</Link>
+    </ContractStub>
+    <ContractStub Include="..\..\protobuf\basic_contract_zero.proto">
       <Link>Protobuf/Proto/basic_contract_zero.proto</Link>
-    </None>
-    <None Include="..\..\protobuf\common.proto">
-      <Link>Protobuf/Proto/common.proto</Link>
-    </None>
-    <None Include="..\..\protobuf\hello_world.proto">
+    </ContractStub>
+    <ContractStub Include="..\..\protobuf\hello_world.proto">
       <Link>Protobuf/Proto/hello_world.proto</Link>
-    </None>
-    <None Include="..\..\protobuf\kernel.proto">
-      <Link>Protobuf/Proto/kernel.proto</Link>
-    </None>
+    </ContractStub>
   </ItemGroup>
-  <Target Name="Gen_proto" BeforeTargets="BeforeBuild">
-    <Exec Condition="!$([MSBuild]::IsOsPlatform(Windows))" Command="../../scripts/generate_contract_stub.sh hello_world.proto basic_contract_zero.proto" />
-    <Exec Condition="$([MSBuild]::IsOsPlatform(Windows))" Command="..\..\scripts\generate_contract_stub.bat hello_world.proto basic_contract_zero.proto" />
-  </Target>
-  <Target Name="UpdateGeneratedFiles" DependsOnTargets="Gen_proto" BeforeTargets="BeforeBuild">
-    <ItemGroup>
-      <Compile Include="./Protobuf/Generated/*.cs" />
-    </ItemGroup>
-  </Target>
 </Project>
