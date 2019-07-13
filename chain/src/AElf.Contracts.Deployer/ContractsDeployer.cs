@@ -33,8 +33,7 @@ namespace AElf.Contracts.Deployer
 
         private static byte[] GetCode(string dllName)
         {
-            // TODO: Workaround.
-            return File.ReadAllBytes(Assembly.LoadFrom($"bin/Debug/netcoreapp2.2/{dllName}.dll").Location);
+            return File.ReadAllBytes(Assembly.Load(dllName).Location);
         }
 
         private static IEnumerable<string> GetContractNames(Assembly assembly)
