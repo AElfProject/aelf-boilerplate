@@ -1,5 +1,6 @@
 using Google.Protobuf.WellKnownTypes;
 using System;
+using System.Collections;
 using System.Linq;
 using AElf.Contracts.Consensus.AEDPoS;
 using AElf.Contracts.MultiToken.Messages;
@@ -277,7 +278,15 @@ namespace AElf.Contracts.BingoGameContract
 
         private long ConvertHashToLong(Hash hash)
         {
-            return Convert.ToInt64(hash);
+            var bitArray = new BitArray(hash.Value.ToByteArray());
+            var value = 0L;
+            for (var i = 0; i < bitArray.Count; i++)
+            {
+                if (bitArray[i])
+                    value += i.Mul(i).Mul(i);
+            }
+
+            return value;
         }
     }
 }
