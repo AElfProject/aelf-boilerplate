@@ -14,9 +14,8 @@
         <MSBuild Projects="@(Contract)" Targets="GetTargetPath">
             <Output TaskParameter="TargetOutputs" ItemName="ContractDlls"/>
         </MSBuild>
-        <Message Text="ContractDlls: @(ContractDlls, ';')" />
         <Delete Files="$(ContractManifestFileName)" ContinueOnError="true"/>
-        <WriteLinesToFile Condition="@(Contract) != ''" File="$(ContractManifestFileName)" Lines="@(ContractDlls)"/>
+        <WriteLinesToFile Condition="@(Contract) != ''" File="$(ContractManifestFileName)" Lines="%(Filename)"/>
         <ItemGroup Condition="Exists($(ContractManifestFileName))">
             <EmbeddedResource Include="$(ContractManifestFileName)"/>
         </ItemGroup>

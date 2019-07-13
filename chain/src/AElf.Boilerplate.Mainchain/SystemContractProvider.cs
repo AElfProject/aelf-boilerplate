@@ -7,7 +7,7 @@ namespace AElf.Boilerplate.MainChain
 {
     public class SystemContractProvider : ISystemContractProvider
     {
-        public List<string> GetSystemContractDllPaths()
+        public IEnumerable<string> GetSystemContractDllPaths()
         {
             return new List<Type>
             {

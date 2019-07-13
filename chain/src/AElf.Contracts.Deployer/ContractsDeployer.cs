@@ -33,7 +33,7 @@ namespace AElf.Contracts.Deployer
 
         private static byte[] GetCode(string dllName)
         {
-            return File.ReadAllBytes(Assembly.LoadFile(dllName).Location);
+            return File.ReadAllBytes(Assembly.Load(dllName).Location);
         }
 
         private static IEnumerable<string> GetContractNames(Assembly assembly)

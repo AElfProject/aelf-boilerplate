@@ -4,11 +4,10 @@
     <RootNamespace>AElf.Boilerplate.MainChain</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.2-beta.1-18089" />
     <PackageReference Include="AElf.Contracts.Genesis" Version="0.7.2-beta.1-18089" />
+
+    <PackageReference Include="AElf.Sdk.CSharp" Version="0.7.2-beta.1-18089" />
     <PackageReference Include="AElf.CrossChain.Communication.Grpc" Version="0.7.2-beta.1-18089" />
-    <PackageReference Include="AElf.CrossChain.Core" Version="0.7.2-beta.1-18089" />
-    <PackageReference Include="AElf.CrossChain.Communication" Version="0.7.2-beta.1-18089" />
     <PackageReference Include="AElf.Kernel.Consensus.AEDPoS" Version="0.7.2-beta.1-18089" />
     <PackageReference Include="AElf.Kernel.SmartContract.Parallel" Version="0.7.2-beta.1-18089" />
     <PackageReference Include="AElf.Kernel.Token" Version="0.7.2-beta.1-18089" />
@@ -16,11 +15,15 @@
     <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="0.7.2-beta.1-18089" />
     <PackageReference Include="AElf.RuntimeSetup" Version="0.7.2-beta.1-18089" />
     <PackageReference Include="AElf.WebApp.Web" Version="0.7.2-beta.1-18089" />
+    <PackageReference Include="AElf.OS" Version="0.7.2-beta.1-18089" />
+
     <PackageReference Include="AElf.Kernel.BlockTransactionLimitController" Version="0.7.2-beta.1-18089" />
     <PackageReference Include="AElf.Kernel.Token" Version="0.7.2-beta.1-18089" />
-    <PackageReference Include="AElf.OS" Version="0.7.2-beta.1-18089" />
-    <PackageReference Include="AElf.OS.Core" Version="0.7.2-beta.1-18089" />
-    
+
+    <ProjectReference Include="..\AElf.Contracts.Deployer\AElf.Contracts.Deployer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
@@ -31,12 +34,9 @@
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ProjectReference>
-
-    <ProjectReference Include="..\AElf.Contracts.Deployer\AElf.Contracts.Deployer.csproj" />
   </ItemGroup>
   
   <ItemGroup>
-
     <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.7.2-beta.1-18089">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>

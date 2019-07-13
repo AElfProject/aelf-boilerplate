@@ -277,8 +277,7 @@ namespace AElf.Contracts.BingoGameContract
 
         private long ConvertHashToLong(Hash hash)
         {
-            return BitConverter.ToInt64(
-                BitConverter.IsLittleEndian ? hash.Value.Reverse().ToArray() : hash.Value.ToArray(), 0);
+            return Convert.ToInt64(hash);
         }
     }
 }

@@ -4,6 +4,6 @@ namespace AElf.Contracts.Deployer
 {
     public interface ISystemContractProvider
     {
-        List<string> GetSystemContractDllPaths();
+        IEnumerable<string> GetSystemContractDllPaths();
     }
 }
