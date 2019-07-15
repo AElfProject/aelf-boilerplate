@@ -1,104 +1,72 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>demo</title>
+  <title>demo</title>
 </head>
 <style>
-    .sub-title {
-        background: #2d0379;
-        color: #FFF;
-        height: 30px;
-        line-height: 30px;
-        text-indent: 8px;
-    }
+  .sub-title {
+    background: #2d0379;
+    color: #FFF;
+    height: 30px;
+    line-height: 30px;
+    text-indent: 8px;
+  }
 
-    .box {
-        border: 1px solid #333;
-    }
+  .box {
+    border: 1px solid #333;
+  }
 
-    .head {
-        height: 30px;
-        width: 100%;
-        background: #2d0379;
-        color: #FFF;
-        line-height: 30px;
-        text-indent: 2em;
-    }
-    
-    .body {
-        background: #fff;
-        padding: 20px;
-    }
+  .head {
+    height: 30px;
+    width: 100%;
+    background: #2d0379;
+    color: #FFF;
+    line-height: 30px;
+    text-indent: 2em;
+  }
+
+  .body {
+    background: #fff;
+    padding: 20px;
+  }
 </style>
+
 <body>
 
-	<p>connectChain -> login -> initContract -> call contract methods</p>
+  <p>connectChain -> login -> initContract -> call contract methods</p>
 
-	<div class="box">
-        <div class="head">Get Chain Status</div>
-        <div class="body">
-            <button type="button" id="get-chain-status">getChainStatus</button>
-            <div>It is necessary to getChainStatus at first when use extension.</div>
-        </div>
+  <div class="box">
+    <div class="head">Get Chain Status</div>
+    <div class="body">
+      <button type="button" id="get-chain-status">getChainStatus</button>
+      <div>It is necessary to getChainStatus at first when use extension.</div>
     </div>
+  </div>
 
-	<div class="box">
-        <div class="head">Login</div>
-        <div class="body">
-            <button type="button" id="login">login</button>
-            <div>The user need login at first to register the app in extension.</div>
-            <div>If the user has logged in, there is no prompt.</div>
-        </div>
+  <div class="box">
+    <div class="head">Login</div>
+    <div class="body">
+      <button type="button" id="login">login</button>
+      <div>The user need login at first to register the app in extension.</div>
+      <div>If the user has logged in, there is no prompt.</div>
     </div>
+  </div>
 
-	<div class="box">
-        <div class="head">Hello World</div>
-        <div class="body">
-            <button type="button" id="init">init contract</button>
-            <div></div>
-        </div>
-        <div class="body">
-            <button type="button" id="hello">hello</button>
-            <div></div>
-        </div>
+  <div class="box">
+    <div class="head">Hello World</div>
+    <div class="body">
+      <button type="button" id="init">init contract</button>
+      <div></div>
     </div>
+    <div class="body">
+      <button type="button" id="hello">hello</button>
+      <div></div>
+    </div>
+  </div>
 
-    <script type="text/javascript" src="./aelf.min.js"></script>
-    <script type="text/javascript">
-        {
-            AElf = window.AElf;
-            const Wallet = AElf.wallet;
-            const sha256 = AElf.utils.sha256;
-
-            // address: 65dDNxzcd35jESiidFXN5JV8Z7pCwaFnepuYQToNefSgqk9
-            const defaultPrivateKey = 'bdb3b39ef4cd18c2697a920eb6d9e8c3cf1a930570beb37d04fb52400092c42b';
-
-            const wallet = Wallet.getWalletByPrivateKey(defaultPrivateKey);
-            const aelf = new AElf(new AElf.providers.HttpProvider(
-                'http://127.0.0.1:1235/chain',
-                null,
-                null,
-                null,
-                [{
-                    name: 'Accept',
-                    value: 'text/plain;v=1.0'
-                }]
-            ));
-
-            if (!aelf.isConnected()) {
-                alert('Blockchain Node is not running.');
-            }
-
-
-            const helloWorldContractName = 'HelloWorldContract';
-            const {
-                GenesisContractAddress
-            } = aelf.chain.getChainStatus();
-            const zeroC = aelf.chain.contractAt(GenesisContractAddress, wallet);
-            window.helloWorldContractAddress = zeroC.GetContractAddressByName.call(sha256(helloWorldContractName));
-        }
-    </script>
-    
-	<script type="text/javascript" src="index.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/aelf-sdk@3.2.8/dist/aelf.umd.js"></script>
+  <script type="text/javascript" src="index.js"></script>
 </body>
+
 </html>
