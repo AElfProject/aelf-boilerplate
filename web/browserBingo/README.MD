@@ -13,3 +13,5 @@ $ npm i
 ```bash
 $ npm start
 ```
+
+and a page will be opened by webpack in your default browser

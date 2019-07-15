@@ -21,10 +21,6 @@ module.exports = {
             'aelf-sdk$': 'aelf-sdk/dist/aelf.umd.js'
         }
     },
-    node: {
-        fs: 'empty',
-        child_process: 'empty'
-    },
     module: {
         rules: [{
             test: /\.js?$/,
