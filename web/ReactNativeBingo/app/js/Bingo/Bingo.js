@@ -37,7 +37,7 @@ export default class Bingo extends Component {
         aelf.chain.getBlockHeight((error, result) => {
             console.log(result);
         });
-        aelf.chain.contractAtAsync(config.multiTokenAddress, this.wallet, (error, result) => {
+        aelf.chain.contractAt(config.multiTokenAddress, this.wallet, (error, result) => {
             this.setState({
                 multiTokenContract: result
             });
@@ -46,7 +46,7 @@ export default class Bingo extends Component {
             }, 0);
         });
 
-        aelf.chain.contractAtAsync(config.bingoGameAddress, this.wallet, (error, result) => {
+        aelf.chain.contractAt(config.bingoGameAddress, this.wallet, (error, result) => {
             if (result) {
                 this.setState({
                     bingoGameContract: result
@@ -102,7 +102,7 @@ export default class Bingo extends Component {
             // bingoGameContract.GetPlayerInformation.call('csoxW4vTJNT9gdvyWS6W7UqEdkSo9pWyJqBoGSnUHXVnj4ykJ', (error, result) => {
             //     console.log(error, result);
             // });
-            bingoGameContract.Play({Value: parseInt(this.state.value, 10)}, (error, result) => {
+            bingoGameContract.Play({value: parseInt(this.state.value, 10)}, (error, result) => {
                 if (result) {
                     console.log(result);
                     this.setState({
