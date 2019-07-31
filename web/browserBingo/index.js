@@ -9,13 +9,14 @@ import AElf from 'aelf-sdk';
 const { sha256 } = AElf.utils;
 const defaultPrivateKey = 'a59c14882c023d63e84e5faf36558fdc8dbf1063eed45ce7e507f1cd9bcde1d9';
 const wallet = AElf.wallet.getWalletByPrivateKey(defaultPrivateKey);
-
+// link to local Blockchain, you can learn how to run a local node in https://docs.aelf.io/main/main/setup
 const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
 
 if (!aelf.isConnected()) {
   alert('Blockchain Node is not running.');
 }
 
+// add event for dom
 function initDomEvent(multiTokenContract, bingoGameContract) {
   const register = document.getElementById('register');
   const balance = document.getElementById('balance');
@@ -27,6 +28,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   const loader = document.getElementById('loader');
   let txId = 0;
 
+  // Update your card number,Returns the change in the number of your cards
   function getBalance() {
     const payload = {
       symbol: 'CARD',
@@ -43,6 +45,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
       });
   }
 
+  // register game, update the number of cards, display game interface
   register.onclick = function () {
     bingoGameContract.Register()
       .then(
@@ -58,6 +61,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
       });
   };
 
+  // click button to change the number of bets
   buttonBox.onclick = function (e) {
     let value;
     switch (e.toElement.innerText) {
@@ -80,10 +84,11 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
     balanceInput.value = value;
   };
 
+  // Check the format of the input, start play
   play.onclick = function () {
     const reg = /^[1-9]\d*$/;
     const value = parseInt(balanceInput.value, 10);
-    if (reg.test(value)) {
+    if (reg.test(value) && value <= balance.innerText) {
       loader.style.display = 'inline-block';
       bingoGameContract.Play({ value })
         .then(result => {
@@ -98,11 +103,14 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
         .catch(err => {
           console.log(err);
         });
+    } else if (value > balance.innerText) {
+      alert('Please enter a number less than the number of cards you own!');
     } else {
       alert('Please enter a positive integer greater than 0!');
     }
   };
 
+  // return to game results
   bingo.onclick = function () {
     bingoGameContract.Bingo(txId)
       .then(
@@ -127,11 +135,14 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
 
 function init() {
   aelf.chain.getChainStatus()
+    // get instance by GenesisContractAddress
     .then(res => aelf.chain.contractAt(res.GenesisContractAddress, wallet))
+    // return contract's address which you query by contract's name
     .then(zeroC => Promise.all([
       zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.Token')),
       zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.BingoGameContract'))
     ]))
+    // return contract's instance and you can call the methods on this instance
     .then(([tokenAddress, bingoAddress]) => Promise.all([
       aelf.chain.contractAt(tokenAddress, wallet),
       aelf.chain.contractAt(bingoAddress, wallet)
@@ -144,4 +155,5 @@ function init() {
     });
 }
 
+// run program
 init();

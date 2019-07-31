@@ -23,9 +23,6 @@
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2"
   },
-  "lint-staged": {
-    "*.js": "eslint"
-  },
   "scripts": {
     "start": "webpack-dev-server --progress --colors --display-chunks --watch --config ./webpack.config.js"
   },
