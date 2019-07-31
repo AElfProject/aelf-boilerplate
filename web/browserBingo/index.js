@@ -46,7 +46,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   }
 
   // register game, update the number of cards, display game interface
-  register.onclick = function () {
+  register.onclick = () => {
     bingoGameContract.Register()
       .then(
         getBalance
@@ -62,7 +62,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   };
 
   // click button to change the number of bets
-  buttonBox.onclick = function (e) {
+  buttonBox.onclick = e => {
     let value;
     switch (e.toElement.innerText) {
       case '3000':
@@ -85,7 +85,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   };
 
   // Check the format of the input, start play
-  play.onclick = function () {
+  play.onclick = () => {
     const reg = /^[1-9]\d*$/;
     const value = parseInt(balanceInput.value, 10);
     if (reg.test(value) && value <= balance.innerText) {
@@ -111,7 +111,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   };
 
   // return to game results
-  bingo.onclick = function () {
+  bingo.onclick = () => {
     bingoGameContract.Bingo(txId)
       .then(
         getBalance
