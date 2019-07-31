@@ -3,11 +3,35 @@
     [
       "@babel/preset-env",
       {
-        "modules": false
+        "modules": false,
+        "targets": "> 1%, not dead"
       }
     ]
   ],
   "plugins": [
+    "@babel/plugin-proposal-class-properties",
     "@babel/plugin-transform-runtime"
-  ]
+  ],
+  "ignore": [
+    "dist/*.js"
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "modules": "auto"
+          }
+        ]
+      ],
+      "plugins": [
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-transform-runtime"
+      ],
+      "ignore": [
+        "dist/*.js"
+      ]
+    }
+  }
 }
