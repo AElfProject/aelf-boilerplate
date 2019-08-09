@@ -1,9 +1,17 @@
 # BingoGame
 
-1.open the index.html manually in the browser.
+1. install dependencies
+
+in this directory, run
+
+```bash
+$ npm i
+```
 
 2.you can run 
 
 ```bash
-    npm run start
+$ npm start
 ```
+
+and a page will be opened by webpack in your default browser

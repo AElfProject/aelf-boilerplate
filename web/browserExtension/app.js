@@ -16,10 +16,6 @@ app.get('/index.js', (req, res) => {
     res.sendfile('index.js');
 });
 
-app.get('/aelf.min.js', (req, res) => {
-    res.sendfile('aelf.min.js');
-});
-
 app.listen(port, () => {
     console.log('----', port);
 });

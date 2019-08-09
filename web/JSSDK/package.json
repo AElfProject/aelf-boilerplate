@@ -10,6 +10,6 @@
   "author": "hzz780",
   "license": "MIT",
   "dependencies": {
-    "aelf-sdk": "^3.0.0"
+    "aelf-sdk": "^3.2.8"
   }
 }

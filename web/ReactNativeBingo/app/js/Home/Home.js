@@ -23,7 +23,7 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        aelf.chain.contractAtAsync(config.bingoGameAddress, this.wallet, (error, result) => {
+        aelf.chain.contractAt(config.bingoGameAddress, this.wallet, (error, result) => {
             if (result) {
                 this.setState({
                     bingoGameContract: result
@@ -34,7 +34,7 @@ export default class Home extends Component {
 
     onClick() {
         const {bingoGameContract} = this.state;
-        bingoGameContract.Register({}, (error, result) => {
+        bingoGameContract.Register((error, result) => {
             Toast.success('恭喜你注册成功，祝你游戏愉快！！！', 3, () => {
                 Actions.PalyGame();
             });
