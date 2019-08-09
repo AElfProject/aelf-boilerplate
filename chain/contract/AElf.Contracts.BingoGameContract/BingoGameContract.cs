@@ -11,7 +11,13 @@ namespace AElf.Contracts.BingoGameContract
 {
     public class BingoGameContract : BingoGameContractContainer.BingoGameContractBase
     {
-        public override Empty InitialBingoGame(InitialBingoGameInput input)
+        /// <summary>
+        /// Initial reference contracts' address;
+        /// create CARD token and issue to contract itself.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public override Empty Initial(Empty input)
         {
             Assert(!State.Initialized.Value, "Already initialized.");
             State.TokenContract.Value =
@@ -24,29 +30,35 @@ namespace AElf.Contracts.BingoGameContract
             {
                 Symbol = BingoGameContractConstants.CardSymbol,
                 TokenName = "Bingo Card",
-                Decimals = 2,
+                Decimals = 0,
                 Issuer = Context.Self,
                 IsBurnable = true,
-                TotalSupply = BingoGameContractConstants.TotalCards,
+                TotalSupply = long.MaxValue,
                 LockWhiteList = {Context.Self}
             });
-            
+
             State.TokenContract.Issue.Send(new IssueInput
             {
                 Symbol = BingoGameContractConstants.CardSymbol,
-                Amount = BingoGameContractConstants.TotalCards,
+                Amount = long.MaxValue,
                 To = Context.Self,
-                Memo = "All to owner."
+                Memo = "All to issuer."
             });
             State.Initialized.Value = true;
             return new Empty();
         }
 
+        /// <summary>
+        /// Give user a certain amount of CARD tokens for free.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public override Empty Register(Empty input)
         {
-            Assert(State.PlayerInformation[Context.Sender] == null, "Already registered.");
+            Assert(State.PlayerInformation[Context.Sender] == null, $"User {Context.Sender} already registered.");
             var information = new PlayerInformation
             {
+                // The value of seed will influence user's game result in some aspects.
                 Seed = Context.TransactionId
             };
             State.PlayerInformation[Context.Sender] = information;
@@ -56,7 +68,7 @@ namespace AElf.Contracts.BingoGameContract
                 Symbol = BingoGameContractConstants.CardSymbol,
                 Amount = BingoGameContractConstants.InitialCards,
                 To = Context.Sender,
-                Memo = "Initial Bingo cars to player."
+                Memo = "Initial Bingo Cards for player."
             });
 
             return new Empty();
@@ -64,37 +76,34 @@ namespace AElf.Contracts.BingoGameContract
 
         public override Empty Deposit(SInt64Value input)
         {
-            var information = State.PlayerInformation[Context.Sender];
-            Assert(information != null, "Not registered.");
+            var playerInformation = State.PlayerInformation[Context.Sender];
+            Assert(playerInformation != null, $"User {Context.Sender} not registered before.");
+            Assert(input.Value > 0, "At least you should buy 1 CARD.");
+            var elfAmount = input.Value.Mul(1_0000_0000);
             State.TokenContract.TransferFrom.Send(new TransferFromInput
             {
                 Symbol = Context.Variables.NativeSymbol,
-                Amount = input.Value,
+                Amount = elfAmount,
                 From = Context.Sender,
-                // TODO: Created a profit item and To = ProfitItemVirtualAddress
                 To = Context.Self,
-                Memo = "Thanks for recharging."
+                Memo = "Thanks for recharging:)"
             });
             State.TokenContract.Transfer.Send(new TransferInput
             {
                 Symbol = BingoGameContractConstants.CardSymbol,
                 Amount = input.Value,
                 To = Context.Sender,
-                Memo = "Now you are stronger."
+                Memo = "Now you are stronger:)"
             });
 
             return new Empty();
         }
 
-        public override Empty Play(SInt64Value input)
+        public override SInt64Value Play(SInt64Value input)
         {
-            Assert(input.Value > 1, "Invalid money.");
+            Assert(input.Value > 1, "Invalid bet amount.");
             var playerInformation = State.PlayerInformation[Context.Sender];
-            Assert(playerInformation != null, "Not registered.");
-            if (playerInformation == null)
-            {
-                return new Empty();
-            }
+            Assert(playerInformation != null, $"User {Context.Sender} not registered before.");
 
             Context.LogDebug(() => $"Playing with amount {input.Value}");
 
@@ -104,133 +113,95 @@ namespace AElf.Contracts.BingoGameContract
                 To = Context.Self,
                 Amount = input.Value,
                 Symbol = BingoGameContractConstants.CardSymbol,
-                Memo = "Play the game."
+                Memo = "Enjoy!"
             });
 
-            playerInformation.BingoInfos.Add(new BingoInformation
+            var currentRound = State.ConsensusContract.GetCurrentRoundInformation.Call(new Empty());
+
+            playerInformation.Bouts.Add(new BoutInformation
             {
-                PlayRoundNumber = State.ConsensusContract.GetCurrentRoundNumber.Call(new Empty()).Value,
+                // Record current round number.
+                PlayRoundNumber = currentRound.RoundNumber,
                 Amount = input.Value,
                 PlayId = Context.TransactionId
             });
 
             State.PlayerInformation[Context.Sender] = playerInformation;
-            return new Empty();
+
+            return new SInt64Value {Value = CalculateWaitingMilliseconds(currentRound)};
         }
 
-        public override BoolOutput Bingo(Hash input)
+        private long CalculateWaitingMilliseconds(Round round)
         {
-            Context.LogDebug(() => $"Bingo with {input.ToHex()}");
+            var extraBlockProducerExpectedTime = round.RealTimeMinersInformation.Values.OrderByDescending(i => i.Order)
+                .First().ExpectedMiningTime.AddMilliseconds(4000);
+            var expectedTimeOfGettingRandomNumber = extraBlockProducerExpectedTime.AddMilliseconds(8000);
+            return (expectedTimeOfGettingRandomNumber - Context.CurrentBlockTime).Milliseconds();
+        }
+
+        public override BoolValue Bingo(Hash input)
+        {
+            Context.LogDebug(() => $"Getting game result of play id: {input.ToHex()}");
+
             var playerInformation = State.PlayerInformation[Context.Sender];
-            Assert(playerInformation != null, "Not registered.");
-            if (playerInformation == null)
+            Assert(playerInformation != null, $"User {Context.Sender} not registered before.");
+            Assert(playerInformation.Bouts.Count > 0, $"User {Context.Sender} seems never join this game.");
+
+            var boutInformation = input == Hash.Empty
+                ? playerInformation.Bouts.First(i => i.BingoRoundNumber == 0)
+                : playerInformation.Bouts.FirstOrDefault(i => i.PlayId == input);
+
+            Assert(boutInformation != null, "Bouts not found.");
+            Assert(!boutInformation.IsComplete, "Bout already finished.");
+
+            var targetRound = State.ConsensusContract.GetRoundInformation.Call(new SInt64Value
             {
-                return new BoolOutput {BoolValue = false};
-            }
+                Value = boutInformation.PlayRoundNumber.Add(1)
+            });
+            Assert(targetRound != null, "Still preparing your game result, please wait for a while :)");
 
-            Assert(playerInformation.BingoInfos.Count > 0, "No play id.");
+            var randomHash = targetRound.RealTimeMinersInformation.Values.First(i => i.OutValue != null).OutValue;
+            var isWin = ConvertHashToBool(randomHash);
 
-            var bingoInformation = input == Hash.Empty
-                ? playerInformation.BingoInfos.First(i => i.BingoRoundNumber == 0)
-                : playerInformation.BingoInfos.FirstOrDefault(i => i.PlayId == input);
+            var usefulHash = Hash.FromTwoHashes(randomHash, playerInformation.Seed);
+            var award = CalculateAward(boutInformation.Amount, GetKindFromHash(usefulHash));
+            award = isWin ? award : -award;
 
-            Assert(bingoInformation != null, "Play id not found.");
-            if (bingoInformation == null)
-            {
-                return new BoolOutput {BoolValue = false};
-            }
-
-            var currentRoundNumber = State.ConsensusContract.GetCurrentRoundNumber.Call(new Empty()).Value;
-            var riskyNumber = currentRoundNumber - bingoInformation.PlayRoundNumber;
-            Assert(riskyNumber > 2, "Still preparing your award :)");
-
-            // We use in values of previous round.
-            var previousRoundInformation =
-                State.ConsensusContract.GetRoundInformation.Call(new SInt64Value {Value = currentRoundNumber - 1});
-
-            var minersCount = previousRoundInformation.RealTimeMinersInformation.Count;
-
-            // The lucky number only decide which miner's previous in value will be used to generate multiplier.
-            var luckyHash = Hash.FromTwoHashes(playerInformation.Seed, bingoInformation.PlayId);
-            var luckyNumber = ConvertHashToLong(luckyHash);
-            // Order in previous round of chosen miner.
-            var targetOrder = Math.Abs((int) luckyNumber % minersCount).Add(1);
-
-            // Get random hash (random number).
-            var randomHash = previousRoundInformation.RealTimeMinersInformation.Values
-                .First(i => i.Order == targetOrder).PreviousInValue;
-            var randomNumber = ConvertHashToLong(randomHash);
-            randomNumber = randomNumber.Div(10);
-
-            // Characteristic number of previous round.
-            // This means players choose to call Bingo this round will use a same characteristic number.
-            var characteristicHash = GetCharacteristicHash(previousRoundInformation);
-            var characteristicNumber = ConvertHashToLong(characteristicHash);
-            characteristicNumber = characteristicNumber.Div(10);
-
-            var span = randomNumber.Sub(characteristicNumber);
-
-            var denominator = span % BingoGameContractConstants.MaxAwardMultiplier;
-            denominator = span >= 0 ? denominator.Add(1) : denominator.Sub(1);
-
-            riskyNumber = Math.Min(riskyNumber, BingoGameContractConstants.MaxAwardMultiplier);
-
-            var award = bingoInformation.Amount;
-            if (denominator > 0)
-            {
-                award = award.Mul(riskyNumber).Div(denominator).Add(bingoInformation.Amount);
-            }
-
-            if (denominator == 0)
-            {
-                award = award.Mul(riskyNumber);
-            }
-
-            if (denominator < 0)
-            {
-                award = award.Div(-denominator).Div(riskyNumber);
-            }
-
-            bingoInformation.Award = award;
-            bingoInformation.BingoRoundNumber = currentRoundNumber;
-
-            State.PlayerInformation[Context.Sender] = playerInformation;
-
-            if (award != 0)
+            var transferAmount = boutInformation.Amount.Add(award);
+            if (transferAmount > 0)
             {
                 State.TokenContract.Transfer.Send(new TransferInput
                 {
                     Symbol = BingoGameContractConstants.CardSymbol,
-                    Amount = Math.Abs(award),
+                    Amount = transferAmount,
                     To = Context.Sender,
-                    Memo = "Well done."
+                    Memo = "Thx for playing my game."
                 });
             }
 
-            return new BoolOutput {BoolValue = denominator >= 0};
+            boutInformation.Award = award;
+            boutInformation.IsComplete = true;
+            State.PlayerInformation[Context.Sender] = playerInformation;
+
+            return new BoolValue {Value = true};
         }
 
         public override SInt64Value GetAward(Hash input)
         {
             var playerInformation = State.PlayerInformation[Context.Sender];
-            Assert(playerInformation != null, "Not registered.");
-            if (playerInformation == null)
-            {
-                return new SInt64Value {Value = 0};
-            }
+            Assert(playerInformation != null, $"User {Context.Sender} not registered before.");
 
-            var bingoInformation = playerInformation.BingoInfos.FirstOrDefault(i => i.PlayId == input);
+            var boutInformation = playerInformation.Bouts.FirstOrDefault(i => i.PlayId == input);
 
-            return bingoInformation == null
+            return boutInformation == null
                 ? new SInt64Value {Value = 0}
-                : new SInt64Value {Value = bingoInformation.Award};
+                : new SInt64Value {Value = boutInformation.Award};
         }
 
         public override Empty Quit(Empty input)
         {
             var playerInformation = State.PlayerInformation[Context.Sender];
             Assert(playerInformation != null, "Not registered.");
-            // TODO: Set to null when support deleting state.
             State.PlayerInformation[Context.Sender] = new PlayerInformation();
 
             var balance = State.TokenContract.GetBalance.Call(new GetBalanceInput
@@ -265,28 +236,62 @@ namespace AElf.Contracts.BingoGameContract
             return State.PlayerInformation[input] ?? new PlayerInformation();
         }
 
-        private long CalculateAward(long randomNumber, long characteristicNumber, int riskyNumber, long bettingAmount)
+        /// <summary>
+        /// 100%: 0...15, 240...256
+        /// 70%: 16...47, 208...239
+        /// 40%: 48...95, 160...207
+        /// 10%: 96...159
+        /// </summary>
+        /// <param name="hash"></param>
+        /// <returns></returns>
+        private int GetKindFromHash(Hash hash)
         {
-            throw new NotImplementedException();
+            var sum = SumHash(hash);
+            if (sum <= 15 || sum >= 240)
+                return 4;
+
+            if (sum <= 47 || sum >= 208)
+                return 3;
+
+            if (sum <= 95 || sum >= 160)
+                return 2;
+
+            return 1;
         }
 
-        private Hash GetCharacteristicHash(Round round)
+        private long CalculateAward(long amount, int kind)
         {
-            return round.RealTimeMinersInformation.Values.Where(m => m.OutValue != null).Aggregate(Hash.Empty,
-                (current, minerInRound) => Hash.FromTwoHashes(current, minerInRound.OutValue));
+            switch (kind)
+            {
+                case 1:
+                    return amount.Div(10);
+                case 2:
+                    return amount.Mul(4).Div(10);
+                case 3:
+                    return amount.Mul(7).Div(10);
+                case 4:
+                    return amount;
+                default:
+                    return 0;
+            }
         }
 
-        private long ConvertHashToLong(Hash hash)
+        private int SumHash(Hash hash)
         {
             var bitArray = new BitArray(hash.Value.ToByteArray());
-            var value = 0L;
+            var value = 0;
             for (var i = 0; i < bitArray.Count; i++)
             {
                 if (bitArray[i])
-                    value += i.Mul(i).Mul(i);
+                    value += i;
             }
 
             return value;
+        }
+
+        private bool ConvertHashToBool(Hash hash)
+        {
+            return SumHash(hash) % 2 == 0;
         }
     }
 }

@@ -3,6 +3,7 @@ syntax = "proto3";
 import "aelf/core.proto";
 import "aelf/options.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
 
 option csharp_namespace = "AElf.Contracts.BingoGameContract";
 
@@ -10,15 +11,15 @@ service BingoGameContract {
     option (aelf.csharp_state) = "AElf.Contracts.BingoGameContract.BingoGameContractState";
     
     // Actions
-    rpc InitialBingoGame (InitialBingoGameInput) returns (google.protobuf.Empty) {
+    rpc Initial (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
     rpc Register (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
     rpc Deposit (aelf.SInt64Value) returns (google.protobuf.Empty) {
     }
-    rpc Play (aelf.SInt64Value) returns (google.protobuf.Empty) {
+    rpc Play (aelf.SInt64Value) returns (aelf.SInt64Value) {
     }
-    rpc Bingo (aelf.Hash) returns (BoolOutput) {
+    rpc Bingo (aelf.Hash) returns (google.protobuf.BoolValue) {
     }
     rpc Quit (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
@@ -32,25 +33,16 @@ service BingoGameContract {
     }
 }
 
-message InitialBingoGameInput {
-    aelf.Hash token_contract_system_name = 1;
-    aelf.Hash consensus_contract_system_name = 2;
-}
-
 message PlayerInformation {
     aelf.Hash seed = 1;
-    repeated BingoInformation bingo_infos = 2;
+    repeated BoutInformation bouts = 2;
 }
 
-message BingoInformation {
+message BoutInformation {
     sint64 play_round_number = 1;
     sint64 amount = 2;
     sint64 award = 3;
     bool is_complete = 4;
     aelf.Hash play_id = 5;
     sint64 bingo_round_number = 6;
-}
-
-message BoolOutput {
-    bool BoolValue = 1;
 }
