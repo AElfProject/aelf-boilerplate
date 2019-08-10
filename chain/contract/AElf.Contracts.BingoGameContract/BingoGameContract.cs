@@ -160,7 +160,7 @@ namespace AElf.Contracts.BingoGameContract
             });
             Assert(targetRound != null, "Still preparing your game result, please wait for a while :)");
 
-            var randomHash = targetRound.RealTimeMinersInformation.Values.First(i => i.OutValue != null).OutValue;
+            var randomHash = targetRound.RealTimeMinersInformation.Values.First(i => i.PreviousInValue != null).PreviousInValue;
             var isWin = ConvertHashToBool(randomHash);
 
             var usefulHash = Hash.FromTwoHashes(randomHash, playerInformation.Seed);
