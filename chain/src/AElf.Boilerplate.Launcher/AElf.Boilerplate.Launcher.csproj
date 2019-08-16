@@ -10,9 +10,9 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="0.7.2-alpha.1" />
-    <PackageReference Include="AElf.Runtime.CSharp" Version="0.7.2-alpha.1" />
-    <PackageReference Include="AElf.RuntimeSetup" Version="0.7.2-alpha.1" />
+    <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="0.7.2-beta.1-18089" />
+    <PackageReference Include="AElf.Runtime.CSharp" Version="0.7.2-beta.1-18089" />
+    <PackageReference Include="AElf.RuntimeSetup" Version="0.7.2-beta.1-18089" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,12 +24,15 @@
   <ItemGroup>
     <Content Include="appsettings.Development.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="appsettings.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="appsettings.MainChain.MainNet.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   
@@ -47,27 +50,27 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.7.2-alpha.1">
+    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.7.2-beta.1-18089">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </PackageReference>
-    <PackageReference Include="AElf.Contracts.Election" Version="0.7.2-alpha.1">
+    <PackageReference Include="AElf.Contracts.Election" Version="0.7.2-beta.1-18089">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </PackageReference>
-    <PackageReference Include="AElf.Contracts.Profit" Version="0.7.2-alpha.1">
+    <PackageReference Include="AElf.Contracts.Profit" Version="0.7.2-beta.1-18089">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </PackageReference>
-    <PackageReference Include="AElf.Contracts.Vote" Version="0.7.2-alpha.1">
+    <PackageReference Include="AElf.Contracts.Vote" Version="0.7.2-beta.1-18089">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </PackageReference>
-    <PackageReference Include="AElf.Contracts.MultiToken" Version="0.7.2-alpha.1">
+    <PackageReference Include="AElf.Contracts.MultiToken" Version="0.7.2-beta.1-18089">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
