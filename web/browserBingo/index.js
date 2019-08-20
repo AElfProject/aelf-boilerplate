@@ -45,16 +45,26 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
       });
   }
 
+  getBalance();
+
   // register game, update the number of cards, display game interface
-  register.onclick = () => {
+  register.onclick = e => {
+    const registerBtn = e.currentTarget.firstElementChild;
+    registerBtn.innerText = 'loading...';
+    registerBtn.disabled = true;
+
     bingoGameContract.Register()
       .then(
         getBalance
       )
       .then(() => {
         alert('Congratulations on your successful registration！');
+
         siteBody.style.display = 'block';
         register.style.display = 'none';
+
+        registerBtn.innerText = 'Register';
+        registerBtn.disabled = false;
       })
       .catch(err => {
         console.log(err);
