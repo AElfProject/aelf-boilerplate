@@ -1,9 +1,5 @@
-using AElf;
 using AElf.Contracts.Consensus.AEDPoS;
-using AElf.Contracts.Genesis;
-using AElf.Contracts.MultiToken.Messages;
-using AElf.Sdk.CSharp.State;
-using AElf.Types;
+using AElf.Contracts.MultiToken;
 
 namespace AElf.Contracts.BingoGameContract
 {

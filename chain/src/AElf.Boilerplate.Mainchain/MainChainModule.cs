@@ -9,14 +9,13 @@ using AElf.Kernel.Consensus.AEDPoS;
 using AElf.Kernel.Infrastructure;
 using AElf.Kernel.SmartContract;
 using AElf.Kernel.SmartContract.Application;
+using AElf.Kernel.SmartContract.Parallel;
 using AElf.Kernel.Token;
 using AElf.Modularity;
 using AElf.OS;
 using AElf.OS.Network.Grpc;
 using AElf.OS.Node.Application;
 using AElf.OS.Node.Domain;
-using AElf.OS.Rpc.ChainController;
-using AElf.OS.Rpc.Net;
 using AElf.Runtime.CSharp;
 using AElf.RuntimeSetup;
 using AElf.WebApp.Web;
@@ -34,16 +33,19 @@ using Volo.Abp.Threading;
 namespace AElf.Boilerplate.MainChain
 {
     [DependsOn(
-        typeof(AEDPoSAElfModule),
         typeof(KernelAElfModule),
+        typeof(AEDPoSAElfModule),
+        typeof(TokenKernelAElfModule),
         typeof(OSAElfModule),
         typeof(AbpAspNetCoreModule),
         typeof(CSharpRuntimeAElfModule),
         typeof(GrpcNetworkModule),
-        typeof(ChainControllerRpcModule),
-        typeof(NetRpcAElfModule),
         typeof(RuntimeSetupAElfModule),
-        typeof(WebWebAppAElfModule)
+
+        //web api module
+        typeof(WebWebAppAElfModule),
+
+        typeof(ParallelExecutionModule)
     )]
     public class MainChainModule : AElfModule
     {
@@ -79,7 +81,7 @@ namespace AElf.Boilerplate.MainChain
             s.TryAddSingleton<ISmartContractAddressNameProvider, VoteSmartContractAddressNameProvider>();
 
             var configuration = context.Services.GetConfiguration();
-            Configure<TokenInitialOptions>(configuration.GetSection("TokenInitial"));
+            Configure<EconomicOptions>(configuration.GetSection("Economic"));
             Configure<ChainOptions>(option =>
             {
                 option.ChainId =
@@ -91,7 +93,7 @@ namespace AElf.Boilerplate.MainChain
             Configure<HostSmartContractBridgeContextOptions>(options =>
             {
                 options.ContextVariables[ContextVariableDictionary.NativeSymbolName] = context.Services
-                    .GetConfiguration().GetValue("TokenInitial:Symbol", "ELF");
+                    .GetConfiguration().GetValue("Economic:Symbol", "ELF");
             });
 
             Configure<ContractOptions>(configuration.GetSection("Contract"));

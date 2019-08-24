@@ -14,13 +14,13 @@ namespace AElf.Blockchains.MainChain
         private readonly IReadOnlyDictionary<string, byte[]> _codes;
         
         private readonly ConsensusOptions _consensusOptions;
-        private readonly TokenInitialOptions _tokenInitialOptions;
+        private readonly EconomicOptions _economicOptions;
 
         public GenesisSmartContractDtoProvider(IOptionsSnapshot<ConsensusOptions> dposOptions,
-            IOptionsSnapshot<TokenInitialOptions> tokenInitialOptions, ContractsDeployer contractsDeployer)
+            IOptionsSnapshot<EconomicOptions> economicOptions, ContractsDeployer contractsDeployer)
         {
             _consensusOptions = dposOptions.Value;
-            _tokenInitialOptions = tokenInitialOptions.Value;
+            _economicOptions = economicOptions.Value;
             
             _codes = contractsDeployer.GetContractCodes<GenesisSmartContractDtoProvider>();
         }

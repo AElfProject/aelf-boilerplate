@@ -1,9 +1,8 @@
 using Google.Protobuf.WellKnownTypes;
-using System;
 using System.Collections;
 using System.Linq;
 using AElf.Contracts.Consensus.AEDPoS;
-using AElf.Contracts.MultiToken.Messages;
+using AElf.Contracts.MultiToken;
 using AElf.Sdk.CSharp;
 using AElf.Types;
 
