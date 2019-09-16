@@ -15,6 +15,9 @@
     <ContractReference Include="..\..\protobuf\acs4.proto">
       <Link>Protobuf/Proto/acs4.proto</Link>
     </ContractReference>
+    <ContractReference Include="..\..\protobuf\acs6.proto">
+      <Link>Protobuf/Proto/acs6.proto</Link>
+    </ContractReference>
     <ContractReference Include="..\..\protobuf\acs0.proto">
       <Link>Protobuf/Proto/acs0.proto</Link>
     </ContractReference>

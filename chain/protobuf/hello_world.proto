@@ -11,8 +11,53 @@ service HelloWorldContract {
     option (aelf.csharp_state) = "AElf.Contracts.HelloWorldContract.HelloWorldContractState";
 
     rpc Hello (google.protobuf.Empty) returns (HelloReturn) { }
+
+    rpc Add (AddInput) returns (AddOutput) { }
+    rpc Visit (Visitor) returns (google.protobuf.Empty) { }
+    rpc GetVisitors (google.protobuf.Empty) returns (VisitorList) { }
+
+    rpc RequestRandomList (RequestRandomParam) returns (RequestRandomOutput) { }
+    rpc GetRandomList (aelf.Hash) returns (RandomList) { }
 }
 
 message HelloReturn {
     string Value = 1;
+}
+
+// AddInput的格式定义，根据protobuf的协议规定，Key的首字母须大写
+message AddInput {
+    sint64 A = 1;
+    sint64 B = 2;
+}
+
+// AddOutpu的定义
+message AddOutput {
+    sint64 Value = 1;
+}
+
+message Visitor {
+    string Name = 1;
+}
+
+message VisitorList {
+    repeated string Names = 1;
+}
+
+message listArrayData{
+    sint64 index = 1;
+    string name = 2;
+    sint64 number = 3;
+}
+
+message RequestRandomParam {
+    sint64 Number = 1;
+    repeated listArrayData List = 2;
+}
+
+message RequestRandomOutput {
+    aelf.Hash token_hash = 1;
+}
+
+message RandomList {
+    repeated listArrayData List = 3;
 }
