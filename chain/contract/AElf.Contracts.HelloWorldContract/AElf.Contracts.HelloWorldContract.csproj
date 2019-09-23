@@ -9,9 +9,5 @@
     <ContractCode Include="..\..\protobuf\hello_world.proto">
       <Link>Protobuf/Proto/hello_world.proto</Link>
     </ContractCode>
-
-    <ContractReference Include="..\..\protobuf\acs6.proto">
-      <Link>Protobuf/Proto/acs6.proto</Link>
-    </ContractReference>
   </ItemGroup>
 </Project>
