@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>AElf.Contracts.RandomDemoContract</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IsContract>true</IsContract>
+  </PropertyGroup>
+  <ItemGroup>
+    <ContractCode Include="..\..\protobuf\random_demo.proto">
+      <Link>Protobuf/Proto/random_demo.proto</Link>
+    </ContractCode>
+
+    <ContractReference Include="..\..\protobuf\acs6.proto">
+      <Link>Protobuf/Proto/acs6.proto</Link>
+    </ContractReference>
+  </ItemGroup>
+</Project>
