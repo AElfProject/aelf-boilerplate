@@ -81,7 +81,7 @@ namespace AElf.Boilerplate.MainChain
             s.TryAddSingleton<ISmartContractAddressNameProvider, VoteSmartContractAddressNameProvider>();
 
             var configuration = context.Services.GetConfiguration();
-            Configure<EconomicOptions>(configuration.GetSection("Economic"));
+            Configure<AElf.OS.EconomicOptions>(configuration.GetSection("Economic"));
             Configure<ChainOptions>(option =>
             {
                 option.ChainId =
