@@ -10,6 +10,7 @@ using AElf.Kernel.Infrastructure;
 using AElf.Kernel.SmartContract;
 using AElf.Kernel.SmartContract.Application;
 using AElf.Kernel.SmartContract.Parallel;
+using AElf.Kernel.SmartContractExecution.Application;
 using AElf.Kernel.Token;
 using AElf.Modularity;
 using AElf.OS;
@@ -81,7 +82,7 @@ namespace AElf.Boilerplate.MainChain
             s.TryAddSingleton<ISmartContractAddressNameProvider, VoteSmartContractAddressNameProvider>();
 
             var configuration = context.Services.GetConfiguration();
-            Configure<EconomicOptions>(configuration.GetSection("Economic"));
+            Configure<AElf.OS.EconomicOptions>(configuration.GetSection("Economic"));
             Configure<ChainOptions>(option =>
             {
                 option.ChainId =
@@ -102,6 +103,8 @@ namespace AElf.Boilerplate.MainChain
             context.Services.AddSingleton(typeof(ContractsDeployer));
 
             context.Services.AddTransient<IGenesisSmartContractDtoProvider, GenesisSmartContractDtoProvider>();
+
+            context.Services.RemoveAll<ITransactionValidationProvider>();
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using AElf.Boilerplate.MainChain;
 using AElf.Contracts.Deployer;
 using AElf.Kernel.Account.Application;
 using AElf.Kernel.Consensus.AEDPoS;
+using AElf.OS;
 using AElf.OS.Node.Application;
 using AElf.Types;
 using Microsoft.Extensions.Options;
