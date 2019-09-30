@@ -9,6 +9,7 @@ using AElf.Kernel.Token;
 using AElf.OS.Node.Application;
 using AElf.Types;
 using AElf.Contracts.BingoGameContract;
+using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Blockchains.MainChain
 {
@@ -31,12 +32,8 @@ namespace AElf.Blockchains.MainChain
             var bingoGameContractMethodCallList =
                 new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
             bingoGameContractMethodCallList.Add(
-                nameof(BingoGameContractContainer.BingoGameContractStub.InitialBingoGame),
-                new InitialBingoGameInput
-                {
-                    TokenContractSystemName = TokenSmartContractAddressNameProvider.Name,
-                    ConsensusContractSystemName = ConsensusSmartContractAddressNameProvider.Name
-                });
+                nameof(BingoGameContractContainer.BingoGameContractStub.Initial),
+                new Empty());
             return bingoGameContractMethodCallList;
         }
     }

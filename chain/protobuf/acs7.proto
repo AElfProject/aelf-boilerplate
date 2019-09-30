@@ -27,6 +27,9 @@ service ACS7 {
     rpc GetIndexedCrossChainBlockDataByHeight (aelf.SInt64Value) returns (CrossChainBlockData) {
         option (aelf.is_view) = true;
     }
+    rpc GetIndexedSideChainBlockDataByHeight (aelf.SInt64Value) returns (IndexedSideChainBlockData) {
+        option (aelf.is_view) = true;
+    }
     rpc GetBoundParentChainHeightAndMerklePathByHeight (aelf.SInt64Value) returns (CrossChainMerkleProofContext) {
         option (aelf.is_view) = true;
     }
@@ -55,7 +58,7 @@ message ParentChainBlockData {
     aelf.Hash transaction_status_merkle_root = 4;
 
     // Indexed block height from side chain and merkle path for this side chain block
-    map<int64, MerklePath> indexed_merkle_path = 5;
+    map<int64, aelf.MerklePath> indexed_merkle_path = 5;
     map<string, bytes> extra_data = 6;
 }
 
@@ -96,7 +99,7 @@ message CrossChainBlockData {
 
 message CrossChainMerkleProofContext {
     int64 bound_parent_chain_height = 1;
-    MerklePath merkle_path_for_parent_chain_root = 2;
+    aelf.MerklePath merkle_path_for_parent_chain_root = 2;
 }
 
 message ChainInitializationData {
@@ -106,6 +109,7 @@ message ChainInitializationData {
     repeated bytes extra_information = 4;
     int64 creation_height_on_parent_chain = 5;
     bool chain_creator_privilege_preserved = 6;
+    string side_chain_token_symbol = 7;
 }
 
 enum ResourceType
@@ -136,6 +140,16 @@ message SideChainCreationRequest {
     int64 locked_token_amount = 2;
     bytes contract_code = 3;
     bool is_privilege_preserved = 4;
+    SideChainTokenInfo side_chain_token_info = 5;
+}
+
+message SideChainTokenInfo {
+    string symbol = 1;
+    string tokenName = 2;
+    sint64 totalSupply = 3;
+    sint32 decimals = 4;
+    aelf.Address issuer = 5;
+    bool is_burnable = 6;
 }
 
 message RequestChainCreationOutput {
@@ -143,6 +157,11 @@ message RequestChainCreationOutput {
     aelf.Hash proposal_id = 2;
 }
 
-message MerklePath {
-    repeated aelf.Hash path = 1;
+message IndexedParentChainBlockData{
+    int64 local_chain_height = 1;
+    repeated acs7.ParentChainBlockData parent_chain_block_data = 2;
+}
+
+message IndexedSideChainBlockData{
+    repeated acs7.SideChainBlockData side_chain_block_data = 1;
 }
