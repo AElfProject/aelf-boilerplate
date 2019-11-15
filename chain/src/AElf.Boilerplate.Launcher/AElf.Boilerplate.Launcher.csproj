@@ -47,7 +47,7 @@
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="..\..\contract\AElf.Contracts.RandomDemoContract\AElf.Contracts.RandomDemoContract.csproj">
+    <ProjectReference Include="..\..\contract\AElf.Contracts.LotteryDemoContract\AElf.Contracts.LotteryDemoContract.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
