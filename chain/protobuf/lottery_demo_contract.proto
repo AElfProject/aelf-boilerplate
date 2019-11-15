@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "AElf.Contracts.LotteryDemoContract";
+
+service LotteryDemoContract {
+    option (aelf.csharp_state) = "AElf.Contracts.LotteryDemoContract.LotteryDemoContractState";
+
+    rpc InitializeLotteryDemoContract (InitializeLotteryDemoContractInput) returns (google.protobuf.Empty) {
+    }
+    rpc NewPeriod (NewPeriodInput) returns (google.protobuf.Empty) {
+    }
+    rpc Bet (Lotteries) returns (google.protobuf.Empty) {
+    }
+    rpc TakeReward (aelf.Hash) returns (google.protobuf.Empty) {
+    }
+}
+
+message InitializeLotteryDemoContractInput {
+    string token_symbol = 1;
+}
+
+message NewPeriodInput {
+    sint64 period_number = 1;
+    aelf.Hash random_number_token = 2;
+}
+
+message Lotteries {
+    repeated Lottery lottery = 1;
+    aelf.Address saler_address = 2; // 分销员地址
+    sint32 proportion_sale = 3; // 销售分成 [0, 15] default 0
+    sint32 proportion_bonus = 4; // 兑奖分成 [0, 5] default 0
+    sint32 target_period = 5; // 当前期数，在APP里做
+    aelf.Address sender_address = 6; // 用户地址
+}
+
+message Lottery {
+    sint32 type = 1;
+    repeated sint32 value = 2;
+}
