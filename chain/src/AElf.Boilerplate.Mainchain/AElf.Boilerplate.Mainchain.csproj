@@ -1,23 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <RootNamespace>AElf.Boilerplate.MainChain</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AElf.Contracts.Genesis" Version="0.8.1" />
+    <PackageReference Include="AElf.Contracts.Genesis" Version="0.8.2" />
 
-    <PackageReference Include="AElf.Sdk.CSharp" Version="0.8.1" />
-    <PackageReference Include="AElf.CrossChain.Communication.Grpc" Version="0.8.1" />
-    <PackageReference Include="AElf.Kernel.Consensus.AEDPoS" Version="0.8.1" />
-    <PackageReference Include="AElf.Kernel.SmartContract.Parallel" Version="0.8.1" />
-    <PackageReference Include="AElf.Kernel.Token" Version="0.8.1" />
-    <PackageReference Include="AElf.Runtime.CSharp" Version="0.8.1" />
-    <PackageReference Include="AElf.RuntimeSetup" Version="0.8.1" />
-    <PackageReference Include="AElf.WebApp.Web" Version="0.8.1" />
-    <PackageReference Include="AElf.OS" Version="0.8.1" />
+    <PackageReference Include="AElf.Sdk.CSharp" Version="0.8.2" />
+    <PackageReference Include="AElf.CrossChain.Communication.Grpc" Version="0.8.2" />
+    <PackageReference Include="AElf.Kernel.Consensus.AEDPoS" Version="0.8.2" />
+    <PackageReference Include="AElf.Kernel.SmartContract.Parallel" Version="0.8.2" />
+    <PackageReference Include="AElf.Kernel.Token" Version="0.8.2" />
+    <PackageReference Include="AElf.Runtime.CSharp" Version="0.8.2" />
+    <PackageReference Include="AElf.RuntimeSetup" Version="0.8.2" />
+    <PackageReference Include="AElf.WebApp.Web" Version="0.8.2" />
+    <PackageReference Include="AElf.OS" Version="0.8.2" />
 
-    <PackageReference Include="AElf.Kernel.BlockTransactionLimitController" Version="0.8.1" />
-    <PackageReference Include="AElf.Kernel.Token" Version="0.8.1" />
+    <PackageReference Include="AElf.Kernel.BlockTransactionLimitController" Version="0.8.2" />
+    <PackageReference Include="AElf.Kernel.Token" Version="0.8.2" />
 
     <ProjectReference Include="..\AElf.Contracts.Deployer\AElf.Contracts.Deployer.csproj" />
   </ItemGroup>
@@ -33,35 +33,30 @@
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="..\..\contract\AElf.Contracts.RandomDemoContract\AElf.Contracts.RandomDemoContract.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Contract</OutputItemType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </ProjectReference>
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.8.1">
+    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.8.2">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </PackageReference>
-    <PackageReference Include="AElf.Contracts.Election" Version="0.8.1">
+    <PackageReference Include="AElf.Contracts.Election" Version="0.8.2">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </PackageReference>
-    <PackageReference Include="AElf.Contracts.Profit" Version="0.8.1">
+    <PackageReference Include="AElf.Contracts.Profit" Version="0.8.2">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </PackageReference>
-    <PackageReference Include="AElf.Contracts.Vote" Version="0.8.1">
+    <PackageReference Include="AElf.Contracts.Vote" Version="0.8.2">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </PackageReference>
-    <PackageReference Include="AElf.Contracts.MultiToken" Version="0.8.1">
+    <PackageReference Include="AElf.Contracts.MultiToken" Version="0.8.2">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Contract</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
