@@ -26,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.BingoGameCon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.HelloWorldContract", "contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj", "{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.LotteryDemoContrtact", "contract\AElf.Contracts.LotteryDemoContrtact\AElf.Contracts.LotteryDemoContrtact.csproj", "{B15042F7-AD67-4BD5-AFCA-12CB00347B82}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.LotteryDemoContract", "contract\AElf.Contracts.LotteryDemoContract\AElf.Contracts.LotteryDemoContract.csproj", "{B15042F7-AD67-4BD5-AFCA-12CB00347B82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

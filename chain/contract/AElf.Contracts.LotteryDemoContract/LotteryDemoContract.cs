@@ -17,6 +17,8 @@ namespace AElf.Contracts.LotteryDemoContract
 
         public override Empty NewPeriod(NewPeriodInput input)
         {
+            // TODO: Check the sender's address
+
             Assert(State.CurrentPeriod.Value.Add(1) == input.PeriodNumber, "Incorrect period number.");
 
             // Update current period.
