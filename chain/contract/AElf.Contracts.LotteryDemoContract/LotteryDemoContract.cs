@@ -12,6 +12,10 @@ namespace AElf.Contracts.LotteryDemoContract
         public override Empty InitializeLotteryDemoContract(InitializeLotteryDemoContractInput input)
         {
             State.TokenSymbol.Value = input.TokenSymbol;
+            State.TokenContract.Value =
+                Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
+            State.RandomNumberGenerationContract.Value =
+                Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
             return new Empty();
         }
 
