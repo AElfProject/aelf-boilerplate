@@ -103,11 +103,15 @@ namespace AElf.Contracts.LotteryDemoContract
             Assert(currentPeriodNumber >= 0, "No record now.");
             
             var periodRandomNumberTokenRecords = new List<PeriodRandomNumberToken>();
+            var offset = input.Offset;
+            var limit = input.Limit;
 
-            while (currentPeriodNumber >= 0)
+            var currentOffset = currentPeriodNumber - offset;
+            var endOffset = currentOffset - limit ;
+            while (currentOffset >= endOffset)
             {
                 periodRandomNumberTokenRecords.Add(State.PeriodRandomNumberTokens[currentPeriodNumber]);
-                currentPeriodNumber--;
+                currentOffset--;
             }
 
             return new RecordOutput
@@ -132,6 +136,7 @@ namespace AElf.Contracts.LotteryDemoContract
             var tokenSymbol = State.TokenSymbol.Value ?? Context.Variables.NativeSymbol;
             var length = input.Lottery.Count;
             // Charge from Context.Sender
+            // TODO: 余额不足，不让下注. 不能查txResult怎么判断？
             State.TokenContract.TransferFrom.Send(new TransferFromInput
             {
                 From = Context.Sender,
@@ -172,6 +177,8 @@ namespace AElf.Contracts.LotteryDemoContract
                 Amount = reward,
                 To = Context.Sender
             });
+            // TODO: 交易成功后，remove掉这值？所以我应该怎么在合约判断交易成功了？
+            State.Lotteries.Remove(input);
 
             return new Empty();
         }
