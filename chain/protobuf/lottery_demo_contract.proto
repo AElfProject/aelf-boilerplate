@@ -11,11 +11,17 @@ service LotteryDemoContract {
 
     rpc InitializeLotteryDemoContract (InitializeLotteryDemoContractInput) returns (google.protobuf.Empty) {
     }
-    rpc NewPeriod (NewPeriodInput) returns (google.protobuf.Empty) {
+    rpc NewPeriod (NewPeriodInput) returns (NewPeriodOutput) {
+    }
+    rpc GetWinngNumber (google.protobuf.Empty) returns (GetWinngNumberOutput) {
     }
     rpc Bet (Lotteries) returns (google.protobuf.Empty) {
     }
     rpc TakeReward (aelf.Hash) returns (google.protobuf.Empty) {
+    }
+    // Views
+    rpc GetRecord (RecordInput) returns (RecordOutput) {
+        option (aelf.is_view) = true;
     }
 }
 
@@ -25,7 +31,19 @@ message InitializeLotteryDemoContractInput {
 
 message NewPeriodInput {
     sint64 period_number = 1;
-    aelf.Hash random_number_token = 2;
+    aelf.Hash random_number_token = 2; // 随机的订单号
+}
+
+message NewPeriodOutput {
+    aelf.Hash random_hash = 1;
+    sint64 timestamp = 2;
+}
+
+message GetWinngNumberOutput {
+    aelf.Hash random_hash = 1;
+    sint64 period_number = 2;
+    aelf.Hash random_number_token = 3;
+    sint64 winning_number = 4;
 }
 
 message Lotteries {
@@ -33,11 +51,29 @@ message Lotteries {
     aelf.Address saler_address = 2; // 分销员地址
     sint32 proportion_sale = 3; // 销售分成 [0, 15] default 0
     sint32 proportion_bonus = 4; // 兑奖分成 [0, 5] default 0
-    sint32 target_period = 5; // 当前期数，在APP里做
+    sint64 target_period = 5; // 当前期数，在APP里做
     aelf.Address sender_address = 6; // 用户地址
 }
 
 message Lottery {
     sint32 type = 1;
     repeated sint32 value = 2;
+}
+
+message PeriodRandomNumberToken {
+    aelf.Hash random_number_token = 1;
+    sint64 timestamp = 2;
+    sint64 winning_number = 3;
+}
+
+message RecordInput {
+    sint32 offset = 1;
+    sint32 limit = 2;
+}
+
+message RecordOutput {
+    sint32 offset = 1;
+    sint32 limit = 2;
+    sint64 current_period = 3;
+    repeated PeriodRandomNumberToken records = 4;
 }
