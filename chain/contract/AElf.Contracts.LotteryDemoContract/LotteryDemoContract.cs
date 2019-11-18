@@ -56,9 +56,12 @@ namespace AElf.Contracts.LotteryDemoContract
         public override Empty NewPeriod(NewPeriodInput input)
         {
             var randomNumberToken = input.RandomNumberToken;
+            // 链内写拿不到token
+            // var randomNumberToken = State.RandomNumberGenerationContract.RequestRandomNumber.Send();
             var currentPeriod = State.CurrentPeriod.Value;
             var nextPeriod = currentPeriod + 1;
             var unixTimestamp = Context.CurrentBlockTime;
+            
 
             Assert(Context.Sender == State.Sponsor.Value, "Invalid admin account.");
             Assert(State.RandomNumberTokens[randomNumberToken] != 1, "Existed random token.");
