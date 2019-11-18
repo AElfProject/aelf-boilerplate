@@ -3,21 +3,19 @@ syntax = "proto3";
 import "aelf/core.proto";
 import "aelf/options.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "AElf.Contracts.LotteryDemoContract";
 
 service LotteryDemoContract {
     option (aelf.csharp_state) = "AElf.Contracts.LotteryDemoContract.LotteryDemoContractState";
-
-    rpc InitializeLotteryDemoContract (InitializeLotteryDemoContractInput) returns (google.protobuf.Empty) {
-    }
-
+    
     rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
     }
 
-    rpc NewPeriod (NewPeriodInput) returns (NewPeriodOutput) {
+    rpc NewPeriod (NewPeriodInput) returns (google.protobuf.Empty) {
     }
-    rpc GetWinngNumber (google.protobuf.Empty) returns (GetWinngNumberOutput) {
+    rpc GetLuckyNumber (google.protobuf.Empty) returns (GetLuckyNumberOutput) {
     }
     rpc Bet (Lotteries) returns (google.protobuf.Empty) {
     }
@@ -27,36 +25,39 @@ service LotteryDemoContract {
     rpc GetRecord (RecordInput) returns (RecordOutput) {
         option (aelf.is_view) = true;
     }
+    // Views
+    rpc GetState (google.protobuf.Empty) returns (GetStateOutput) {
+        option (aelf.is_view) = true;
+    }
 }
 
-message InitializeLotteryDemoContractInput {
-    string token_symbol = 1;
-    aelf.Address sponsor = 2;
+message GetStateOutput {
+    sint64  current_period = 1;
+    google.protobuf.Timestamp current_time_stamp = 2;
+    bool ready_to_next_period = 3;
+    string token_symbol = 4;
+    aelf.Address sponsor = 5;
+    sint64 interval_time = 6;
 }
 
 message InitializeInput {
     aelf.Address sponsor = 1;
     sint64 start_period = 2;
-    sint64 start_timestamp = 3;
+    google.protobuf.Timestamp start_timestamp = 3;
     string token_symbol = 4;
     bool ready = 5;
 }
 
 message NewPeriodInput {
-    sint64 period_number = 1;
-    aelf.Hash random_number_token = 2; // 随机的订单号
+//    sint64 period_number = 1;
+    aelf.Hash random_number_token = 1; // 随机的订单号
 }
 
-message NewPeriodOutput {
-    aelf.Hash random_hash = 1;
-    sint64 timestamp = 2;
-}
-
-message GetWinngNumberOutput {
+message GetLuckyNumberOutput {
     aelf.Hash random_hash = 1;
     sint64 period_number = 2;
     aelf.Hash random_number_token = 3;
-    sint64 winning_number = 4;
+    sint64 lucky_number = 4;
 }
 
 message Lotteries {
@@ -65,7 +66,7 @@ message Lotteries {
     sint32 proportion_sale = 3; // 销售分成 [0, 15] default 0
     sint32 proportion_bonus = 4; // 兑奖分成 [0, 5] default 0
     sint64 target_period = 5; // 当前期数，在APP里做
-    aelf.Address sender_address = 6; // 用户地址
+    aelf.Address sender_address = 6; // 用户地址 Context.Sender
 }
 
 message Lottery {
@@ -75,8 +76,8 @@ message Lottery {
 
 message PeriodRandomNumberToken {
     aelf.Hash random_number_token = 1;
-    sint64 timestamp = 2;
-    sint64 winning_number = 3;
+    google.protobuf.Timestamp timestamp = 2;
+    sint64 lucky_number = 3;
 }
 
 message RecordInput {

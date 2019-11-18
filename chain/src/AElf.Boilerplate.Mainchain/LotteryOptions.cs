@@ -18,7 +18,7 @@ namespace AElf.Boilerplate.MainChain
             )
         };
 
-        public long InitialBalance { get; set; } = 1000_0000;
+        public long InitialBalance { get; set; } = 100_000_000_000;
 
         public string TokenSymbol { get; set; } = "ELF"; //Use ELF token to play lottery by default.
     }

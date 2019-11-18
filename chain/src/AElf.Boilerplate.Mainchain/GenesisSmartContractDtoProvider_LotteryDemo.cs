@@ -16,24 +16,10 @@ namespace AElf.Blockchains.MainChain
 
             l.AddGenesisSmartContract(
                 _codes.Single(kv => kv.Key.Contains("LotteryDemo")).Value,
-                Hash.FromString("AElf.ContractNames.LotteryDemo"), GenerateLotteryDemoInitializationCallList());
+                Hash.FromString("AElf.ContractNames.LotteryDemo"),
+                new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList());
 
             return l;
-        }
-
-        private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList
-            GenerateLotteryDemoInitializationCallList()
-        {
-            var lotteryDemoContractMethodCallList =
-                new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
-            lotteryDemoContractMethodCallList.Add(
-                nameof(LotteryDemoContractContainer.LotteryDemoContractStub.InitializeLotteryDemoContract),
-                new InitializeLotteryDemoContractInput
-                {
-                    TokenSymbol = _lotteryOptions.TokenSymbol,
-                    Sponsor = _lotteryOptions.Sponsor
-                });
-            return lotteryDemoContractMethodCallList;
         }
     }
 }

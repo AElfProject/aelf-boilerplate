@@ -24,9 +24,9 @@ namespace AElf.Contracts.LotteryDemoContract
 //        public MappedState<long, long> LotteryRecord { get; set; }
         public MappedState<Hash, int> RandomNumberTokens { get; set; } // 会有更好的设计的
 
-        public SInt64Value CurrentPeriod { get; set; }
-        public SInt64Value CurrentTimeStamp { get; set; }
-        public BoolValue ReadyToNextPeriod { get; set; }
+        public SingletonState<long> CurrentPeriod { get; set; }
+        public SingletonState<Timestamp> CurrentTimeStamp { get; set; }
+        public BoolState ReadyToNextPeriod { get; set; }
 
         public StringState TokenSymbol { get; set; }
 
