@@ -27,6 +27,7 @@ service LotteryDemoContract {
 
 message InitializeLotteryDemoContractInput {
     string token_symbol = 1;
+    aelf.Address sponsor = 2;
 }
 
 message NewPeriodInput {

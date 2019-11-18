@@ -42,15 +42,18 @@ namespace AElf.Blockchains.MainChain
                 Symbol = _economicOptions.Symbol,
                 Memo = "Play!"
             });
-            tokenContractCallList.Add(nameof(TokenContractContainer.TokenContractStub.Issue), new IssueInput
+            foreach (var player in _lotteryOptions.PlayerList)
             {
-                To = Address.FromPublicKey(
-                  ByteArrayHelper.HexStringToByteArray("0484dc77d6b059d50156bc1a803203a2733dc591ae1358d7538c001565380b6c477b268a32baa6e609e41c0920b6b0eff3bee7ac3fc72148a3f89cb6579e256fa5")
-                  ),
-                Amount = _economicOptions.TotalSupply / 10,
-                Symbol = _economicOptions.Symbol,
-                Memo = "Play 233!"
-            });
+                tokenContractCallList.Add(nameof(TokenContractContainer.TokenContractStub.Issue), new IssueInput
+                {
+                    To = player,
+                    Amount = _lotteryOptions.InitialBalance,
+                    // Assume lottery demo contract use the same symbol as native symbol.
+                    Symbol = _economicOptions.Symbol,
+                    Memo = "Player 233!"
+                });
+            }
+
             return tokenContractCallList;
         }
     }

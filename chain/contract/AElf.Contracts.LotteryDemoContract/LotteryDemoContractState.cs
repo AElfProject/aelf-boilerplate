@@ -29,5 +29,7 @@ namespace AElf.Contracts.LotteryDemoContract
         public BoolValue ReadyToNextPeriod { get; set; }
 
         public StringState TokenSymbol { get; set; }
+
+        public SingletonState<Address> Sponsor { get; set; }
     }
 }

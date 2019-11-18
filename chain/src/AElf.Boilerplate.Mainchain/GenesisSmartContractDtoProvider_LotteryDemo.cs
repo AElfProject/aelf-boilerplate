@@ -30,7 +30,8 @@ namespace AElf.Blockchains.MainChain
                 nameof(LotteryDemoContractContainer.LotteryDemoContractStub.InitializeLotteryDemoContract),
                 new InitializeLotteryDemoContractInput
                 {
-                    TokenSymbol = _economicOptions.TokenName
+                    TokenSymbol = _lotteryOptions.TokenSymbol,
+                    Sponsor = _lotteryOptions.Sponsor
                 });
             return lotteryDemoContractMethodCallList;
         }

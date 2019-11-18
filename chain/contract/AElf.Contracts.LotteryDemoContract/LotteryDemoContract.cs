@@ -4,25 +4,26 @@ using System.Linq;
 using AElf.Contracts.MultiToken;
 using AElf.Sdk.CSharp;
 using AElf.Types;
-using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.LotteryDemoContract
 {
     public class LotteryDemoContract : LotteryDemoContractContainer.LotteryDemoContractBase
     {
-        private int BASIC_MULTIPLE = 10 ^ 8;
-        private int ONE_STAR_REWARD = 10;
-        private int INTERVERL_TIME = 60 * 10; // seconds
+        private const int BasicMultiple = 10 ^ 8;
+        private const int OneStarReward = 10;
+        private const int IntervalTime = 60 * 10; // seconds
+
         public override Empty InitializeLotteryDemoContract(InitializeLotteryDemoContractInput input)
         {
             State.TokenSymbol.Value = input.TokenSymbol;
-            
+            State.Sponsor.Value = input.Sponsor;
+
             // TODO: 加了这段就挂了。。。为何
             State.CurrentPeriod.Value = -1; // 初始化，第-1期，正式的从第0期开始。
             State.ReadyToNextPeriod.Value = true;
             State.CurrentTimeStamp.Value = 0;
-            
+
             State.TokenContract.Value =
                 Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
             State.RandomNumberGenerationContract.Value =
@@ -32,24 +33,19 @@ namespace AElf.Contracts.LotteryDemoContract
 
         public override NewPeriodOutput NewPeriod(NewPeriodInput input)
         {
-            // TODO: Check the sender's address
-            var ownerAddress = Address.FromPublicKey(
-                ByteArrayHelper.HexStringToByteArray(
-                    "0484dc77d6b059d50156bc1a803203a2733dc591ae1358d7538c001565380b6c477b268a32baa6e609e41c0920b6b0eff3bee7ac3fc72148a3f89cb6579e256fa5")
-            );
             var randomNumberToken = input.RandomNumberToken;
 
-            Assert(Context.Sender == ownerAddress, "Invalid admin account.");
+            Assert(Context.Sender == State.Sponsor.Value, "Invalid admin account.");
             Assert(State.CurrentPeriod.Value.Add(1) == input.PeriodNumber, "Incorrect period number.");
             Assert(State.RandomNumberTokens[input.RandomNumberToken] != 1, "Existed random token.");
             Assert(State.ReadyToNextPeriod.Value, "It is not ready to next period.");
-            var unixTimestamp = (Int64)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            Assert(State.CurrentTimeStamp.Value - unixTimestamp > INTERVERL_TIME, "It is not time to next period.");
-            
+            var unixTimestamp = (Int64) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            Assert(State.CurrentTimeStamp.Value - unixTimestamp > IntervalTime, "It is not time to next period.");
+
             // update
             State.CurrentPeriod.Value = input.PeriodNumber;
             State.CurrentTimeStamp.Value = unixTimestamp;
-            
+
             var periodRandomNumberToken = new PeriodRandomNumberToken
             {
                 RandomNumberToken = randomNumberToken,
@@ -69,15 +65,15 @@ namespace AElf.Contracts.LotteryDemoContract
                 Timestamp = unixTimestamp,
             };
         }
-        
+
         public override GetWinngNumberOutput GetWinngNumber(Empty input)
         {
             var currentPeriodValue = State.CurrentPeriod.Value;
             var periodRandomNumberToken = State.PeriodRandomNumberTokens[currentPeriodValue];
             var currentRandomNumberToken = periodRandomNumberToken.RandomNumberToken;
-            
+
             var randomHash = State.RandomNumberGenerationContract.GetRandomNumber.Call(currentRandomNumberToken);
-            Assert((randomHash != null) && (randomHash is Hash),"Random Number not Ready");
+            Assert((randomHash != null) && (randomHash is Hash), "Random Number not Ready");
             // TODO：需要返回了正确的randomHash后
             var winngNumber = ConvertToInteger(randomHash);
             State.PeriodRandomNumberTokens[currentPeriodValue] = new PeriodRandomNumberToken
@@ -87,7 +83,7 @@ namespace AElf.Contracts.LotteryDemoContract
                 WinningNumber = winngNumber, // 该值仅供参考
             };
             State.ReadyToNextPeriod.Value = true;
-            
+
             return new GetWinngNumberOutput
             {
                 RandomHash = randomHash,
@@ -96,18 +92,18 @@ namespace AElf.Contracts.LotteryDemoContract
                 WinningNumber = winngNumber,
             };
         }
-        
+
         public override RecordOutput GetRecord(RecordInput input)
         {
             var currentPeriodNumber = State.CurrentPeriod.Value;
             Assert(currentPeriodNumber >= 0, "No record now.");
-            
+
             var periodRandomNumberTokenRecords = new List<PeriodRandomNumberToken>();
             var offset = input.Offset;
             var limit = input.Limit;
 
             var currentOffset = currentPeriodNumber - offset;
-            var endOffset = currentOffset - limit ;
+            var endOffset = currentOffset - limit;
             while (currentOffset >= endOffset)
             {
                 periodRandomNumberTokenRecords.Add(State.PeriodRandomNumberTokens[currentPeriodNumber]);
@@ -142,7 +138,7 @@ namespace AElf.Contracts.LotteryDemoContract
                 From = Context.Sender,
                 To = Context.Self,
                 Symbol = tokenSymbol,
-                Amount = length * 2 * BASIC_MULTIPLE // TODO: Prize
+                Amount = length * 2 * BasicMultiple // TODO: Prize
             });
 
             // Update lotteries detail for this tx id.
@@ -162,8 +158,9 @@ namespace AElf.Contracts.LotteryDemoContract
             // Query random number.
             var periodRandomNumberToken = State.PeriodRandomNumberTokens[lotteries.TargetPeriod];
             Assert(periodRandomNumberToken.RandomNumberToken.Any(), "Invalid random number token.");
-            var randomHash = State.RandomNumberGenerationContract.GetRandomNumber.Call(periodRandomNumberToken.RandomNumberToken);
-            Assert((randomHash != null) && (randomHash is Hash),"Random Number not Ready");
+            var randomHash =
+                State.RandomNumberGenerationContract.GetRandomNumber.Call(periodRandomNumberToken.RandomNumberToken);
+            Assert((randomHash != null) && (randomHash is Hash), "Random Number not Ready");
             // TODO: hash -> number of length 5.
             var winningNumber = ConvertToInteger(randomHash);
             // TODO: Calculate reward via given data.
@@ -200,20 +197,22 @@ namespace AElf.Contracts.LotteryDemoContract
                 var lottery = lotteryList[i];
                 var numbers = lottery.Value;
                 var type = lottery.Type;
-                switch (type) 
+                switch (type)
                 {
                     case 1:
                         if (numbers[4] == winningNumber % 10)
                         {
-                            reward += ONE_STAR_REWARD;
+                            reward += OneStarReward;
                         }
+
                         break;
                     default:
                         // nothing
                         break;
                 }
             }
-            return reward * BASIC_MULTIPLE;
+
+            return reward * BasicMultiple;
             // throw new NotImplementedException();
         }
     }
