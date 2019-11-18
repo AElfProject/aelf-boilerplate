@@ -11,6 +11,10 @@ service LotteryDemoContract {
 
     rpc InitializeLotteryDemoContract (InitializeLotteryDemoContractInput) returns (google.protobuf.Empty) {
     }
+
+    rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
+    }
+
     rpc NewPeriod (NewPeriodInput) returns (NewPeriodOutput) {
     }
     rpc GetWinngNumber (google.protobuf.Empty) returns (GetWinngNumberOutput) {
@@ -28,6 +32,14 @@ service LotteryDemoContract {
 message InitializeLotteryDemoContractInput {
     string token_symbol = 1;
     aelf.Address sponsor = 2;
+}
+
+message InitializeInput {
+    aelf.Address sponsor = 1;
+    sint64 start_period = 2;
+    sint64 start_timestamp = 3;
+    string token_symbol = 4;
+    bool ready = 5;
 }
 
 message NewPeriodInput {

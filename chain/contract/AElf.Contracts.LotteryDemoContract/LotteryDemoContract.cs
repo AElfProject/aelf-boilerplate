@@ -16,18 +16,35 @@ namespace AElf.Contracts.LotteryDemoContract
 
         public override Empty InitializeLotteryDemoContract(InitializeLotteryDemoContractInput input)
         {
-            State.TokenSymbol.Value = input.TokenSymbol;
-            State.Sponsor.Value = input.Sponsor;
+//            State.TokenSymbol.Value = input.TokenSymbol;
+//            State.Sponsor.Value = input.Sponsor;
+//
+//            // TODO: 加了这段就挂了。。。为何
+//            State.CurrentPeriod.Value = -1; // 初始化，第-1期，正式的从第0期开始。
+//            State.ReadyToNextPeriod.Value = true;
+//            State.CurrentTimeStamp.Value = 0;
 
-            // TODO: 加了这段就挂了。。。为何
-            State.CurrentPeriod.Value = -1; // 初始化，第-1期，正式的从第0期开始。
-            State.ReadyToNextPeriod.Value = true;
-            State.CurrentTimeStamp.Value = 0;
-
+            // TODO: 变成合约里的快合约调用，而非系统上的？
             State.TokenContract.Value =
                 Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
             State.RandomNumberGenerationContract.Value =
                 Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
+            return new Empty();
+        }
+
+        public override Empty Initialize(InitializeInput input)
+        {
+            // TODO: 不让重复初始化
+//            Assert( !State.TokenSymbol.Value.Any(), "Already initialize");
+            
+            State.TokenSymbol.Value = input.TokenSymbol;
+            State.Sponsor.Value = input.Sponsor;
+
+            // TODO: 加了这段就挂了。。。为何
+            State.CurrentPeriod.Value = input.StartPeriod; // 初始化，第-1期，正式的从第0期开始。
+            State.ReadyToNextPeriod.Value = input.Ready;
+            State.CurrentTimeStamp.Value = input.StartTimestamp;
+            
             return new Empty();
         }
 
