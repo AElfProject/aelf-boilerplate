@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using AElf.Blockchains.MainChain;
+using AElf.Boilerplate.MainChain.TestTransactionProviders;
 using AElf.Contracts.Deployer;
 using AElf.Contracts.Genesis;
 using AElf.Database;
@@ -7,6 +8,7 @@ using AElf.Kernel;
 using AElf.Kernel.Consensus;
 using AElf.Kernel.Consensus.AEDPoS;
 using AElf.Kernel.Infrastructure;
+using AElf.Kernel.Miner.Application;
 using AElf.Kernel.SmartContract;
 using AElf.Kernel.SmartContract.Application;
 using AElf.Kernel.SmartContract.Parallel;
@@ -111,6 +113,9 @@ namespace AElf.Boilerplate.MainChain
             context.Services.AddTransient<IGenesisSmartContractDtoProvider, GenesisSmartContractDtoProvider>();
 
             context.Services.RemoveAll<ITransactionValidationProvider>();
+
+            context.Services.AddSingleton<ITestTransactionGenerator, RequestRandomNumberTransactionGenerator>();
+            context.Services.AddSingleton<ISystemTransactionGenerator, RequestRandomNumberTransactionGenerator>();
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
