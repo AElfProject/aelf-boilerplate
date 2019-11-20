@@ -26,7 +26,7 @@ namespace AElf.Contracts.LotteryDemoContract
 
         public SingletonState<long> CurrentPeriod { get; set; }
         public SingletonState<Timestamp> CurrentTimeStamp { get; set; }
-        public BoolState ReadyToNextPeriod { get; set; }
+        public BoolState LastPeriodLuckyNumberShown { get; set; }
 
         public StringState TokenSymbol { get; set; }
 

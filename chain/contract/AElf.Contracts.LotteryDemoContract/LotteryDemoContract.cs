@@ -13,7 +13,6 @@ namespace AElf.Contracts.LotteryDemoContract
         private const int BasicMultiple = 100_000_000;
         private const int OneStarReward = 10;
         private const int IntervalTime = 60 * 10; // seconds
-//        private const int IntervalTime = 10; // seconds
 
         public override GetStateOutput GetState (Empty input)
         {
@@ -21,7 +20,7 @@ namespace AElf.Contracts.LotteryDemoContract
             {
                 CurrentPeriod = State.CurrentPeriod.Value,
                 CurrentTimeStamp = State.CurrentTimeStamp.Value,
-                ReadyToNextPeriod = State.ReadyToNextPeriod.Value,
+                LastPeriodLuckyNumberShown = State.LastPeriodLuckyNumberShown.Value,
                 TokenSymbol = State.TokenSymbol.Value,
                 Sponsor = State.Sponsor.Value,
                 IntervalTime = IntervalTime
@@ -35,14 +34,17 @@ namespace AElf.Contracts.LotteryDemoContract
             State.TokenSymbol.Value = input.TokenSymbol;
             State.Sponsor.Value = input.Sponsor;
             
-            State.CurrentPeriod.Value = input.StartPeriod; // 初始化，建议从第0期开始。
-            State.ReadyToNextPeriod.Value = input.Ready; // 不让直接赋值true也是醉了。
+            // 初始化，建议从第0期开始。
+            State.CurrentPeriod.Value = input.StartPeriod;
+            // 不让直接赋值true false也是醉了。默认传入true。
+            State.LastPeriodLuckyNumberShown.Value = input.Ready;
             State.CurrentTimeStamp.Value = input.StartTimestamp;
             State.PeriodRandomNumberTokens[input.StartPeriod] = new PeriodRandomNumberToken
             {
                 RandomNumberToken = Context.TransactionId,
                 Timestamp = input.StartTimestamp,
                 LuckyNumber = -1,
+                Period = input.StartPeriod,
             };
             
             State.TokenContract.Value =
@@ -55,44 +57,48 @@ namespace AElf.Contracts.LotteryDemoContract
         // 在开启新的一期的同时，插入老的一期的随机数，准备给老一期的开奖
         public override Empty NewPeriod(NewPeriodInput input)
         {
+            // TODO: 如果BP节点没有打包这个交易，那么需要有机制重新插入新的随机数。现在没法 getTxResult.
             var randomNumberToken = input.RandomNumberToken;
             // 链内写拿不到token
             // var randomNumberToken = State.RandomNumberGenerationContract.RequestRandomNumber.Send();
-            var currentPeriod = State.CurrentPeriod.Value;
-            var nextPeriod = currentPeriod + 1;
+            var lastPeriod = State.CurrentPeriod.Value;
+            var currentPeriod = lastPeriod + 1;
+
             var unixTimestamp = Context.CurrentBlockTime;
             
-
+            // TODO: 不能使用assert的方式返回，改成错误码 + 错误信息的方式返回
             Assert(Context.Sender == State.Sponsor.Value, "Invalid admin account.");
             Assert(State.RandomNumberTokens[randomNumberToken] != 1, "Existed random token.");
-            Assert(State.ReadyToNextPeriod.Value, "It is not ready to next period.");
+            Assert(State.LastPeriodLuckyNumberShown.Value, "It is not ready to next period.");
             Assert((unixTimestamp.Seconds - State.CurrentTimeStamp.Value.Seconds) > IntervalTime, "It is not time to next period.");
 
             // update
-            State.CurrentPeriod.Value = nextPeriod;
+            State.CurrentPeriod.Value = currentPeriod;
             State.CurrentTimeStamp.Value = unixTimestamp;
             
             // Update random number token.
             State.RandomNumberTokens[randomNumberToken] = 1;
-            State.PeriodRandomNumberTokens[currentPeriod] = new PeriodRandomNumberToken
+            State.PeriodRandomNumberTokens[lastPeriod] = new PeriodRandomNumberToken
             {
                 RandomNumberToken = randomNumberToken,
                 Timestamp = unixTimestamp,
                 LuckyNumber = -1,
+                Period = lastPeriod,
             };
             // Initial next period
-            State.PeriodRandomNumberTokens[nextPeriod] = new PeriodRandomNumberToken
+            State.PeriodRandomNumberTokens[currentPeriod] = new PeriodRandomNumberToken
             {
                 RandomNumberToken = Context.TransactionId,
                 Timestamp = unixTimestamp,
                 LuckyNumber = -1,
+                Period = currentPeriod,
             };
             // State
             // TODO：必须判断这个交易在pending状态时插入。不然能够作弊？
             // TODO: 这里有风险，链上需要新加方法。
 //            var randomHash = State.RandomNumberGenerationContract.GetRandomNumber.Call(input.RandomNumberToken);
 
-            State.ReadyToNextPeriod.Value = false;
+            State.LastPeriodLuckyNumberShown.Value = false;
             return new Empty();
         }
 
@@ -101,8 +107,9 @@ namespace AElf.Contracts.LotteryDemoContract
         // 2.公开随机数时，已经是LIB了，这时候就没有问题了。
         public override GetLuckyNumberOutput GetLuckyNumber(Empty input)
         {
-            var prePeriodValue = State.CurrentPeriod.Value - 1;
-            var periodRandomNumberToken = State.PeriodRandomNumberTokens[prePeriodValue];
+            Assert(State.CurrentPeriod.Value > 0, "0 period is not ok, please call NewPeriod after Initialize.");
+            var lastPeriodValue = State.CurrentPeriod.Value - 1;
+            var periodRandomNumberToken = State.PeriodRandomNumberTokens[lastPeriodValue];
             var currentRandomNumberToken = periodRandomNumberToken.RandomNumberToken;
             
             // TODO: 如果随机数变成无法获取，需要有机制对这期重新开奖？
@@ -110,18 +117,19 @@ namespace AElf.Contracts.LotteryDemoContract
             Assert(randomHash != null && randomHash.Value.Any(), "Random Number not Ready");
             
             var luckyNumber = ConvertToInteger(randomHash);
-            State.PeriodRandomNumberTokens[prePeriodValue] = new PeriodRandomNumberToken
+            State.PeriodRandomNumberTokens[lastPeriodValue] = new PeriodRandomNumberToken
             {
                 RandomNumberToken = periodRandomNumberToken.RandomNumberToken,
                 Timestamp = periodRandomNumberToken.Timestamp,
                 LuckyNumber = luckyNumber, // 该值仅记录供参考
+                Period = periodRandomNumberToken.Period
             };
-            State.ReadyToNextPeriod.Value = true;
+            State.LastPeriodLuckyNumberShown.Value = true;
 
             return new GetLuckyNumberOutput
             {
                 RandomHash = randomHash,
-                PeriodNumber = prePeriodValue,
+                PeriodNumber = lastPeriodValue,
                 RandomNumberToken = currentRandomNumberToken,
                 LuckyNumber = luckyNumber,
             };

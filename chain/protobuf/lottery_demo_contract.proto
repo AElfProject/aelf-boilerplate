@@ -34,7 +34,7 @@ service LotteryDemoContract {
 message GetStateOutput {
     sint64  current_period = 1;
     google.protobuf.Timestamp current_time_stamp = 2;
-    bool ready_to_next_period = 3;
+    bool last_period_lucky_number_shown = 3;
     string token_symbol = 4;
     aelf.Address sponsor = 5;
     sint64 interval_time = 6;
@@ -78,6 +78,7 @@ message PeriodRandomNumberToken {
     aelf.Hash random_number_token = 1;
     google.protobuf.Timestamp timestamp = 2;
     sint64 lucky_number = 3;
+    sint64 period = 4;
 }
 
 message RecordInput {
