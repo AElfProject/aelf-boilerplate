@@ -88,16 +88,18 @@
     <ItemGroup>
         <PackageReference Include="AElf.WebApp.Application.Chain" Version="0.9.0-18217">
             <CopyToOutputDirectory>lib\netcoreapp3.0\*.xml</CopyToOutputDirectory>
+            <PackageName>aelf.webApp.application.chain</PackageName>
         </PackageReference>
         <PackageReference Include="AElf.WebApp.Application.Net" Version="0.9.0-18217">
             <CopyToOutputDirectory>lib\netcoreapp3.0\*.xml</CopyToOutputDirectory>
+            <PackageName>aelf.webApp.application.net</PackageName>
         </PackageReference>
     </ItemGroup>
 
-    <Target Name="CopyPackages" AfterTargets="Build">
+    <Target Name="CopyPackages" AfterTargets="AfterBuild">
         <ItemGroup>
             <PackageReferenceFiles Condition="%(PackageReference.CopyToOutputDirectory) != 'PreserveNewest' And %(PackageReference.CopyToOutputDirectory) != ''"
-                                   Include="$(NugetPackageRoot)\%(PackageReference.Identity)\%(PackageReference.Version)\%(PackageReference.CopyToOutputDirectory)"/>
+                                   Include="$(NugetPackageRoot)%(PackageReference.PackageName)\%(PackageReference.Version)\%(PackageReference.CopyToOutputDirectory)"/>
         </ItemGroup>
         <Copy SourceFiles="@(PackageReferenceFiles)" DestinationFolder="$(OutDir)"/>
     </Target>
