@@ -16,6 +16,7 @@
         <PackageReference Include="AElf.OS" Version="0.9.0-18217" />
         <PackageReference Include="AElf.Kernel.BlockTransactionLimitController" Version="0.9.0-18217" />
         <PackageReference Include="AElf.Kernel.Token" Version="0.9.0-18217" />
+        <ProjectReference Include="..\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj" />
         <ProjectReference Include="..\AElf.Contracts.Deployer\AElf.Contracts.Deployer.csproj" />
     </ItemGroup>
 
