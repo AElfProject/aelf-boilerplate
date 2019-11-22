@@ -18,7 +18,10 @@
     <ItemGroup>
         <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="1.0.2"/>
         <PackageReference Include="Volo.Abp.Autofac" Version="1.0.2"/>
-        <PackageReference Include="Microsoft.AspNetCore.App"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -81,4 +84,23 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
     </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AElf.WebApp.Application.Chain" Version="0.9.0-18217">
+            <CopyToOutputDirectory>lib\netcoreapp3.0\*.xml</CopyToOutputDirectory>
+            <PackageName>aelf.webapp.application.chain</PackageName>
+        </PackageReference>
+        <PackageReference Include="AElf.WebApp.Application.Net" Version="0.9.0-18217">
+            <CopyToOutputDirectory>lib\netcoreapp3.0\*.xml</CopyToOutputDirectory>
+            <PackageName>aelf.webapp.application.net</PackageName>
+        </PackageReference>
+    </ItemGroup>
+
+    <Target Name="CopyPackages" AfterTargets="AfterBuild">
+        <ItemGroup>
+            <PackageReferenceFiles Condition="%(PackageReference.CopyToOutputDirectory) != 'PreserveNewest' And %(PackageReference.CopyToOutputDirectory) != ''"
+                                   Include="$(NugetPackageRoot)%(PackageReference.PackageName)\%(PackageReference.Version)\%(PackageReference.CopyToOutputDirectory)"/>
+        </ItemGroup>
+        <Copy SourceFiles="@(PackageReferenceFiles)" DestinationFolder="$(OutDir)"/>
+    </Target>
 </Project>
