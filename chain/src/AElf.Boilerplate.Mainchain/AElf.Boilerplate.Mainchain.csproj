@@ -21,17 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-            <OutputItemType>Contract</OutputItemType>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ProjectReference>
         <ProjectReference Include="..\..\contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-            <OutputItemType>Contract</OutputItemType>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ProjectReference>
-        <ProjectReference Include="..\..\contract\AElf.Contracts.LotteryDemoContract\AElf.Contracts.LotteryDemoContract.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -97,14 +87,8 @@
         <ContractStub Include="..\..\protobuf\vote_contract.proto">
             <Link>Protobuf\Proto\vote_contract.proto</Link>
         </ContractStub>
-        <ContractStub Include="..\..\protobuf\bingo_game_contract.proto">
-            <Link>Protobuf\Proto\bingo_game_contract.proto</Link>
-        </ContractStub>
-        <ContractStub Include="..\..\protobuf\hello_world.proto">
-            <Link>Protobuf\Proto\hello_world.proto</Link>
-        </ContractStub>
-        <ContractStub Include="..\..\protobuf\lottery_demo_contract.proto">
-            <Link>Protobuf\Proto\lottery_demo_contract.proto</Link>
+        <ContractStub Include="..\..\protobuf\hello_world_contract.proto">
+            <Link>Protobuf\Proto\hello_world_contract.proto</Link>
         </ContractStub>
     </ItemGroup>
 </Project>
