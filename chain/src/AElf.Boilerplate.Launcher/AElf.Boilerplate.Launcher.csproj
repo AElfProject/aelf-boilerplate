@@ -40,17 +40,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-            <OutputItemType>Contract</OutputItemType>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ProjectReference>
-        <ProjectReference Include="..\..\contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-            <OutputItemType>Contract</OutputItemType>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ProjectReference>
-        <ProjectReference Include="..\..\contract\AElf.Contracts.LotteryDemoContract\AElf.Contracts.LotteryDemoContract.csproj">
+        <ProjectReference Include="..\..\contract\AElf.Contracts.HelloWorld\AElf.Contracts.HelloWorld.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

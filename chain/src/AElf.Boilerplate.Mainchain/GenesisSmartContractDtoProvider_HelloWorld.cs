@@ -14,7 +14,7 @@ namespace AElf.Blockchains.MainChain
 
             l.AddGenesisSmartContract(
                 _codes.Single(kv=>kv.Key.Contains("HelloWorld")).Value,
-                Hash.FromString("AElf.ContractNames.HelloWorldContract"), new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList());
+                Hash.FromString("AElf.ContractNames.HelloWorld"), new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList());
 
             return l;
         }

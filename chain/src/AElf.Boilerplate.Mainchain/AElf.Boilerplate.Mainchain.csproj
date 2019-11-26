@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj">
+        <ProjectReference Include="..\..\contract\AElf.Contracts.HelloWorld\AElf.Contracts.HelloWorld.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
