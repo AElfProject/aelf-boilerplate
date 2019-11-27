@@ -12,6 +12,9 @@ namespace AElf.Contracts.HelloWorld
 
         public override GreetToOutput GreetTo(StringValue input)
         {
+            // Should not greet to empty string or white space.
+            Assert(!string.IsNullOrWhiteSpace(input.Value), "Invalid name.");
+
             // State.GreetedList.Value is null if not initialized.
             var greetList = State.GreetedList.Value ?? new GreetedList();
 

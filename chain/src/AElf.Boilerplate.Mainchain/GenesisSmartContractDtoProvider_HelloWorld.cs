@@ -8,15 +8,13 @@ namespace AElf.Blockchains.MainChain
 {
     public partial class GenesisSmartContractDtoProvider
     {
-        public IEnumerable<GenesisSmartContractDto> GetGenesisSmartContractDtosForHelloWorld(Address zeroContractAddress)
+        public IEnumerable<GenesisSmartContractDto> GetGenesisSmartContractDtosForHelloWorld()
         {
-            var l = new List<GenesisSmartContractDto>();
-
-            l.AddGenesisSmartContract(
+            var dto = new List<GenesisSmartContractDto>();
+            dto.AddGenesisSmartContract(
                 _codes.Single(kv=>kv.Key.Contains("HelloWorld")).Value,
                 Hash.FromString("AElf.ContractNames.HelloWorld"), new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList());
-
-            return l;
+            return dto;
         }
     }
 }

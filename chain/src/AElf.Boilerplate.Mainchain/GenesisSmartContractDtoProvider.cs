@@ -39,7 +39,7 @@ namespace AElf.Blockchains.MainChain
                 GetGenesisSmartContractDtosForElection(zeroContractAddress),
                 GetGenesisSmartContractDtosForToken(zeroContractAddress),
                 GetGenesisSmartContractDtosForConsensus(zeroContractAddress),
-                GetGenesisSmartContractDtosForHelloWorld(zeroContractAddress)
+                GetGenesisSmartContractDtosForHelloWorld()
             }.SelectMany(x => x);
         }
     }
