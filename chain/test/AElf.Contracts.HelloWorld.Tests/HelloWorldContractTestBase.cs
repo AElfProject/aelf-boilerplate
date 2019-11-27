@@ -4,28 +4,26 @@ using Acs0;
 using AElf.Contracts.TestKit;
 using AElf.Cryptography.ECDSA;
 using AElf.Kernel;
-using AElf.OS.Node.Application;
 using AElf.Types;
 using Google.Protobuf;
 using Volo.Abp.Threading;
 
 namespace AElf.Contracts.HelloWorld
 {
-    public class HelloWorldContractTestBase : TestKit.ContractTestBase<HelloWorldContractTestModule>
+    public class HelloWorldContractTestBase : ContractTestBase<HelloWorldContractTestModule>
     {
-        protected Address TesterAddress => Address.FromPublicKey(SampleECKeyPairs.KeyPairs.First().PublicKey);
-        protected Address HelloWorldContractAddress { get; set; }
+        private Address HelloWorldContractAddress { get; set; }
 
-        internal ACS0Container.ACS0Stub ZeroContractStub { get; set; }
+        private ACS0Container.ACS0Stub ZeroContractStub { get; set; }
 
         internal HelloWorldContractContainer.HelloWorldContractStub HelloWorldContractStub { get; set; }
 
-        public HelloWorldContractTestBase()
+        protected HelloWorldContractTestBase()
         {
             InitializeContracts();
         }
 
-        protected void InitializeContracts()
+        private void InitializeContracts()
         {
             ZeroContractStub = GetZeroContractStub(SampleECKeyPairs.KeyPairs.First());
 
@@ -36,25 +34,19 @@ namespace AElf.Contracts.HelloWorld
                         Category = KernelConstants.CodeCoverageRunnerCategory,
                         Code = ByteString.CopyFrom(File.ReadAllBytes(typeof(HelloWorldContract).Assembly.Location)),
                         Name = ProfitSmartContractAddressNameProvider.Name,
-                        TransactionMethodCallList = GenerateProfitInitializationCallList()
+                        TransactionMethodCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList()
                     })).Output;
             HelloWorldContractStub = GetHelloWorldContractStub(SampleECKeyPairs.KeyPairs.First());
         }
 
-        internal ACS0Container.ACS0Stub GetZeroContractStub(ECKeyPair keyPair)
+        private ACS0Container.ACS0Stub GetZeroContractStub(ECKeyPair keyPair)
         {
             return GetTester<ACS0Container.ACS0Stub>(ContractZeroAddress, keyPair);
         }
 
-        internal HelloWorldContractContainer.HelloWorldContractStub GetHelloWorldContractStub(ECKeyPair keyPair)
+        private HelloWorldContractContainer.HelloWorldContractStub GetHelloWorldContractStub(ECKeyPair keyPair)
         {
             return GetTester<HelloWorldContractContainer.HelloWorldContractStub>(HelloWorldContractAddress, keyPair);
-        }
-
-        private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList
-            GenerateProfitInitializationCallList()
-        {
-            return new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
         }
     }
 }

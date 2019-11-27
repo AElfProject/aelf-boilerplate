@@ -32,7 +32,7 @@ namespace AElf.Contracts.HelloWorld
             return new GreetToOutput
             {
                 GreetTime = Context.CurrentBlockTime,
-                Name = input.Value
+                Name = input.Value.Trim()
             };
         }
 
