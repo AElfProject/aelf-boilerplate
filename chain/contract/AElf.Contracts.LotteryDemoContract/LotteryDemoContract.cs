@@ -6,6 +6,7 @@ using AElf.Sdk.CSharp;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
 
+// 
 namespace AElf.Contracts.LotteryDemoContract
 {
     public class LotteryDemoContract : LotteryDemoContractContainer.LotteryDemoContractBase
@@ -13,6 +14,8 @@ namespace AElf.Contracts.LotteryDemoContract
         private const int BasicMultiple = 100_000_000;
         private const int OneStarReward = 10;
         private const int IntervalTime = 60 * 10; // seconds
+//        private const int IntervalTime = 6 * 10; // seconds
+//        private const int IntervalTime = 6 * 10; // seconds
 
         public override GetStateOutput GetState (Empty input)
         {
@@ -43,6 +46,7 @@ namespace AElf.Contracts.LotteryDemoContract
             {
                 RandomNumberToken = Context.TransactionId,
                 Timestamp = input.StartTimestamp,
+                LotteryTime = null,
                 LuckyNumber = -1,
                 Period = input.StartPeriod,
             };
@@ -82,6 +86,7 @@ namespace AElf.Contracts.LotteryDemoContract
             {
                 RandomNumberToken = randomNumberToken,
                 Timestamp = unixTimestamp,
+                LotteryTime = null,
                 LuckyNumber = -1,
                 Period = lastPeriod,
             };
@@ -90,6 +95,7 @@ namespace AElf.Contracts.LotteryDemoContract
             {
                 RandomNumberToken = Context.TransactionId,
                 Timestamp = unixTimestamp,
+                LotteryTime = null,
                 LuckyNumber = -1,
                 Period = currentPeriod,
             };
@@ -117,10 +123,12 @@ namespace AElf.Contracts.LotteryDemoContract
             Assert(randomHash != null && randomHash.Value.Any(), "Random Number not Ready");
             
             var luckyNumber = ConvertToInteger(randomHash);
+            var unixTimestamp = Context.CurrentBlockTime;
             State.PeriodRandomNumberTokens[lastPeriodValue] = new PeriodRandomNumberToken
             {
                 RandomNumberToken = periodRandomNumberToken.RandomNumberToken,
                 Timestamp = periodRandomNumberToken.Timestamp,
+                LotteryTime = unixTimestamp,
                 LuckyNumber = luckyNumber, // 该值仅记录供参考
                 Period = periodRandomNumberToken.Period
             };
@@ -132,6 +140,7 @@ namespace AElf.Contracts.LotteryDemoContract
                 PeriodNumber = lastPeriodValue,
                 RandomNumberToken = currentRandomNumberToken,
                 LuckyNumber = luckyNumber,
+                LotteryTime = unixTimestamp
             };
         }
 
@@ -285,6 +294,12 @@ namespace AElf.Contracts.LotteryDemoContract
             }
 
             return reward;
+        }
+        
+        // TODO: 待补充过期未领奖的删除操作
+        public override Empty RemoveExpiredBet(Empty input)
+        {
+            return base.RemoveExpiredBet(input);
         }
     }
 }

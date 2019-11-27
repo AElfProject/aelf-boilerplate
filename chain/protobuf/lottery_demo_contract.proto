@@ -19,6 +19,8 @@ service LotteryDemoContract {
     }
     rpc Bet (Lotteries) returns (google.protobuf.Empty) {
     }
+    rpc RemoveExpiredBet(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    }
     rpc TakeReward (aelf.Hash) returns (google.protobuf.Empty) {
     }
     // Views
@@ -58,6 +60,7 @@ message GetLuckyNumberOutput {
     sint64 period_number = 2;
     aelf.Hash random_number_token = 3;
     sint64 lucky_number = 4;
+    google.protobuf.Timestamp lottery_time = 5;
 }
 
 message Lotteries {
@@ -77,8 +80,9 @@ message Lottery {
 message PeriodRandomNumberToken {
     aelf.Hash random_number_token = 1;
     google.protobuf.Timestamp timestamp = 2;
-    sint64 lucky_number = 3;
-    sint64 period = 4;
+    google.protobuf.Timestamp lottery_time = 3;
+    sint64 lucky_number = 4;
+    sint64 period = 5;
 }
 
 message RecordInput {
