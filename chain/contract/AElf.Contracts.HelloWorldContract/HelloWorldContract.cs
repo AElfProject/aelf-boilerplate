@@ -6,7 +6,7 @@ namespace AElf.Contracts.HelloWorldContract
     {
         public override HelloReturn Hello(Empty input)
         {
-            return new HelloReturn {Value = "Hellddddddddddddddo wgjuthbf2!"};
+            return new HelloReturn {Value = "Hello world!"};
         }
     }
 }
