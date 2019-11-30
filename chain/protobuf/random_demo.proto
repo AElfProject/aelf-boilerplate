@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "AElf.Contracts.RandomDemoContract";
+
+service RandomDemoContract {
+
+    option (aelf.csharp_state) = "AElf.Contracts.RandomDemoContract.RandomDemoContractState";
+
+    rpc RequestRandomList (RequestRandomParam) returns (RequestRandomOutput) { }
+    rpc GetRandomList (aelf.Hash) returns (RandomList) { }
+}
+
+message listArrayData{
+    sint64 index = 1;
+    string name = 2;
+    sint64 number = 3;
+}
+
+message RequestRandomParam {
+    sint64 Number = 1;
+    repeated listArrayData List = 2;
+}
+
+message RequestRandomOutput {
+    aelf.Hash token_hash = 1;
+}
+
+message RandomList {
+    repeated listArrayData List = 3;
+}

@@ -23,6 +23,7 @@ using AElf.WebApp.Web;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -62,11 +63,14 @@ namespace AElf.Boilerplate.MainChain
         public override void PreConfigureServices(ServiceConfigurationContext context)
         {
             var configuration = context.Services.GetConfiguration();
+            var hostBuilderContext = context.Services.GetSingletonInstanceOrNull<HostBuilderContext>();
 
-            context.Services.SetConfiguration(new ConfigurationBuilder().AddConfiguration(configuration)
+            var newConfig = new ConfigurationBuilder().AddConfiguration(configuration)
                 .AddJsonFile("appsettings.MainChain.MainNet.json")
                 .SetBasePath(context.Services.GetHostingEnvironment().ContentRootPath)
-                .Build());
+                .Build();
+
+            hostBuilderContext.Configuration = newConfig;
         }
 
         public override void ConfigureServices(ServiceConfigurationContext context)
@@ -95,6 +99,8 @@ namespace AElf.Boilerplate.MainChain
             {
                 options.ContextVariables[ContextVariableDictionary.NativeSymbolName] = context.Services
                     .GetConfiguration().GetValue("Economic:Symbol", "ELF");
+                options.ContextVariables[ContextVariableDictionary.ResourceTokenSymbolList] = context.Services
+                    .GetConfiguration().GetValue("Economic:ResourceTokenSymbolList", "STO,RAM,CPU,NET");
             });
 
             Configure<ContractOptions>(configuration.GetSection("Contract"));

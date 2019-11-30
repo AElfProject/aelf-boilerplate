@@ -1,79 +1,106 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <ServerGarbageCollection>true</ServerGarbageCollection>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <ServerGarbageCollection>true</ServerGarbageCollection>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AElf.Boilerplate.Mainchain\AElf.Boilerplate.Mainchain.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="0.8.0-beta" />
-    <PackageReference Include="AElf.Runtime.CSharp" Version="0.8.0-beta" />
-    <PackageReference Include="AElf.RuntimeSetup" Version="0.8.0-beta" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\AElf.Boilerplate.Mainchain\AElf.Boilerplate.Mainchain.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="0.19.0" />
-    <PackageReference Include="Volo.Abp.Autofac" Version="0.19.0" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Content Include="appsettings.Development.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="appsettings.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="appsettings.MainChain.MainNet.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\..\contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Contract</OutputItemType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </ProjectReference>
-    <ProjectReference Include="..\..\contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Contract</OutputItemType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </ProjectReference>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="0.8.3"/>
+        <PackageReference Include="AElf.Runtime.CSharp" Version="0.8.3"/>
+        <PackageReference Include="AElf.RuntimeSetup" Version="0.8.3"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.8.0-beta">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Contract</OutputItemType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </PackageReference>
-    <PackageReference Include="AElf.Contracts.Election" Version="0.8.0-beta">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Contract</OutputItemType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </PackageReference>
-    <PackageReference Include="AElf.Contracts.Profit" Version="0.8.0-beta">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Contract</OutputItemType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </PackageReference>
-    <PackageReference Include="AElf.Contracts.Vote" Version="0.8.0-beta">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Contract</OutputItemType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </PackageReference>
-    <PackageReference Include="AElf.Contracts.MultiToken" Version="0.8.0-beta">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Contract</OutputItemType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </PackageReference>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="1.0.2"/>
+        <PackageReference Include="Volo.Abp.Autofac" Version="1.0.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="appsettings.Development.json">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="appsettings.json">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="appsettings.MainChain.MainNet.json">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </ProjectReference>
+        <ProjectReference Include="..\..\contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </ProjectReference>
+        <ProjectReference Include="..\..\contract\AElf.Contracts.LotteryDemoContract\AElf.Contracts.LotteryDemoContract.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </ProjectReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.8.3">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
+        <PackageReference Include="AElf.Contracts.Election" Version="0.8.3">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
+        <PackageReference Include="AElf.Contracts.Profit" Version="0.8.3">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
+        <PackageReference Include="AElf.Contracts.Vote" Version="0.8.3">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
+        <PackageReference Include="AElf.Contracts.MultiToken" Version="0.8.3">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AElf.WebApp.Application.Chain" Version="0.8.3">
+            <CopyToOutputDirectory>lib\netcoreapp3.0\*.xml</CopyToOutputDirectory>
+            <PackageName>aelf.webapp.application.chain</PackageName>
+        </PackageReference>
+        <PackageReference Include="AElf.WebApp.Application.Net" Version="0.8.3">
+            <CopyToOutputDirectory>lib\netcoreapp3.0\*.xml</CopyToOutputDirectory>
+            <PackageName>aelf.webapp.application.net</PackageName>
+        </PackageReference>
+    </ItemGroup>
+
+    <Target Name="CopyPackages" AfterTargets="AfterBuild">
+        <ItemGroup>
+            <PackageReferenceFiles Condition="%(PackageReference.CopyToOutputDirectory) != 'PreserveNewest' And %(PackageReference.CopyToOutputDirectory) != ''"
+                                   Include="$(NugetPackageRoot)%(PackageReference.PackageName)\%(PackageReference.Version)\%(PackageReference.CopyToOutputDirectory)"/>
+        </ItemGroup>
+        <Copy SourceFiles="@(PackageReferenceFiles)" DestinationFolder="$(OutDir)"/>
+    </Target>
 </Project>
