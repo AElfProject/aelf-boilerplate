@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <RootNamespace>AElf.Contracts.OrderContract</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsContract>true</IsContract>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ContractCode Include="..\..\protobuf\order_contract.proto">
+            <Link>Protobuf\Proto\order_contract.proto</Link>
+        </ContractCode>
+    </ItemGroup>
+
+</Project>

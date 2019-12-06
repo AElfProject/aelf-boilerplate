@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AElf.Contracts.TestKit" Version="0.8.3" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+        <PackageReference Include="xunit" Version="2.4.0" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+        <PackageReference Include="Shouldly" Version="3.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ContractStub Include="..\..\protobuf\acs0.proto">
+            <Link>Protobuf/Proto/acs0.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\basic_contract_zero.proto">
+            <Link>Protobuf/Proto/basic_contract_zero.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\order_contract.proto">
+            <Link>Protobuf/Proto/order_contract.proto</Link>
+        </ContractStub>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\contract\AElf.Contracts.OrderContract\AElf.Contracts.OrderContract.csproj">
+            <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
+        </ProjectReference>
+    </ItemGroup>
+
+</Project>

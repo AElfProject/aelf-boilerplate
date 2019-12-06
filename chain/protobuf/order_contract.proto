@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+import "aelf/options.proto";
+import "aelf/core.proto";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "AElf.Contracts.OrderContract";
+
+service OrderContract {
+    option (aelf.csharp_state) = "AElf.Contracts.OrderContract.OrderContractState";
+
+    // Actions
+    rpc CreateOrder (OrderInput) returns (aelf.SInt64Value) { }
+
+    // Views
+    rpc FetchOrders (FetchOrdersInput) returns (Orders) {
+        option (aelf.is_view) = true;
+    }
+}
+
+enum OrderStatus {
+    CREATED = 0;
+    CANCELED = 1;
+    PAID = 2;
+    FINISHED = 3;
+}
+
+message OrderInput {
+    sint64 id = 1;
+    sint64 account_id = 2;
+    map<string, sint64> items = 4;
+    google.protobuf.Timestamp create_time = 5;
+    string memo = 6;
+}
+
+message Order {
+    sint64 id = 1;
+    sint64 account_id = 2;
+    OrderStatus status = 3;
+    map<string, sint64> items = 4;
+    google.protobuf.Timestamp create_time = 5;
+    string memo = 6;
+}
+
+message FetchOrdersInput {
+    sint64 account_id = 1;
+    sint64 start_order_id = 2;
+    sint64 limit = 3;
+}
+
+message Orders {
+    repeated Order value = 1;
+}
