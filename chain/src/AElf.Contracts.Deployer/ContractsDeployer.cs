@@ -19,7 +19,7 @@ namespace AElf.Contracts.Deployer
             var contractNames = GetContractNames(typeof(T).Assembly).ToList();
             if (contractNames.Count == 0)
             {
-                throw new NoContractDllFoundInManifestException();
+                throw new DllNotFoundInManifestException();
             }
 
             var codes = contractNames.Select(n => (n, GetCode(n))).ToDictionary(x => x.Item1, x => x.Item2);
