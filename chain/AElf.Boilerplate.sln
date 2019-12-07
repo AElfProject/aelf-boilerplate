@@ -11,9 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{21D85A91-5BB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{DBC47323-E6A2-42A2-A624-CE2EE6139567}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorldContract.Test", "test\HelloWorldContract.Test\HelloWorldContract.Test.csproj", "{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.HelloWorldContract.Test", "test\AElf.Contracts.HelloWorldContract.Test\AElf.Contracts.HelloWorldContract.Test.csproj", "{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingoGameContract.Test", "test\BingoGameContract.Test\BingoGameContract.Test.csproj", "{E2491309-869C-4422-A7B6-B895C30B7D5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.BingoGameContract.Test", "test\AElf.Contracts.BingoGameContract.Test\AElf.Contracts.BingoGameContract.Test.csproj", "{E2491309-869C-4422-A7B6-B895C30B7D5D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "contract", "contract", "{5C980166-C987-470D-AEE0-3858A170A903}"
 	ProjectSection(SolutionItems) = preProject
@@ -30,7 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.LotteryDemoC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.GreeterContract", "contract\AElf.Contracts.GreeterContract\AElf.Contracts.GreeterContract.csproj", "{4C0F6A56-667B-4534-A60F-CDAC5F3A5534}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.Greeter.Tests", "test\AElf.Contracts.Greeter.Tests\AElf.Contracts.Greeter.Tests.csproj", "{B177712A-3005-41CC-965A-62FFA32545DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.GreeterContract.Tests", "test\AElf.Contracts.GreeterContract.Tests\AElf.Contracts.GreeterContract.Tests.csproj", "{B177712A-3005-41CC-965A-62FFA32545DD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.Tester", "src\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj", "{217599C5-2CF0-411E-97B5-5657739CEE5D}"
 EndProject

@@ -2,11 +2,10 @@ using System.Threading.Tasks;
 using AElf.Types;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using HelloWorldContract.Test;
 using Shouldly;
 using Xunit;
 
-namespace AElf.Contracts.Greeter
+namespace AElf.Contracts.GreeterContract
 {
     public class GreeterContractTests : GreeterContractTestBase
     {

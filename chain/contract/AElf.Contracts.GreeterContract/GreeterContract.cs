@@ -1,6 +1,6 @@
 using Google.Protobuf.WellKnownTypes;
 
-namespace AElf.Contracts.Greeter
+namespace AElf.Contracts.GreeterContract
 {
     public class GreeterContract : GreeterContractContainer.GreeterContractBase
     {

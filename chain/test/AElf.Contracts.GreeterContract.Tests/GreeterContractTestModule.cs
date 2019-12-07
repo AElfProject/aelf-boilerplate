@@ -2,7 +2,7 @@ using AElf.Contracts.TestKit;
 using AElf.Kernel.SmartContract;
 using Volo.Abp.Modularity;
 
-namespace AElf.Contracts.Greeter
+namespace AElf.Contracts.GreeterContract
 {
     [DependsOn(typeof(ContractTestModule))]
     public class GreeterContractTestModule : ContractTestModule
