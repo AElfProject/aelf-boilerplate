@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
-        <RootNamespace>AElf.Contracts.Greeter</RootNamespace>
+        <RootNamespace>AElf.Contracts.GreeterContract</RootNamespace>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
@@ -30,7 +30,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\contract\AElf.Contracts.GreeterContract\AElf.Contracts.GreeterContract.csproj" />
-        <ProjectReference Include="..\HelloWorldContract.Test\HelloWorldContract.Test.csproj" />
     </ItemGroup>
 
 </Project>

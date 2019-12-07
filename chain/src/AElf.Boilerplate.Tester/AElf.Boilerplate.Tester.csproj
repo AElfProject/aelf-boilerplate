@@ -14,7 +14,7 @@
 
     <ItemGroup>
         <ContractMessage Include="..\..\protobuf\acs6.proto">
-            <Link>Protobuf\Proto\acs1.proto</Link>
+            <Link>Protobuf\Proto\acs6.proto</Link>
         </ContractMessage>
     </ItemGroup>
 

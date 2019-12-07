@@ -6,10 +6,10 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-option csharp_namespace = "AElf.Contracts.Greeter";
+option csharp_namespace = "AElf.Contracts.GreeterContract";
 
 service GreeterContract { 
-    option (aelf.csharp_state) = "AElf.Contracts.Greeter.GreeterContractState";
+    option (aelf.csharp_state) = "AElf.Contracts.GreeterContract.GreeterContractState";
 
     // Actions
     rpc Greet (google.protobuf.Empty) returns (google.protobuf.StringValue) { }

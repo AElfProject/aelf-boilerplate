@@ -34,14 +34,14 @@ namespace AElf.Boilerplate.Tester.TestTransactionGenerator
         {
             var empty = new Empty().ToByteString();
             var greetTx = AsyncHelper.RunSync(() => _transactionGeneratingService.GenerateTransactionAsync(
-                Hash.FromString("AElf.ContractNames.HelloWorld"), "Greet", empty));
+                Hash.FromString("AElf.ContractNames.Greeter"), "Greet", empty));
 
             var randomName = new StringValue {Value = Guid.NewGuid().ToString().Substring(3)}.ToByteString();
             var greetToTx = AsyncHelper.RunSync(() => _transactionGeneratingService.GenerateTransactionAsync(
-                Hash.FromString("AElf.ContractNames.HelloWorld"), "GreetTo", randomName));
+                Hash.FromString("AElf.ContractNames.Greeter"), "GreetTo", randomName));
 
             var getGreetedListTx = AsyncHelper.RunSync(() => _transactionGeneratingService.GenerateTransactionAsync(
-                Hash.FromString("AElf.ContractNames.HelloWorld"), "GetGreetedList", empty));
+                Hash.FromString("AElf.ContractNames.Greeter"), "GetGreetedList", empty));
 
             var transactions = new List<Transaction>
             {
