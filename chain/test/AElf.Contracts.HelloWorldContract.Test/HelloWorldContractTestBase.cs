@@ -1,8 +1,6 @@
 using System.IO;
 using System.Linq;
 using Acs0;
-using AElf;
-using AElf.Contracts.OrderContract;
 using AElf.Contracts.TestKit;
 using AElf.Cryptography.ECDSA;
 using AElf.Kernel;
@@ -10,16 +8,16 @@ using AElf.Types;
 using Google.Protobuf;
 using Volo.Abp.Threading;
 
-namespace OrderContract.Test
+namespace AElf.Contracts.HelloWorldContract
 {
-    public class OrderContractTestBase : ContractTestBase<OrderContractTestModule>
+    public class HelloWorldContractTestBase : ContractTestBase<HelloWorldContractTestModule>
     {
-        internal OrderContractContainer.OrderContractStub OrderContractStub { get; set; }
+        internal HelloWorldContractContainer.HelloWorldContractStub HelloWorldContractStub { get; set; }
         private ACS0Container.ACS0Stub ZeroContractStub { get; set; }
 
-        private Address OrderContractAddress { get; set; }
+        private Address HelloWorldContractAddress { get; set; }
 
-        protected OrderContractTestBase()
+        protected HelloWorldContractTestBase()
         {
             InitializeContracts();
         }
@@ -28,17 +26,17 @@ namespace OrderContract.Test
         {
             ZeroContractStub = GetZeroContractStub(SampleECKeyPairs.KeyPairs.First());
 
-            OrderContractAddress = AsyncHelper.RunSync(() =>
+            HelloWorldContractAddress = AsyncHelper.RunSync(() =>
                 ZeroContractStub.DeploySystemSmartContract.SendAsync(
                     new SystemContractDeploymentInput
                     {
                         Category = KernelConstants.CodeCoverageRunnerCategory,
-                        Code = ByteString.CopyFrom(File.ReadAllBytes(typeof(AElf.Contracts.OrderContract.OrderContract).Assembly.Location)),
+                        Code = ByteString.CopyFrom(File.ReadAllBytes(typeof(HelloWorldContract).Assembly.Location)),
                         Name = ProfitSmartContractAddressNameProvider.Name,
                         TransactionMethodCallList =
                             new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList()
                     })).Output;
-            OrderContractStub = GetOrderContractStub(SampleECKeyPairs.KeyPairs.First());
+            HelloWorldContractStub = GetHelloWorldContractStub(SampleECKeyPairs.KeyPairs.First());
         }
 
         private ACS0Container.ACS0Stub GetZeroContractStub(ECKeyPair keyPair)
@@ -46,8 +44,9 @@ namespace OrderContract.Test
             return GetTester<ACS0Container.ACS0Stub>(ContractZeroAddress, keyPair);
         }
 
-        private OrderContractContainer.OrderContractStub GetOrderContractStub(ECKeyPair keyPair)
+        private HelloWorldContractContainer.HelloWorldContractStub GetHelloWorldContractStub(ECKeyPair keyPair)
         {
-            return GetTester<OrderContractContainer.OrderContractStub>(OrderContractAddress, keyPair);
-        }    }
+            return GetTester<HelloWorldContractContainer.HelloWorldContractStub>(HelloWorldContractAddress, keyPair);
+        }
+    }
 }

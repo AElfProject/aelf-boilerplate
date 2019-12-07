@@ -16,10 +16,16 @@
         <PackageReference Include="AElf.OS" Version="0.8.3" />
         <PackageReference Include="AElf.Kernel.BlockTransactionLimitController" Version="0.8.3" />
         <PackageReference Include="AElf.Kernel.Token" Version="0.8.3" />
+        <ProjectReference Include="..\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj" />
         <ProjectReference Include="..\AElf.Contracts.Deployer\AElf.Contracts.Deployer.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\contract\AElf.Contracts.GreeterContract\AElf.Contracts.GreeterContract.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </ProjectReference>
         <ProjectReference Include="..\..\contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
@@ -104,8 +110,8 @@
         <ContractStub Include="..\..\protobuf\bingo_game_contract.proto">
             <Link>Protobuf\Proto\bingo_game_contract.proto</Link>
         </ContractStub>
-        <ContractStub Include="..\..\protobuf\hello_world.proto">
-            <Link>Protobuf\Proto\hello_world.proto</Link>
+        <ContractStub Include="..\..\protobuf\hello_world_contract.proto">
+            <Link>Protobuf\Proto\hello_world_contract.proto</Link>
         </ContractStub>
         <ContractStub Include="..\..\protobuf\lottery_demo_contract.proto">
             <Link>Protobuf\Proto\lottery_demo_contract.proto</Link>

@@ -1,6 +1,6 @@
 using AElf.Sdk.CSharp.State;
 
- namespace AElf.Contracts.Greeter
+ namespace AElf.Contracts.GreeterContract
  {
      public class GreeterContractState : ContractState
      {

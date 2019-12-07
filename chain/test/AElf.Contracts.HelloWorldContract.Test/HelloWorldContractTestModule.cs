@@ -1,14 +1,11 @@
-using System.IO;
 using AElf.Contracts.TestKit;
 using AElf.Kernel.SmartContract;
-using AElf.Runtime.CSharp;
-using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Modularity;
 
-namespace OrderContract.Test
+namespace AElf.Contracts.HelloWorldContract
 {
     [DependsOn(typeof(ContractTestModule))]
-    public class OrderContractTestModule : ContractTestModule
+    public class HelloWorldContractTestModule : ContractTestModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {

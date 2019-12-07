@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <RootNamespace>AElf.Boilerplate.Tester</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AElf.Core" Version="0.8.3" />
+        <PackageReference Include="AElf.Kernel.Consensus" Version="0.8.3" />
+        <PackageReference Include="AElf.Kernel.Core" Version="0.8.3" />
+        <PackageReference Include="AElf.Kernel.SmartContract" Version="0.8.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ContractMessage Include="..\..\protobuf\acs6.proto">
+            <Link>Protobuf\Proto\acs6.proto</Link>
+        </ContractMessage>
+    </ItemGroup>
+
+</Project>

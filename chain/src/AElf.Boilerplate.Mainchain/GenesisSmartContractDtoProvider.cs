@@ -18,12 +18,12 @@ namespace AElf.Blockchains.MainChain
         private readonly ConsensusOptions _consensusOptions;
         private readonly EconomicOptions _economicOptions;
 
-        public GenesisSmartContractDtoProvider(IOptionsSnapshot<ConsensusOptions> dposOptions,
+        public GenesisSmartContractDtoProvider(IOptionsSnapshot<ConsensusOptions> consensusOptions,
             IOptionsSnapshot<EconomicOptions> economicOptions, ContractsDeployer contractsDeployer,
             IAccountService accountService)
         {
             _accountService = accountService;
-            _consensusOptions = dposOptions.Value;
+            _consensusOptions = consensusOptions.Value;
             _economicOptions = economicOptions.Value;
             
             _codes = contractsDeployer.GetContractCodes<GenesisSmartContractDtoProvider>();
@@ -42,6 +42,7 @@ namespace AElf.Blockchains.MainChain
                 GetGenesisSmartContractDtosForHelloWorld(zeroContractAddress),
                 GetGenesisSmartContractDtosForBingoGame(zeroContractAddress),
                 GetGenesisSmartContractDtosForLotteryDemo(zeroContractAddress),
+                GetGenesisSmartContractDtosForGreeter(),
                 //GetGenesisSmartContractDtosForRandomDemo(zeroContractAddress)
                 GetGenesisSmartContractDtosForOrder(zeroContractAddress)
             }.SelectMany(x => x);

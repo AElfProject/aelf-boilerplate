@@ -35,7 +35,7 @@ namespace AElf.Contracts.OrderContract
 
             // Fetch orders for account
             var orders = new Orders();
-            var endOrderId = fetchOrdersInput.StartOrderId + fetchOrdersInput.Limit + 1;
+            var endOrderId = fetchOrdersInput.StartOrderId + fetchOrdersInput.Limit;
             for (var i = fetchOrdersInput.StartOrderId; i < endOrderId; i++)
             {
                 var order = State.Orders[fetchOrdersInput.AccountId][i];
