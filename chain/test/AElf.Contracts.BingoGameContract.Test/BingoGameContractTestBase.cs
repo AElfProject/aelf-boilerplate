@@ -62,7 +62,6 @@ namespace BingoGameContract.Test
 
         internal async Task InitialContracts()
         {
-            await InitializeAElfConsensus();
             await BasicContractZeroStub.DeploySystemSmartContract.SendAsync(new SystemContractDeploymentInput
             {
                 Category = KernelConstants.CodeCoverageRunnerCategory,
@@ -72,27 +71,6 @@ namespace BingoGameContract.Test
             });
         }
 
-        internal async Task InitializeAElfConsensus()
-        {
-            {
-                var result = await AEDPoSContractStub.InitialAElfConsensusContract.SendAsync(
-                    new InitialAElfConsensusContractInput
-                    {
-                        TimeEachTerm = 604800L,
-                        MinerIncreaseInterval = BingoGameContractTestConstants.MinerIncreaseInterval
-                    });
-                CheckResult(result.TransactionResult);
-            }
-            {
-                var result = await AEDPoSContractStub.FirstRound.SendAsync(
-                    new MinerList
-                    {
-                        Pubkeys = {InitialCoreDataCenterKeyPairs.Select(p => ByteString.CopyFrom(p.PublicKey))}
-                    }.GenerateFirstRoundOfNewTerm(BingoGameContractTestConstants.MiningInterval,
-                        StartTimestamp.ToDateTime()));
-                CheckResult(result.TransactionResult);
-            }
-        }
 
         private void CheckResult(TransactionResult result)
         {
@@ -100,14 +78,6 @@ namespace BingoGameContract.Test
             {
                 throw new Exception(result.Error);
             }
-        }
-
-        private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList
-            GenerateBingoContractMethodCallList()
-        {
-            var callList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
-            callList.Add(nameof(BingoGameContractContainer.BingoGameContractStub.Initial), new Empty());
-            return callList;
         }
     }
 }

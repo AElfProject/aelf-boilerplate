@@ -5,10 +5,10 @@
     <RootNamespace>BingoGameContract.Test</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.8.3" />
-    <PackageReference Include="AElf.Contracts.TestKit" Version="0.8.3" />
-    <PackageReference Include="AElf.Kernel.Consensus" Version="0.8.3" />
-    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.8.3" />
+    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.9.0" />
+    <PackageReference Include="AElf.Contracts.TestKit" Version="0.9.0" />
+    <PackageReference Include="AElf.Kernel.Consensus" Version="0.9.0" />
+    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.9.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Protobuf\Generated" />
+    <Folder Include="Types" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj">
@@ -32,6 +33,12 @@
     </ContractStub>
     <ContractStub Include="..\..\protobuf\token_contract.proto">
       <Link>Protobuf/Proto/token_contract.proto</Link>
+    </ContractStub>
+    <ContractStub Include="..\..\protobuf\acs0.proto">
+      <Link>Protobuf/Proto/acs0.proto</Link>
+    </ContractStub>
+    <ContractStub Include="..\..\protobuf\acs1.proto">
+      <Link>Protobuf/Proto/acs1.proto</Link>
     </ContractStub>
     <ContractStub Include="..\..\protobuf\acs4.proto">
       <Link>Protobuf/Proto/acs4.proto</Link>
