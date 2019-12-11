@@ -11,14 +11,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{21D85A91-5BB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{DBC47323-E6A2-42A2-A624-CE2EE6139567}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorldContract.Test", "test\HelloWorldContract.Test\HelloWorldContract.Test.csproj", "{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.HelloWorldContract.Test", "test\AElf.Contracts.HelloWorldContract.Test\AElf.Contracts.HelloWorldContract.Test.csproj", "{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingoGameContract.Test", "test\BingoGameContract.Test\BingoGameContract.Test.csproj", "{E2491309-869C-4422-A7B6-B895C30B7D5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.BingoGameContract.Test", "test\AElf.Contracts.BingoGameContract.Test\AElf.Contracts.BingoGameContract.Test.csproj", "{E2491309-869C-4422-A7B6-B895C30B7D5D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "contract", "contract", "{5C980166-C987-470D-AEE0-3858A170A903}"
-ProjectSection(SolutionItems) = preProject
-	contract\Directory.Build.props = contract\Directory.Build.props
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		contract\Directory.Build.props = contract\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.Deployer", "src\AElf.Contracts.Deployer\AElf.Contracts.Deployer.csproj", "{9484A7A9-CA57-4FF4-9FD8-27BFEF92EDBC}"
 EndProject
@@ -27,6 +27,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.HelloWorldContract", "contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj", "{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.LotteryDemoContract", "contract\AElf.Contracts.LotteryDemoContract\AElf.Contracts.LotteryDemoContract.csproj", "{B15042F7-AD67-4BD5-AFCA-12CB00347B82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.GreeterContract", "contract\AElf.Contracts.GreeterContract\AElf.Contracts.GreeterContract.csproj", "{4C0F6A56-667B-4534-A60F-CDAC5F3A5534}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.GreeterContract.Tests", "test\AElf.Contracts.GreeterContract.Tests\AElf.Contracts.GreeterContract.Tests.csproj", "{B177712A-3005-41CC-965A-62FFA32545DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.Tester", "src\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj", "{217599C5-2CF0-411E-97B5-5657739CEE5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +72,18 @@ Global
 		{B15042F7-AD67-4BD5-AFCA-12CB00347B82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B15042F7-AD67-4BD5-AFCA-12CB00347B82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B15042F7-AD67-4BD5-AFCA-12CB00347B82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C0F6A56-667B-4534-A60F-CDAC5F3A5534}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C0F6A56-667B-4534-A60F-CDAC5F3A5534}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C0F6A56-667B-4534-A60F-CDAC5F3A5534}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C0F6A56-667B-4534-A60F-CDAC5F3A5534}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B177712A-3005-41CC-965A-62FFA32545DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B177712A-3005-41CC-965A-62FFA32545DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B177712A-3005-41CC-965A-62FFA32545DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B177712A-3005-41CC-965A-62FFA32545DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{217599C5-2CF0-411E-97B5-5657739CEE5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{217599C5-2CF0-411E-97B5-5657739CEE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{217599C5-2CF0-411E-97B5-5657739CEE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{217599C5-2CF0-411E-97B5-5657739CEE5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +97,9 @@ Global
 		{19311D5A-8788-4463-A6EF-6AA4E9115232} = {5C980166-C987-470D-AEE0-3858A170A903}
 		{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F} = {5C980166-C987-470D-AEE0-3858A170A903}
 		{B15042F7-AD67-4BD5-AFCA-12CB00347B82} = {5C980166-C987-470D-AEE0-3858A170A903}
+		{4C0F6A56-667B-4534-A60F-CDAC5F3A5534} = {5C980166-C987-470D-AEE0-3858A170A903}
+		{B177712A-3005-41CC-965A-62FFA32545DD} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
+		{217599C5-2CF0-411E-97B5-5657739CEE5D} = {21D85A91-5BB8-4912-8107-49435A461AAC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7426B41-E959-40E4-9ED8-ED8D9C50F133}

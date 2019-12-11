@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using AElf.Blockchains.MainChain;
+using AElf.Boilerplate.Tester;
 using AElf.Contracts.Deployer;
 using AElf.Contracts.Genesis;
 using AElf.Database;
@@ -47,7 +48,10 @@ namespace AElf.Boilerplate.MainChain
         //web api module
         typeof(WebWebAppAElfModule),
 
-        typeof(ParallelExecutionModule)
+        typeof(ParallelExecutionModule),
+        
+        // test contracts by sending txs
+        typeof(TesterModule)
     )]
     public class MainChainModule : AElfModule
     {

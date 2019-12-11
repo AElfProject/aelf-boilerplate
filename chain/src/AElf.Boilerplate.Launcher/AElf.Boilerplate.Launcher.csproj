@@ -10,15 +10,18 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="0.9.0-18217"/>
-        <PackageReference Include="AElf.Runtime.CSharp" Version="0.9.0-18217"/>
-        <PackageReference Include="AElf.RuntimeSetup" Version="0.9.0-18217"/>
+        <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="0.9.0"/>
+        <PackageReference Include="AElf.Runtime.CSharp" Version="0.9.0"/>
+        <PackageReference Include="AElf.RuntimeSetup" Version="0.9.0"/>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="1.0.2"/>
         <PackageReference Include="Volo.Abp.Autofac" Version="1.0.2"/>
-        <PackageReference Include="Microsoft.AspNetCore.App"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -52,33 +55,57 @@
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </ProjectReference>
+        <ProjectReference Include="..\..\contract\AElf.Contracts.GreeterContract\AElf.Contracts.GreeterContract.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </ProjectReference>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.9.0-18217">
+        <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.9.0">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
-        <PackageReference Include="AElf.Contracts.Election" Version="0.9.0-18217">
+        <PackageReference Include="AElf.Contracts.Election" Version="0.9.0">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
-        <PackageReference Include="AElf.Contracts.Profit" Version="0.9.0-18217">
+        <PackageReference Include="AElf.Contracts.Profit" Version="0.9.0">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
-        <PackageReference Include="AElf.Contracts.Vote" Version="0.9.0-18217">
+        <PackageReference Include="AElf.Contracts.Vote" Version="0.9.0">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
-        <PackageReference Include="AElf.Contracts.MultiToken" Version="0.9.0-18217">
+        <PackageReference Include="AElf.Contracts.MultiToken" Version="0.9.0">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
     </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AElf.WebApp.Application.Chain" Version="0.9.0">
+            <CopyToOutputDirectory>lib\netcoreapp3.0\*.xml</CopyToOutputDirectory>
+            <PackageName>aelf.webapp.application.chain</PackageName>
+        </PackageReference>
+        <PackageReference Include="AElf.WebApp.Application.Net" Version="0.9.0">
+            <CopyToOutputDirectory>lib\netcoreapp3.0\*.xml</CopyToOutputDirectory>
+            <PackageName>aelf.webapp.application.net</PackageName>
+        </PackageReference>
+    </ItemGroup>
+
+    <Target Name="CopyPackages" AfterTargets="AfterBuild">
+        <ItemGroup>
+            <PackageReferenceFiles Condition="%(PackageReference.CopyToOutputDirectory) != 'PreserveNewest' And %(PackageReference.CopyToOutputDirectory) != ''"
+                                   Include="$(NugetPackageRoot)%(PackageReference.PackageName)\%(PackageReference.Version)\%(PackageReference.CopyToOutputDirectory)"/>
+        </ItemGroup>
+        <Copy SourceFiles="@(PackageReferenceFiles)" DestinationFolder="$(OutDir)"/>
+    </Target>
 </Project>

@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+import "aelf/options.proto";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "AElf.Contracts.GreeterContract";
+
+service GreeterContract { 
+    option (aelf.csharp_state) = "AElf.Contracts.GreeterContract.GreeterContractState";
+
+    // Actions
+    rpc Greet (google.protobuf.Empty) returns (google.protobuf.StringValue) { }
+    rpc GreetTo (google.protobuf.StringValue) returns (GreetToOutput) { }
+
+    // Views
+    rpc GetGreetedList (google.protobuf.Empty) returns (GreetedList) {
+        option (aelf.is_view) = true;
+    }
+}
+
+message GreetToOutput {
+    string name = 1;
+    google.protobuf.Timestamp greet_time = 2;
+}
+
+message GreetedList {
+    repeated string value = 1;
+}
