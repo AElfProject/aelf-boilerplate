@@ -34,6 +34,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.GreeterContr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.Tester", "src\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj", "{217599C5-2CF0-411E-97B5-5657739CEE5D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AElf.Boilerplate.WebApp", "AElf.Boilerplate.WebApp", "{C9A5D929-07A9-4664-9EAA-452BF25877CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.WebApp.Testing", "src\AElf.Boilerplate.WebApp.Testing\AElf.Boilerplate.WebApp.Testing.csproj", "{3B96B0C2-B5F1-403B-A6D9-B62C269EA9D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +88,10 @@ Global
 		{217599C5-2CF0-411E-97B5-5657739CEE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{217599C5-2CF0-411E-97B5-5657739CEE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{217599C5-2CF0-411E-97B5-5657739CEE5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B96B0C2-B5F1-403B-A6D9-B62C269EA9D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B96B0C2-B5F1-403B-A6D9-B62C269EA9D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B96B0C2-B5F1-403B-A6D9-B62C269EA9D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B96B0C2-B5F1-403B-A6D9-B62C269EA9D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,6 +108,8 @@ Global
 		{4C0F6A56-667B-4534-A60F-CDAC5F3A5534} = {5C980166-C987-470D-AEE0-3858A170A903}
 		{B177712A-3005-41CC-965A-62FFA32545DD} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 		{217599C5-2CF0-411E-97B5-5657739CEE5D} = {21D85A91-5BB8-4912-8107-49435A461AAC}
+		{C9A5D929-07A9-4664-9EAA-452BF25877CC} = {21D85A91-5BB8-4912-8107-49435A461AAC}
+		{3B96B0C2-B5F1-403B-A6D9-B62C269EA9D8} = {C9A5D929-07A9-4664-9EAA-452BF25877CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7426B41-E959-40E4-9ED8-ED8D9C50F133}
