@@ -1,4 +1,4 @@
-# aelf-boilerplate : a framework for smart contract and dApp development
+# AElf-boilerplate - A framework for smart contract and dApp development
 
 Welcome to AElf Boilerplate's official GitHub repo !
 
