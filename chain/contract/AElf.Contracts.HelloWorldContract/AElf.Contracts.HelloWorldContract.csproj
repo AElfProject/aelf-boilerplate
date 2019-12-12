@@ -1,11 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <!-- The root namespace -->
     <RootNamespace>AElf.Contracts.HelloWorldContract</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <!-- Mark this project as a contract -->
     <IsContract>true</IsContract>
   </PropertyGroup>
   <ItemGroup>
+    <!-- Reference the protobuf definition of the contract -->
     <ContractCode Include="..\..\protobuf\hello_world_contract.proto">
       <Link>Protobuf/Proto/hello_world_contract.proto</Link>
     </ContractCode>
