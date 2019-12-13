@@ -13,9 +13,9 @@ namespace AElf.Contracts.LotteryDemoContract
     {
         private const int BasicMultiple = 100_000_000;
         private const int OneStarReward = 10;
-        private const int IntervalTime = 60 * 10; // seconds
-//        private const int IntervalTime = 6 * 10; // seconds
-//        private const int IntervalTime = 6 * 10; // seconds
+//        private const int IntervalTime = 60 * 10; // seconds
+//        private const int IntervalTime = 20; // seconds
+        private const int IntervalTime = 10; // seconds
 
         public override GetStateOutput GetState (Empty input)
         {
@@ -264,7 +264,8 @@ namespace AElf.Contracts.LotteryDemoContract
 
         private static long ConvertToInteger(Hash hash)
         {
-            var luckyNumber = Math.Abs(hash.ToInt64() % 100000);
+            var hexStr = hash.ToHex().Substring(0, 8);
+            var luckyNumber = Convert.ToInt64(hexStr, 16) % 100000;
             return luckyNumber;
         }
 
