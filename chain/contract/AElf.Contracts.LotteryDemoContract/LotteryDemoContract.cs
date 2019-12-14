@@ -264,8 +264,7 @@ namespace AElf.Contracts.LotteryDemoContract
 
         private static long ConvertToInteger(Hash hash)
         {
-            var hexStr = hash.ToHex().Substring(0, 8);
-            var luckyNumber = Convert.ToInt64(hexStr, 16) % 100000;
+            var luckyNumber = Math.Abs(hash.ToInt64() % 100000);
             return luckyNumber;
         }
 
