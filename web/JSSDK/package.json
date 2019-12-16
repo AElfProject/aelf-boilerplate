@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js & node open.js"
+    "browser": "serve ./ -l 8900",
+    "start": "node index.js && node open.js && npm run browser"
   },
   "author": "hzz780",
   "license": "MIT",
   "dependencies": {
-    "aelf-sdk": "^3.2.8"
+    "aelf-sdk": "^3.2.23"
+  },
+  "devDependencies": {
+    "open": "^7.0.0",
+    "serve": "^11.2.0"
   }
 }

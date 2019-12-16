@@ -2,9 +2,12 @@
  * @author zhouminghui
  * @file open.js
  */
-const os = require('os');
-const spawn = require('child_process').spawn;
-const exec = require('child_process').exec;
+const open = require('open');
 
-let sysType = os.type();
-sysType === 'Windows_NT' ? exec('index.html') : spawn('open', ['index.html']);
+(() => {
+    console.log('Open http://localhost:8900/index.html');
+
+    setTimeout(() => {
+        open('http://localhost:8900/index.html');
+    }, 2000);
+})();

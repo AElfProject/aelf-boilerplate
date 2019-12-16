@@ -2,7 +2,7 @@
  * @file index.js
  * @author hzz780
  */
-const AElf = require('aelf-sdk/dist/aelf.cjs');
+const AElf = require('aelf-sdk');
 const Wallet = AElf.wallet;
 const sha256 = AElf.utils.sha256;
 
@@ -13,7 +13,8 @@ const wallet = Wallet.getWalletByPrivateKey(defaultPrivateKey);
 const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
 
 if(!aelf.isConnected()) {
-    alert('Blockchain Node is not running.');
+    console.error('Blockchain Node is not running.');
+    process.exit(1);
 }
 
 /** use async mode with promise, all chain methods and contract methods are default to be async **/

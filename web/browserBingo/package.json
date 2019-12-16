@@ -30,6 +30,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "aelf-sdk": "^3.2.8"
+    "aelf-sdk": "^3.2.23"
   }
 }
