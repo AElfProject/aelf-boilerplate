@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Linq;
 using AElf.Boilerplate.MainChain;
-using AElf.Kernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp;
 using Volo.Abp.Modularity;
 
 namespace AElf.Boilerplate.Launcher
@@ -15,6 +13,7 @@ namespace AElf.Boilerplate.Launcher
     public class Startup
     {
         private readonly IConfiguration _configuration;
+        private const string DefaultCorsPolicyName = "CorsPolicy";
 
         public Startup(IConfiguration configuration)
         {
@@ -26,6 +25,25 @@ namespace AElf.Boilerplate.Launcher
         public void ConfigureServices(IServiceCollection services)
         {
             AddApplication<MainChainModule>(services);
+            services.AddCors(options =>
+            {
+                options.AddPolicy(DefaultCorsPolicyName, builder =>
+                {
+                    builder
+                        .WithOrigins(_configuration["CorsOrigins"]
+                            .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                            .Select(o => o.RemovePostFix("/"))
+                            .ToArray()
+                        )
+                        .WithAbpExposedHeaders()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                    if (_configuration["CorsOrigins"] != "*")
+                    {
+                        builder.AllowCredentials();
+                    }
+                });
+            });
         }
         
         private static void AddApplication<T>(IServiceCollection services) where T: IAbpModule
@@ -37,6 +55,7 @@ namespace AElf.Boilerplate.Launcher
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseRouting();
+            app.UseCors(DefaultCorsPolicyName);
 
             app.InitializeApplication();
         }
