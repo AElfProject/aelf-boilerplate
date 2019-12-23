@@ -114,7 +114,7 @@ namespace AElf.Boilerplate.MainChain
 
             context.Services.AddTransient<IGenesisSmartContractDtoProvider, GenesisSmartContractDtoProvider>();
 
-            context.Services.RemoveAll<ITransactionValidationProvider>();
+            //context.Services.RemoveAll<ITransactionValidationProvider>();
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
