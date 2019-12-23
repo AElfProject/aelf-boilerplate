@@ -13,6 +13,7 @@ using AElf.Kernel.SmartContract.Application;
 using AElf.Kernel.SmartContract.Parallel;
 using AElf.Kernel.SmartContractExecution.Application;
 using AElf.Kernel.Token;
+using AElf.Kernel.Txn.Application;
 using AElf.Modularity;
 using AElf.OS;
 using AElf.OS.Network.Grpc;
@@ -114,7 +115,7 @@ namespace AElf.Boilerplate.MainChain
 
             context.Services.AddTransient<IGenesisSmartContractDtoProvider, GenesisSmartContractDtoProvider>();
 
-            //context.Services.RemoveAll<ITransactionValidationProvider>();
+            context.Services.RemoveAll<ITransactionValidationProvider>();
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
