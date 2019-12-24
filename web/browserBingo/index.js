@@ -12,6 +12,7 @@ const wallet = AElf.wallet.createNewWallet();
 // const wallet = AElf.wallet.getWalletByPrivateKey(defaultPrivateKey);
 // link to local Blockchain, you can learn how to run a local node in https://docs.aelf.io/main/main/setup
 // const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
+const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
 
 if (!aelf.isConnected()) {
   alert('Blockchain Node is not running.');
@@ -26,6 +27,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   const bingo = document.getElementById('bingo');
   const buttonBox = document.querySelector('.button-box');
   const balanceInput = document.getElementById('balance-input');
+  const refreshButton = document.getElementById('refresh-button');
   const loader = document.getElementById('loader');
   let txId = 0;
 
@@ -62,6 +64,10 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
         console.log(err);
       });;
   }
+
+  refreshButton.onclick = () => {
+    getBalance();
+  };
 
   // register game, update the number of cards, display game interface
   register.onclick = () => {
