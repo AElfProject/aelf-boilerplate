@@ -13,8 +13,7 @@ const defaultPrivateKey = 'bdb3b39ef4cd18c2697a920eb6d9e8c3cf1a930570beb37d04fb5
 
 let wallet = Wallet.getWalletByPrivateKey(defaultPrivateKey);
 const aelf = new AElf(new AElf.providers.HttpProvider(
-  // 'http://127.0.0.1:1235'
-  'http://192.168.199.105:1235'
+  'http://127.0.0.1:1235'
 ));
 
 if (!aelf.isConnected()) {
