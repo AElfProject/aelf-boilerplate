@@ -23,21 +23,33 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        aelf.chain.contractAt(config.bingoGameAddress, this.wallet, (error, result) => {
-            if (result) {
+        aelf.chain.getChainStatus()
+            // get instance by GenesisContractAddress
+            .then(res => aelf.chain.contractAt(res.GenesisContractAddress, this.wallet))
+            // return contract's address which you query by contract's name
+            .then(zeroC => zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.BingoGameContract')))
+            // return contract's instance and you can call the methods on this instance
+            .then(bingoAddress => aelf.chain.contractAt(bingoAddress, this.wallet))
+            .then(bingoGameContract => {
                 this.setState({
-                    bingoGameContract: result
+                    bingoGameContract
                 });
-            }
-        });
+            })
+            .catch(err => {
+                Toast.fail('get contract failed');
+                console.error(err);
+            });
     }
 
     onClick() {
         const {bingoGameContract} = this.state;
-        bingoGameContract.Register((error, result) => {
+        bingoGameContract.Register().then(() => {
             Toast.success('恭喜你注册成功，祝你游戏愉快！！！', 3, () => {
                 Actions.PalyGame();
             });
+        }).catch(err => {
+            console.error(err);
+            Toast.fail('registration failed');
         });
     }
 

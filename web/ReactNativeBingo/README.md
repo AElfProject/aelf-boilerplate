@@ -1,5 +1,9 @@
 # ReactNative
 
+## Requirements
+
+You have to install `Node`, `Npm` and `Yarn` before going through next steps.
+
 ## 如何启动 BingoGame
 
 在运行BingoGame之前，请先确保你已经按照文档配置好了测试环境。
@@ -14,25 +18,36 @@
 
 - [windows Android](https://ke.qq.com/webcourse/index.html#course_id=197101&term_id=100233637&taid=1220874518856173&vid=d1417tgg1ez)
 
+### Install dependencies
+
+```bash
+yarn
+```
+
+or, just choose one tools between `Yarn` and `Npm`
+
+```bash
+npm i
+```
 
 ### macOs IOS 如何启动
 
-首先确保 app/config/config.js 中有相应的配置。你不需要进行修改，但是需要注意 IOS模拟器中需要使用 ```defaultChain: 'http://127.0.0.1:1235/chain'```
+首先确保 app/config/config.js 中有相应的配置。你不需要进行修改，但是需要注意 IOS模拟器中需要使用 ```defaultChain: 'http://127.0.0.1:1235'```
 
 1. 运行
 
 ```shell
-    bash build.sh run-ios
+bash build.sh run-ios
 ```
 
 ### macOs Android 如何启动
 
-首先确保 app/config/config.js 中有相应的配置。你不需要进行修改，但是需要注意 IOS模拟器中需要使用 ```defaultChain: 'http://10.0.2.2:1235/chain'``` (Android Studio 模拟器 映射主机地址为 ```10.0.2.2```)
+首先确保 app/config/config.js 中有相应的配置。你不需要进行修改，但是需要注意 IOS模拟器中需要使用 ```defaultChain: 'http://10.0.2.2:1235'``` (Android Studio 模拟器 映射主机地址为 ```10.0.2.2```)
 
 1. 运行
 
 ```shell
-    bash build.sh run-android
+bash build.sh run-android
 ```
 
 # 无法运行

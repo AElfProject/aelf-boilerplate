@@ -34,25 +34,32 @@ export default class Bingo extends Component {
     }
 
     componentDidMount() {
-        aelf.chain.getBlockHeight((error, result) => {
-            console.log(result);
-        });
-        aelf.chain.contractAt(config.multiTokenAddress, this.wallet, (error, result) => {
-            this.setState({
-                multiTokenContract: result
-            });
-            setTimeout(() => {
-                this.getBalance();
-            }, 0);
-        });
-
-        aelf.chain.contractAt(config.bingoGameAddress, this.wallet, (error, result) => {
-            if (result) {
+        aelf.chain.getChainStatus()
+            // get instance by GenesisContractAddress
+            .then(res => aelf.chain.contractAt(res.GenesisContractAddress, this.wallet))
+            // return contract's address which you query by contract's name
+            .then(zeroC => Promise.all([
+                zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.Token')),
+                zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.BingoGameContract'))
+            ]))
+            // return contract's instance and you can call the methods on this instance
+            .then(([tokenAddress, bingoAddress]) => Promise.all([
+                aelf.chain.contractAt(tokenAddress, this.wallet),
+                aelf.chain.contractAt(bingoAddress, this.wallet)
+            ]))
+            .then(([multiTokenContract, bingoGameContract]) => {
                 this.setState({
-                    bingoGameContract: result
+                    multiTokenContract,
+                    bingoGameContract
                 });
-            }
-        });
+                setTimeout(() => {
+                    this.getBalance();
+                }, 0);
+            })
+            .catch(err => {
+                Toast.fail('get contract failed');
+                console.error(err);
+            });
     }
 
     getBalance() {
@@ -61,13 +68,12 @@ export default class Bingo extends Component {
             symbol: 'CARD',
             owner: wallet.address
         };
-        multiTokenContract.GetBalance.call(payload, (error, result) => {
-            console.log(result);
-            if (result) {
-                this.setState({
-                    balance: result.balance
-                });
-            }
+        multiTokenContract.GetBalance.call(payload).then(result => {
+            this.setState({
+                balance: result.balance
+            });
+        }).catch(err => {
+            console.error(err);
         });
     }
 
@@ -78,7 +84,7 @@ export default class Bingo extends Component {
             amount: this.state.value,
             symbol: 'ELF'
         };
-        multiTokenContract.Transfer(payload, (error, result) => {
+        multiTokenContract.Transfer(payload).then(result => {
             this.setState({
                 address: null,
                 value: null
@@ -86,6 +92,9 @@ export default class Bingo extends Component {
             setTimeout(() => {
                 this.getBalance();
             }, 4000);
+        }).catch(err => {
+            console.error(err);
+            Toast.fail('tranfer failed');
         });
     }
 
@@ -98,10 +107,6 @@ export default class Bingo extends Component {
                 disabled: true,
                 loading: true
             });
-            // console.log(bingoGameContract);
-            // bingoGameContract.GetPlayerInformation.call('csoxW4vTJNT9gdvyWS6W7UqEdkSo9pWyJqBoGSnUHXVnj4ykJ', (error, result) => {
-            //     console.log(error, result);
-            // });
             bingoGameContract.Play({value: parseInt(this.state.value, 10)}, (error, result) => {
                 if (result) {
                     console.log(result);
@@ -119,8 +124,7 @@ export default class Bingo extends Component {
                     }, 20000);
                 }
             });
-        }
-        else {
+        } else {
             Toast.fail('必须为大于0的整数，不能以0开头！');
         }
     }
