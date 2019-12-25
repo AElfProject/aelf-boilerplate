@@ -27,7 +27,7 @@ export default class Bingo extends Component {
             multiTokenContract: null,
             bingoGameContract: null,
             loading: false,
-            disabled: false,
+            disabled: true,
             noClick: true,
             txId: null
         };
@@ -50,7 +50,8 @@ export default class Bingo extends Component {
             .then(([multiTokenContract, bingoGameContract]) => {
                 this.setState({
                     multiTokenContract,
-                    bingoGameContract
+                    bingoGameContract,
+                    disabled: false
                 });
                 setTimeout(() => {
                     this.getBalance();

@@ -223,6 +223,7 @@ input:focus ~ .left, input:focus ~ .right {
 .loader {
     position: relative;
     display: none;
+    z-index: 1;
   }
   
   .outer,

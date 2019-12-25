@@ -9,6 +9,7 @@ import AElf from 'aelf-sdk';
 const { sha256 } = AElf.utils;
 const defaultPrivateKey = 'a59c14882c023d63e84e5faf36558fdc8dbf1063eed45ce7e507f1cd9bcde1d9';
 const wallet = AElf.wallet.getWalletByPrivateKey(defaultPrivateKey);
+// const wallet = AElf.wallet.createNewWallet();
 // link to local Blockchain, you can learn how to run a local node in https://docs.aelf.io/main/main/setup
 const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
 
@@ -46,11 +47,26 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   }
 
   // register game, update the number of cards, display game interface
+  let loading = false;
   register.onclick = () => {
+    if (loading) {
+      return;
+    }
+    loading = true;
+    loader.style.display = 'inline-block';
     bingoGameContract.Register()
-      .then(
-        getBalance
-      )
+      .then(() => {
+        return new Promise(resolve => {
+          register.innerText = 'Loading';
+          setTimeout(() => {
+            getBalance();
+            loading = false;
+            register.innerText = 'Register';
+            loader.style.display = 'none';
+            resolve()
+          }, 3000);
+        });
+      })
       .then(() => {
         alert('Congratulations on your successful registration！');
         siteBody.style.display = 'block';
@@ -134,6 +150,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
 }
 
 function init() {
+  document.getElementById('register').innerText = 'Please wait...';
   aelf.chain.getChainStatus()
     // get instance by GenesisContractAddress
     .then(res => aelf.chain.contractAt(res.GenesisContractAddress, wallet))

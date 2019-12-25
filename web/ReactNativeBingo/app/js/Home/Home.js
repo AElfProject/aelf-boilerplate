@@ -18,7 +18,9 @@ export default class Home extends Component {
         super(props);
         this.wallet = aelf.wallet.getWalletByPrivateKey(config.userPrivateKey);
         this.state = {
-            bingoGameContract: null
+            bingoGameContract: null,
+            disabled: true,
+            loading: false
         };
     }
 
@@ -32,7 +34,8 @@ export default class Home extends Component {
             .then(bingoAddress => aelf.chain.contractAt(bingoAddress, this.wallet))
             .then(bingoGameContract => {
                 this.setState({
-                    bingoGameContract
+                    bingoGameContract,
+                    disabled: false
                 });
             })
             .catch(err => {
@@ -43,8 +46,12 @@ export default class Home extends Component {
 
     onClick() {
         const {bingoGameContract} = this.state;
+        this.setState({
+            loading: true
+        });
         bingoGameContract.Register().then(() => {
             Toast.success('恭喜你注册成功，祝你游戏愉快！！！', 3, () => {
+                this.setState({loading: false});
                 Actions.PalyGame();
             });
         }).catch(err => {
@@ -63,6 +70,8 @@ export default class Home extends Component {
                 <Button
                     style={styles.button}
                     type='primary'
+                    disabled={this.state.disabled}
+                    loading={this.state.loading}
                     onPress={() => this.onClick()}
                 >
                     Register
