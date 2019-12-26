@@ -7,10 +7,12 @@
 import AElf from 'aelf-sdk';
 
 const { sha256 } = AElf.utils;
-const defaultPrivateKey = 'a59c14882c023d63e84e5faf36558fdc8dbf1063eed45ce7e507f1cd9bcde1d9';
-const wallet = AElf.wallet.getWalletByPrivateKey(defaultPrivateKey);
-// const wallet = AElf.wallet.createNewWallet();
+
+// const defaultPrivateKey = 'a59c14882c023d63e84e5faf36558fdc8dbf1063eed45ce7e507f1cd9bcde1d9';
+const wallet = AElf.wallet.createNewWallet();
+// const wallet = AElf.wallet.getWalletByPrivateKey(defaultPrivateKey);
 // link to local Blockchain, you can learn how to run a local node in https://docs.aelf.io/main/main/setup
+// const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
 const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
 
 if (!aelf.isConnected()) {
@@ -26,6 +28,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   const bingo = document.getElementById('bingo');
   const buttonBox = document.querySelector('.button-box');
   const balanceInput = document.getElementById('balance-input');
+  const refreshButton = document.getElementById('refresh-button');
   const loader = document.getElementById('loader');
   let txId = 0;
 
@@ -35,16 +38,37 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
       symbol: 'CARD',
       owner: wallet.address
     };
+
+    // TODO:
+    setTimeout(() => {
+      multiTokenContract.GetBalance.call(payload)
+        .then(result => {
+          console.log('result: ', result);
+          const difference = result.balance - balance.innerText;
+          balance.innerHTML = result.balance;
+          return difference;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }, 3000);
+
     return multiTokenContract.GetBalance.call(payload)
       .then(result => {
+        // console.log('result: ', result);
         const difference = result.balance - balance.innerText;
-        balance.innerHTML = result.balance;
+        // balance.innerHTML = result.balance;
+        balance.innerHTML = 'loading...';
         return difference;
       })
       .catch(err => {
         console.log(err);
-      });
+      });;
   }
+
+  refreshButton.onclick = () => {
+    getBalance();
+  };
 
   // register game, update the number of cards, display game interface
   let loading = false;
@@ -108,6 +132,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
       loader.style.display = 'inline-block';
       bingoGameContract.Play({ value })
         .then(result => {
+          console.log('Play result: ', result);
           play.style.display = 'none';
           txId = result.TransactionId;
           setTimeout(() => {
@@ -135,6 +160,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
       .then(difference => {
         play.style.display = 'inline-block';
         bingo.style.display = 'none';
+        console.log('difference: ', difference);
         if (difference > 0) {
           alert(`Congratulations！！ You got ${difference} card`);
         } else if (difference < 0) {
