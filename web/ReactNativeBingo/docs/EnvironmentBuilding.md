@@ -1,10 +1,10 @@
-# Mac 下 Ios 与 Android 测试环境配置。
+# Mac 下 iOS 与 Android 测试环境配置
 
-## 1. Mac IOS
+## 1. Mac iOS
 
-### 1. 安装 Xcode
+### 1. Install Xcode
 
-React Native 目前需要Xcode 9.4 或更高版本。你可以通过 App Store 或是到 [Apple 开发者官网上下载](https://developer.apple.com/xcode/downloads/)。这一步骤会同时安装 Xcode IDE、Xcode 的命令行工具和 iOS 模拟器。
+`Xcode >= 9.4` [Click to download Xcode](https://developer.apple.com/xcode/downloads/)
 
 ## 2. Mac Android
 
@@ -13,6 +13,7 @@ React Native 目前需要Xcode 9.4 或更高版本。你可以通过 App Store �
 如果你和我一样使用的 ShadowsocksX 那么请切换为全局模式。
 
 ### 1. 安装 Android Studio
+
 首先下载和安装 [Android Studio](https://developer.android.com/studio/index.html)，国内用户可能无法打开官方链接，请自行使用搜索引擎搜索可用的下载链接。安装界面中选择"Custom"选项，确保选中了以下几项
 
 - Android SDK
@@ -46,11 +47,11 @@ React Native 需要通过环境变量来了解你的 Android SDK 装在什么路
 
 如果你的 ```~/``` 目录下没有 ```.bash_profile``` 文件，你可以创建它并编辑它
 
-```shell
+```bash
     vi ~/.bash_profile
 ```
 
-```
+```bash
     # 如果你不是通过Android Studio安装的sdk，则其路径可能不同，请自行确定清楚。
     export ANDROID_HOME=$HOME/Library/Android/sdk
     export PATH=$PATH:$ANDROID_HOME/tools
@@ -61,7 +62,7 @@ React Native 需要通过环境变量来了解你的 Android SDK 装在什么路
 
 使用```source $HOME/.bash_profile```命令来使环境变量设置立即生效（否则重启后才生效）。可以使用```echo $ANDROID_HOME```检查此变量是否已正确设置。
 
-```
+```bash
     请确保你正常指定了 Android SDK 路径。你可以在 Android Studio 的"Preferences"菜单中查看 SDK 的真实路径，具体是Appearance & Behavior → System Settings → Android SDK。
 ```
 
