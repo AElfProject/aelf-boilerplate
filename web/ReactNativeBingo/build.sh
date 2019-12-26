@@ -17,34 +17,18 @@ sleep 1
 node_modules_action=${1:-"default"}
 echo ${node_modules_action}
 
+npx react-native link && echo "link complete"
+sleep 1
+npx react-native link react-native-randombytes && echo "npx react-native link react-native-randombytes"
+sleep 1
+npx rn-nodeify --hack --install && echo "npx rn-nodeify --hack --install"
+
 if [ ${node_modules_action} = "run-ios" ]
 then 
-    echo "yarn install"
-    yarn install && echo "install done"
-    sleep 3
-    yarn install && echo "install check done"
-    sleep 3
-    react-native link && echo "link complete"
-    sleep 1
-    react-native link react-native-randombytes && echo "react-native link react-native-randombytes"
-    sleep 1
-    ./node_modules/.bin/rn-nodeify --hack --install && echo "./node_modules/.bin/rn-nodeify --hack --install"
-    sleep 1
-    react-native run-ios
+    npx react-native run-ios
 fi
 
 if [ ${node_modules_action} = "run-android" ]
 then
-    echo "yarn install"
-    yarn install && echo "install done"
-    sleep 3
-    yarn install && echo "install check done"
-    sleep 3
-    react-native link && echo "link complete"
-    sleep 1
-    react-native link react-native-randombytes && echo "react-native link react-native-randombytes"
-    sleep 1
-    ./node_modules/.bin/rn-nodeify --hack --install && echo "./node_modules/.bin/rn-nodeify --hack --install"
-    sleep 1
-    react-native run-android
+    npx react-native run-android
 fi

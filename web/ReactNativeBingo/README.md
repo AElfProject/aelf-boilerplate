@@ -1,12 +1,14 @@
 # ReactNative
 
-## 如何启动 BingoGame
+## Requirements
 
-在运行BingoGame之前，请先确保你已经按照文档配置好了测试环境。
-如果您不知道如何配置测试环境，您可以通过 https://reactnative.cn/docs/getting-started.html
-查找你所需的环境配置，或者[点击查看](./docs/EnvironmentBuilding.md), 请确保可以正常运行 Ios模拟器 与 Android 模拟器。
+You have to install `Node`, `Npm` and `Yarn` before going through next steps.
 
-视频教程 (React-native 中文网)
+## How to run BingoGame
+
+Please make sure that you are ready to use React Native. [0.59 docs](https://facebook.github.io/react-native/docs/getting-started)
+
+reactnative.cn Tutorial.
 
 - [macOS iOS](https://ke.qq.com/webcourse/index.html#course_id=197101&term_id=100233637&taid=1220865928921581&vid=a1417i5op7k)
 
@@ -14,32 +16,46 @@
 
 - [windows Android](https://ke.qq.com/webcourse/index.html#course_id=197101&term_id=100233637&taid=1220874518856173&vid=d1417tgg1ez)
 
+### Install dependencies
 
-### macOs IOS 如何启动
-
-首先确保 app/config/config.js 中有相应的配置。你不需要进行修改，但是需要注意 IOS模拟器中需要使用 ```defaultChain: 'http://127.0.0.1:1235/chain'```
-
-1. 运行
-
-```shell
-    bash build.sh run-ios
+```bash
+yarn
 ```
 
-### macOs Android 如何启动
+or, just choose one tools between `Yarn` and `Npm`
 
-首先确保 app/config/config.js 中有相应的配置。你不需要进行修改，但是需要注意 IOS模拟器中需要使用 ```defaultChain: 'http://10.0.2.2:1235/chain'``` (Android Studio 模拟器 映射主机地址为 ```10.0.2.2```)
-
-1. 运行
-
-```shell
-    bash build.sh run-android
+```bash
+npm i
 ```
 
-# 无法运行
+### iOS
 
-如果您第一次无法运行，请删除 node_modules 重新运行 ```bash build.sh run-xxx``` 如果依旧无法使用，您可以到我们的git上发起 [Issues](https://github.com/AElfProject/aelf-boilerplate/issues) 或者使用 ```broserBingo```
+```bash
+# app/config/config.js
+defaultChain: 'http://127.0.0.1:1235' # match your own api
+```
 
+```shell
+bash build.sh run-ios
+```
 
-# 配置真机测试环境
+### Android
 
-## [Link Android](./docs/android.md)
+```bash
+# app/config/config.js
+defaultChain: 'http://10.0.2.2:1235' # match your own api
+```
+
+```shell
+bash build.sh run-android
+```
+
+## Can not run it
+
+1. Find the solution with Googel. Most of the error belongs to React Native.
+
+2. And you can create [issues](https://github.com/AElfProject/aelf-boilerplate/issues) or just use `broserBingo`.
+
+## How to use the RN app in your real phone
+
+Please see [docs of React Native](https://facebook.github.io/react-native/docs/0.59/getting-started).

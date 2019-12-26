@@ -4,17 +4,17 @@
  * @description How to use the plugin for hello world
  */
 
-AElf = window.AElf;
+const AElf = window.AElf;
 const Wallet = AElf.wallet;
 const sha256 = AElf.utils.sha256;
 
-// address: 65dDNxzcd35jESiidFXN5JV8Z7pCwaFnepuYQToNefSgqk9
+// address: 2hxkDg6Pd2d4yU1A16PTZVMMrEDYEPR8oQojMDwWdax5LsBaxX
 const defaultPrivateKey = 'bdb3b39ef4cd18c2697a920eb6d9e8c3cf1a930570beb37d04fb52400092c42b';
 
+const endpoint = 'http://127.0.0.1:1235';
+
 let wallet = Wallet.getWalletByPrivateKey(defaultPrivateKey);
-const aelf = new AElf(new AElf.providers.HttpProvider(
-  'http://127.0.0.1:1235'
-));
+const aelf = new AElf(new AElf.providers.HttpProvider(endpoint));
 
 if (!aelf.isConnected()) {
   alert('Blockchain Node is not running.');
@@ -74,7 +74,7 @@ aelf.chain.getChainStatus().then(async result => {
     const aelf = new window.NightElf.AElf({
       // Enter your test address in this location
       httpProvider: [
-        'http://127.0.0.1:1235'
+        endpoint
       ],
       appName
     });
