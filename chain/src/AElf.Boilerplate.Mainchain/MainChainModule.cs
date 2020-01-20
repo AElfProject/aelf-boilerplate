@@ -13,7 +13,6 @@ using AElf.Kernel.SmartContract.Application;
 using AElf.Kernel.SmartContract.Parallel;
 using AElf.Kernel.SmartContractExecution.Application;
 using AElf.Kernel.Token;
-using AElf.Kernel.Txn.Application;
 using AElf.Modularity;
 using AElf.OS;
 using AElf.OS.Network.Grpc;
@@ -89,9 +88,11 @@ namespace AElf.Boilerplate.MainChain
             s.TryAddSingleton<ISmartContractAddressNameProvider, TokenConverterSmartContractAddressNameProvider>();
             s.TryAddSingleton<ISmartContractAddressNameProvider, TokenSmartContractAddressNameProvider>();
             s.TryAddSingleton<ISmartContractAddressNameProvider, VoteSmartContractAddressNameProvider>();
+            //s.TryAddSingleton<ISmartContractAddressNameProvider, TokenHolderSmartContractAddressNameProvider>();
 
             var configuration = context.Services.GetConfiguration();
-            Configure<AElf.OS.EconomicOptions>(configuration.GetSection("Economic"));
+            Configure<EconomicOptions>(configuration.GetSection("Economic"));
+            Configure<LotteryOptions>(configuration.GetSection("Lottery"));
             Configure<ChainOptions>(option =>
             {
                 option.ChainId =

@@ -13,11 +13,22 @@
         <ContractReference Include="..\..\protobuf\acs6.proto">
             <Link>Protobuf\Proto\reference\acs6.proto</Link>
         </ContractReference>
+      <ContractReference Include="..\..\protobuf\token_converter_contract.proto">
+        <Link>Protobuf\Proto\reference\token_converter_contract.proto</Link>
+      </ContractReference>
+      <ContractReference Include="..\..\protobuf\acs1.proto">
+        <Link>Protobuf\Proto\reference\acs1.proto</Link>
+      </ContractReference>
+
     </ItemGroup>
 
     <ItemGroup>
         <ContractCode Include="..\..\protobuf\lottery_demo_contract.proto">
             <Link>Protobuf\Proto\lottery_demo_contract.proto</Link>
         </ContractCode>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="AElf.Sdk.CSharp" Version="0.9.1" />
     </ItemGroup>
 </Project>

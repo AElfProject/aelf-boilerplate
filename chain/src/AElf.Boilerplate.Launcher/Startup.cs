@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Linq;
 using AElf.Boilerplate.MainChain;
+using AElf.Kernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Cors;
+using Volo.Abp;
 using Volo.Abp.Modularity;
 
 namespace AElf.Boilerplate.Launcher

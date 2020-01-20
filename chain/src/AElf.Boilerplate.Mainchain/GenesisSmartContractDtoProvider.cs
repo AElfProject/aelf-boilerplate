@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using AElf.Boilerplate.MainChain;
 using AElf.Contracts.Deployer;
 using AElf.Kernel.Account.Application;
 using AElf.Kernel.Consensus.AEDPoS;
@@ -14,18 +15,20 @@ namespace AElf.Blockchains.MainChain
     {
         private readonly IAccountService _accountService;
         private readonly IReadOnlyDictionary<string, byte[]> _codes;
-        
+
         private readonly ConsensusOptions _consensusOptions;
         private readonly EconomicOptions _economicOptions;
+        private readonly LotteryOptions _lotteryOptions;
 
         public GenesisSmartContractDtoProvider(IOptionsSnapshot<ConsensusOptions> consensusOptions,
             IOptionsSnapshot<EconomicOptions> economicOptions, ContractsDeployer contractsDeployer,
-            IAccountService accountService)
+            IAccountService accountService, IOptionsSnapshot<LotteryOptions> lotteryOptions)
         {
             _accountService = accountService;
             _consensusOptions = consensusOptions.Value;
             _economicOptions = economicOptions.Value;
-            
+            _lotteryOptions = lotteryOptions.Value;
+
             _codes = contractsDeployer.GetContractCodes<GenesisSmartContractDtoProvider>();
         }
 
@@ -42,7 +45,13 @@ namespace AElf.Blockchains.MainChain
                 GetGenesisSmartContractDtosForHelloWorld(zeroContractAddress),
                 GetGenesisSmartContractDtosForBingoGame(zeroContractAddress),
                 GetGenesisSmartContractDtosForLotteryDemo(zeroContractAddress),
-                GetGenesisSmartContractDtosForGreeter()
+                GetGenesisSmartContractDtosForTokenConverter(),
+                GetGenesisSmartContractDtosForCasinoConverter(),
+                //GetGenesisSmartContractDtosForTokenHolder(),
+                GetGenesisSmartContractDtosForCasino(),
+                
+                //GetGenesisSmartContractDtosForGreeter(),
+                
                 //GetGenesisSmartContractDtosForRandomDemo(zeroContractAddress)
             }.SelectMany(x => x);
         }

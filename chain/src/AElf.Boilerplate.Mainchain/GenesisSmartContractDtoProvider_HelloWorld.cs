@@ -6,7 +6,6 @@ using AElf.Types;
 
 namespace AElf.Blockchains.MainChain
 {
-    /* Part of the GenesisSmartContractDtoProvider */
     public partial class GenesisSmartContractDtoProvider
     {
         public IEnumerable<GenesisSmartContractDto> GetGenesisSmartContractDtosForHelloWorld(Address zeroContractAddress)
@@ -14,12 +13,8 @@ namespace AElf.Blockchains.MainChain
             var l = new List<GenesisSmartContractDto>();
 
             l.AddGenesisSmartContract(
-                // find the contracts code by name
-                _codes.Single(kv => kv.Key.Contains("HelloWorld")).Value,
-                // the name of the contract is built from the full name
-                Hash.FromString("AElf.ContractNames.HelloWorldContract"), 
-                
-                new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList());
+                _codes.Single(kv=>kv.Key.Contains("HelloWorld")).Value,
+                Hash.FromString("AElf.ContractNames.HelloWorldContract"), new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList());
 
             return l;
         }

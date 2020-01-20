@@ -4,8 +4,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.Launcher", "src\AElf.Boilerplate.Launcher\AElf.Boilerplate.Launcher.csproj", "{7691E8CC-C427-4361-AF9A-D769A92C2318}"
+	ProjectSection(ProjectDependencies) = postProject
+		{882A52F2-2A9C-4B00-BB08-EFE11456FDC6} = {882A52F2-2A9C-4B00-BB08-EFE11456FDC6}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.Mainchain", "src\AElf.Boilerplate.Mainchain\AElf.Boilerplate.Mainchain.csproj", "{F5B9CE98-80B4-46F0-A040-1BE75C276411}"
+	ProjectSection(ProjectDependencies) = postProject
+		{882A52F2-2A9C-4B00-BB08-EFE11456FDC6} = {882A52F2-2A9C-4B00-BB08-EFE11456FDC6}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{21D85A91-5BB8-4912-8107-49435A461AAC}"
 EndProject
@@ -20,19 +26,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "contract", "contract", "{5C
 		contract\Directory.Build.props = contract\Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.Deployer", "src\AElf.Contracts.Deployer\AElf.Contracts.Deployer.csproj", "{9484A7A9-CA57-4FF4-9FD8-27BFEF92EDBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.Deployer", "src\AElf.Contracts.Deployer\AElf.Contracts.Deployer.csproj", "{9484A7A9-CA57-4FF4-9FD8-27BFEF92EDBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.BingoGameContract", "contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj", "{19311D5A-8788-4463-A6EF-6AA4E9115232}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.BingoGameContract", "contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj", "{19311D5A-8788-4463-A6EF-6AA4E9115232}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.HelloWorldContract", "contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj", "{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.HelloWorldContract", "contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj", "{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.LotteryDemoContract", "contract\AElf.Contracts.LotteryDemoContract\AElf.Contracts.LotteryDemoContract.csproj", "{B15042F7-AD67-4BD5-AFCA-12CB00347B82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.LotteryDemoContract", "contract\AElf.Contracts.LotteryDemoContract\AElf.Contracts.LotteryDemoContract.csproj", "{B15042F7-AD67-4BD5-AFCA-12CB00347B82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.GreeterContract", "contract\AElf.Contracts.GreeterContract\AElf.Contracts.GreeterContract.csproj", "{4C0F6A56-667B-4534-A60F-CDAC5F3A5534}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.GreeterContract", "contract\AElf.Contracts.GreeterContract\AElf.Contracts.GreeterContract.csproj", "{4C0F6A56-667B-4534-A60F-CDAC5F3A5534}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.GreeterContract.Tests", "test\AElf.Contracts.GreeterContract.Tests\AElf.Contracts.GreeterContract.Tests.csproj", "{B177712A-3005-41CC-965A-62FFA32545DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.GreeterContract.Tests", "test\AElf.Contracts.GreeterContract.Tests\AElf.Contracts.GreeterContract.Tests.csproj", "{B177712A-3005-41CC-965A-62FFA32545DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.Tester", "src\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj", "{217599C5-2CF0-411E-97B5-5657739CEE5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.Tester", "src\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj", "{217599C5-2CF0-411E-97B5-5657739CEE5D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.CasinoContract", "contract\AElf.Contracts.CasinoContract\AElf.Contracts.CasinoContract.csproj", "{882A52F2-2A9C-4B00-BB08-EFE11456FDC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.CasinoConverterContract", "contract\AElf.Contracts.CasinoConverterContract\AElf.Contracts.CasinoConverterContract.csproj", "{A19DB8CF-5EFB-4BB9-8F66-06CC97E1C913}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +94,14 @@ Global
 		{217599C5-2CF0-411E-97B5-5657739CEE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{217599C5-2CF0-411E-97B5-5657739CEE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{217599C5-2CF0-411E-97B5-5657739CEE5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{882A52F2-2A9C-4B00-BB08-EFE11456FDC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{882A52F2-2A9C-4B00-BB08-EFE11456FDC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{882A52F2-2A9C-4B00-BB08-EFE11456FDC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{882A52F2-2A9C-4B00-BB08-EFE11456FDC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A19DB8CF-5EFB-4BB9-8F66-06CC97E1C913}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A19DB8CF-5EFB-4BB9-8F66-06CC97E1C913}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A19DB8CF-5EFB-4BB9-8F66-06CC97E1C913}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A19DB8CF-5EFB-4BB9-8F66-06CC97E1C913}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,6 +118,8 @@ Global
 		{4C0F6A56-667B-4534-A60F-CDAC5F3A5534} = {5C980166-C987-470D-AEE0-3858A170A903}
 		{B177712A-3005-41CC-965A-62FFA32545DD} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 		{217599C5-2CF0-411E-97B5-5657739CEE5D} = {21D85A91-5BB8-4912-8107-49435A461AAC}
+		{882A52F2-2A9C-4B00-BB08-EFE11456FDC6} = {5C980166-C987-470D-AEE0-3858A170A903}
+		{A19DB8CF-5EFB-4BB9-8F66-06CC97E1C913} = {5C980166-C987-470D-AEE0-3858A170A903}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7426B41-E959-40E4-9ED8-ED8D9C50F133}

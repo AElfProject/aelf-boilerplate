@@ -38,10 +38,22 @@ namespace AElf.Blockchains.MainChain
             tokenContractCallList.Add(nameof(TokenContractContainer.TokenContractStub.Issue), new IssueInput
             {
                 To = Address.FromPublicKey(AsyncHelper.RunSync(_accountService.GetPublicKeyAsync)),
-                Amount = _economicOptions.TotalSupply,
+                Amount = _economicOptions.TotalSupply / 10,
                 Symbol = _economicOptions.Symbol,
                 Memo = "Play!"
             });
+            foreach (var player in _lotteryOptions.PlayerList)
+            {
+                tokenContractCallList.Add(nameof(TokenContractContainer.TokenContractStub.Issue), new IssueInput
+                {
+                    To = player,
+                    Amount = _lotteryOptions.InitialBalance,
+                    // Assume lottery demo contract use the same symbol as native symbol.
+                    Symbol = _economicOptions.Symbol,
+                    Memo = "Player 233!"
+                });
+            }
+
             return tokenContractCallList;
         }
     }

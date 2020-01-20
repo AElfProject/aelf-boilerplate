@@ -16,6 +16,9 @@ namespace AElf.Boilerplate.MainChain
                 typeof(Contracts.Election.ElectionContract),
                 typeof(Contracts.Consensus.AEDPoS.AEDPoSContract),
                 typeof(Contracts.MultiToken.TokenContract),
+                typeof(Contracts.TokenConverter.TokenConverterContract),
+                typeof(Contracts.TokenHolder.TokenHolderContract),
+
             }.Select(t => t.Assembly.Location).ToList();
         }
     }

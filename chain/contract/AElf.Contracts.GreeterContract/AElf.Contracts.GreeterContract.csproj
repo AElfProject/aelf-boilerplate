@@ -13,4 +13,8 @@
         </ContractCode>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Update="AElf.Sdk.CSharp" Version="0.9.1" />
+    </ItemGroup>
+
 </Project> 

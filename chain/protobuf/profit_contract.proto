@@ -4,8 +4,6 @@ package profit;
 
 import "acs1.proto";
 import "aelf/core.proto";
-import "aelf/options.proto";
-import "google/protobuf/empty.proto";
 
 option csharp_namespace = "AElf.Contracts.Profit";
 
@@ -63,6 +61,7 @@ message CreateSchemeInput {
     bool is_release_all_balance_every_time_by_default = 2;
     sint32 delay_distribute_period_count = 3;
     aelf.Address manager = 4;
+    bool can_remove_beneficiary_directly = 5;
 }
 
 message Scheme {
@@ -71,6 +70,7 @@ message Scheme {
     map<string, sint64> undistributed_profits = 3;// token symbol -> amount
     sint64 current_period = 4;
     repeated SchemeBeneficiaryShare sub_schemes = 5;
+    bool can_remove_beneficiary_directly = 6;
     sint64 profit_receiving_due_period_count = 7;
     bool is_release_all_balance_every_time_by_default = 8;
     aelf.Hash scheme_id = 9;
@@ -86,7 +86,7 @@ message SchemeBeneficiaryShare {
 
 message AddBeneficiaryInput {
     aelf.Hash scheme_id = 1;
-    BeneficiaryShare BeneficiaryShare = 2;
+    BeneficiaryShare beneficiary_share = 2;
     sint64 end_period = 3;
 }
 
@@ -97,12 +97,12 @@ message RemoveBeneficiaryInput {
 
 message AddBeneficiariesInput {
     aelf.Hash scheme_id = 1;
-    repeated BeneficiaryShare BeneficiaryShares = 2;
+    repeated BeneficiaryShare beneficiary_shares = 2;
     sint64 end_period = 4;
 }
 
 message RemoveBeneficiariesInput {
-    repeated aelf.Address Beneficiaries = 1;
+    repeated aelf.Address beneficiaries = 1;
     aelf.Hash scheme_id = 2;
 }
 
@@ -114,6 +114,7 @@ message BeneficiaryShare {
 message ClaimProfitsInput {
     aelf.Hash scheme_id = 1;
     string symbol = 2;
+    aelf.Address beneficiary = 3;
 }
 
 message DistributeProfitsInput {
@@ -124,7 +125,7 @@ message DistributeProfitsInput {
 }
 
 message ProfitDetails {
-    repeated ProfitDetail Details = 1;
+    repeated ProfitDetail details = 1;
 }
 
 message ProfitDetail {
