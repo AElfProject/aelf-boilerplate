@@ -42,11 +42,11 @@ namespace AElf.Blockchains.MainChain
                 GetGenesisSmartContractDtosForElection(),
                 GetGenesisSmartContractDtosForToken(),
                 GetGenesisSmartContractDtosForConsensus(),
+                GetGenesisSmartContractDtosForConfiguration(),
                 GetGenesisSmartContractDtosForHelloWorld(),
                 GetGenesisSmartContractDtosForBingoGame(),
                 GetGenesisSmartContractDtosForLotteryDemo(),
-                GetGenesisSmartContractDtosForGreeter()
-                //GetGenesisSmartContractDtosForRandomDemo(zeroContractAddress)
+                GetGenesisSmartContractDtosForGreeter(),
             }.SelectMany(x => x);
         }
     }
