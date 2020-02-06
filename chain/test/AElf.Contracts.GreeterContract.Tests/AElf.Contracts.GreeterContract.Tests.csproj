@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.Contracts.TestKit" Version="0.9.2-18295" />
+        <PackageReference Include="AElf.Contracts.TestKit" Version="0.9.2" />
     </ItemGroup>
 
     <ItemGroup>
