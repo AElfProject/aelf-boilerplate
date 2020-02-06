@@ -11,18 +11,17 @@ namespace AElf.Blockchains.MainChain
 {
     public partial class GenesisSmartContractDtoProvider
     {
-        public IEnumerable<GenesisSmartContractDto> GetGenesisSmartContractDtosForToken(Address zeroContractAddress)
+        public IEnumerable<GenesisSmartContractDto> GetGenesisSmartContractDtosForToken()
         {
             var l = new List<GenesisSmartContractDto>();
             l.AddGenesisSmartContract(
                 _codes.Single(kv => kv.Key.Contains("MultiToken")).Value,
                 TokenSmartContractAddressNameProvider.Name,
-                GenerateTokenInitializationCallList(zeroContractAddress));
+                GenerateTokenInitializationCallList());
             return l;
         }
 
-        private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList GenerateTokenInitializationCallList(
-            Address issuer)
+        private SystemContractDeploymentInput.Types.SystemTransactionMethodCallList GenerateTokenInitializationCallList()
         {
             var tokenContractCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
             tokenContractCallList.Add(nameof(TokenContractContainer.TokenContractStub.Create), new CreateInput
@@ -33,7 +32,7 @@ namespace AElf.Blockchains.MainChain
                 TokenName = _economicOptions.TokenName,
                 TotalSupply = _economicOptions.TotalSupply,
                 // Set the contract zero address as the issuer temporarily.
-                Issuer = issuer,
+                Issuer = _smartContractAddressService.GetZeroSmartContractAddress(),
             });
             tokenContractCallList.Add(nameof(TokenContractContainer.TokenContractStub.Issue), new IssueInput
             {

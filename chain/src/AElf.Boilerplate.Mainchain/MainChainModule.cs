@@ -104,8 +104,11 @@ namespace AElf.Boilerplate.MainChain
             {
                 options.ContextVariables[ContextVariableDictionary.NativeSymbolName] = context.Services
                     .GetConfiguration().GetValue("Economic:Symbol", "ELF");
-                options.ContextVariables[ContextVariableDictionary.ResourceTokenSymbolList] = context.Services
-                    .GetConfiguration().GetValue("Economic:ResourceTokenSymbolList", "STO,RAM,CPU,NET");
+                options.ContextVariables[ContextVariableDictionary.PayTxFeeSymbolList] = context.Services
+                    .GetConfiguration()
+                    .GetValue("Economic:SymbolListToPayTxFee", "WRITE,READ,STORAGE,TRAFFIC");
+                options.ContextVariables[ContextVariableDictionary.PayRentalSymbolList] = context.Services
+                    .GetConfiguration().GetValue("Economic:SymbolListToPayRental", "CPU,RAM,DISK,NET");
             });
 
             Configure<ContractOptions>(configuration.GetSection("Contract"));
@@ -131,7 +134,7 @@ namespace AElf.Boilerplate.MainChain
                 .GetZeroSmartContractAddress();
             var dtoProvider = context.ServiceProvider.GetRequiredService<IGenesisSmartContractDtoProvider>();
 
-            dto.InitializationSmartContracts = dtoProvider.GetGenesisSmartContractDtos(zeroContractAddress).ToList();
+            dto.InitializationSmartContracts = dtoProvider.GetGenesisSmartContractDtos().ToList();
             var contractOptions = context.ServiceProvider.GetService<IOptionsSnapshot<ContractOptions>>().Value;
             dto.ContractDeploymentAuthorityRequired = contractOptions.ContractDeploymentAuthorityRequired;
 

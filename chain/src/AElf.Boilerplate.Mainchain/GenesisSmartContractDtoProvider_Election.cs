@@ -10,7 +10,7 @@ namespace AElf.Blockchains.MainChain
 {
     public partial class GenesisSmartContractDtoProvider
     {
-        public IEnumerable<GenesisSmartContractDto> GetGenesisSmartContractDtosForElection(Address zeroContractAddress)
+        public IEnumerable<GenesisSmartContractDto> GetGenesisSmartContractDtosForElection()
         {
             var l = new List<GenesisSmartContractDto>();
 
