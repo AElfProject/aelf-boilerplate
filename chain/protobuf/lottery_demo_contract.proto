@@ -3,29 +3,147 @@ syntax = "proto3";
 import "aelf/core.proto";
 import "aelf/options.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "AElf.Contracts.LotteryDemoContract";
 
 service LotteryDemoContract {
     option (aelf.csharp_state) = "AElf.Contracts.LotteryDemoContract.LotteryDemoContractState";
+    
+    rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
+    }
 
-    rpc InitializeLotteryDemoContract (InitializeLotteryDemoContractInput) returns (google.protobuf.Empty) {
+
+
+
+
+    //new
+
+    rpc UpdateRandom (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
-    rpc NewPeriod (NewPeriodInput) returns (google.protobuf.Empty) {
+
+    rpc SetAdmin (aelf.Address) returns (google.protobuf.Empty) {
     }
-    rpc Bet (Lotteries) returns (google.protobuf.Empty) {
+
+    rpc SetRandom (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
-    rpc TakeReward (aelf.Hash) returns (google.protobuf.Empty) {
+
+    rpc SetSaler (SetSalerInput) returns (google.protobuf.Empty) {
+    }
+
+
+
+    rpc RequestNewPeriod (NewPeriodInput2) returns (google.protobuf.Empty) {
+    }
+
+    rpc NewLottery (LotteryInput) returns (google.protobuf.Empty) {
+    }
+
+    rpc TakeReward (TakeRewardInput) returns (google.protobuf.Empty) {
+    }
+
+
+    rpc GetRandomNumbers (RandomsInput) returns (RandomsOutput) {
+        option (aelf.is_view) = true;
+    }
+
+
+    // Views
+    rpc GetState (google.protobuf.Empty) returns (GetStateOutput) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetRandomNumber (google.protobuf.Empty) returns (RandomOutput) {
+        option (aelf.is_view) = true;
+    }
+
+    rpc GetLottery (GetLotteryInput) returns (GetLotteryOutput) {
+        option (aelf.is_view) = true;
+    }
+
+
+    rpc GetLotteries (google.protobuf.Empty) returns (GetLotteriesOutput) {
+        option (aelf.is_view) = true;
+    }
+
+    rpc GetRewardedLotteries (GetLotteriesInput) returns (GetLotteriesOutput) {
+        option (aelf.is_view) = true;
+    }
+
+    rpc GetAllLotteries (GetLotteriesInput) returns (GetLotteriesOutput) {
+        option (aelf.is_view) = true;
+    }
+
+
+    rpc GetPeriod (GetPeriodInput) returns (PeriodBody) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetPeriods (GetPeriodsInput) returns (PeriodsOutput) {
+        option (aelf.is_view) = true;
+    }
+
+    rpc GetLatestShownPeriod (google.protobuf.Empty) returns (PeriodBody) {
+        option (aelf.is_view) = true;
+    }
+
+    rpc GetBuyablePeriod (google.protobuf.Empty) returns (BuyablePeriodOutput) {
+        option (aelf.is_view) = true;
+    }
+
+
+    rpc RequestNewRandom (google.protobuf.Empty) returns (TestOutput) {
+        option (aelf.is_view) = true;
+    }
+
+
+    rpc GetRandomNumberByToken (RandomByTokenInput) returns (RandomOutput) {
+        option (aelf.is_view) = true;
     }
 }
 
-message InitializeLotteryDemoContractInput {
-    string token_symbol = 1;
+
+message GetStateOutput {
+    sint64  current_period = 1;
+    google.protobuf.Timestamp current_time_stamp = 2;
+    string token_symbol = 3;
+    aelf.Address token_converter = 4;
+    sint64 interval_time = 5;
+    aelf.Hash random_hash = 6;
+    sint64 lottery_id = 7;
+    aelf.Address parent_casino = 8;
+}
+
+message InitializeInput {
+    sint64 start_period = 1;
+    google.protobuf.Timestamp start_timestamp = 2;
+    string token_symbol = 3;
+    bool ready = 4;
+    aelf.Address parent_casino = 5;
 }
 
 message NewPeriodInput {
-    sint64 period_number = 1;
-    aelf.Hash random_number_token = 2;
+//    sint64 period_number = 1;
+    aelf.Hash random_number_token = 1; // 随机的订单号
+}
+
+
+message NewPeriodInput2 {
+    repeated aelf.Hash tokens = 1; // 随机randomTokens
+}
+
+message GetLuckyNumberOutput {
+    aelf.Hash random_hash = 1;
+    sint64 period_number = 2;
+    aelf.Hash random_number_token = 3;
+    sint64 lucky_number = 4;
+    google.protobuf.Timestamp lottery_time = 5;
+}
+
+message GetRandomNumberOutput {
+    aelf.Hash random_hash = 1;
+    sint64 period_number = 2;
+    aelf.Hash random_number_token = 3;
+    sint64 lucky_number = 4;
+    google.protobuf.Timestamp lottery_time = 5;
 }
 
 message Lotteries {
@@ -33,11 +151,181 @@ message Lotteries {
     aelf.Address saler_address = 2; // 分销员地址
     sint32 proportion_sale = 3; // 销售分成 [0, 15] default 0
     sint32 proportion_bonus = 4; // 兑奖分成 [0, 5] default 0
-    sint32 target_period = 5; // 当前期数，在APP里做
-    aelf.Address sender_address = 6; // 用户地址
+    sint64 target_period = 5; // 当前期数，在APP里做
+    aelf.Address sender_address = 6; // 用户地址 Context.Sender
 }
 
 message Lottery {
     sint32 type = 1;
     repeated sint32 value = 2;
 }
+
+message PeriodRandomNumberToken {
+    aelf.Hash random_number_token = 1;
+    google.protobuf.Timestamp timestamp = 2;
+    google.protobuf.Timestamp lottery_time = 3;
+    sint64 lucky_number = 4;
+    sint64 period = 5;
+}
+
+
+message RandomsInput {
+    sint64 offset = 1;
+    sint64 limit = 2;
+}
+
+message RandomByTokenInput {
+    aelf.Hash token = 1;
+}
+
+message RecordOutput {
+    sint64 offset = 1;
+    sint64 limit = 2;
+    sint64 current_period = 3;
+    repeated PeriodRandomNumberToken records = 4;
+}
+
+message RecordOutput2 {
+    aelf.Hash random_hash = 1;
+    sint64 current_period = 2;
+}
+
+message RandomsOutput {
+    sint64 offset = 1;
+    sint64 limit = 2;
+    sint64 current_period = 3;
+    repeated RandomOutput records = 4;
+}
+
+message RandomOutput {
+    sint64 period_number = 1;
+    aelf.Hash random_hash = 2;
+}
+
+
+message BuyablePeriodOutput {
+    sint64 period_number = 1;
+}
+
+
+message LotteryBody {
+    sint64 id = 1;
+    aelf.Address owner = 2;
+    sint64 period = 3;          //投注期数
+    sint32 rule = 4;         //玩法
+    repeated BetBody bets = 5;
+    bool drawed = 6;            //是否已领奖
+    aelf.Address saler = 7;     //分销商地址
+    sint64 bonus = 8;           //抽成
+    sint64 have_reward = 9;     //是否中奖 初始化为-1， 123等奖
+    sint64 rate = 10;           //投注倍率
+    google.protobuf.Timestamp added_time = 11;
+}
+
+message BetBody {
+    string bet = 1;
+}
+
+message GetPeriodInput {
+    
+    sint64 period = 1;
+}
+
+message GetPeriodsInput {
+    sint64 offset = 1;
+    sint64 limit = 2;
+}
+
+message PeriodBody {
+    
+    sint64 period = 1;
+    aelf.Hash random_hash = 2;
+    repeated aelf.Hash random_tokens = 3;
+    sint64 lucky_number = 4;
+    google.protobuf.Timestamp create_time = 5;
+    google.protobuf.Timestamp finish_time = 6;
+    //aelf.Hash random_token = 3;
+}
+
+message PeriodsOutput {
+    
+    repeated PeriodBody periods = 1;
+
+}
+
+message LotteryInput {
+    
+    repeated BetBody bets = 1;
+    sint32 rule = 2;
+    aelf.Address saler = 3;
+    sint64 rate = 4;
+}
+
+message TakeRewardInput {
+    
+    sint64 lottery_id = 1;
+}
+
+
+message SetSalerInput {
+    
+    aelf.Address address = 1;
+    sint64 bonus = 2;
+}
+
+message GetLotteryInput {
+    sint64 lottery_id = 1;
+}
+
+message GetLotteryOutput {
+    LotteryBody lottery = 1;
+}
+
+message GetLotteriesOutput {
+    repeated LotteryBody lotteries = 1;
+    sint32 total_pages = 2;
+}
+
+message GetLotteriesInput {
+    sint32 offset = 1;
+    sint32 limit = 2;
+}
+
+message RewardedLotteriesOutput {
+    repeated LotteryBody lotteries = 3;
+}
+
+message LotteriesList {
+    repeated sint64 lotteries = 1;
+}
+
+
+
+message LotteryAdded {
+    option (aelf.is_event) = true;
+    sint64 lottery_id = 1;
+    sint64 period_number = 2;
+    sint32 rule = 3;
+    aelf.Address owner = 4;
+    google.protobuf.Timestamp added_time = 5;
+}
+
+message PeriodAdded {
+    option (aelf.is_event) = true;
+    sint64 period_number = 1;
+    aelf.Hash random_token = 2;
+    google.protobuf.Timestamp added_time = 3;
+}
+
+
+
+
+
+
+
+message TestOutput {
+    
+    aelf.Hash a = 1;
+    aelf.Hash b = 2;
+}
+

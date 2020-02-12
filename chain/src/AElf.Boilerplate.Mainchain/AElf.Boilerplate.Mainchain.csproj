@@ -41,6 +41,16 @@
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </ProjectReference>
+        <ProjectReference Include="..\..\contract\AElf.Contracts.CasinoContract\AElf.Contracts.CasinoContract.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </ProjectReference>
+        <ProjectReference Include="..\..\contract\AElf.Contracts.CasinoConverterContract\AElf.Contracts.CasinoConverterContract.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </ProjectReference>
     </ItemGroup>
 
     <ItemGroup>
@@ -115,6 +125,12 @@
         </ContractStub>
         <ContractStub Include="..\..\protobuf\lottery_demo_contract.proto">
             <Link>Protobuf\Proto\lottery_demo_contract.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\casino_contract.proto">
+            <Link>Protobuf\Proto\casino_contract.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\casino_converter_contract.proto">
+            <Link>Protobuf\Proto\casino_converter_contract.proto</Link>
         </ContractStub>
         <ContractStub Include="..\..\protobuf\greeter_contract.proto">
             <Link>Protobuf\Proto\greeter_contract.proto</Link>

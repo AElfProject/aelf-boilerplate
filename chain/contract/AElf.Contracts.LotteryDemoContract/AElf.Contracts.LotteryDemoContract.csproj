@@ -13,6 +13,10 @@
         <ContractReference Include="..\..\protobuf\acs6.proto">
             <Link>Protobuf\Proto\reference\acs6.proto</Link>
         </ContractReference>
+      <ContractReference Include="..\..\protobuf\acs1.proto">
+        <Link>Protobuf\Proto\reference\acs1.proto</Link>
+      </ContractReference>
+
     </ItemGroup>
 
     <ItemGroup>
@@ -20,4 +24,5 @@
             <Link>Protobuf\Proto\lottery_demo_contract.proto</Link>
         </ContractCode>
     </ItemGroup>
+
 </Project>

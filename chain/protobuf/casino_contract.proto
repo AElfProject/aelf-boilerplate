@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "AElf.Contracts.CasinoContract";
+
+service CasinoContract {
+    option (aelf.csharp_state) = "AElf.Contracts.CasinoContract.CasinoContractState";
+
+    // Actions
+    rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
+    }
+    rpc Buy (BuyInput) returns (google.protobuf.Empty) { }
+
+    rpc Sell (SellInput) returns (google.protobuf.Empty) { }
+
+    rpc Lock (LockInput) returns (google.protobuf.Empty) { }    //可能用不到
+
+    rpc Reinvest (google.protobuf.Empty) returns (google.protobuf.Empty) { }    //可能用不到
+
+    rpc CollectProfit (google.protobuf.Empty) returns (google.protobuf.Empty) { }
+
+    rpc ReplenishChildren (google.protobuf.Empty) returns (google.protobuf.Empty) { }
+
+    rpc ContributeToProfit (google.protobuf.Empty) returns (google.protobuf.Empty) { }  //可能用不到
+
+    rpc DistributeFromProfit (google.protobuf.Empty) returns (google.protobuf.Empty) { }    //可能用不到
+
+    rpc WithdrawDividend (google.protobuf.Empty) returns (google.protobuf.Empty) { }    //可能用不到
+        
+
+    // Views
+    rpc GetStatus (google.protobuf.Empty) returns (GetStatusOutput) {
+        option (aelf.is_view) = true;
+    }
+
+}
+
+message InitializeInput {
+    string token_symbol = 1;
+    sint32 decimals = 2;
+    sint64 token_supply = 3;
+    string connector = 4;
+    aelf.Address lottery = 5;
+    aelf.Address CasinoConverter = 6;
+}
+
+
+
+message BuyInput {
+    sint64 amount = 1;
+}
+message BuyOutput {
+    sint64 amount = 1;
+}
+
+message SellInput {
+    sint64 amount = 1;
+}
+message SellOutput {
+    sint64 amount = 1;
+}
+
+message LockInput {
+    sint32 type = 1;
+}
+
+
+
+message GetStatusOutput {
+    string token_symbol = 1;
+    sint64 decimals = 2;
+    sint64 token_supply = 3;
+    string connector = 4;
+    aelf.Address lottery = 5;
+    aelf.Address casino_converter = 6;
+}
+

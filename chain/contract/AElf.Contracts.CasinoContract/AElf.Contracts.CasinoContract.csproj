@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>AElf.Contracts.CasinoContract</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IsContract>true</IsContract>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <ContractReference Include="..\..\protobuf\token_contract.proto">
+      <Link>Protobuf\Proto\reference\token_contract.proto</Link>
+    </ContractReference>
+    <ContractReference Include="..\..\protobuf\acs1.proto">
+      <Link>Protobuf\Proto\reference\acs1.proto</Link>
+    </ContractReference>
+    <ContractReference Include="..\..\protobuf\profit_contract.proto">
+      <Link>Protobuf\Proto\reference\profit_contract.proto</Link>
+    </ContractReference>
+    <ContractReference Include="..\..\protobuf\token_holder_contract.proto">
+      <Link>Protobuf\Proto\reference\token_holder_contract.proto</Link>
+    </ContractReference>
+    <ContractReference Include="..\..\protobuf\casino_converter_contract.proto">
+      <Link>Protobuf\Proto\reference\casino_converter_contract.proto</Link>
+    </ContractReference>
+
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ContractCode Include="..\..\protobuf\casino_contract.proto">
+      <Link>Protobuf\Proto\casino_contract.proto</Link>
+    </ContractCode>
+    
+  </ItemGroup>
+</Project>
