@@ -173,7 +173,7 @@ namespace AElf.Contracts.CasinoContract
             State.CasinoConverterContract.Initialize.Send(new CasinoConverter.InitializeInput
             {
                 BaseTokenSymbol = State.Connector.Value,
-                FeeRate = "0",
+                FeeRate = "0.01",
                 ManagerAddress = Context.Self,
                 TokenContractAddress = State.TokenContract.Value,
                 FeeReceiverAddress = Context.Sender,
