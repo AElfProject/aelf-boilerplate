@@ -59,6 +59,7 @@ namespace AElf.Contracts.CasinoConverter
             State.ConnectorCount.Value = count;
 
 
+            ////
             //Approve Casino
             State.TokenContract.Approve.Send(new ApproveInput
             {
@@ -148,7 +149,6 @@ namespace AElf.Contracts.CasinoConverter
             var amountToPayPlusFee = amountToPay.Add(fee);
             Assert(input.PayLimit == 0 || amountToPayPlusFee <= input.PayLimit, "Price not good.");
 
-            // Pay fee
             if (false && fee > 0)
             {
                 HandleFee(fee);
@@ -329,7 +329,96 @@ namespace AElf.Contracts.CasinoConverter
             return new Empty();
         }
 
+        //启用分裂盘功能
+        public override Empty EnableReferral(EnableReferralInput input)
+        {
+            var referralToken = input.ReferralToken;
+            string childToken = String.Empty;
+
+
+            Assert(State.ReferralTokens[referralToken] != null, "No this referrak token");
+            State.ChildToFather[Context.Sender] = State.ReferralTokens[referralToken];
+
+
+            do
+            {
+                childToken = RandomString(8);
+
+            } while (State.ReferralTokens[childToken] != null);
+
+            State.ReferralTokens[childToken] = Context.Sender;
+            State.AddressReferralTokens[Context.Sender] = childToken;
+
+            
+            return new Empty();
+
+        }
+
+
+        public override Empty ReferralBuy(BuyInput input)
+        {
+            Assert(State.AddressReferralTokens[Context.Sender] != null, "You need a father referral");
+            Assert(IsValidSymbol(input.Symbol), "Invalid symbol.");
+            var toConnector = State.Connectors[input.Symbol];
+            Assert(toConnector != null, "[Buy]Can't find to connector.");
+            Assert(toConnector.IsPurchaseEnabled, "can't purchase");
+            Assert(!string.IsNullOrEmpty(toConnector.RelatedSymbol), "can't find related symbol'");
+            var fromConnector = State.Connectors[toConnector.RelatedSymbol];
+            Assert(fromConnector != null, "[Buy]Can't find from connector.");
+            var amountToPay = BancorHelper.GetAmountToPayFromReturn(
+                GetSelfBalance(fromConnector), GetWeight(fromConnector),
+                GetSelfBalance(toConnector), GetWeight(toConnector),
+                input.Amount);
+            var fee = 0;
+
+            var amountToPayPlusFee = amountToPay.Add(fee);
+            Assert(input.PayLimit == 0 || amountToPayPlusFee <= input.PayLimit, "Price not good.");
+
+            if (false && fee > 0)
+            {
+                HandleFee(fee);
+            }
+
+            // Transfer base token
+            State.TokenContract.TransferFrom.Send(
+                new TransferFromInput()
+                {
+                    Symbol = State.BaseTokenSymbol.Value,
+                    From = Context.Sender,
+                    To = Context.Self,
+                    Amount = amountToPay,
+                });
+            State.DepositBalance[fromConnector.Symbol] = State.DepositBalance[fromConnector.Symbol].Add(amountToPay);
+            
+            
+            
+            // Transfer bought token    先不转，等推荐足够人了再转
+            State.TokenContract.Transfer.Send(
+                new TransferInput
+                {
+                    Symbol = input.Symbol,
+                    To = Context.Sender,
+                    Amount = input.Amount
+                });
+
+            Context.Fire(new TokenBought
+            {
+                Symbol = input.Symbol,
+                BoughtAmount = input.Amount,
+                BaseAmount = amountToPay,
+                FeeAmount = fee
+            });
+            return new Empty();
+        }
+
+
+
+
+
         #endregion Actions
+
+
+
 
         #region Helpers
 
@@ -420,6 +509,22 @@ namespace AElf.Contracts.CasinoConverter
             var weight = AssertedDecimal(connector.Weight);
             Assert(IsBetweenZeroAndOne(weight), "Connector Shares has to be a decimal between 0 and 1.");
             connector.Weight = weight.ToString(CultureInfo.InvariantCulture);
+        }
+
+
+        //new helper
+
+        private string RandomString(int length)
+        {
+            string constant = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ";
+            string checkCode = String.Empty;
+
+            Random rd = new Random();
+            for (int i = 0; i < length; i++)
+            {
+                checkCode += constant[rd.Next(62)].ToString();
+            }
+            return checkCode;
         }
 
         #endregion

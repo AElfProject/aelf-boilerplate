@@ -49,8 +49,9 @@ namespace AElf.Contracts.LotteryDemoContract
             
             State.TokenContract.Value = Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
             State.RandomNumberGenerationContract.Value = Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
+            State.AEDPoSContract.Value = Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
             //State.TokenConverterContract.Value = Context.GetContractAddressByName(SmartContractConstants.TokenConverterContractSystemName);
-            
+
 
             //给母合约授权
             State.TokenContract.Approve.Send(new ApproveInput
@@ -245,8 +246,46 @@ namespace AElf.Contracts.LotteryDemoContract
             return new Empty();
         }
 
+       /* public override Empty UpdateRandom2(Empty input)
+        {
+            Assert(State.CurrentPeriod.Value > 0, "0 period is not ok, please call NewPeriod after Initialize.");
+            var lastPeriodValue = State.CurrentPeriod.Value;
+            var donePeriodValue = Context.CurrentHeight / 80;   //80block 一期
+            var randomHash = Hash.Empty;
+
+            
+
+            for (long i = lastPeriodValue; i <= donePeriodValue; i++)
+            {
+                randomHash = State.AEDPoSContract.GetRandomHash.Call(new SInt64Value
+                {
+                    Value = lastPeriodValue * 80,
+                });
+
+                Assert(randomHash != Hash.Empty, "Sth is wrong!!!!");
+
+                //新增一期开奖
+                var newPeriod = new PeriodBody{
+                    Period = i,
+                    RandomHash = randomHash,
+                    LuckyNumber = Math.Abs(randomHash.ToInt64() % 100000),
+                    CreateTime = Context.CurrentBlockTime,
+                    FinishTime = Context.CurrentBlockTime
+                };
+                State.Periods[ i ] = newPeriod;
+                State.LastCreateTime.Value = Context.CurrentBlockTime;
+
+                //更新未开奖彩票状态
+                UpdateRewardOfLotteries();
+            }
+
+            State.CurrentPeriod.Value = donePeriodValue + 1;
 
 
+            return new Empty();
+        }
+
+*/
         public override Empty NewLottery(LotteryInput input)
         {
             var bets = input.Bets;
@@ -344,6 +383,105 @@ namespace AElf.Contracts.LotteryDemoContract
 
         }
 
+
+        //新随机数的购买彩票
+        /*public override Empty NewLottery2(LotteryInput input)
+        {
+            var bets = input.Bets;
+            var rule = input.Rule;
+            var saler = input.Saler;
+            var rate = input.Rate;
+            var tokenSymbol = State.TokenSymbol.Value ?? Context.Variables.NativeSymbol;
+            var blockTime = Context.CurrentBlockTime;
+
+
+            //初始化用户彩票池
+            InitializeLotteriesList(Context.Sender);
+
+
+            //获得可买期 检查当前期是否已经开奖
+            var buyablePeriod = GetBuyablePeriod2(new Empty()).PeriodNumber;
+
+
+            var cost = rate.Mul(bets.Count).Mul(2).Mul(Decimals);
+            var balance = State.TokenContract.GetBalance.Call(new GetBalanceInput{
+                Symbol = tokenSymbol,
+                Owner = Context.Sender
+                }).Balance;
+            //转账
+            // 问: 余额不足，不让下注. 不能查txResult怎么判断？,发交易会直接throw出来这个问题。
+            //检查余额不足
+            Assert(balance.CompareTo(cost) >= 0,"No enough balance");
+
+            //分销商不存在的话要初始化
+            if (State.SalersBonus[saler] == null) State.SalersBonus[saler] = (long)10;
+
+            var bonus = State.SalersBonus[saler];
+
+
+
+            bonus = bonus.Mul(bets.Count).Mul(Decimals.Mul(2)).Mul(rate).Div(100);
+
+            State.TokenContract.TransferToContract.Send(new TransferToContractInput
+            {
+                Symbol = tokenSymbol,
+                // TODO: 这里可能会导致精度问题，后续需要看一下安全范围。
+                Amount = cost//.Sub(bonus) //ELF的位数？？
+            });
+            // // 给分销人的钱
+            // if (State.SalersBonus[saler] > 0)
+            // {
+            //     State.TokenContract.TransferFrom.Send(new TransferFromInput
+            //     {
+            //         From = Context.Sender, 
+            //         To = saler,
+            //         Symbol = tokenSymbol,
+            //         Amount = bonus,
+            //     });
+            // }
+
+
+
+            //发行彩票
+            //LotteryBody abs;
+
+            
+            State.Lotteries2[State.CurrentLotteryId.Value]= new LotteryBody{
+                Id = State.CurrentLotteryId.Value,
+                Owner = Context.Sender,
+                Period = buyablePeriod,
+                Rule = rule,
+                Bets = {bets},
+                Drawed = false,
+                Saler = saler,
+                Bonus = State.SalersBonus[saler],
+                HaveReward = -1,
+                Rate = rate,
+                AddedTime = blockTime
+            };
+
+            State.UnDoneLotteries[Context.Sender].Lotteries.Add(State.CurrentLotteryId.Value);
+            
+
+            //Event emit 现在JSSDK还TM不能subscribe event
+            Context.Fire(new LotteryAdded{
+                LotteryId = State.CurrentLotteryId.Value,
+                PeriodNumber = State.CurrentPeriod.Value,
+                Rule = rule,
+                Owner = Context.Sender,
+                AddedTime = blockTime,
+                });
+
+
+
+            //
+            State.CurrentLotteryId.Value++;
+
+
+            return new Empty();
+
+        }
+*/
         //获取指定id彩票
         public override GetLotteryOutput GetLottery(GetLotteryInput input)
         {
@@ -456,6 +594,19 @@ namespace AElf.Contracts.LotteryDemoContract
                 PeriodNumber = buyablePeriod,
             } ;
         }
+
+
+        //新获取可买期
+        /*public override BuyablePeriodOutput GetBuyablePeriod2(Empty input)
+        {
+            var blockHeight = Context.CurrentHeight;
+
+            var buyablePeriod = blockHeight / 80 + 1;
+
+            return new BuyablePeriodOutput{
+                PeriodNumber = buyablePeriod,
+            } ;
+        }*/
 
         //获取指定Token的随机数
         public override RandomOutput GetRandomNumberByToken(RandomByTokenInput input)

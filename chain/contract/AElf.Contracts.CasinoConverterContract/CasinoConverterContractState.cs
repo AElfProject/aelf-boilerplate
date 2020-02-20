@@ -4,7 +4,6 @@ using AElf.Contracts.MultiToken;
 using AElf.Sdk.CSharp.State;
 using AElf.Types;
 //using AElf.Contracts.Consensus.AEDPoS;
-using Acs1;
 using AElf.Contracts.Parliament;
 
 
@@ -24,6 +23,18 @@ namespace AElf.Contracts.CasinoConverter
         //public MappedState<string, MethodFees> TransactionFees { get; set; }
         public MappedState<string, long> DepositBalance { get; set; }
 
+
+        //用户的推广码
+        public MappedState<string, Address> ReferralTokens { get; set; }
+        public MappedState<Address, string> AddressReferralTokens { get; set; }
+        public MappedState<Address, Address> ChildToFather { get; set; }
+
+        public MappedState<long, ReferralBuyRequest> ReferralBuyRequests { get; set; }
+        public MappedState<Address, ReferralBuyRequestList> OwnerToRequestsId { get; set; }
+
+        
+
+        
 
 
         internal ParliamentContractContainer.ParliamentContractReferenceState ParliamentContract { get; set; }

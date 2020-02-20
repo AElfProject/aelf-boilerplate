@@ -23,6 +23,12 @@ service LotteryDemoContract {
     rpc UpdateRandom (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
 
+    rpc UpdateRandom2 (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    }
+
+    rpc SetAdmin (aelf.Address) returns (google.protobuf.Empty) {
+    }
+
     rpc SetRandom (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
 
@@ -37,10 +43,10 @@ service LotteryDemoContract {
     rpc NewLottery (LotteryInput) returns (google.protobuf.Empty) {
     }
 
-    rpc TakeReward (TakeRewardInput) returns (google.protobuf.Empty) {
+    rpc NewLottery2 (LotteryInput) returns (google.protobuf.Empty) {
     }
 
-    rpc ContributeProfitToParent (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    rpc TakeReward (TakeRewardInput) returns (google.protobuf.Empty) {
     }
 
 
@@ -87,6 +93,10 @@ service LotteryDemoContract {
     }
 
     rpc GetBuyablePeriod (google.protobuf.Empty) returns (BuyablePeriodOutput) {
+        option (aelf.is_view) = true;
+    }
+
+    rpc GetBuyablePeriod2 (google.protobuf.Empty) returns (BuyablePeriodOutput) {
         option (aelf.is_view) = true;
     }
 

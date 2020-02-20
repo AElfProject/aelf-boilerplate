@@ -6,6 +6,8 @@ using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
 using Acs1;
 using AElf.Contracts.Parliament;
+using AElf.Contracts.Consensus.AEDPoS;
+
 
 namespace AElf.Contracts.LotteryDemoContract
 {
@@ -15,7 +17,8 @@ namespace AElf.Contracts.LotteryDemoContract
             RandomNumberGenerationContract { get; set; }
         internal TokenContractContainer.TokenContractReferenceState TokenContract { get; set; }
         internal ParliamentContractContainer.ParliamentContractReferenceState ParliamentContract { get; set; }
-        
+           
+        internal AEDPoSContractContainer.AEDPoSContractReferenceState AEDPoSContract { get; set; }
 
         /// <summary>
         /// TxId -> Lotteries detail

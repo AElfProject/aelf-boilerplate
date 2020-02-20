@@ -20,6 +20,8 @@ service CasinoConverterContract {
     }
     rpc Buy (BuyInput) returns (google.protobuf.Empty) {
     }
+    rpc ReferralBuy (BuyInput) returns (google.protobuf.Empty) {
+    }
     rpc Sell (SellInput) returns (google.protobuf.Empty) {
     }
     rpc SetFeeRate (google.protobuf.StringValue) returns (google.protobuf.Empty) {
@@ -32,6 +34,15 @@ service CasinoConverterContract {
     }
     rpc EnableConnector(ToBeConnectedTokenInfo) returns (google.protobuf.Empty){
     }
+
+
+    //new actions
+    rpc EnableReferral(EnableReferralInput) returns (google.protobuf.Empty){
+    }
+
+
+
+
     // Views
     rpc GetTokenContractAddress (google.protobuf.Empty) returns (aelf.Address) {
         option (aelf.is_view) = true;
@@ -135,4 +146,27 @@ message ToBeConnectedTokenInfo{
 message DepositInfo{
     sint64 need_amount = 1;
     sint64 amount_out_of_token_convert = 2;
+}
+
+
+
+//new messages
+
+message EnableReferralInput{
+    string referral_token = 1;
+
+}
+
+message ReferralBuyRequest{
+    
+    sint64 id = 1;
+    sint64 amount = 2;
+    aelf.Address owner = 3;
+    repeated sint64 children = 4;
+    google.protobuf.Timestamp create_time = 5;
+    google.protobuf.Timestamp finish_time = 6;
+}
+
+message ReferralBuyRequestList {
+    repeated sint64 ids = 1;
 }
