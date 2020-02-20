@@ -5,6 +5,9 @@ using AElf.Contracts.TokenHolder;
 using AElf.Contracts.CasinoConverter;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
+using Acs1;
+using AElf.Contracts.Parliament;
+
 
 namespace AElf.Contracts.CasinoContract
 {
@@ -24,6 +27,8 @@ namespace AElf.Contracts.CasinoContract
 
         internal CasinoConverterContractContainer.CasinoConverterContractReferenceState CasinoConverterContract { get; set; }
         
+        internal ParliamentContractContainer.ParliamentContractReferenceState ParliamentContract { get; set; }
+
 
 
         public StringState TokenSymbol { get; set; }
@@ -52,6 +57,10 @@ namespace AElf.Contracts.CasinoContract
         internal MappedState<int, Address> ChildCasinos { get; set; }
 
 
+
+        //For Acs1
+        public MappedState<string, MethodFees> TransactionFees { get; set; }
+        public SingletonState<AuthorityInfo> MethodFeeController { get; set; }
 
 
 

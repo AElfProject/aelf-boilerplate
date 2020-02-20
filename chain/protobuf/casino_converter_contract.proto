@@ -3,13 +3,15 @@ syntax = "proto3";
 import "aelf/core.proto";
 import "google/protobuf/wrappers.proto";
 import "acs1.proto";
+import "acs3.proto";
+
 
 option csharp_namespace = "AElf.Contracts.CasinoConverter";
 
 service CasinoConverterContract {
     
     option (aelf.csharp_state) = "AElf.Contracts.CasinoConverter.CasinoConverterContractState";
-    //option (aelf.base) = "acs1.proto";
+    option (aelf.base) = "acs1.proto";
     
     // Actions
     rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {

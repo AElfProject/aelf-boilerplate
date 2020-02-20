@@ -9,7 +9,7 @@ using Google.Protobuf.WellKnownTypes;
 // 
 namespace AElf.Contracts.LotteryDemoContract
 {
-    public class LotteryDemoContract : LotteryDemoContractContainer.LotteryDemoContractBase
+    public partial class LotteryDemoContract : LotteryDemoContractContainer.LotteryDemoContractBase
     {
         private const long Decimals = 100_000_000;
         private const int IntervalTime = 60; // seconds
@@ -154,6 +154,9 @@ namespace AElf.Contracts.LotteryDemoContract
                     AddedTime = blockTime,
                     });
             }
+            else{
+                Assert(false, "New Period Added Failed");
+            }
             
             //可以在这自动开奖?
             
@@ -281,25 +284,23 @@ namespace AElf.Contracts.LotteryDemoContract
 
             bonus = bonus.Mul(bets.Count).Mul(Decimals.Mul(2)).Mul(rate).Div(100);
 
-            State.TokenContract.TransferFrom.Send(new TransferFromInput
+            State.TokenContract.TransferToContract.Send(new TransferToContractInput
             {
-                From = Context.Sender, // 需要Approve
-                To = Context.Self,
                 Symbol = tokenSymbol,
                 // TODO: 这里可能会导致精度问题，后续需要看一下安全范围。
-                Amount = cost.Sub(bonus) //ELF的位数？？
+                Amount = cost//.Sub(bonus) //ELF的位数？？
             });
-            // 给分销人的钱
-            if (State.SalersBonus[saler] > 0)
-            {
-                State.TokenContract.TransferFrom.Send(new TransferFromInput
-                {
-                    From = Context.Sender, 
-                    To = saler,
-                    Symbol = tokenSymbol,
-                    Amount = bonus,
-                });
-            }
+            // // 给分销人的钱
+            // if (State.SalersBonus[saler] > 0)
+            // {
+            //     State.TokenContract.TransferFrom.Send(new TransferFromInput
+            //     {
+            //         From = Context.Sender, 
+            //         To = saler,
+            //         Symbol = tokenSymbol,
+            //         Amount = bonus,
+            //     });
+            // }
 
 
 
@@ -361,8 +362,10 @@ namespace AElf.Contracts.LotteryDemoContract
             foreach(var l in State.DoneLotteries[Context.Sender].Lotteries ){
                 res0.Add(State.Lotteries2[l]);
             }
-            //ID降序
-            res0.Sort((x, y) => y.Id.CompareTo(x.Id));
+            //ID降序 不让用
+            //res0.Sort((x, y) => y.Id.CompareTo(x.Id));
+            res0 = res0.OrderByDescending(d=>d.Id).ToList();
+
             var res = new GetLotteriesOutput{
                 Lotteries = { res0 }
             };
@@ -383,8 +386,10 @@ namespace AElf.Contracts.LotteryDemoContract
                 }
                 
             }
-            //ID降序
-            res0.Sort((x, y) => y.Id.CompareTo(x.Id));
+            //ID降序 不让用
+            //res0.Sort((x, y) => y.Id.CompareTo(x.Id));
+            res0 = res0.OrderByDescending(d=>d.Id).ToList();
+
             var res = new GetLotteriesOutput{
                 Lotteries = { res0.Skip(input.Offset).Take(input.Limit) },
                 TotalPages = res0.Count() / input.Limit
@@ -407,8 +412,10 @@ namespace AElf.Contracts.LotteryDemoContract
             foreach(var l in State.DoneLotteries[Context.Sender].Lotteries ){
                 res0.Add(State.Lotteries2[l]);
             }
-            //ID降序
-            res0.Sort((x,y) => y.Id.CompareTo(x.Id) );
+            //ID降序 不让用
+            //res0.Sort((x,y) => y.Id.CompareTo(x.Id) );
+            res0 = res0.OrderByDescending(d=>d.Id).ToList();
+
             var res = new GetLotteriesOutput{
                 Lotteries = { res0.Skip(input.Offset).Take(input.Limit) },
                 TotalPages = res0.Count()/input.Limit

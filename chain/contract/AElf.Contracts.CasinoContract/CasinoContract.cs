@@ -11,7 +11,7 @@ using Google.Protobuf.WellKnownTypes;
 namespace AElf.Contracts.CasinoContract
 {
     
-    public class CasinoContract : CasinoContractContainer.CasinoContractBase
+    public partial class CasinoContract : CasinoContractContainer.CasinoContractBase
     {
         private const long CollectInterval = 86400;
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>AElf.Contracts.CasinoContract</RootNamespace>
+    <RootNamespace>AElf.Contracts.PiggyContract</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsContract>true</IsContract>
   </PropertyGroup>
@@ -25,24 +25,15 @@
     <ContractReference Include="..\..\protobuf\token_contract.proto">
       <Link>Protobuf\Proto\reference\token_contract.proto</Link>
     </ContractReference>
-    <ContractReference Include="..\..\protobuf\profit_contract.proto">
-      <Link>Protobuf\Proto\reference\profit_contract.proto</Link>
-    </ContractReference>
-    <ContractReference Include="..\..\protobuf\token_holder_contract.proto">
-      <Link>Protobuf\Proto\reference\token_holder_contract.proto</Link>
-    </ContractReference>
-    <ContractReference Include="..\..\protobuf\casino_converter_contract.proto">
-      <Link>Protobuf\Proto\reference\casino_converter_contract.proto</Link>
-    </ContractReference>
     <ContractReference Include="..\..\protobuf\parliament_contract.proto">
-            <Link>Protobuf\Proto\reference\parliament_contract.proto</Link>
+      <Link>Protobuf\Proto\reference\parliament_contract.proto</Link>
     </ContractReference>
 
   </ItemGroup>
   
   <ItemGroup>
-    <ContractCode Include="..\..\protobuf\casino_contract.proto">
-      <Link>Protobuf\Proto\casino_contract.proto</Link>
+    <ContractCode Include="..\..\protobuf\piggy_contract.proto">
+      <Link>Protobuf\Proto\piggy_contract.proto</Link>
     </ContractCode>
     
   </ItemGroup>

@@ -4,6 +4,8 @@ using AElf.Contracts.MultiToken;
 using AElf.Sdk.CSharp.State;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
+using Acs1;
+using AElf.Contracts.Parliament;
 
 namespace AElf.Contracts.LotteryDemoContract
 {
@@ -11,8 +13,9 @@ namespace AElf.Contracts.LotteryDemoContract
     {
         internal Acs6.RandomNumberProviderContractContainer.RandomNumberProviderContractReferenceState
             RandomNumberGenerationContract { get; set; }
-
         internal TokenContractContainer.TokenContractReferenceState TokenContract { get; set; }
+        internal ParliamentContractContainer.ParliamentContractReferenceState ParliamentContract { get; set; }
+        
 
         /// <summary>
         /// TxId -> Lotteries detail
@@ -68,6 +71,9 @@ namespace AElf.Contracts.LotteryDemoContract
 
 
 
+        public MappedState<string, MethodFees> TransactionFees { get; set; }
+
+        public SingletonState<AuthorityInfo> MethodFeeController { get; set; }
 
 
     }

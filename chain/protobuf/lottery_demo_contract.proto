@@ -4,17 +4,18 @@ import "aelf/core.proto";
 import "aelf/options.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
+import "acs1.proto";
+import "acs3.proto";
 
 option csharp_namespace = "AElf.Contracts.LotteryDemoContract";
 
 service LotteryDemoContract {
     option (aelf.csharp_state) = "AElf.Contracts.LotteryDemoContract.LotteryDemoContractState";
-    
+    option (aelf.base) = "acs1.proto";
+
+
     rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
     }
-
-
-
 
 
     //new

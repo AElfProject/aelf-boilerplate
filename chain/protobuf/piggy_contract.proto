@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "acs1.proto";
+import "acs3.proto";
+
+ 
+option csharp_namespace = "AElf.Contracts.PiggyContract";
+
+service PiggyContract {
+    option (aelf.csharp_state) = "AElf.Contracts.PiggyContract.PiggyContractState";
+    option (aelf.base) = "acs1.proto";
+
+    rpc Deposit (DepositInput) returns (google.protobuf.Empty) { }
+
+    rpc Withdraw (WithdrawInput) returns (google.protobuf.Empty) { }
+
+    // Views
+    rpc GetStatus (google.protobuf.Empty) returns (GetStatusOutput) {
+        option (aelf.is_view) = true;
+    }
+
+}
+
+
+
+message DepositInput {
+    sint64 amount = 1;
+}
+
+message WithdrawInput {
+    sint64 amount = 1;
+}
+
+message GetStatusOutput {
+    string token_symbol = 1;
+    string result = 2;
+}
+
+
+
+message DataOutput {
+    option (aelf.is_event) = true;
+    string result = 1;
+}
+
