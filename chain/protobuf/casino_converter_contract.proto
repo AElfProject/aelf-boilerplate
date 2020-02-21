@@ -65,6 +65,11 @@ service CasinoConverterContract {
     rpc GetNeededDeposit(ToBeConnectedTokenInfo) returns (DepositInfo) {
         option (aelf.is_view) = true;
     }
+
+
+    rpc GetReferralBuyRequests(google.protobuf.Empty) returns (ReferralBuyRequests) {
+        option (aelf.is_view) = true;
+    }
 }
 
 message Connector {
@@ -160,13 +165,18 @@ message EnableReferralInput{
 message ReferralBuyRequest{
     
     sint64 id = 1;
-    sint64 amount = 2;
-    aelf.Address owner = 3;
-    repeated sint64 children = 4;
-    google.protobuf.Timestamp create_time = 5;
-    google.protobuf.Timestamp finish_time = 6;
+    string symbol = 2;
+    sint64 amount = 3;
+    aelf.Address owner = 4;
+    repeated sint64 children = 5;
+    google.protobuf.Timestamp create_time = 6;
+    google.protobuf.Timestamp finish_time = 7;
 }
 
 message ReferralBuyRequestList {
     repeated sint64 ids = 1;
+}
+
+message ReferralBuyRequests {
+    repeated ReferralBuyRequest requests = 1;
 }

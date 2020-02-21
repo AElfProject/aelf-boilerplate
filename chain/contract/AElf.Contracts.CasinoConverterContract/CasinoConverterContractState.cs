@@ -29,6 +29,7 @@ namespace AElf.Contracts.CasinoConverter
         public MappedState<Address, string> AddressReferralTokens { get; set; }
         public MappedState<Address, Address> ChildToFather { get; set; }
 
+        public SingletonState<long> CurrentBuyRequestId { get; set; }
         public MappedState<long, ReferralBuyRequest> ReferralBuyRequests { get; set; }
         public MappedState<Address, ReferralBuyRequestList> OwnerToRequestsId { get; set; }
 

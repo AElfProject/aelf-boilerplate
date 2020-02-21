@@ -69,6 +69,11 @@ namespace AElf.Contracts.CasinoConverter
             });
 
 
+            //for referral
+
+            State.CurrentBuyRequestId.Value = 0;
+
+
             return new Empty();
         }
 
@@ -329,6 +334,10 @@ namespace AElf.Contracts.CasinoConverter
             return new Empty();
         }
 
+
+
+
+
         //启用分裂盘功能
         public override Empty EnableReferral(EnableReferralInput input)
         {
@@ -374,10 +383,7 @@ namespace AElf.Contracts.CasinoConverter
             var amountToPayPlusFee = amountToPay.Add(fee);
             Assert(input.PayLimit == 0 || amountToPayPlusFee <= input.PayLimit, "Price not good.");
 
-            if (false && fee > 0)
-            {
-                HandleFee(fee);
-            }
+    
 
             // Transfer base token
             State.TokenContract.TransferFrom.Send(
@@ -389,30 +395,54 @@ namespace AElf.Contracts.CasinoConverter
                     Amount = amountToPay,
                 });
             State.DepositBalance[fromConnector.Symbol] = State.DepositBalance[fromConnector.Symbol].Add(amountToPay);
-            
-            
-            
-            // Transfer bought token    先不转，等推荐足够人了再转
-            State.TokenContract.Transfer.Send(
-                new TransferInput
-                {
-                    Symbol = input.Symbol,
-                    To = Context.Sender,
-                    Amount = input.Amount
-                });
 
-            Context.Fire(new TokenBought
+
+            //给father的referralBuy标记完成
+            FinishFathersRequest(State.CurrentBuyRequestId.Value, input.Amount);
+
+
+            // child的request放入ReferralBuyRequests 先不转token，等推荐足够人了再转
+            var newBuyRequest = new ReferralBuyRequest
             {
+                Id = State.CurrentBuyRequestId.Value,
                 Symbol = input.Symbol,
-                BoughtAmount = input.Amount,
-                BaseAmount = amountToPay,
-                FeeAmount = fee
-            });
+                Amount = input.Amount.Mul(15).Div(10),  //1.5倍奖励
+                Owner = Context.Sender,
+                Children = { -1, -1},
+                CreateTime = Context.CurrentBlockTime
+            };
+
+            State.ReferralBuyRequests[State.CurrentBuyRequestId.Value] = newBuyRequest;
+
+            //初始化
+            State.OwnerToRequestsId[Context.Sender] = State.OwnerToRequestsId[Context.Sender] ?? new ReferralBuyRequestList
+            {
+                Ids = { }
+            };
+            State.OwnerToRequestsId[Context.Sender].Ids.Add(State.CurrentBuyRequestId.Value);
+
+            State.CurrentBuyRequestId.Value += 1;
+
+            
             return new Empty();
         }
 
 
+        public override ReferralBuyRequests GetReferralBuyRequests(Empty input)
+        {
+            var ids = State.OwnerToRequestsId[Context.Sender];
+            ReferralBuyRequests result = new ReferralBuyRequests 
+            {
+                Requests = {},
+            };
+            ids.Ids.All(id =>
+            {
+                result.Requests.Add(State.ReferralBuyRequests[id]);
+                return true;
+            });
 
+            return result;
+        }
 
 
         #endregion Actions
@@ -513,6 +543,38 @@ namespace AElf.Contracts.CasinoConverter
 
 
         //new helper
+        private void FinishFathersRequest(long requestId, long amount)
+        {
+            var father = State.ChildToFather[Context.Sender];
+            ReferralBuyRequestList fathersRequests = State.OwnerToRequestsId[father];
+
+            var res = fathersRequests.Ids.Any(id => {
+                if(State.ReferralBuyRequests[id].FinishTime == null && State.ReferralBuyRequests[id].Amount < amount)
+                {
+                    State.ReferralBuyRequests[id].Children.Add(requestId);
+
+                    if (State.ReferralBuyRequests[id].Children.Count() >= 2)
+                    {
+                        State.ReferralBuyRequests[id].FinishTime = Context.CurrentBlockTime;
+
+                        // Transfer bought token
+                        State.TokenContract.Transfer.Send(
+                            new TransferInput
+                            {
+                                Symbol = State.ReferralBuyRequests[id].Symbol,
+                                To = Context.Sender,
+                                Amount = State.ReferralBuyRequests[id].Amount
+                            }
+                        );
+                        
+                    }
+
+                    return true;
+                }
+
+                return false;
+            });
+        }
 
         private string RandomString(int length)
         {
