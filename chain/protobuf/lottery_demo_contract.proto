@@ -3,41 +3,84 @@ syntax = "proto3";
 import "aelf/core.proto";
 import "aelf/options.proto";
 import "google/protobuf/empty.proto";
+import "acs1.proto";
+import "acs3.proto";
 
 option csharp_namespace = "AElf.Contracts.LotteryDemoContract";
 
 service LotteryDemoContract {
     option (aelf.csharp_state) = "AElf.Contracts.LotteryDemoContract.LotteryDemoContractState";
+    option (aelf.base) = "acs1.proto";
 
     rpc InitializeLotteryDemoContract (InitializeLotteryDemoContractInput) returns (google.protobuf.Empty) {
     }
-    rpc NewPeriod (NewPeriodInput) returns (google.protobuf.Empty) {
+    rpc Buy(BuyInput) returns (google.protobuf.Empty) {
     }
-    rpc Bet (Lotteries) returns (google.protobuf.Empty) {
+    rpc Draw (DrawInput) returns (google.protobuf.Empty) {
     }
-    rpc TakeReward (aelf.Hash) returns (google.protobuf.Empty) {
+    rpc PrepareDraw (google.protobuf.Empty) returns (google.protobuf.Empty) {
+	}
+    rpc TakeReward (TakeRewardInput) returns (google.protobuf.Empty) {
     }
+    rpc GetRewardResult (GetRewardResultInput) returns (GetRewardResultOutput) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetLotteries (google.protobuf.Empty) returns (GetLotteriesOutput) {
+        option (aelf.is_view) = true;
+	}
 }
 
 message InitializeLotteryDemoContractInput {
     string token_symbol = 1;
 }
 
-message NewPeriodInput {
-    sint64 period_number = 1;
-    aelf.Hash random_number_token = 2;
+message BuyInput {
+    sint32 amount = 1;
 }
-
-message Lotteries {
-    repeated Lottery lottery = 1;
-    aelf.Address saler_address = 2; // 分销员地址
-    sint32 proportion_sale = 3; // 销售分成 [0, 15] default 0
-    sint32 proportion_bonus = 4; // 兑奖分成 [0, 5] default 0
-    sint32 target_period = 5; // 当前期数，在APP里做
-    aelf.Address sender_address = 6; // 用户地址
+message TakeRewardInput {
+    aelf.Hash random_hash = 1;
+    string data = 2;
+}
+message DrawInput {
+    repeated uint64 levels_count = 1;
 }
 
 message Lottery {
-    sint32 type = 1;
-    repeated sint32 value = 2;
+    uint64 id = 1;
+    aelf.Hash random_hash = 2;
+    aelf.Address owner = 3;
+    uint64 level = 4;
+}
+
+message PeriodBody {
+    uint64 id = 1;
+    sint64 block_number = 2;
+    aelf.Hash random_hash = 3;
+}
+
+message LotteryList {
+    repeated uint64 ids = 1;
+}
+
+message GetRewardResultInput {
+    uint64 period = 1;
+}
+
+message GetRewardResultOutput {
+    uint64 period = 1;
+    aelf.Hash random_hash = 2;
+    repeated Lottery reward_lotteries = 3;
+}
+
+message RewardResult {
+    uint64 lottery_id = 1;
+}
+
+message RewardResultsList {
+    repeated RewardResult reward_results = 2;
+}
+
+
+message GetLotteriesOutput {
+    repeated Lottery lotteries = 3;
 }
