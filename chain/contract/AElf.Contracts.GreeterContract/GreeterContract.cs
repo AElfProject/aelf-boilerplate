@@ -4,10 +4,13 @@ namespace AElf.Contracts.GreeterContract
 {
     public class GreeterContract : GreeterContractContainer.GreeterContractBase
     {
-        public override StringValue Greet(Empty input)
+        public override TestInput Greet(TestInput input)
         {
             Context.LogDebug(() => "Hello World!");
-            return new StringValue {Value = "Hello World!"};
+
+            return new TestInput {
+                Amount = input.Amount - 1,
+            };
         }
 
         public override GreetToOutput GreetTo(StringValue input)

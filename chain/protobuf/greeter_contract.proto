@@ -12,7 +12,9 @@ service GreeterContract {
     option (aelf.csharp_state) = "AElf.Contracts.GreeterContract.GreeterContractState";
 
     // Actions
-    rpc Greet (google.protobuf.Empty) returns (google.protobuf.StringValue) { }
+    rpc Greet (TestInput) returns (TestInput) { 
+        option (aelf.is_view) = true;
+    }
     rpc GreetTo (google.protobuf.StringValue) returns (GreetToOutput) { }
 
     // Views
@@ -28,4 +30,8 @@ message GreetToOutput {
 
 message GreetedList {
     repeated string value = 1;
+}
+
+message TestInput {
+    uint64 amount = 1;
 }
