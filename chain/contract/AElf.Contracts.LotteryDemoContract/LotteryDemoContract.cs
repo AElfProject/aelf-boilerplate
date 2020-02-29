@@ -29,10 +29,10 @@ namespace AElf.Contracts.LotteryDemoContract
 
         public override Empty Buy(BuyInput input)
         {
-            Assert(input.Amount <100, "Ì«jb¶àÁË");
+            Assert(input.Amount <100, "å¤ªjbå¤šäº†");
             Assert(input.Amount > 0, "????");
 
-            //³õÊ¼»¯
+            //åˆå§‹åŒ–
             State.OwnerToLotteries[Context.Sender] = State.OwnerToLotteries[Context.Sender] ?? new LotteryList { Ids = { } };
 
             State.TokenContract.TransferToContract.Send(new TransferToContractInput
@@ -52,6 +52,7 @@ namespace AElf.Contracts.LotteryDemoContract
                     RandomHash = hash,
                     Owner = Context.Sender,
                     Level = 0,
+                    Block = Context.CurrentHeight,
                 };
                 State.Lotteries[State.CurrentLotteryId.Value] = lottery;
                 State.LotteryToId[hash] = State.CurrentLotteryId.Value;
@@ -79,7 +80,7 @@ namespace AElf.Contracts.LotteryDemoContract
             State.Periods[State.CurrentPeriod.Value].RandomHash = randomHash;
 
 
-            //¸ù¾İËæ»úÊı´¦Àí²ÊÆ±
+            //æ ¹æ®éšæœºæ•°å¤„ç†å½©ç¥¨
             DealWithLotteries(input);
 
 
@@ -90,7 +91,7 @@ namespace AElf.Contracts.LotteryDemoContract
         public override Empty PrepareDraw(Empty input)
         {
             Assert(Context.Sender == State.Admin.Value, "must be admin!");
-            //¼ì²éÃ»ÓĞÎ´¿ªµÄ½±
+            //æ£€æŸ¥æ²¡æœ‰æœªå¼€çš„å¥–
             Assert(State.Periods[State.CurrentPeriod.Value].RandomHash != Hash.Empty, "last draw doesn't finished");
 
             State.CurrentPeriod.Value += 1;
@@ -101,7 +102,7 @@ namespace AElf.Contracts.LotteryDemoContract
                 RandomHash = Hash.Empty
             };
 
-            //³õÊ¼»¯
+            //åˆå§‹åŒ–
             State.PeriodToResultsList[State.CurrentPeriod.Value] = new RewardResultsList
             {
                 RewardResults = { }
@@ -166,20 +167,20 @@ namespace AElf.Contracts.LotteryDemoContract
             var pool = new List<ulong>();
             int luckyIndex = 0;
             ulong luckyId = 0;
-            ulong category = 1;   //categoryÎª½±Æ·   ±ÈÈçLevelsCount=[2,0,3,6,0] category´Ó1µ½5  categoryÎª1µÄ½±Æ·ÊıÎª2£¬2µÄ½±Æ·ÊıÎª0£¬ÒÔ´ËÀàÍÆ
+            ulong category = 1;   //categoryä¸ºå¥–å“   æ¯”å¦‚LevelsCount=[2,0,3,6,0] categoryä»1åˆ°5  categoryä¸º1çš„å¥–å“æ•°ä¸º2ï¼Œ2çš„å¥–å“æ•°ä¸º0ï¼Œä»¥æ­¤ç±»æ¨
             var randomHash = State.Periods[State.CurrentPeriod.Value].RandomHash;
 
 
-            //°ÑÎ´ÖĞ½±µÄlottery·ÅÈëpool
+            //æŠŠæœªä¸­å¥–çš„lotteryæ”¾å…¥pool
             for (ulong i = 0; i < State.CurrentLotteryId.Value; i++)
             {
-                if (State.Lotteries[i].Level == 0)
+                if (State.Lotteries[i].Level == 0 && State.Lotteries[i].Block < State.Periods[State.CurrentPeriod.Value].BlockNumber)
                     pool.Add(i);
             }
 
             Assert(pool.Count() > 0, "no available lottery");
 
-            //°´level½øĞĞ³é½±£¬ÓĞ²»ÉÙ±äÁ¿Ç¿ÖÆ×ª»»£¬ÓĞ°²È«Òş»¼
+            //æŒ‰levelè¿›è¡ŒæŠ½å¥–ï¼Œæœ‰ä¸å°‘å˜é‡å¼ºåˆ¶è½¬æ¢ï¼Œæœ‰å®‰å…¨éšæ‚£
             foreach (var count in input.LevelsCount)
             {
                 ulong i = count;
@@ -195,7 +196,7 @@ namespace AElf.Contracts.LotteryDemoContract
                     });
 
                     pool.Remove(luckyId);
-                    //²»¶Ï¶Ô×Ô¼ºhash²úÉúĞÂËæ»úÊı
+                    //ä¸æ–­å¯¹è‡ªå·±hashäº§ç”Ÿæ–°éšæœºæ•°
                     randomHash = Hash.FromByteArray(randomHash.ToByteArray());
 
                     i--;
