@@ -1,34 +1,50 @@
-# ASP.NET Core (.NET Framework)
-# Build and test ASP.NET Core projects targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
-trigger:
-- master
-
-pool:
-  vmImage: 'windows-latest'
-
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-
-steps:
-- task: NuGetToolInstaller@1
-
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+jobs:
+# All tasks on Windows....
+- job: build_all_windows
+  displayName: Build all tasks (Windows)
+  pool:
+    vmImage: windows-latest
+  variables:
+    CI_TEST: true
+  steps:
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 3.1.100
+  - task: BatchScript@1
+    displayName: 'Download AElf build tools'
+    inputs:
+      filename: 'chain/scripts/download_binary.bat'
+  - script: PowerShell.exe -file chain/scripts/install.ps1 
+  - script: PowerShell.exe -file build.ps1 -target=Run-Unit-Tests
+# All tasks on Linux
+- job: build_all_linux
+  displayName: Build all tasks (Linux)
+  timeoutInMinutes: 120
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 3.1.100
+  - script: bash chain/scripts/download_binary.sh
+  - script: bash chain/scripts/install.sh
+  - script: bash build.sh -target=Run-Unit-Tests
+    displayName: 'Build and Test'
+# All tasks on macOS
+- job: build_all_darwin
+  displayName: Build all tasks (macOS)
+  pool:
+    vmImage: macos-latest
+  variables:
+    CI_TEST: true
+  steps:
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 3.1.100
+  - script: bash chain/scripts/download_binary.sh
+  - script: bash chain/scripts/install.sh
+  - script: bash build.sh -target=Run-Unit-Tests
+    displayName: 'Build and Test'
