@@ -17,6 +17,7 @@ jobs:
       filename: 'chain/scripts/download_binary.bat'
   - script: PowerShell.exe -file chain/scripts/install.ps1 
   - script: PowerShell.exe -file build.ps1 -target=Run-Unit-Tests
+    displayName: 'Build and Test'
 # All tasks on Linux
 - job: build_all_linux
   displayName: Build all tasks (Linux)
