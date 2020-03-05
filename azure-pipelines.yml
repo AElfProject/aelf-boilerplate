@@ -15,7 +15,10 @@ jobs:
     displayName: 'Download AElf build tools'
     inputs:
       filename: 'chain/scripts/download_binary.bat'
-  - script: PowerShell.exe -file chain/scripts/install.ps1 
+  - script: choco install protoc --version=3.7.0 -y 
+    displayName: 'Install protobuf'
+  - script: choco install unzip
+    displayName: 'Install unzip'
   - script: PowerShell.exe -file build.ps1 -target=Run-Unit-Tests
     displayName: 'Build and Test'
 # All tasks on Linux
@@ -30,7 +33,9 @@ jobs:
     inputs:
       version: 3.1.100
   - script: bash chain/scripts/download_binary.sh
+    displayName: 'Download AElf build tools'
   - script: bash chain/scripts/install.sh
+    displayName: 'Install protobuf'
   - script: bash build.sh -target=Run-Unit-Tests
     displayName: 'Build and Test'
 # All tasks on macOS
@@ -46,6 +51,8 @@ jobs:
     inputs:
       version: 3.1.100
   - script: bash chain/scripts/download_binary.sh
+    displayName: 'Download AElf build tools'
   - script: bash chain/scripts/install.sh
+    displayName: 'Install protobuf'
   - script: bash build.sh -target=Run-Unit-Tests
     displayName: 'Build and Test'
