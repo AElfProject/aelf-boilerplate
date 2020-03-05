@@ -15,7 +15,7 @@ jobs:
     displayName: 'Download AElf build tools'
     inputs:
       filename: 'chain/scripts/download_binary.bat'
-  - script: choco install protoc --version=3.7.0 -y 
+  - script: PowerShell.exe -file chain/scripts/install.ps1 
     displayName: 'Install protobuf'
   - script: choco install unzip
     displayName: 'Install unzip'
