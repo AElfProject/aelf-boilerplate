@@ -19,7 +19,7 @@ jobs:
     displayName: 'Install protobuf'
   - script: choco install unzip
     displayName: 'Install unzip'
-  - script: Set-ExecutionPolicy AllSigned
+  - script: Set-ExecutionPolicy AllSigned -Force
   - script: PowerShell.exe -file build.ps1 -target=Run-Unit-Tests
     displayName: 'Build and Test'
 # All tasks on Linux
