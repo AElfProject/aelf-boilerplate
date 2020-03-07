@@ -28,7 +28,7 @@ Task("Restore")
     DotNetCoreRestore("./chain/AElf.Boilerplate.sln", new DotNetCoreRestoreSettings
     {
         Verbosity = DotNetCoreVerbosity.Quiet,
-        Sources = new [] { "https://www.myget.org/F/aelf-project-dev/api/v3/index.json" }
+        Sources = new [] { "https://www.myget.org/F/aelf-project-dev/api/v3/index.json", "https://api.nuget.org/v3/index.json" }
     });
 });
 Task("Build")
