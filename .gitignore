@@ -294,3 +294,6 @@ aelf.js
 **/package-lock.json
 
 Contracts.manifest
+
+# Contract patcher dlls
+chain/scripts/patcher/*
