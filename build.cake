@@ -25,13 +25,12 @@ Task("Restore")
     .Description("restore project dependencies")
     .Does(() =>
 {
-    var restoreSettings = new DotNetCoreRestoreSettings{
-        ArgumentCustomization = args => {
-            return args.Append("-v quiet");}
-};
-    DotNetCoreRestore(solution,restoreSettings);
+    DotNetCoreRestore("./chain/AElf.Boilerplate.sln", new DotNetCoreRestoreSettings
+    {
+        Verbosity = DotNetCoreVerbosity.Quiet,
+        Sources = new [] { "https://www.myget.org/F/aelf-project-dev/api/v3/index.json" }
+    });
 });
-
 Task("Build")
     .Description("Compilation project")
     .IsDependentOn("Clean")
