@@ -18,7 +18,7 @@ namespace AElf.Contracts.LotteryDemoContract
 
         public MappedState<long, Hash> RandomNumberTokens { get; set; }
 
-        public SInt64Value CurrentPeriod { get; set; }
+        public Int64State CurrentPeriod { get; set; }
 
         public StringState TokenSymbol { get; set; }
     }
