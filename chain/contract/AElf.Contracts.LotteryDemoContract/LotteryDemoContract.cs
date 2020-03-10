@@ -66,8 +66,8 @@ namespace AElf.Contracts.LotteryDemoContract
 
         public override Empty Draw(DrawInput input)
         {
-            Assert(Context.Sender == State.Admin.Value, "must be admin!");
-            Assert(State.Periods[State.CurrentPeriod.Value].RandomHash == Hash.Empty, "latest already drawn");
+            Assert(Context.Sender == State.Admin.Value, "No permission to draw!");
+            Assert(State.Periods[State.CurrentPeriod.Value].RandomHash == Hash.Empty, "Latest period already drawn");
 
             var randomHash = State.AEDPoSContract.GetRandomHash.Call(new SInt64Value
             {
@@ -84,11 +84,11 @@ namespace AElf.Contracts.LotteryDemoContract
 
         public override Empty PrepareDraw(Empty input)
         {
-            Assert(Context.Sender == State.Admin.Value, "must be admin!");
+            Assert(Context.Sender == State.Admin.Value, "No permission to prepare!");
             //检查没有未开的奖
             Assert(
                 State.Periods[State.CurrentPeriod.Value] == null ||
-                State.Periods[State.CurrentPeriod.Value].RandomHash != Hash.Empty, "last draw doesn't finished");
+                State.Periods[State.CurrentPeriod.Value].RandomHash != Hash.Empty, "There's still one period not finished");
 
             State.CurrentPeriod.Value = State.CurrentPeriod.Value.Add(1);
             State.Periods[State.CurrentPeriod.Value] = new PeriodBody
@@ -106,9 +106,9 @@ namespace AElf.Contracts.LotteryDemoContract
 
         public override Empty TakeReward(TakeRewardInput input)
         {
-            Assert(State.LotteryToOwner[input.RandomHash] == Context.Sender, "You can only take your own lottery");
-            Assert(State.Lotteries[State.LotteryToId[input.RandomHash]].Level != 0, "no reward");
-            Assert(State.LotteryToData[input.RandomHash] == null, "Already Took");
+            Assert(State.LotteryToOwner[input.RandomHash] == Context.Sender, "You can only take your own lottery.");
+            Assert(State.Lotteries[State.LotteryToId[input.RandomHash]].Level != 0, "No reward.");
+            Assert(State.LotteryToData[input.RandomHash] == null, "Already took before.");
 
             State.LotteryToData[input.RandomHash].Value = input.Data;
 
@@ -164,16 +164,15 @@ namespace AElf.Contracts.LotteryDemoContract
             //按level进行抽奖，有不少变量强制转换，有安全隐患
             foreach (var count in input.LevelsCount)
             {
-                ulong i = count;
+                var i = count;
                 while (i > 0)
                 {
-                    var luckyIndex = (int) randomHash.ToInt64() % pool.Count();
-                    var luckyId = pool.Skip(luckyIndex).Take(1).First();
+                    var luckyIndex = randomHash.ToInt64() % pool.Count;
+                    var luckyId = pool.Skip((int) luckyIndex).Take(1).First();
                     State.Lotteries[luckyId].Level = category;
                     State.PeriodToResultsList[State.CurrentPeriod.Value].RewardResults.Add(new RewardResult
                     {
-                        LotteryId = luckyId,
-                        //RandomHash = State.Lotteries[luckyId].RandomHash
+                        LotteryId = luckyId
                     });
 
                     pool.Remove(luckyId);
