@@ -28,17 +28,7 @@ namespace AElf.Contracts.LotteryDemoContract
         public MappedState<Hash, ulong> LotteryToId { get; set; }
         public MappedState<Address, LotteryList> OwnerToLotteries { get; set; }
         public MappedState<ulong, RewardResultsList> PeriodToResultsList { get; set; }
-
-
-        //领奖登记信息
         public MappedState<Hash, StringState> LotteryToData { get; set; }
-
-
-
-
-
-
-
         public MappedState<string, MethodFees> TransactionFees { get; set; }
         public SingletonState<AuthorityInfo> MethodFeeController { get; set; }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using AElf.Blockchains.BasicBaseChain.ContractNames;
 using AElf.Blockchains.MainChain;
 using AElf.Boilerplate.Tester;
 using AElf.Contracts.Deployer;

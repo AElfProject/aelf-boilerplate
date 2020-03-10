@@ -1,16 +1,5 @@
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-
-if(Test-Path C:\protoc\bin\protoc.exe) { 
-    cp C:\protoc\include C:\WINDOWS\; 
-    cp C:\protoc\bin\protoc.exe  C:\WINDOWS\; 
-    protoc --version; 
-    exit 100;
-}
-else {
-    wget https://github.com/protocolbuffers/protobuf/releases/download/v3.7.0/protoc-3.7.0-win64.zip -OutFile C:\protoc-3.7.0-win64.zip; 
-    Expand-Archive -Path C:\protoc-3.7.0-win64.zip -DestinationPath C:\protoc ;
-    cp -r C:\protoc\include\google\protobuf\ C:\WINDOWS\include\google\; 
-    cp C:\protoc\bin\protoc.exe  C:\WINDOWS\;
-	protoc --version;
-	exit 0;
-};
+wget https://github.com/protocolbuffers/protobuf/releases/download/v3.11.4/protoc-3.11.4-win64.zip -OutFile C:\protoc-3.11.4-win64.zip; 
+Expand-Archive -Path C:\protoc-3.11.4-win64.zip -DestinationPath C:\protoc ;
+cp -r C:\protoc\include\ C:\WINDOWS\; 
+cp C:\protoc\bin\protoc.exe  C:\WINDOWS\;
+protoc --version;
