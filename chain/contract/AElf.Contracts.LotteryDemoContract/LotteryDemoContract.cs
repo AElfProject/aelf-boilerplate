@@ -122,7 +122,8 @@ namespace AElf.Contracts.LotteryDemoContract
             Assert(results != null, "No results of this period.");
             var randomHash = State.Periods[input.Period].RandomHash;
             // ReSharper disable once PossibleNullReferenceException
-            var lotteries = results.RewardResults.Select(result => State.Lotteries[result.LotteryId]).ToList();
+            var lotteries = results.RewardResults.Select(result => State.Lotteries[result.LotteryId] ?? new Lottery())
+                .ToList();
 
             return new GetRewardResultOutput
             {
