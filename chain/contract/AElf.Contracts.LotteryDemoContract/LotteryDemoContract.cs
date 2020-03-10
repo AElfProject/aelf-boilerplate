@@ -45,7 +45,7 @@ namespace AElf.Contracts.LotteryDemoContract
 
             for (var i = 0; i < input.Amount; i++)
             {
-                var hash = GetHashToken();
+                var hash = GetHashToken(i);
                 var lottery = new Lottery
                 {
                     Id = State.CurrentLotteryId.Value,
@@ -185,9 +185,9 @@ namespace AElf.Contracts.LotteryDemoContract
             }
         }
 
-        private Hash GetHashToken()
+        private Hash GetHashToken(int index)
         {
-            var hash = Hash.FromString(Context.Sender + Context.CurrentHeight.ToString());
+            var hash = Hash.FromString(Context.Sender + index.ToString() + Context.CurrentHeight.ToString());
             Assert(State.LotteryToOwner[hash] == null, "One sender only can buy one at one height.");
             return hash;
         }
