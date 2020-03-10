@@ -49,7 +49,7 @@ namespace AElf.Contracts.LotteryDemoContract
                 var lottery = new Lottery
                 {
                     Id = State.CurrentLotteryId.Value,
-                    RandomHash = hash,
+                    TokenHash = hash,
                     Owner = Context.Sender,
                     Level = 0,
                     Block = Context.CurrentHeight,
@@ -88,7 +88,8 @@ namespace AElf.Contracts.LotteryDemoContract
             //检查没有未开的奖
             Assert(
                 State.Periods[State.CurrentPeriod.Value] == null ||
-                State.Periods[State.CurrentPeriod.Value].RandomHash != Hash.Empty, "There's still one period not finished");
+                State.Periods[State.CurrentPeriod.Value].RandomHash != Hash.Empty,
+                "There's still one period not finished");
 
             State.CurrentPeriod.Value = State.CurrentPeriod.Value.Add(1);
             State.Periods[State.CurrentPeriod.Value] = new PeriodBody
@@ -117,14 +118,11 @@ namespace AElf.Contracts.LotteryDemoContract
 
         public override GetRewardResultOutput GetRewardResult(GetRewardResultInput input)
         {
-            RewardResultsList results = State.PeriodToResultsList[input.Period];
+            var results = State.PeriodToResultsList[input.Period];
+            Assert(results != null, "No results of this period.");
             var randomHash = State.Periods[input.Period].RandomHash;
-            var lotteries = new List<Lottery>();
-
-            foreach (var result in results.RewardResults)
-            {
-                lotteries.Add(State.Lotteries[result.LotteryId]);
-            }
+            // ReSharper disable once PossibleNullReferenceException
+            var lotteries = results.RewardResults.Select(result => State.Lotteries[result.LotteryId]).ToList();
 
             return new GetRewardResultOutput
             {
@@ -161,6 +159,7 @@ namespace AElf.Contracts.LotteryDemoContract
 
             Assert(pool.Any(), "Available lottery not found.");
 
+            var rewardResultsList = State.PeriodToResultsList[State.CurrentPeriod.Value];
             //按level进行抽奖，有不少变量强制转换，有安全隐患
             foreach (var count in input.LevelsCount)
             {
@@ -170,7 +169,7 @@ namespace AElf.Contracts.LotteryDemoContract
                     var luckyIndex = randomHash.ToInt64() % pool.Count;
                     var luckyId = pool.Skip((int) luckyIndex).Take(1).First();
                     State.Lotteries[luckyId].Level = category;
-                    State.PeriodToResultsList[State.CurrentPeriod.Value].RewardResults.Add(new RewardResult
+                    rewardResultsList.RewardResults.Add(new RewardResult
                     {
                         LotteryId = luckyId
                     });
@@ -184,6 +183,8 @@ namespace AElf.Contracts.LotteryDemoContract
 
                 category++;
             }
+
+            State.PeriodToResultsList[State.CurrentPeriod.Value] = rewardResultsList;
         }
 
         private Hash GetHashToken(int index)

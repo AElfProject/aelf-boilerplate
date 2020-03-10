@@ -47,7 +47,7 @@ message DrawInput {
 
 message Lottery {
     uint64 id = 1;
-    aelf.Hash random_hash = 2;
+    aelf.Hash token_hash = 2;
     aelf.Address owner = 3;
     uint64 level = 4;
     sint64 block = 5;
