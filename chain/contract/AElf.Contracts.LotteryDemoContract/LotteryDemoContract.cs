@@ -86,9 +86,11 @@ namespace AElf.Contracts.LotteryDemoContract
         {
             Assert(Context.Sender == State.Admin.Value, "must be admin!");
             //检查没有未开的奖
-            Assert(State.Periods[State.CurrentPeriod.Value].RandomHash != Hash.Empty, "last draw doesn't finished");
+            Assert(
+                State.Periods[State.CurrentPeriod.Value] == null ||
+                State.Periods[State.CurrentPeriod.Value].RandomHash != Hash.Empty, "last draw doesn't finished");
 
-            State.CurrentPeriod.Value += 1;
+            State.CurrentPeriod.Value = State.CurrentPeriod.Value.Add(1);
             State.Periods[State.CurrentPeriod.Value] = new PeriodBody
             {
                 Id = State.CurrentPeriod.Value,
@@ -187,8 +189,8 @@ namespace AElf.Contracts.LotteryDemoContract
 
         private Hash GetHashToken(int index)
         {
-            var hash = Hash.FromString(Context.Sender + index.ToString() + Context.CurrentHeight.ToString());
-            Assert(State.LotteryToOwner[hash] == null, "One sender only can buy one at one height.");
+            var hash = Hash.FromString(Context.Sender + index.ToString() + Context.CurrentHeight);
+            Assert(State.LotteryToOwner[hash] == null, "One sender only can buy once at the same height.");
             return hash;
         }
     }
