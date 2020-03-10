@@ -187,14 +187,8 @@ namespace AElf.Contracts.LotteryDemoContract
 
         private Hash GetHashToken()
         {
-            var hash = Hash.Empty;
-            ulong index = 0;
-
-            do
-            {
-                Hash.FromString(Context.Sender + index++.ToString());
-            } while (State.LotteryToOwner[hash] == null);
-
+            var hash = Hash.FromString(Context.Sender + Context.CurrentHeight.ToString());
+            Assert(State.LotteryToOwner[hash] == null, "One sender only can buy one at one height.");
             return hash;
         }
     }
