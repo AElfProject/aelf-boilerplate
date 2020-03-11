@@ -30,14 +30,22 @@ namespace AElf.Contracts.LotteryDemoContract
 
             State.Price.Value = input.Price == 0 ? DefaultPrice : input.Price;
             State.DrawingLag.Value = input.DrawingLag == 0 ? DefaultDrawingLag : input.DrawingLag;
+            State.CurrentPeriod.Value = 1;
+            State.SelfIncreasingIdForLottery.Value = 1;
+            State.Periods[1] = new PeriodBody
+            {
+                StartId = 1,
+                BlockNumber = Context.CurrentHeight.Add(State.DrawingLag.Value),
+                RandomHash = Hash.Empty
+            };
 
             return new Empty();
         }
 
-        public override Empty Buy(BuyInput input)
+        public override BoughtLotteriesInformation Buy(SInt32Value input)
         {
-            Assert(input.Amount < State.MaximumAmount.Value, $"单次购买数量不能超过{State.MaximumAmount.Value} :)");
-            Assert(input.Amount > 0, "单次购买数量不能低于1");
+            Assert(input.Value < State.MaximumAmount.Value, $"单次购买数量不能超过{State.MaximumAmount.Value} :)");
+            Assert(input.Value > 0, "单次购买数量不能低于1");
 
             var currentPeriod = State.CurrentPeriod.Value;
             // 如果Sender为本届第一次购买，为其初始化一些信息
@@ -50,12 +58,13 @@ namespace AElf.Contracts.LotteryDemoContract
             State.TokenContract.TransferToContract.Send(new TransferToContractInput
             {
                 Symbol = State.TokenSymbol.Value,
-                Amount = State.Decimals.Value.Mul(DefaultPrice).Mul(input.Amount)
+                Amount = State.Decimals.Value.Mul(DefaultPrice).Mul(input.Value)
             });
 
+            var startId = State.SelfIncreasingIdForLottery.Value;
             var newIds = new List<ulong>();
             // 买多少个，添加多少个彩票
-            for (var i = 0; i < input.Amount; i++)
+            for (var i = 0; i < input.Value; i++)
             {
                 var selfIncreasingId = State.SelfIncreasingIdForLottery.Value;
                 var lottery = new Lottery
@@ -74,10 +83,13 @@ namespace AElf.Contracts.LotteryDemoContract
 
             var currentIds = State.OwnerToLotteries[Context.Sender][currentPeriod];
             currentIds.Ids.Add(newIds);
-            ;
             State.OwnerToLotteries[Context.Sender][currentPeriod] = currentIds;
 
-            return new Empty();
+            return new BoughtLotteriesInformation
+            {
+                StartId = startId,
+                Amount = input.Value
+            };
         }
 
         public override Empty PrepareDraw(Empty input)
@@ -85,7 +97,7 @@ namespace AElf.Contracts.LotteryDemoContract
             Assert(Context.Sender == State.Admin.Value, "No permission to prepare!");
 
             // 检查没有未开的奖
-            Assert(State.CurrentPeriod.Value == 0 || // 第0届信息
+            Assert(State.CurrentPeriod.Value == 0 || // 为0则跳过验证
                    State.Periods[State.CurrentPeriod.Value].RandomHash != Hash.Empty,
                 "There's still at least one period not finished.");
 
@@ -95,8 +107,8 @@ namespace AElf.Contracts.LotteryDemoContract
             // 初始化下一届基本信息
             State.Periods[nextPeriod] = new PeriodBody
             {
-                Id = nextPeriod,
-                BlockNumber = Context.CurrentHeight + State.DrawingLag.Value,
+                StartId = State.SelfIncreasingIdForLottery.Value,
+                BlockNumber = Context.CurrentHeight.Add(State.DrawingLag.Value),
                 RandomHash = Hash.Empty
             };
 
@@ -107,16 +119,16 @@ namespace AElf.Contracts.LotteryDemoContract
         {
             Assert(Context.Sender == State.Admin.Value, "No permission to draw!");
             Assert(State.Periods[State.CurrentPeriod.Value].RandomHash == Hash.Empty, "Latest period already drawn");
+            var expectedBlockNumber = State.Periods[State.CurrentPeriod.Value].BlockNumber;
+            Assert(Context.CurrentHeight >= expectedBlockNumber, "Block height not enough.");
 
             var randomHash = State.AEDPoSContract.GetRandomHash.Call(new SInt64Value
             {
-                Value = State.Periods[State.CurrentPeriod.Value].BlockNumber,
+                Value = expectedBlockNumber
             });
 
-            State.Periods[State.CurrentPeriod.Value].RandomHash = randomHash;
-
-            //根据随机数处理彩票
-            DealWithLotteries(input);
+            // 根据随机数处理彩票
+            DealWithLotteries(input.LevelsCount, randomHash);
 
             return new Empty();
         }
@@ -134,27 +146,29 @@ namespace AElf.Contracts.LotteryDemoContract
             return new Empty();
         }
 
-        public override GetRewardResultOutput GetRewardResult(GetRewardResultInput input)
+        public override GetRewardResultOutput GetRewardResult(UInt64Value input)
         {
-            var results = State.Periods[input.Period].RewardResults;
-            Assert(results != null, "No results of this period.");
-            var randomHash = State.Periods[input.Period].RandomHash;
+            var period = State.Periods[input.Value];
+            var rewardIds = period?.RewardIds;
+            Assert(rewardIds != null, "Result of this period not found.");
+            // ReSharper disable once PossibleNullReferenceException
+            var randomHash = period.RandomHash;
             // ReSharper disable once AssignNullToNotNullAttribute
-            var lotteries = results.Select(result => State.Lotteries[result.LotteryId] ?? new Lottery())
-                .ToList();
+            var lotteries = rewardIds.Select(id => State.Lotteries[id] ?? new Lottery()).ToList();
 
             return new GetRewardResultOutput
             {
-                Period = input.Period,
+                Period = input.Value,
                 RandomHash = randomHash,
                 RewardLotteries = {lotteries}
             };
         }
 
-        public override GetLotteriesOutput GetLotteries(GetLotteriesInput input)
+        public override GetBoughtLotteriesOutput GetBoughtLotteries(GetBoughtLotteriesInput input)
         {
             List<ulong> returnLotteryIds;
-            var allLotteryIds = State.OwnerToLotteries[Context.Sender][input.Period].Ids.ToList();
+            var owner = input.Owner ?? Context.Sender;
+            var allLotteryIds = State.OwnerToLotteries[owner][input.Period].Ids.ToList();
             if (allLotteryIds.Count <= MaximumReturnAmount)
             {
                 returnLotteryIds = allLotteryIds;
@@ -166,7 +180,7 @@ namespace AElf.Contracts.LotteryDemoContract
                 returnLotteryIds = allLotteryIds.Take(takeAmount).ToList();
             }
 
-            return new GetLotteriesOutput
+            return new GetBoughtLotteriesOutput
             {
                 Lotteries =
                 {
@@ -175,41 +189,41 @@ namespace AElf.Contracts.LotteryDemoContract
             };
         }
 
-        private void DealWithLotteries(DrawInput input)
+        private void DealWithLotteries(IEnumerable<ulong> levelsCount, Hash randomHash)
         {
-            var pool = new List<ulong>();
-            ulong category = 1; //category为奖品   比如LevelsCount=[2,0,3,6,0] category从1到5  category为1的奖品数为2，2的奖品数为0，以此类推
-            var randomHash = State.Periods[State.CurrentPeriod.Value].RandomHash;
-
-            //把未中奖的lottery放入pool
-            for (ulong i = 0; i < State.SelfIncreasingIdForLottery.Value; i++)
-            {
-                if (State.Lotteries[i].Level == 0 &&
-                    State.Lotteries[i].Block < State.Periods[State.CurrentPeriod.Value].BlockNumber)
-                    pool.Add(i);
-            }
-
-            Assert(pool.Any(), "Available lottery not found.");
-
-            var rewardResultsList = new List<RewardResult>();
-            //按level进行抽奖，有不少变量强制转换，有安全隐患
-            foreach (var count in input.LevelsCount)
+            var currentPeriodNumber = State.CurrentPeriod.Value;
+            var startId = State.Periods[currentPeriodNumber].StartId;
+            var endId = State.Periods[currentPeriodNumber.Add(1)].StartId.Sub(1);
+            var poolCount = (long) endId.Sub(startId).Add(1);
+            // category为奖品编号
+            // 比如LevelsCount = [2,0,3,6,0]，category从1到5
+            // 1号奖品的奖品数为2，2号奖品的奖品数为0，3号奖品的奖品书为3，……
+            ulong category = 1;
+            var rewardIds = new List<ulong>();
+            var alreadyReward = new List<ulong>();
+            foreach (var count in levelsCount)
             {
                 var i = count;
                 while (i > 0)
                 {
-                    var luckyIndex = randomHash.ToInt64() % pool.Count;
-                    var luckyId = pool.Skip((int) luckyIndex).Take(1).First();
-                    State.Lotteries[luckyId].Level = category;
-                    rewardResultsList.Add(new RewardResult
+                    var luckyIndex = randomHash.ToInt64() % poolCount;
+                    var luckyId = startId.Add((ulong) luckyIndex);
+                    if (!alreadyReward.Contains(luckyId))
                     {
-                        LotteryId = luckyId
-                    });
+                        State.Lotteries[luckyId].Level = category;
+                    }
+                    else
+                    {
+                        // 如果已经得过奖，往后顺延一定数量的候选池的Id
+                        var newLuckId = luckyId.Add(((ulong) poolCount).Div(count));
+                        State.Lotteries[newLuckId % (ulong) poolCount].Level = category;
+                    }
 
-                    pool.Remove(luckyId);
-                    //不断对自己hash产生新随机数
+                    rewardIds.Add(luckyId);
+                    alreadyReward.Add(luckyId);
+
+                    // 不断对自己做Hash运算以产生新随机数
                     randomHash = Hash.FromByteArray(randomHash.ToByteArray());
-
                     i--;
                 }
 
@@ -217,7 +231,8 @@ namespace AElf.Contracts.LotteryDemoContract
             }
 
             var period = State.Periods[State.CurrentPeriod.Value];
-            period.RewardResults.Add(rewardResultsList);
+            period.RandomHash = randomHash;
+            period.RewardIds.Add(rewardIds);
             State.Periods[State.CurrentPeriod.Value] = period;
         }
     }
