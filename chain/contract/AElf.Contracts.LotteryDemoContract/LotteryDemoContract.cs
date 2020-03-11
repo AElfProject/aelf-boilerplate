@@ -139,10 +139,12 @@ namespace AElf.Contracts.LotteryDemoContract
             Assert(State.OwnerToLotteries[Context.Sender][input.Period].Ids.Contains(input.LotteryId),
                 "只能领取宁亲自买的彩票 :)");
             Assert(State.Lotteries[input.LotteryId].Level != 0, "没有中奖嗷 :(");
-            Assert(State.Lotteries[input.LotteryId].RegistrationInformation == null,
+            Assert(!State.Lotteries[input.LotteryId].RegistrationInformation.Any(),
                 $"已经领取过啦！登记信息：{State.Lotteries[input.LotteryId].RegistrationInformation}");
 
             State.Lotteries[input.LotteryId].RegistrationInformation = input.RegistrationInformation;
+            
+            // Distribute the reward now. Maybe transfer some tokens.
 
             return new Empty();
         }
@@ -178,7 +180,7 @@ namespace AElf.Contracts.LotteryDemoContract
             {
                 Assert(input.StartIndex < allLotteryIds.Count, "Invalid start index.");
                 var takeAmount = Math.Min(allLotteryIds.Count.Sub(input.StartIndex), MaximumReturnAmount);
-                returnLotteryIds = allLotteryIds.Take((int) takeAmount).ToList();
+                returnLotteryIds = allLotteryIds.Skip(input.StartIndex).Take((int) takeAmount).ToList();
             }
 
             return new GetBoughtLotteriesOutput
