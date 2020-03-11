@@ -200,6 +200,11 @@ namespace AElf.Contracts.LotteryDemoContract
             var startId = State.Periods[lastPeriodNumber].StartId;
             var endId = State.Periods[currentPeriodNumber].StartId.Sub(1);
             var poolCount = endId.Sub(startId).Add(1);
+            if (poolCount == 0)
+            {
+                // 看来这期彩票并没有人买
+                return;
+            }
             // category为奖品编号
             // 比如LevelsCount = [2,0,3,6,0]，category从1到5
             // 1号奖品的奖品数为2，2号奖品的奖品数为0，3号奖品的奖品书为3，……
