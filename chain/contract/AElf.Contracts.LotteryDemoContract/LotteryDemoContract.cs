@@ -50,7 +50,7 @@ namespace AElf.Contracts.LotteryDemoContract
             Assert(input.Value > 0, "单次购买数量不能低于1");
 
             var currentPeriod = State.CurrentPeriod.Value;
-            // 如果Sender为本届第一次购买，为其初始化一些信息
+            // 如果Sender为本期第一次购买，为其初始化一些信息
             if (State.OwnerToLotteries[Context.Sender][currentPeriod] == null)
             {
                 State.OwnerToLotteries[Context.Sender][currentPeriod] = new LotteryList();
@@ -196,7 +196,8 @@ namespace AElf.Contracts.LotteryDemoContract
         private void DealWithLotteries(IEnumerable<long> levelsCount, Hash randomHash)
         {
             var currentPeriodNumber = State.CurrentPeriod.Value;
-            var startId = State.Periods[currentPeriodNumber.Sub(1)].StartId;
+            var lastPeriodNumber = currentPeriodNumber.Sub(1);
+            var startId = State.Periods[lastPeriodNumber].StartId;
             var endId = State.Periods[currentPeriodNumber].StartId.Sub(1);
             var poolCount = endId.Sub(startId).Add(1);
             // category为奖品编号
@@ -220,10 +221,10 @@ namespace AElf.Contracts.LotteryDemoContract
                     else
                     {
                         // 如果已经得过奖，往后顺延一定数量的候选池的Id
-                        var newLuckyId = luckyId.Add(poolCount.Div(count)) % poolCount;
-                        var newLuckyIdIndex = startId.Add(newLuckyId);
-                        State.Lotteries[newLuckyIdIndex].Level = category;
-                        rewardIds.Add(newLuckyIdIndex);
+                        var newLuckyIdIndex = luckyId.Add(poolCount.Div(count)) % poolCount;
+                        var newLuckyId = startId.Add(newLuckyIdIndex);
+                        State.Lotteries[newLuckyId].Level = category;
+                        rewardIds.Add(newLuckyId);
                     }
 
                     alreadyReward.Add(luckyId);
@@ -236,10 +237,10 @@ namespace AElf.Contracts.LotteryDemoContract
                 category++;
             }
 
-            var period = State.Periods[currentPeriodNumber.Sub(1)];
+            var period = State.Periods[lastPeriodNumber];
             period.RandomHash = randomHash;
             period.RewardIds.Add(rewardIds);
-            State.Periods[State.CurrentPeriod.Value] = period;
+            State.Periods[lastPeriodNumber] = period;
         }
 
         public override Empty ResetPrice(SInt64Value input)
