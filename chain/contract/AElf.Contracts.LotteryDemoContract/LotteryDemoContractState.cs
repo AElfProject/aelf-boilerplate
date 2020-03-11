@@ -27,7 +27,7 @@ namespace AElf.Contracts.LotteryDemoContract
         /// <summary>
         /// 一次购买行为能购买彩票数量的上限
         /// </summary>
-        public SingletonState<int> MaximumAmount { get; set; }
+        public SingletonState<long> MaximumAmount { get; set; }
 
         /// <summary>
         /// 开奖延后区块数
@@ -37,7 +37,7 @@ namespace AElf.Contracts.LotteryDemoContract
         /// <summary>
         /// 该合约设置的Token Symbol的小数点后位数（初始化时从Token合约中获取）
         /// </summary>
-        public SingletonState<int> Decimals { get; set; }
+        public SingletonState<long> Decimals { get; set; }
 
         /// <summary>
         /// 彩票业务最高权限地址
@@ -47,27 +47,27 @@ namespace AElf.Contracts.LotteryDemoContract
         /// <summary>
         /// 当前开奖届数，从0开始
         /// </summary>
-        public SingletonState<ulong> CurrentPeriod { get; set; }
+        public SingletonState<long> CurrentPeriod { get; set; }
 
         /// <summary>
         /// 每售出一笔彩票，自增1
         /// </summary>
-        public SingletonState<ulong> SelfIncreasingIdForLottery { get; set; }
+        public SingletonState<long> SelfIncreasingIdForLottery { get; set; }
 
         /// <summary>
         /// 每一届的基本信息
         /// </summary>
-        public MappedState<ulong, PeriodBody> Periods { get; set; }
+        public MappedState<long, PeriodBody> Periods { get; set; }
 
         /// <summary>
         /// 彩票自增Id -> 彩票详情
         /// </summary>
-        public MappedState<ulong, Lottery> Lotteries { get; set; }
+        public MappedState<long, Lottery> Lotteries { get; set; }
 
         /// <summary>
         /// 用户地址 -> 届数 -> 已购彩票列表
         /// </summary>
-        public MappedState<Address, ulong, LotteryList> OwnerToLotteries { get; set; }
+        public MappedState<Address, long, LotteryList> OwnerToLotteries { get; set; }
 
         public MappedState<string, MethodFees> TransactionFees { get; set; }
         public SingletonState<AuthorityInfo> MethodFeeController { get; set; }

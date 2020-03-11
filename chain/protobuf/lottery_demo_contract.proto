@@ -12,9 +12,10 @@ service LotteryDemoContract {
     option (aelf.csharp_state) = "AElf.Contracts.LotteryDemoContract.LotteryDemoContractState";
     option (aelf.base) = "acs1.proto";
 
+    // Basic Actions
     rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
     }
-    rpc Buy(aelf.SInt32Value) returns (BoughtLotteriesInformation) {
+    rpc Buy(aelf.SInt64Value) returns (BoughtLotteriesInformation) {
     }
     rpc Draw (DrawInput) returns (google.protobuf.Empty) {
     }
@@ -22,7 +23,16 @@ service LotteryDemoContract {
 	}
     rpc TakeReward (TakeRewardInput) returns (google.protobuf.Empty) {
     }
-    rpc GetRewardResult (google.protobuf.UInt64Value) returns (GetRewardResultOutput) {
+    
+    // Management Actions
+    rpc ResetMaximumBuyAmount (aelf.SInt64Value) returns (google.protobuf.Empty) {
+    }
+    rpc ResetPrice (aelf.SInt64Value) returns (google.protobuf.Empty) {
+    }
+    rpc ResetDrawingLag (aelf.SInt64Value) returns (google.protobuf.Empty) {
+    }
+
+    rpc GetRewardResult (aelf.SInt64Value) returns (GetRewardResultOutput) {
         option (aelf.is_view) = true;
     }
     rpc GetBoughtLotteries (GetBoughtLotteriesInput) returns (GetBoughtLotteriesOutput) {
@@ -32,30 +42,30 @@ service LotteryDemoContract {
 
 message InitializeInput {
     string token_symbol = 1;
-    sint32 maximum_amount = 2;
+    sint64 maximum_amount = 2;
     sint64 price = 3;
     sint64 drawing_lag = 4;
 }
 
 message BoughtLotteriesInformation {
-    uint64 start_id = 1;
-    sint32 amount = 2;
+    sint64 start_id = 1;
+    sint64 amount = 2;
 }
 
 message TakeRewardInput {
-    uint64 lottery_id = 1;
+    sint64 lottery_id = 1;
     string registration_information = 2;
-    uint64 period = 3;
+    sint64 period = 3;
 }
 
 message DrawInput {
-    repeated uint64 levels_count = 1;
+    repeated sint64 levels_count = 1;
 }
 
 message Lottery {
-    uint64 id = 1;
+    sint64 id = 1;
     aelf.Address owner = 2;
-    uint64 level = 3;
+    sint64 level = 3;
     sint64 block = 4;
     string registration_information = 5;
 }
@@ -63,26 +73,26 @@ message Lottery {
 message PeriodBody {
     sint64 block_number = 2;
     aelf.Hash random_hash = 3;
-    repeated uint64 reward_ids = 4;
-    uint64 start_id = 5;
+    repeated sint64 reward_ids = 4;
+    sint64 start_id = 5;
 }
 
 message LotteryList {
-    repeated uint64 ids = 1;
+    repeated sint64 ids = 1;
 }
 
 message GetRewardResultInput {
-    uint64 period = 1;
+    sint64 period = 1;
 }
 
 message GetRewardResultOutput {
-    uint64 period = 1;
+    sint64 period = 1;
     aelf.Hash random_hash = 2;
     repeated Lottery reward_lotteries = 3;
 }
 
 message GetBoughtLotteriesInput {
-    uint64 period = 1;
+    sint64 period = 1;
     sint32 start_index = 2;
     aelf.Address owner = 3;
 }

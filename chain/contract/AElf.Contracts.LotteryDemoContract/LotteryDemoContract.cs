@@ -31,12 +31,12 @@ namespace AElf.Contracts.LotteryDemoContract
             State.Price.Value = input.Price == 0 ? DefaultPrice : input.Price;
             State.DrawingLag.Value = input.DrawingLag == 0 ? DefaultDrawingLag : input.DrawingLag;
             State.MaximumAmount.Value = input.MaximumAmount == 0 ? MaximumBuyAmount : input.MaximumAmount;
+            State.SelfIncreasingIdForLottery.Value = 1;
 
             State.CurrentPeriod.Value = 1;
-            State.SelfIncreasingIdForLottery.Value = 1;
             State.Periods[1] = new PeriodBody
             {
-                StartId = 1,
+                StartId = State.SelfIncreasingIdForLottery.Value,
                 BlockNumber = Context.CurrentHeight.Add(State.DrawingLag.Value),
                 RandomHash = Hash.Empty
             };
@@ -44,7 +44,7 @@ namespace AElf.Contracts.LotteryDemoContract
             return new Empty();
         }
 
-        public override BoughtLotteriesInformation Buy(SInt32Value input)
+        public override BoughtLotteriesInformation Buy(SInt64Value input)
         {
             Assert(input.Value < State.MaximumAmount.Value, $"单次购买数量不能超过{State.MaximumAmount.Value} :)");
             Assert(input.Value > 0, "单次购买数量不能低于1");
@@ -60,11 +60,11 @@ namespace AElf.Contracts.LotteryDemoContract
             State.TokenContract.TransferToContract.Send(new TransferToContractInput
             {
                 Symbol = State.TokenSymbol.Value,
-                Amount = State.Decimals.Value.Mul(DefaultPrice).Mul(input.Value)
+                Amount = State.Decimals.Value.Mul(State.Price.Value).Mul(input.Value)
             });
 
             var startId = State.SelfIncreasingIdForLottery.Value;
-            var newIds = new List<ulong>();
+            var newIds = new List<long>();
             // 买多少个，添加多少个彩票
             for (var i = 0; i < input.Value; i++)
             {
@@ -99,15 +99,14 @@ namespace AElf.Contracts.LotteryDemoContract
             Assert(Context.Sender == State.Admin.Value, "No permission to prepare!");
 
             // 检查没有未开的奖
-            Assert(State.CurrentPeriod.Value == 0 || // 为0则跳过验证
+            Assert(State.CurrentPeriod.Value == 1 || // 为1则跳过验证，此时该交易的意义是结束第1期
                    State.Periods[State.CurrentPeriod.Value].RandomHash != Hash.Empty,
                 "There's still at least one period not finished.");
 
-            var nextPeriod = State.CurrentPeriod.Value.Add(1);
-            State.CurrentPeriod.Value = nextPeriod;
+            State.CurrentPeriod.Value = State.CurrentPeriod.Value.Add(1);
 
             // 初始化下一届基本信息
-            State.Periods[nextPeriod] = new PeriodBody
+            State.Periods[State.CurrentPeriod.Value] = new PeriodBody
             {
                 StartId = State.SelfIncreasingIdForLottery.Value,
                 BlockNumber = Context.CurrentHeight.Add(State.DrawingLag.Value),
@@ -120,7 +119,7 @@ namespace AElf.Contracts.LotteryDemoContract
         public override Empty Draw(DrawInput input)
         {
             Assert(Context.Sender == State.Admin.Value, "No permission to draw!");
-            Assert(State.Periods[State.CurrentPeriod.Value].RandomHash == Hash.Empty, "Latest period already drawn");
+            Assert(State.Periods[State.CurrentPeriod.Value].RandomHash == Hash.Empty, "Latest period already drawn.");
             var expectedBlockNumber = State.Periods[State.CurrentPeriod.Value].BlockNumber;
             Assert(Context.CurrentHeight >= expectedBlockNumber, "Block height not enough.");
 
@@ -131,7 +130,7 @@ namespace AElf.Contracts.LotteryDemoContract
 
             // 根据随机数处理彩票
             DealWithLotteries(input.LevelsCount, randomHash);
-
+            
             return new Empty();
         }
 
@@ -148,7 +147,7 @@ namespace AElf.Contracts.LotteryDemoContract
             return new Empty();
         }
 
-        public override GetRewardResultOutput GetRewardResult(UInt64Value input)
+        public override GetRewardResultOutput GetRewardResult(SInt64Value input)
         {
             var period = State.Periods[input.Value];
             var rewardIds = period?.RewardIds;
@@ -168,7 +167,7 @@ namespace AElf.Contracts.LotteryDemoContract
 
         public override GetBoughtLotteriesOutput GetBoughtLotteries(GetBoughtLotteriesInput input)
         {
-            List<ulong> returnLotteryIds;
+            List<long> returnLotteryIds;
             var owner = input.Owner ?? Context.Sender;
             var allLotteryIds = State.OwnerToLotteries[owner][input.Period].Ids.ToList();
             if (allLotteryIds.Count <= MaximumReturnAmount)
@@ -179,7 +178,7 @@ namespace AElf.Contracts.LotteryDemoContract
             {
                 Assert(input.StartIndex < allLotteryIds.Count, "Invalid start index.");
                 var takeAmount = Math.Min(allLotteryIds.Count.Sub(input.StartIndex), MaximumReturnAmount);
-                returnLotteryIds = allLotteryIds.Take(takeAmount).ToList();
+                returnLotteryIds = allLotteryIds.Take((int) takeAmount).ToList();
             }
 
             return new GetBoughtLotteriesOutput
@@ -191,25 +190,25 @@ namespace AElf.Contracts.LotteryDemoContract
             };
         }
 
-        private void DealWithLotteries(IEnumerable<ulong> levelsCount, Hash randomHash)
+        private void DealWithLotteries(IEnumerable<long> levelsCount, Hash randomHash)
         {
             var currentPeriodNumber = State.CurrentPeriod.Value;
             var startId = State.Periods[currentPeriodNumber].StartId;
             var endId = State.Periods[currentPeriodNumber.Add(1)].StartId.Sub(1);
-            var poolCount = (long) endId.Sub(startId).Add(1);
+            var poolCount = endId.Sub(startId).Add(1);
             // category为奖品编号
             // 比如LevelsCount = [2,0,3,6,0]，category从1到5
             // 1号奖品的奖品数为2，2号奖品的奖品数为0，3号奖品的奖品书为3，……
-            ulong category = 1;
-            var rewardIds = new List<ulong>();
-            var alreadyReward = new List<ulong>();
+            long category = 1;
+            var rewardIds = new List<long>();
+            var alreadyReward = new List<long>();
             foreach (var count in levelsCount)
             {
                 var i = count;
                 while (i > 0)
                 {
                     var luckyIndex = randomHash.ToInt64() % poolCount;
-                    var luckyId = startId.Add((ulong) luckyIndex);
+                    var luckyId = startId.Add(luckyIndex);
                     if (!alreadyReward.Contains(luckyId))
                     {
                         State.Lotteries[luckyId].Level = category;
@@ -217,8 +216,8 @@ namespace AElf.Contracts.LotteryDemoContract
                     else
                     {
                         // 如果已经得过奖，往后顺延一定数量的候选池的Id
-                        var newLuckId = luckyId.Add(((ulong) poolCount).Div(count));
-                        State.Lotteries[newLuckId % (ulong) poolCount].Level = category;
+                        var newLuckId = luckyId.Add(poolCount.Div(count));
+                        State.Lotteries[newLuckId % poolCount].Level = category;
                     }
 
                     rewardIds.Add(luckyId);
@@ -236,6 +235,32 @@ namespace AElf.Contracts.LotteryDemoContract
             period.RandomHash = randomHash;
             period.RewardIds.Add(rewardIds);
             State.Periods[State.CurrentPeriod.Value] = period;
+        }
+
+        public override Empty ResetPrice(SInt64Value input)
+        {
+            AssertSenderIsAdmin();
+            State.Price.Value = input.Value;
+            return new Empty();
+        }
+
+        public override Empty ResetDrawingLag(SInt64Value input)
+        {
+            AssertSenderIsAdmin();
+            State.DrawingLag.Value = input.Value;
+            return new Empty();
+        }
+
+        public override Empty ResetMaximumBuyAmount(SInt64Value input)
+        {
+            AssertSenderIsAdmin();
+            State.MaximumAmount.Value = input.Value;
+            return new Empty();
+        }
+
+        private void AssertSenderIsAdmin()
+        {
+            Assert(Context.Sender == State.Admin.Value, "Sender should be admin.");
         }
     }
 }
