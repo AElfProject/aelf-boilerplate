@@ -265,6 +265,11 @@ namespace AElf.Contracts.LotteryDemoContract
             Assert(Context.Sender == State.Admin.Value, "Sender should be admin.");
         }
 
+        public override SInt64Value GetPrice(Empty input)
+        {
+            return new SInt64Value {Value = State.Price.Value};
+        }
+
         private long GetPrecision()
         {
             var precision = 1L;
