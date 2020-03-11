@@ -38,7 +38,7 @@ namespace AElf.Contracts.Consensus.SingleConsensusContract
 
         public override BytesValue GetConsensusExtraData(BytesValue input)
         {
-            return new BytesValue();
+            return Context.Sender.ToBytesValue();
         }
 
         public override ConsensusCommand GetConsensusCommand(BytesValue input)

@@ -8,6 +8,7 @@ using AElf.Database;
 using AElf.Kernel;
 using AElf.Kernel.Consensus;
 using AElf.Kernel.Consensus.AEDPoS;
+using AElf.Kernel.Consensus.Application;
 using AElf.Kernel.Infrastructure;
 using AElf.Kernel.SmartContract;
 using AElf.Kernel.SmartContract.Application;
@@ -120,6 +121,7 @@ namespace AElf.Boilerplate.MainChain
             context.Services.AddTransient<IGenesisSmartContractDtoProvider, GenesisSmartContractDtoProvider>();
 
             context.Services.RemoveAll<ITransactionValidationProvider>();
+            context.Services.AddSingleton<IConsensusExtraDataExtractor, SingleConsensusExtractor>();
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
