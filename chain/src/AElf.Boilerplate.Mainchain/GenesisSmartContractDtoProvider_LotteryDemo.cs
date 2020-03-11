@@ -4,6 +4,7 @@ using Acs0;
 using AElf.Contracts.LotteryDemoContract;
 using AElf.OS.Node.Application;
 using AElf.Types;
+using InitializeInput = AElf.Contracts.LotteryDemoContract.InitializeInput;
 
 namespace AElf.Blockchains.MainChain
 {
@@ -26,8 +27,8 @@ namespace AElf.Blockchains.MainChain
             var lotteryDemoContractMethodCallList =
                 new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList();
             lotteryDemoContractMethodCallList.Add(
-                nameof(LotteryDemoContractContainer.LotteryDemoContractStub.InitializeLotteryDemoContract),
-                new InitializeLotteryDemoContractInput
+                nameof(LotteryDemoContractContainer.LotteryDemoContractStub.Initialize),
+                new InitializeInput
                 {
                     TokenSymbol = _economicOptions.TokenName
                 });
