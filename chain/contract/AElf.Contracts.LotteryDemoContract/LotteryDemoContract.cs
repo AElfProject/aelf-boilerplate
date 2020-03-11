@@ -60,7 +60,7 @@ namespace AElf.Contracts.LotteryDemoContract
             State.TokenContract.TransferToContract.Send(new TransferToContractInput
             {
                 Symbol = State.TokenSymbol.Value,
-                Amount = State.Decimals.Value.Mul(DefaultPrice).Mul(input.Value)
+                Amount = ((long) (State.Decimals.Value)).Mul(State.Price.Value).Mul(input.Value)
             });
 
             var startId = State.SelfIncreasingIdForLottery.Value;
