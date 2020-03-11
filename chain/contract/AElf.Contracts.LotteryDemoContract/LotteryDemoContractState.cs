@@ -9,26 +9,66 @@ namespace AElf.Contracts.LotteryDemoContract
 {
     public class LotteryDemoContractState : ContractState
     {
+        // ReSharper disable once InconsistentNaming
         internal AEDPoSContractContainer.AEDPoSContractReferenceState AEDPoSContract { get; set; }
         internal ParliamentContractContainer.ParliamentContractReferenceState ParliamentContract { get; set; }
         internal TokenContractContainer.TokenContractReferenceState TokenContract { get; set; }
 
         /// <summary>
-        /// TxId -> Lotteries detail
+        /// 该合约中，用户购买所支持的Token Symbol
         /// </summary>
-
-        public SingletonState<ulong> CurrentPeriod { get; set; }
-        public SingletonState<ulong> CurrentLotteryId { get; set; }
         public StringState TokenSymbol { get; set; }
+
+        /// <summary>
+        /// 单价
+        /// </summary>
+        public SingletonState<long> Price { get; set; }
+
+        /// <summary>
+        /// 一次购买行为能购买彩票数量的上限
+        /// </summary>
+        public SingletonState<int> MaximumAmount { get; set; }
+
+        /// <summary>
+        /// 开奖延后区块数
+        /// </summary>
+        public SingletonState<long> DrawingLag { get; set; }
+
+        /// <summary>
+        /// 该合约设置的Token Symbol的小数点后位数（初始化时从Token合约中获取）
+        /// </summary>
+        public SingletonState<int> Decimals { get; set; }
+
+        /// <summary>
+        /// 彩票业务最高权限地址
+        /// </summary>
         public SingletonState<Address> Admin { get; set; }
 
+        /// <summary>
+        /// 当前开奖届数，从0开始
+        /// </summary>
+        public SingletonState<ulong> CurrentPeriod { get; set; }
+
+        /// <summary>
+        /// 每售出一笔彩票，自增1
+        /// </summary>
+        public SingletonState<ulong> SelfIncreasingIdForLottery { get; set; }
+
+        /// <summary>
+        /// 每一届的基本信息
+        /// </summary>
         public MappedState<ulong, PeriodBody> Periods { get; set; }
+
+        /// <summary>
+        /// 彩票自增Id -> 彩票详情
+        /// </summary>
         public MappedState<ulong, Lottery> Lotteries { get; set; }
-        public MappedState<Hash, Address> LotteryToOwner { get; set; }
-        public MappedState<Hash, ulong> LotteryToId { get; set; }
-        public MappedState<Address, LotteryList> OwnerToLotteries { get; set; }
-        public MappedState<ulong, RewardResultsList> PeriodToResultsList { get; set; }
-        public MappedState<Hash, StringState> LotteryToData { get; set; }
+
+        /// <summary>
+        /// 用户地址 -> 届数 -> 已购彩票列表
+        /// </summary>
+        public MappedState<Address, ulong, LotteryList> OwnerToLotteries { get; set; }
+
         public MappedState<string, MethodFees> TransactionFees { get; set; }
         public SingletonState<AuthorityInfo> MethodFeeController { get; set; }
     }

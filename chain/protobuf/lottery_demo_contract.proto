@@ -12,7 +12,7 @@ service LotteryDemoContract {
     option (aelf.csharp_state) = "AElf.Contracts.LotteryDemoContract.LotteryDemoContractState";
     option (aelf.base) = "acs1.proto";
 
-    rpc InitializeLotteryDemoContract (InitializeLotteryDemoContractInput) returns (google.protobuf.Empty) {
+    rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
     }
     rpc Buy(BuyInput) returns (google.protobuf.Empty) {
     }
@@ -25,22 +25,27 @@ service LotteryDemoContract {
     rpc GetRewardResult (GetRewardResultInput) returns (GetRewardResultOutput) {
         option (aelf.is_view) = true;
     }
-    rpc GetLotteries (google.protobuf.Empty) returns (GetLotteriesOutput) {
+    rpc GetLotteries (GetLotteriesInput) returns (GetLotteriesOutput) {
         option (aelf.is_view) = true;
 	}
 }
 
-message InitializeLotteryDemoContractInput {
+message InitializeInput {
     string token_symbol = 1;
+    sint32 maximum_amount = 2;
+    sint64 price = 3;
+    sint64 drawing_lag = 4;
 }
 
 message BuyInput {
     sint32 amount = 1;
 }
 message TakeRewardInput {
-    aelf.Hash random_hash = 1;
-    string data = 2;
+    uint64 lottery_id = 1;
+    string registration_information = 2;
+    uint64 period = 3;
 }
+
 message DrawInput {
     repeated uint64 levels_count = 1;
 }
@@ -51,12 +56,14 @@ message Lottery {
     aelf.Address owner = 3;
     uint64 level = 4;
     sint64 block = 5;
+    string registration_information = 6;
 }
 
 message PeriodBody {
     uint64 id = 1;
     sint64 block_number = 2;
     aelf.Hash random_hash = 3;
+    repeated RewardResult reward_results = 4;
 }
 
 message LotteryList {
@@ -81,6 +88,10 @@ message RewardResultsList {
     repeated RewardResult reward_results = 2;
 }
 
+message GetLotteriesInput {
+    uint64 period = 1;
+    sint32 start_index = 2;
+}
 
 message GetLotteriesOutput {
     repeated Lottery lotteries = 3;
