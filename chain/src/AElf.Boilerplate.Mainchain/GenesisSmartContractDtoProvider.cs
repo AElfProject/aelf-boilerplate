@@ -37,16 +37,7 @@ namespace AElf.Blockchains.MainChain
             // The order matters !!!
             return new[]
             {
-                GetGenesisSmartContractDtosForVote(),
-                GetGenesisSmartContractDtosForProfit(),
-                GetGenesisSmartContractDtosForElection(),
-                GetGenesisSmartContractDtosForToken(),
-                GetGenesisSmartContractDtosForConsensus(),
-                GetGenesisSmartContractDtosForConfiguration(),
-                GetGenesisSmartContractDtosForHelloWorld(),
-                GetGenesisSmartContractDtosForBingoGame(),
-                GetGenesisSmartContractDtosForLotteryDemo(),
-                GetGenesisSmartContractDtosForGreeter(),
+                GetGenesisSmartContractDtosForSingleConsensus(),
             }.SelectMany(x => x);
         }
     }
