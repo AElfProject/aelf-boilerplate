@@ -30,6 +30,8 @@ namespace AElf.Contracts.LotteryDemoContract
 
             State.Price.Value = input.Price == 0 ? DefaultPrice : input.Price;
             State.DrawingLag.Value = input.DrawingLag == 0 ? DefaultDrawingLag : input.DrawingLag;
+            State.MaximumAmount.Value = input.MaximumAmount == 0 ? MaximumBuyAmount : input.MaximumAmount;
+
             State.CurrentPeriod.Value = 1;
             State.SelfIncreasingIdForLottery.Value = 1;
             State.Periods[1] = new PeriodBody
