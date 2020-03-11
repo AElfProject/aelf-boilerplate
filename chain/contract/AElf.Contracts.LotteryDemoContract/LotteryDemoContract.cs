@@ -60,7 +60,7 @@ namespace AElf.Contracts.LotteryDemoContract
             State.TokenContract.TransferToContract.Send(new TransferToContractInput
             {
                 Symbol = State.TokenSymbol.Value,
-                Amount = State.Decimals.Value.Mul(State.Price.Value).Mul(input.Value)
+                Amount = GetPrecision().Mul(State.Price.Value).Mul(input.Value)
             });
 
             var startId = State.SelfIncreasingIdForLottery.Value;
@@ -130,7 +130,7 @@ namespace AElf.Contracts.LotteryDemoContract
 
             // 根据随机数处理彩票
             DealWithLotteries(input.LevelsCount, randomHash);
-            
+
             return new Empty();
         }
 
@@ -193,8 +193,8 @@ namespace AElf.Contracts.LotteryDemoContract
         private void DealWithLotteries(IEnumerable<long> levelsCount, Hash randomHash)
         {
             var currentPeriodNumber = State.CurrentPeriod.Value;
-            var startId = State.Periods[currentPeriodNumber].StartId;
-            var endId = State.Periods[currentPeriodNumber.Add(1)].StartId.Sub(1);
+            var startId = State.Periods[currentPeriodNumber.Sub(1)].StartId;
+            var endId = State.Periods[currentPeriodNumber].StartId.Sub(1);
             var poolCount = endId.Sub(startId).Add(1);
             // category为奖品编号
             // 比如LevelsCount = [2,0,3,6,0]，category从1到5
@@ -207,31 +207,33 @@ namespace AElf.Contracts.LotteryDemoContract
                 var i = count;
                 while (i > 0)
                 {
-                    var luckyIndex = randomHash.ToInt64() % poolCount;
+                    var luckyIndex = Math.Abs(randomHash.ToInt64() % poolCount);
                     var luckyId = startId.Add(luckyIndex);
                     if (!alreadyReward.Contains(luckyId))
                     {
                         State.Lotteries[luckyId].Level = category;
+                        rewardIds.Add(luckyId);
                     }
                     else
                     {
                         // 如果已经得过奖，往后顺延一定数量的候选池的Id
-                        var newLuckId = luckyId.Add(poolCount.Div(count));
-                        State.Lotteries[newLuckId % poolCount].Level = category;
+                        var newLuckyId = luckyId.Add(poolCount.Div(count)) % poolCount;
+                        var newLuckyIdIndex = startId.Add(newLuckyId);
+                        State.Lotteries[newLuckyIdIndex].Level = category;
+                        rewardIds.Add(newLuckyIdIndex);
                     }
 
-                    rewardIds.Add(luckyId);
                     alreadyReward.Add(luckyId);
 
                     // 不断对自己做Hash运算以产生新随机数
-                    randomHash = Hash.FromByteArray(randomHash.ToByteArray());
+                    randomHash = Hash.FromMessage(randomHash);
                     i--;
                 }
 
                 category++;
             }
 
-            var period = State.Periods[State.CurrentPeriod.Value];
+            var period = State.Periods[currentPeriodNumber.Sub(1)];
             period.RandomHash = randomHash;
             period.RewardIds.Add(rewardIds);
             State.Periods[State.CurrentPeriod.Value] = period;
@@ -261,6 +263,17 @@ namespace AElf.Contracts.LotteryDemoContract
         private void AssertSenderIsAdmin()
         {
             Assert(Context.Sender == State.Admin.Value, "Sender should be admin.");
+        }
+
+        private long GetPrecision()
+        {
+            var precision = 1L;
+            for (var i = 0; i < State.Decimals.Value; i++)
+            {
+                precision = precision.Mul(10);
+            }
+
+            return precision;
         }
     }
 }

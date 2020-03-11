@@ -23,13 +23,32 @@
         <ContractStub Include="..\..\protobuf\acs0.proto">
             <Link>Protobuf\Proto\acs0.proto</Link>
         </ContractStub>
+        <ContractStub Include="..\..\protobuf\acs1.proto">
+            <Link>Protobuf\Proto\acs1.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\acs3.proto">
+            <Link>Protobuf\Proto\acs3.proto</Link>
+        </ContractStub>
         <ContractStub Include="..\..\protobuf\greeter_contract.proto">
             <Link>Protobuf\Proto\greeter_contract.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\token_contract.proto">
+            <Link>Protobuf\Proto\token_contract.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\lottery_demo_contract.proto">
+            <Link>Protobuf\Proto\lottery_demo_contract.proto</Link>
         </ContractStub>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\contract\AElf.Contracts.GreeterContract\AElf.Contracts.GreeterContract.csproj" />
+        <ProjectReference Include="..\..\contract\AElf.Contracts.LotteryDemoContract\AElf.Contracts.LotteryDemoContract.csproj" />
+
+        <PackageReference Include="AElf.Contracts.MultiToken" Version="0.9.3-18327">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
     </ItemGroup>
 
 </Project>

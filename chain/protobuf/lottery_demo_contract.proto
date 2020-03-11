@@ -38,6 +38,9 @@ service LotteryDemoContract {
     rpc GetBoughtLotteries (GetBoughtLotteriesInput) returns (GetBoughtLotteriesOutput) {
         option (aelf.is_view) = true;
 	}
+	rpc GetPrice (google.protobuf.Empty) returns (aelf.SInt64Value) {
+        option (aelf.is_view) = true;
+	}
 }
 
 message InitializeInput {
