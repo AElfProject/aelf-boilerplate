@@ -223,6 +223,7 @@ namespace AElf.Contracts.LotteryDemoContract
                 return;
             }
 
+            Assert(levelsCount.Sum() > 0, "奖品不能为空");
             Assert(poolCount >= levelsCount.Sum(), "奖品过多");
 
             // category为奖品编号
@@ -299,9 +300,40 @@ namespace AElf.Contracts.LotteryDemoContract
             Assert(Context.Sender == State.Admin.Value, "Sender should be admin.");
         }
 
+        public override SInt64Value GetSales(SInt64Value input)
+        {
+            var period = State.Periods[input.Value];
+            Assert(period != null, "Period information not found.");
+            if (State.CurrentPeriod.Value == input.Value)
+            {
+                return new SInt64Value
+                {
+                    // ReSharper disable once PossibleNullReferenceException
+                    Value = State.SelfIncreasingIdForLottery.Value.Sub(period.StartId)
+                };
+            }
+
+            var nextPeriod = State.Periods[input.Value.Add(1)];
+            return new SInt64Value
+            {
+                // ReSharper disable once PossibleNullReferenceException
+                Value = nextPeriod.StartId.Sub(period.StartId)
+            };
+        }
+
         public override SInt64Value GetPrice(Empty input)
         {
             return new SInt64Value {Value = State.Price.Value};
+        }
+
+        public override SInt64Value GetDrawingLag(Empty input)
+        {
+            return new SInt64Value {Value = State.DrawingLag.Value};
+        }
+
+        public override SInt64Value GetMaximumBuyAmount(Empty input)
+        {
+            return new SInt64Value {Value = State.MaximumAmount.Value};
         }
 
         private long GetPrecision()

@@ -38,9 +38,18 @@ service LotteryDemoContract {
     rpc GetBoughtLotteries (GetBoughtLotteriesInput) returns (GetBoughtLotteriesOutput) {
         option (aelf.is_view) = true;
 	}
+	rpc GetSales (aelf.SInt64Value) returns (aelf.SInt64Value) {
+        option (aelf.is_view) = true;
+    }
+	rpc GetMaximumBuyAmount (google.protobuf.Empty) returns (aelf.SInt64Value) {
+        option (aelf.is_view) = true;
+    }
 	rpc GetPrice (google.protobuf.Empty) returns (aelf.SInt64Value) {
         option (aelf.is_view) = true;
-	}
+    }
+	rpc GetDrawingLag (google.protobuf.Empty) returns (aelf.SInt64Value) {
+        option (aelf.is_view) = true;
+    }
 }
 
 message InitializeInput {
