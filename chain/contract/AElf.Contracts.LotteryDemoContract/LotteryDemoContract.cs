@@ -103,7 +103,11 @@ namespace AElf.Contracts.LotteryDemoContract
 
             // 检查没有未开的奖
             Assert(State.Periods[State.CurrentPeriod.Value].RandomHash == Hash.Empty,
-                "There's still at least one period not finished.");
+                $"当前的第{State.CurrentPeriod.Value}期还没开奖");
+
+            var currentPeriod = State.Periods[State.CurrentPeriod.Value];
+            Assert(currentPeriod.StartId < State.SelfIncreasingIdForLottery.Value,
+                "本期还未售出，不能结束");
 
             State.CurrentPeriod.Value = State.CurrentPeriod.Value.Add(1);
 
@@ -216,12 +220,7 @@ namespace AElf.Contracts.LotteryDemoContract
             period.RandomHash = randomHash;
 
             var poolCount = endId.Sub(startId).Add(1);
-            if (poolCount == 0)
-            {
-                // 看来这期彩票并没有人买
-                State.Periods[lastPeriodNumber] = period;
-                return;
-            }
+            Assert(poolCount > 0, "没人买不能开奖");
 
             Assert(levelsCount.Sum() > 0, "奖品不能为空");
             Assert(poolCount >= levelsCount.Sum(), "奖品过多");
