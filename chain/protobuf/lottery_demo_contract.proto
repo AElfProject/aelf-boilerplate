@@ -50,6 +50,15 @@ service LotteryDemoContract {
 	rpc GetDrawingLag (google.protobuf.Empty) returns (aelf.SInt64Value) {
         option (aelf.is_view) = true;
     }
+	rpc GetCurrentPeriodNumber (google.protobuf.Empty) returns (aelf.SInt64Value) {
+        option (aelf.is_view) = true;
+    }
+	rpc GetPeriod (aelf.SInt64Value) returns (PeriodBody) {
+        option (aelf.is_view) = true;
+    }
+	rpc GetCurrentPeriod (google.protobuf.Empty) returns (PeriodBody) {
+        option (aelf.is_view) = true;
+    }
 }
 
 message InitializeInput {

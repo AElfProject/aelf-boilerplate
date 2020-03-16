@@ -336,6 +336,23 @@ namespace AElf.Contracts.LotteryDemoContract
             return new SInt64Value {Value = State.MaximumAmount.Value};
         }
 
+        public override SInt64Value GetCurrentPeriodNumber(Empty input)
+        {
+            return new SInt64Value {Value = State.CurrentPeriod.Value};
+        }
+
+        public override PeriodBody GetPeriod(SInt64Value input)
+        {
+            var period = State.Periods[input.Value];
+            return period ?? new PeriodBody();
+        }
+
+        public override PeriodBody GetCurrentPeriod(Empty input)
+        {
+            var period = State.Periods[State.CurrentPeriod.Value];
+            return period ?? new PeriodBody();
+        }
+
         private long GetPrecision()
         {
             var precision = 1L;
