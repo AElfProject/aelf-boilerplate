@@ -47,7 +47,7 @@ async function getContract(name, walletInstance) {
         genesisContract = await aelf.chain.contractAt(chainStatus.GenesisContractAddress, walletInstance);
     }
     if (!contract[name]) {
-        const address = genesisContract.GetContractAddressByName.call(sha256(name));
+        const address = await genesisContract.GetContractAddressByName.call(sha256(name));
         contract = {
             ...contract,
             [name]: await aelf.chain.contractAt(address, walletInstance)
@@ -73,7 +73,6 @@ function initDomEvent() {
                 chainInfo.innerHTML = JSON.stringify(res, undefined, 2);
             })
             .catch(err => {
-                alert(err.message);
                 console.log(err);
             });
     };
@@ -85,7 +84,6 @@ function initDomEvent() {
                 greetResponse.innerHTML = JSON.stringify(ret, null, 2);
             })
             .catch(err => {
-                alert(err.message);
                 console.log(err);
             });
     };
