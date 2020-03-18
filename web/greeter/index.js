@@ -41,10 +41,13 @@ let genesisContract = null;
 async function getContract(name, walletInstance) {
     if (!genesisContract) {
         const chainStatus = await aelf.chain.getChainStatus();
+        if (!chainStatus) {
+            throw new Error('Error occurred when getting chain status');
+        }
         genesisContract = await aelf.chain.contractAt(chainStatus.GenesisContractAddress, walletInstance);
     }
     if (!contract[name]) {
-        const address = genesisContract.GetContractAddressByName.call(sha256('AElf.ContractNames.Greeter'));
+        const address = genesisContract.GetContractAddressByName.call(sha256(name));
         contract = {
             ...contract,
             [name]: await aelf.chain.contractAt(address, walletInstance)
@@ -82,6 +85,7 @@ function initDomEvent() {
                 greetResponse.innerHTML = JSON.stringify(ret, null, 2);
             })
             .catch(err => {
+                alert(err.message);
                 console.log(err);
             });
     };
