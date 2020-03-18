@@ -32,10 +32,10 @@
         <div class="row">
             <div class="col-lg-8">
                 <div>
-                    <h3>Greeting a person</h3>
-                    <label for="toGreet">Name of the person to greet:</label>
-                    <input type="text" id="toGreet" name="toGreet"><br><br>
-                     <input type="submit" id="submit" value="Submit">
+                    <h3>Greet</h3>
+                    <p>Use this method to call the Greet method on the greeter contract.</p>
+                    <input type="submit" id="greet" value="Greet">
+                    <p>Response: </p><p id="greetResponse"></p>
                  </div>
             </div>
         </div>
@@ -44,9 +44,22 @@
             <div class="col-lg-8">
                 <div>
                     <h3>Greeting a person</h3>
+                    <p>Use this method to call the GreetTo method on the greeter contract.</p>
                     <label for="toGreet">Name of the person to greet:</label>
-                    <input type="text" id="toGreet" name="toGreet"><br><br>
-                     <input type="submit" id="submit" value="Submit">
+                    <input type="text" id="nameToGreet" name="nameToGreet"><br><br>
+                    <input type="submit" id="greetToButton" value="Submit">
+                    <p>Response: </p><p id="greetToResponse"></p>
+                 </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div>
+                    <h3>Get greeted list</h3>
+                    <p>This method will retrieve the names that have been greeted.</p>
+                    <input type="submit" id="getGreeted" value="Submit">
+                    <p id="greeted"></p>
                  </div>
             </div>
         </div>
