@@ -1,4 +1,3 @@
-
 import AElf from 'aelf-sdk';
 
 const { sha256 } = AElf.utils;
@@ -7,22 +6,52 @@ const wallet = AElf.wallet.createNewWallet();
 
 const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
 
-var pollMining = async function(transactionId) {
-    console.log(`>> Waiting for ${transactionId} the transaction to be mined.`);
-  
-    for (var i = 0; i < 10; i++) {
-        const currentResult = await aelf.chain.getTxResult(transactionId);
-        // console.log('transaction status: ' + currentResult.Status);
-  
-        if (currentResult.Status === 'MINED')
-            return currentResult;
-  
-        await new Promise(resolve => setTimeout(resolve, 2000))
-        .catch(function () {
-            console.log("Promise Rejected");
-       });;
+
+async function pollMining(txId, times = 0, delay = 2000, timeLimit = 10) {
+    const currentTime = times + 1;
+    await new Promise(resolve => {
+        setTimeout(() => {
+            resolve();
+        }, delay);
+    });
+    let tx;
+    try {
+        tx = await aelf.chain.getTxResult(txId);
+    } catch (e) {
+        if (e.Status) {
+            return e;
+        }
+        throw new Error('Network Error');
     }
-  }
+    if (tx.Status === 'PENDING' && currentTime <= timeLimit) {
+        const result = await pollMining(txId, currentTime, delay, timeLimit);
+        return result;
+    }
+    if (tx.Status === 'PENDING' && currentTime > timeLimit) {
+        return tx;
+    }
+    if (tx.Status === 'MINED') {
+        return tx;
+    }
+    return tx;
+}
+
+let contract = {};
+let genesisContract = null;
+async function getContract(name, walletInstance) {
+    if (!genesisContract) {
+        const chainStatus = await aelf.chain.getChainStatus();
+        genesisContract = await aelf.chain.contractAt(chainStatus.GenesisContractAddress, walletInstance);
+    }
+    if (!contract[name]) {
+        const address = genesisContract.GetContractAddressByName.call(sha256('AElf.ContractNames.Greeter'));
+        contract = {
+            ...contract,
+            [name]: await aelf.chain.contractAt(address, walletInstance)
+        };
+    }
+    return contract[name];
+}
 
 function initDomEvent() {
     const refresh = document.getElementById('refresh');
@@ -34,61 +63,61 @@ function initDomEvent() {
 
     refresh.onclick = () => {
         aelf.chain.getChainStatus()
-        .then(res => chainInfo.innerHTML = JSON.stringify(res, undefined, 2))
-        .catch(err => {
-            console.log(err);
-        });
-    }
+            .then(res => {
+                if (!res) {
+                    throw new Error('Error occurred when getting chain status');
+                }
+                chainInfo.innerHTML = JSON.stringify(res, undefined, 2);
+            })
+            .catch(err => {
+                alert(err.message);
+                console.log(err);
+            });
+    };
 
-    greet.onclick = () => { 
-        aelf.chain.getChainStatus()
-        .then(res => aelf.chain.contractAt(res.GenesisContractAddress, wallet))
-        .then(zeroC => zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.Greeter')))
-        .then(greeterAddress => aelf.chain.contractAt(greeterAddress, wallet))
-        .then(greeterContract => greeterContract.Greet.call())
-        .then(ret => greetResponse.innerHTML = JSON.stringify(ret))
-        .catch(err => {
-            console.log(err);
-        });
+    greet.onclick = () => {
+        getContract('AElf.ContractNames.Greeter', wallet)
+            .then(greeterContract => greeterContract.Greet.call())
+            .then(ret => {
+                greetResponse.innerHTML = JSON.stringify(ret, null, 2);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     };
 
     greetToButton.onclick = () => {
         const nameToGreet = document.getElementById('nameToGreet');
         const greetToResponse = document.getElementById('greetToResponse');
-        console.log(nameToGreet.value);
 
-        aelf.chain.getChainStatus()
-        .then(res => aelf.chain.contractAt(res.GenesisContractAddress, wallet))
-        .then(zeroC => zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.Greeter')))
-        .then(greeterAddress => aelf.chain.contractAt(greeterAddress, wallet))
-        .then(greeterContract => greeterContract.GreetTo({ value: nameToGreet.value }))
-        .then(tx => pollMining(tx.TransactionId))
-        .then(ret => greetToResponse.innerHTML = ret.ReadableReturnValue)
-        .catch(err => {
-            console.log(err);
-        });
+        getContract('AElf.ContractNames.Greeter', wallet)
+            .then(greeterContract => greeterContract.GreetTo({
+                value: nameToGreet.value
+            }))
+            .then(tx => pollMining(tx.TransactionId))
+            .then(ret => {
+                greetToResponse.innerHTML = ret.ReadableReturnValue;
+            })
+            .catch(err => {
+                console.log(err);
+            });
     };
 
     getGreeted.onclick = () => {
         const greeted = document.getElementById('greeted');
 
-        aelf.chain.getChainStatus()
-        .then(res => aelf.chain.contractAt(res.GenesisContractAddress, wallet))
-        .then(zeroC => zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.Greeter')))
-        .then(greeterAddress => aelf.chain.contractAt(greeterAddress, wallet))
-        .then(greeterContract => greeterContract.GetGreetedList.call())
-        .then(ret => greeted.innerHTML = JSON.stringify(ret))
-        .catch(err => {
-            console.log(err);
-        });
-
+        getContract('AElf.ContractNames.Greeter', wallet)
+            .then(greeterContract => greeterContract.GetGreetedList.call())
+            .then(ret => {
+                greeted.innerHTML = JSON.stringify(ret, null, 2);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     };
-
-}
-
-function init() {
-    initDomEvent();
 }
 
 // run the Greeter front end
-init();
+window.onload = () => {
+    initDomEvent();
+};

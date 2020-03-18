@@ -1,5 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+const DIST = path.resolve(__dirname, './dist');
 
 module.exports = {
     entry: {
@@ -7,7 +10,7 @@ module.exports = {
     },
     mode: 'development',
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: DIST,
         filename: 'greeter.bundle.js'
     },
     devtool: 'source-map',
@@ -25,7 +28,7 @@ module.exports = {
     },
     devServer: {
         disableHostCheck: true,
-        contentBase: path.resolve(__dirname),
+        contentBase: DIST,
         // host: '0.0.0.0',
         host: '127.0.0.1',
         port: 9527,
@@ -36,6 +39,12 @@ module.exports = {
         open: true
     },
     plugins: [
+        new CopyWebpackPlugin([
+            {
+                from: path.resolve(__dirname, './index.css'),
+                to: path.resolve(DIST, './index.css')
+            },
+        ]),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, './template.html'),
             filename: 'index.html',
