@@ -7,10 +7,6 @@ const wallet = AElf.wallet.createNewWallet();
 
 const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
 
-//if (!aelf.isConnected()) {
-//  alert('Blockchain Node is not running.');
-//}
-
 var pollMining = async function(transactionId) {
     console.log(`>> Waiting for ${transactionId} the transaction to be mined.`);
   
@@ -29,7 +25,6 @@ var pollMining = async function(transactionId) {
   }
 
 function initDomEvent() {
-    const send = document.getElementById('send');
     const refresh = document.getElementById('refresh');
     const chainInfo = document.getElementById('chaininfo');
     const greet = document.getElementById('greet');
@@ -39,7 +34,6 @@ function initDomEvent() {
 
     refresh.onclick = () => {
         aelf.chain.getChainStatus()
-        // get instance by GenesisContractAddress
         .then(res => chainInfo.innerHTML = JSON.stringify(res, undefined, 2))
         .catch(err => {
             console.log(err);
