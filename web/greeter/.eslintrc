@@ -1,0 +1,42 @@
+{
+  "root": true,
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "classes": true
+    }
+  },
+  "env": {
+    "es6": true,
+    "node": true,
+    "browser": true,
+    "jest": true
+  },
+  "plugins": [
+    "babel",
+    "import"
+  ],
+  "extends": [
+    "eslint-config-airbnb-base"
+  ],
+  "globals": {},
+  "rules": {
+    "no-console": ["warn"],
+    "no-useless-escape": 0,
+    "indent": ["error", 4],
+    "no-empty": 0,
+    "comma-dangle": 0,
+    "arrow-parens": ["error", "as-needed"],
+    "import/prefer-default-export": "off",
+    "import/no-cycle": "off",
+    "no-underscore-dangle": "off",
+    "no-bitwise": "off",
+    "no-mixed-operators": "off",
+    "max-len": ["error", { "code": 120}],
+    "class-methods-use-this": "off",
+    "no-plusplus": "off"
+  }
+}
