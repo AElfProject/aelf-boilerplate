@@ -12,7 +12,7 @@ namespace AElf.Contracts.LotteryDemoContract
         // ReSharper disable once InconsistentNaming
         internal AEDPoSContractContainer.AEDPoSContractReferenceState AEDPoSContract { get; set; }
         internal ParliamentContractContainer.ParliamentContractReferenceState ParliamentContract { get; set; }
-        internal TokenContractContainer.TokenContractReferenceState TokenContract { get; set; }
+        internal TokenContractImplContainer.TokenContractImplReferenceState TokenContract { get; set; }
 
         /// <summary>
         /// 该合约中，用户购买所支持的Token Symbol

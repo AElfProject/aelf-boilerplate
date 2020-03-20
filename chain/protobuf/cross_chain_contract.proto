@@ -3,7 +3,6 @@ syntax = "proto3";
 import "acs7.proto";
 import "google/protobuf/wrappers.proto";
 import "acs1.proto";
-import "acs3.proto";
 import public "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "AElf.Contracts.CrossChain";
@@ -22,6 +21,8 @@ service CrossChainContract {
     rpc ChangeCrossChainIndexingController(acs1.AuthorityInfo) returns (google.protobuf.Empty) {
     }
     rpc ChangeSideChainLifetimeController(acs1.AuthorityInfo) returns (google.protobuf.Empty) {
+    }
+    rpc FeedbackCrossChainIndexingProposalId(aelf.Hash) returns (google.protobuf.Empty) {
     }
     
     // Views
@@ -97,10 +98,6 @@ message CrossChainIndexingDataProposedEvent{
     acs7.CrossChainBlockData proposed_cross_chain_data = 1;
 }
 
-message SideChainBlockDataIndexedEvent{
-    option (aelf.is_event) = true;
-}
-
 message CrossChainIndexingProposal{
     aelf.Hash proposal_id = 1;
     aelf.Address proposer = 2;
@@ -149,4 +146,10 @@ message SideChainInfo {
 
 message GetChainStatusOutput{
     SideChainStatus status = 1;
+}
+
+message SideChainCreationRequestState{
+    acs7.SideChainCreationRequest side_chain_creation_request = 1;
+    google.protobuf.Timestamp expired_time = 2;
+    aelf.Address proposer = 3;
 }
