@@ -70,6 +70,7 @@ jobs:
   - task: Npm@1
     inputs:
       command: 'install'
+      workingDir: 'web/ReactNativeBingo'
   - task: ReactNativePrepare@0
     inputs:
       platform: 'ios'
