@@ -70,12 +70,9 @@ jobs:
   - task: Npm@1
     inputs:
       command: 'install'
-      workingDir: 'web/ReactNativeBingo'
+      workingDir: 'web/ReactNativeBingo/ios'
   - task: ReactNativePrepare@0
     inputs:
       platform: 'ios'
-      cwd: 'web/ReactNativeBingo/ios/ReactNativeBingo'
-  - task: ReactNativePrepare@0
-    inputs:
-      platform: 'android'
-      cwd: 'web/ReactNativeBingo/android/'
+      xcodeProject: 'web/ReactNativeBingo/ios/ReactNativeBingo.xcodeproj/project.pbxproj'
+      cwd: 'web/ReactNativeBingo/ios'
