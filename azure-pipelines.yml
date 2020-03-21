@@ -67,6 +67,9 @@ jobs:
   variables:
     CI_TEST: true
   steps:
+  - task: Npm@1
+    inputs:
+      command: 'install'
   - task: ReactNativePrepare@0
     inputs:
       platform: 'ios'
