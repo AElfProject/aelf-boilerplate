@@ -1,4 +1,12 @@
 jobs:
+- task: ReactNativePrepare@0
+  inputs:
+    platform: 'ios'
+    cwd: 'web/ReactNativeBingo/ios/ReactNativeBingo'
+- task: ReactNativePrepare@0
+  inputs:
+    platform: 'android'
+    cwd: 'web/ReactNativeBingo/android/'
 
 # All tasks on Windows....
 - job: build_all_windows
