@@ -28,6 +28,12 @@ jobs:
        platform: 'ios'
        xcodeProject: 'web/ReactNativeBingo/ios/ReactNativeBingo.xcodeproj/project.pbxproj'
        cwd: 'web/ReactNativeBingo'
+   - script: cd web/ReactNativeBingo && npm install 
+     displayName: 'run npm install'
+   - script: cd web/ReactNativeBingo && node_modules/.bin/rn-nodeify --install 'crypto,buffer,react-native-randombytes,vm,stream,http,https,os,url,net,fs,screen,react-native-gesture-handler' --hack
+     displayName: 'Install dependencies'
+   - script: cd web/ReactNativeBingo && npm install react-native-gesture-handler --save && npm install react-native-reanimated --save 
+     displayName: 'Install react-native module'
    - task: Gradle@2
      displayName: 'build apk with Gradle' 
      inputs:
@@ -38,13 +44,6 @@ jobs:
        javaHomeOption: 'JDKVersion'
        sonarQubeRunAnalysis: false
      continueOnError: false
-
-   - script: cd web/ReactNativeBingo && npm install 
-     displayName: 'run npm install'
-   - script: cd web/ReactNativeBingo && node_modules/.bin/rn-nodeify --install 'crypto,buffer,react-native-randombytes,vm,stream,http,https,os,url,net,fs,screen,react-native-gesture-handler' --hack
-     displayName: 'Install dependencies'
-   - script: cd web/ReactNativeBingo && npm install react-native-gesture-handler --save && npm install react-native-reanimated --save 
-     displayName: 'Install react-native module'
    - script: cd web/ReactNativeBingo && npm run build:ios
      displayName: 'npm run build:ios'
    - task: InstallAppleCertificate@2
