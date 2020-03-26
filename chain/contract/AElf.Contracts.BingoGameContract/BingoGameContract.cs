@@ -155,7 +155,7 @@ namespace AElf.Contracts.BingoGameContract
             Assert(boutInformation != null, "Bouts not found.");
             Assert(!boutInformation.IsComplete, "Bout already finished.");
 
-            var targetRound = State.ConsensusContract.GetRoundInformation.Call(new SInt64Value
+            var targetRound = State.ConsensusContract.GetRoundInformation.Call(new Int64Value
             {
                 Value = boutInformation.PlayRoundNumber.Add(1)
             });

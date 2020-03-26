@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using AElf.Blockchains.BasicBaseChain.ContractNames;
 using AElf.Blockchains.MainChain;
 using AElf.Boilerplate.Tester;
@@ -69,14 +70,42 @@ namespace AElf.Boilerplate.MainChain
         public override void PreConfigureServices(ServiceConfigurationContext context)
         {
             var configuration = context.Services.GetConfiguration();
+            var contentRootPath = context.Services.GetHostingEnvironment().ContentRootPath;
             var hostBuilderContext = context.Services.GetSingletonInstanceOrNull<HostBuilderContext>();
 
+            var chainType = configuration.GetValue("ChainType", ChainType.MainChain);
+            var netType = configuration.GetValue("NetType", NetType.MainNet);
+
             var newConfig = new ConfigurationBuilder().AddConfiguration(configuration)
-                .AddJsonFile("appsettings.MainChain.MainNet.json")
-                .SetBasePath(context.Services.GetHostingEnvironment().ContentRootPath)
+                .AddJsonFile($"appsettings.{chainType}.{netType}.json")
+                .SetBasePath(contentRootPath)
                 .Build();
 
             hostBuilderContext.Configuration = newConfig;
+
+            Configure<EconomicOptions>(newConfig.GetSection("Economic"));
+            Configure<ChainOptions>(option =>
+            {
+                option.ChainId = ChainHelper.ConvertBase58ToChainId(newConfig["ChainId"]);
+                option.ChainType = chainType;
+                option.NetType = netType;
+            });
+
+            Configure<HostSmartContractBridgeContextOptions>(options =>
+            {
+                options.ContextVariables[ContextVariableDictionary.NativeSymbolName] =
+                    newConfig.GetValue("Economic:Symbol", "ELF");
+                options.ContextVariables["SymbolListToPayTxFee"] =
+                    newConfig.GetValue("Economic:SymbolListToPayTxFee", "WRITE,READ,STORAGE,TRAFFIC");
+                options.ContextVariables["SymbolListToPayRental"] =
+                    newConfig.GetValue("Economic:SymbolListToPayRental", "CPU,RAM,DISK,NET");
+            });
+
+            Configure<ContractOptions>(newConfig.GetSection("Contract"));
+            Configure<ContractOptions>(options =>
+            {
+                options.GenesisContractDir = Path.Combine(contentRootPath, "genesis");
+            });
         }
 
         public override void ConfigureServices(ServiceConfigurationContext context)
@@ -90,24 +119,6 @@ namespace AElf.Boilerplate.MainChain
             s.TryAddSingleton<ISmartContractAddressNameProvider, TokenConverterSmartContractAddressNameProvider>();
             s.TryAddSingleton<ISmartContractAddressNameProvider, TokenSmartContractAddressNameProvider>();
             s.TryAddSingleton<ISmartContractAddressNameProvider, VoteSmartContractAddressNameProvider>();
-
-            var configuration = context.Services.GetConfiguration();
-            Configure<AElf.OS.EconomicOptions>(configuration.GetSection("Economic"));
-            Configure<ChainOptions>(option =>
-            {
-                option.ChainId =
-                    ChainHelper.ConvertBase58ToChainId(context.Services.GetConfiguration()["ChainId"]);
-                option.ChainType = context.Services.GetConfiguration().GetValue("ChainType", ChainType.MainChain);
-                option.NetType = context.Services.GetConfiguration().GetValue("NetType", NetType.MainNet);
-            });
-
-            Configure<HostSmartContractBridgeContextOptions>(options =>
-            {
-                options.ContextVariables[ContextVariableDictionary.NativeSymbolName] = context.Services
-                    .GetConfiguration().GetValue("Economic:Symbol", "ELF");
-            });
-
-            Configure<ContractOptions>(configuration.GetSection("Contract"));
 
             context.Services.AddSingleton<ISystemContractProvider, SystemContractProvider>();
             context.Services.AddSingleton(typeof(ContractsDeployer));
