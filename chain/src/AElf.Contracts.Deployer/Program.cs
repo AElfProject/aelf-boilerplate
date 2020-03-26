@@ -12,14 +12,15 @@ namespace AElf.Contracts.Deployer
         {
             [Option('s', "skipaudit", Default = false, HelpText = "Skip performing code check on contract code.")]
             public bool SkipAudit { get; set; }
-            
-            [Option('w', "overwrite", Default = false, HelpText = "Overwrite contract's DLL instead of saving with .patched extension.")]
+
+            [Option('w', "overwrite", Default = false,
+                HelpText = "Overwrite contract's DLL instead of saving with .patched extension.")]
             public bool Overwrite { get; set; }
-            
+
             [Option('p', "path", Required = true, HelpText = "The path of the contract's DLL.")]
             public string ContractDllPath { get; set; }
         }
-        
+
         static void Main(string[] args)
         {
             Parser.Default.ParseArguments<Options>(args)
@@ -52,24 +53,24 @@ namespace AElf.Contracts.Deployer
                 saveAsPath = o.ContractDllPath + ".patched";
                 Console.WriteLine($"[CONTRACT-PATCHER] Saving as {saveAsPath}");
             }
-            
+
             var patchedCode = ContractPatcher.Patch(File.ReadAllBytes(o.ContractDllPath));
 
             if (!o.SkipAudit)
             {
                 try
                 {
-                    var auditor = new ContractAuditor(null, null);
-                    auditor.Audit(patchedCode, null, false);
+                    var auditor = new CSharpContractAuditor(null, null);
+                    auditor.Audit(patchedCode, null);
                 }
-                catch (InvalidCodeException ex)
+                catch (CSharpInvalidCodeException ex)
                 {
                     foreach (var finding in ex.Findings)
                     {
                         // Print error in parsable format so that it can be shown in IDE
                         Console.WriteLine($"error: {finding.ToString()}");
                     }
-                }                
+                }
             }
 
             File.WriteAllBytes(saveAsPath, patchedCode);

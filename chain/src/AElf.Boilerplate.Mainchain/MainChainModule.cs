@@ -105,11 +105,6 @@ namespace AElf.Boilerplate.MainChain
             {
                 options.ContextVariables[ContextVariableDictionary.NativeSymbolName] = context.Services
                     .GetConfiguration().GetValue("Economic:Symbol", "ELF");
-                options.ContextVariables[ContextVariableDictionary.PayTxFeeSymbolList] = context.Services
-                    .GetConfiguration()
-                    .GetValue("Economic:SymbolListToPayTxFee", "WRITE,READ,STORAGE,TRAFFIC");
-                options.ContextVariables[ContextVariableDictionary.PayRentalSymbolList] = context.Services
-                    .GetConfiguration().GetValue("Economic:SymbolListToPayRental", "CPU,RAM,DISK,NET");
             });
 
             Configure<ContractOptions>(configuration.GetSection("Contract"));

@@ -5,10 +5,10 @@
     <RootNamespace>BingoGameContract.Test</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.9.3-18327" />
-    <PackageReference Include="AElf.Contracts.TestKit" Version="0.9.3-18327" />
-    <PackageReference Include="AElf.Kernel.Consensus.Core" Version="0.9.3-18327" />
-    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.9.3-18327" />
+    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.9.3-18347" />
+    <PackageReference Include="AElf.Contracts.TestKit" Version="0.9.3-18347" />
+    <PackageReference Include="AElf.Kernel.Consensus.Core" Version="0.9.3-18347" />
+    <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="0.9.3-18347" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
