@@ -3,7 +3,6 @@ syntax = "proto3";
 import "acs7.proto";
 import "google/protobuf/wrappers.proto";
 import "acs1.proto";
-import "acs3.proto";
 import public "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "AElf.Contracts.CrossChain";
@@ -23,11 +22,10 @@ service CrossChainContract {
     }
     rpc ChangeSideChainLifetimeController(acs1.AuthorityInfo) returns (google.protobuf.Empty) {
     }
+    rpc FeedbackCrossChainIndexingProposalId(aelf.Hash) returns (google.protobuf.Empty) {
+    }
     
     // Views
-    rpc VerifyTransaction (VerifyTransactionInput) returns (google.protobuf.BoolValue) {
-        option (aelf.is_view) = true;
-    }
     rpc GetSideChainCreator (aelf.SInt32Value) returns (aelf.Address) {
         option (aelf.is_view) = true;
     }
@@ -69,13 +67,6 @@ message InitializeInput {
     bool is_privilege_preserved = 3;
 }
 
-message VerifyTransactionInput {
-    aelf.Hash transaction_id = 1;
-    aelf.MerklePath path = 2;
-    sint64 parent_chain_height = 3;
-    int32 verified_chain_id = 4;
-}
-
 message IndexedChainHeightDict{
     map<int32, int64> indexed_chain_heights = 1;
 }
@@ -95,10 +86,6 @@ message Disposed {
 message CrossChainIndexingDataProposedEvent{
     option (aelf.is_event) = true;
     acs7.CrossChainBlockData proposed_cross_chain_data = 1;
-}
-
-message SideChainBlockDataIndexedEvent{
-    option (aelf.is_event) = true;
 }
 
 message CrossChainIndexingProposal{
@@ -149,4 +136,10 @@ message SideChainInfo {
 
 message GetChainStatusOutput{
     SideChainStatus status = 1;
+}
+
+message SideChainCreationRequestState{
+    acs7.SideChainCreationRequest side_chain_creation_request = 1;
+    google.protobuf.Timestamp expired_time = 2;
+    aelf.Address proposer = 3;
 }

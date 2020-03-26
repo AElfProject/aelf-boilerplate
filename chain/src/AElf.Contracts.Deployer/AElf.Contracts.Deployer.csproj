@@ -1,14 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
         <PackageId>AElf.Contracts.Deployer</PackageId>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <Description>Smart contract deployer.</Description>
     </PropertyGroup>
     <ItemGroup Label="NuGet package assets">
         <None Pack="true" PackagePath="build\" Include="*.targets;" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="AElf.Types" Version="0.9.2" />
+        <PackageReference Include="AElf.CSharp.CodeOps" Version="1.0.0-preview1" />
+        <PackageReference Include="AElf.Runtime.CSharp.Core" Version="1.0.0-preview1" />
+        <PackageReference Include="AElf.Types" Version="1.0.0-preview1" />
+        <PackageReference Include="CommandLineParser" Version="2.7.82" />
     </ItemGroup>
+    <Target Name="CopyDlls" AfterTargets="AfterBuild">
+        <ItemGroup>
+            <PatcherDlls Include="$(TargetDir)\*" />
+        </ItemGroup>
+        <MakeDir Directories="$(PatcherDir)" Condition="!Exists('$(PatcherDir)')" />
+        <Copy SourceFiles="@(PatcherDlls)" DestinationFolder="$(PatcherDir)" SkipUnchangedFiles="true" />
+    </Target>
 </Project>

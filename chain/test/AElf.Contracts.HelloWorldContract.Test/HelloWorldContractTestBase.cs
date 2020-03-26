@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using Acs0;
+using AElf.Blockchains.BasicBaseChain.ContractNames;
 using AElf.Contracts.TestKit;
 using AElf.Cryptography.ECDSA;
 using AElf.Kernel;
@@ -30,7 +31,7 @@ namespace AElf.Contracts.HelloWorldContract
                 ZeroContractStub.DeploySystemSmartContract.SendAsync(
                     new SystemContractDeploymentInput
                     {
-                        Category = KernelConstants.CodeCoverageRunnerCategory,
+                        Category = KernelConstants.DefaultRunnerCategory,
                         Code = ByteString.CopyFrom(File.ReadAllBytes(typeof(HelloWorldContract).Assembly.Location)),
                         Name = ProfitSmartContractAddressNameProvider.Name,
                         TransactionMethodCallList =
