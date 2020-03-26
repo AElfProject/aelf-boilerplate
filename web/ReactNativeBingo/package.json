@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'",
     "test": "jest"
   },
   "dependencies": {
@@ -32,6 +33,7 @@
     "react-native-router-flux": "^4.0.6",
     "react-native-tcp": "^3.3.0",
     "react-native-udp": "^2.6.0",
+    "react-native-screens": "^2.0.0-beta.7",
     "readable-stream": "^1.0.33",
     "rn-nodeify": "^10.2.0",
     "stream-browserify": "^1.0.0",
