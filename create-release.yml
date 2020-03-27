@@ -1,13 +1,13 @@
-trigger:
-  branches:
-    include:
-    - master
-    - dev
-    - refs/tags/*
+# trigger:
+#   branches:
+#     include:
+#     - master
+#     - dev
+#     - refs/tags/*
 jobs: 
  - job: build_all_mac
    displayName: Build all tasks (macos)
-   condition: startsWith(variables['build.sourceBranch'], 'refs/tags/')
+#    condition: startsWith(variables['build.sourceBranch'], 'refs/tags/')
    pool:
     vmImage: 'macos-latest'
    steps:
@@ -34,16 +34,16 @@ jobs:
      displayName: 'Install dependencies'
    - script: cd web/ReactNativeBingo && npm install react-native-gesture-handler --save && npm install react-native-reanimated --save 
      displayName: 'Install react-native module'
-   - task: Gradle@2
-     displayName: 'build apk with Gradle' 
-     inputs:
-       gradleWrapperFile: 'web/ReactNativeBingo/android/gradlew'
-       workingDirectory: 'web/ReactNativeBingo/android/app'
-       tasks: 'assembleRelease'
-       publishJUnitResults: false
-       javaHomeOption: 'JDKVersion'
-       sonarQubeRunAnalysis: false
-     continueOnError: false
+#    - task: Gradle@2
+#      displayName: 'build apk with Gradle' 
+#      inputs:
+#        gradleWrapperFile: 'web/ReactNativeBingo/android/gradlew'
+#        workingDirectory: 'web/ReactNativeBingo/android/app'
+#        tasks: 'assembleRelease'
+#        publishJUnitResults: false
+#        javaHomeOption: 'JDKVersion'
+#        sonarQubeRunAnalysis: false
+#      continueOnError: false
    - script: cd web/ReactNativeBingo && npm run build:ios
      displayName: 'npm run build:ios'
    - task: InstallAppleCertificate@2
@@ -72,21 +72,22 @@ jobs:
        destinationPlatformOption: 'iOS'
        destinationSimulators: 'iPhone 8'
        workingDirectory: 'web/ReactNativeBingo/ios/ReactNativeBingo.xcodeproj'
-
-   - script: set tagname && export tag_Name=`git tag --sort=-creatordate | head -1` && echo '##vso[task.setvariable variable=tagname;]'$tag_Name
-     displayName: 'set tagname'
-   - task: GitHubRelease@1
-     displayName: 'create release'
-     inputs:
-       gitHubConnection: 'github.com_rosona'
-       repositoryName: 'AElfProject/aelf-boilerplate'
-       action: 'edit'
-       target: '$(Build.SourceVersion)'
-       tag: '$(tagname)'
-       releaseNotesSource: 'inline'
-       assets: |
-         web/ReactNativeBingo/android/app/build/outputs/apk/release/app-release.apk
-         output/$(SDK)/$(Configuration)/ReactNativeBingo.ipa
-       assetUploadMode: 'replace'
-       isPreRelease: true
-       addChangeLog: false
+   - script: mv output/$(SDK)/$(Configuration)/ReactNativeBingo.ipa output/$(SDK)/$(Configuration)/app-release.ipa
+   - script: ls -l output/$(SDK)/$(Configuration)/app-release.ipa
+#    - script: set tagname && export tag_Name=`git tag --sort=-creatordate | head -1` && echo '##vso[task.setvariable variable=tagname;]'$tag_Name
+#      displayName: 'set tagname'
+#    - task: GitHubRelease@1
+#      displayName: 'create release'
+#      inputs:
+#        gitHubConnection: 'github.com_rosona'
+#        repositoryName: 'AElfProject/aelf-boilerplate'
+#        action: 'edit'
+#        target: '$(Build.SourceVersion)'
+#        tag: '$(tagname)'
+#        releaseNotesSource: 'inline'
+#        assets: |
+#          web/ReactNativeBingo/android/app/build/outputs/apk/release/app-release.apk
+#          output/$(SDK)/$(Configuration)/ReactNativeBingo.ipa
+#        assetUploadMode: 'replace'
+#        isPreRelease: true
+#        addChangeLog: false
