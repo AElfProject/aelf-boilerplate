@@ -66,13 +66,14 @@ jobs:
        scheme: 'ReactNativeBingo'
        packageApp: true
        archivePath: 'web/ReactNativeBingo/ios/dist'
+       exportPath: 'web/ReactNativeBingo/ios/dist'
        signingOption: 'manual'
        signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
        provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
        destinationPlatformOption: 'iOS'
        destinationSimulators: 'iPhone 8'
        workingDirectory: 'web/ReactNativeBingo/ios/ReactNativeBingo.xcodeproj'
-
+   - script: cd web/ReactNativeBingo/ios/dist && mv ReactNativeBingo.ipa app-release.ipa
    - script: set tagname && export tag_Name=`git tag --sort=-creatordate | head -1` && echo '##vso[task.setvariable variable=tagname;]'$tag_Name
      displayName: 'set tagname'
    - task: GitHubRelease@1
@@ -86,7 +87,7 @@ jobs:
        releaseNotesSource: 'inline'
        assets: |
          web/ReactNativeBingo/android/app/build/outputs/apk/release/app-release.apk
-         output/$(SDK)/$(Configuration)/ReactNativeBingo.ipa
+         web/ReactNativeBingo/ios/dist/app-release.ipa
        assetUploadMode: 'replace'
        isPreRelease: true
        addChangeLog: false
