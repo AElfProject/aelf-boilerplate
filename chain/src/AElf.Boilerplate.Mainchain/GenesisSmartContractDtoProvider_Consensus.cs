@@ -32,18 +32,20 @@ namespace AElf.Blockchains.MainChain
                 nameof(AEDPoSContractContainer.AEDPoSContractStub.InitialAElfConsensusContract),
                 new InitialAElfConsensusContractInput
                 {
-                    TimeEachTerm = _consensusOptions.TimeEachTerm,
-                    MinerIncreaseInterval=_consensusOptions.MinerIncreaseInterval
+                    PeriodSeconds = _consensusOptions.PeriodSeconds,
+                    MinerIncreaseInterval = _consensusOptions.MinerIncreaseInterval,
+                    IsTermStayOne = true
                 });
-            aelfConsensusMethodCallList.Add(nameof(AEDPoSContractContainer.AEDPoSContractStub.FirstRound),
-                new MinerList
+            var firstRound = new MinerList
+            {
+                Pubkeys =
                 {
-                    Pubkeys =
-                    {
-                        _consensusOptions.InitialMinerList.Select(p => p.ToByteString())
-                    }
-                }.GenerateFirstRoundOfNewTerm(_consensusOptions.MiningInterval,
-                    _consensusOptions.StartTimestamp.ToDateTime()));
+                    _consensusOptions.InitialMinerList.Select(p => p.ToByteString())
+                }
+            }.GenerateFirstRoundOfNewTerm(_consensusOptions.MiningInterval,
+                _consensusOptions.StartTimestamp.ToDateTime());
+            aelfConsensusMethodCallList.Add(nameof(AEDPoSContractContainer.AEDPoSContractStub.FirstRound),
+                firstRound);
             return aelfConsensusMethodCallList;
         }
     }
@@ -83,6 +85,7 @@ namespace AElf.Blockchains.MainChain
 
             round.RoundNumber = currentRoundNumber + 1;
             round.TermNumber = currentTermNumber + 1;
+            round.IsMinerListJustChanged = true;
 
             return round;
         }

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Greeter front end</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="./index.css" >
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <h1>Greeter contract front-end</h1>
+                    <p>Welcome to the Greeter contract's front end. This webpage, built with webpack and basic HTML, demonstrates simple interactions with the chain and a contract that has been deployed.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <h3>Chain status</h3>
+                    <p>This section shows you how to get the status of the chain.</p>
+                    <pre id="chaininfo"></pre>
+                    <input type="submit" value="Fetch chain status" id="refresh">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div>
+                        <h3>Greet</h3>
+                        <p>Use this method to call the Greet method on the greeter contract.</p>
+                        <input type="submit" id="greet" value="Greet">
+                        <p>Response: </p><p id="greetResponse"></p>
+                     </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div>
+                        <h3>Greeting a person</h3>
+                        <p>Use this method to call the GreetTo method on the greeter contract.</p>
+                        <label for="nameToGreet">Name of the person to greet:</label>
+                        <input type="text" id="nameToGreet" name="nameToGreet"><br><br>
+                        <input type="submit" id="greetToButton" value="Greet to">
+                        <p>Response: </p><p id="greetToResponse"></p>
+                     </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div>
+                        <h3>Get greeted list</h3>
+                        <p>This method will retrieve the names that have been greeted.</p>
+                        <input type="submit" id="getGreeted" value="Get greeted names">
+                        <p id="greeted"></p>
+                     </div>
+                </div>
+            </div>
+
+        </div>
+    </body>
+</html>
