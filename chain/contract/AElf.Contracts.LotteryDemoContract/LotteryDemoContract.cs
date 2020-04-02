@@ -130,7 +130,7 @@ namespace AElf.Contracts.LotteryDemoContract
             var expectedBlockNumber = State.Periods[State.CurrentPeriod.Value].BlockNumber;
             Assert(Context.CurrentHeight >= expectedBlockNumber, "Block height not enough.");
 
-            var randomHash = State.AEDPoSContract.GetRandomHash.Call(new SInt64Value
+            var randomHash = State.AEDPoSContract.GetRandomHash.Call(new Int64Value
             {
                 Value = expectedBlockNumber
             });

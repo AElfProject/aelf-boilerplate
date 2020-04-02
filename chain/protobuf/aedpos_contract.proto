@@ -94,9 +94,6 @@ service AEDPoSContract {
     rpc GetRandomHash (google.protobuf.Int64Value) returns (aelf.Hash) {
         option (aelf.is_view) = true;
     }
-    rpc GetRandomHash (aelf.SInt64Value) returns (aelf.Hash) {
-        option (aelf.is_view) = true;
-    }
 }
 
 message InitialAElfConsensusContractInput {
