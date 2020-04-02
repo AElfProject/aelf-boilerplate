@@ -15,7 +15,7 @@ service LotteryDemoContract {
     // Basic Actions
     rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
     }
-    rpc Buy(aelf.Int64Value) returns (BoughtLotteriesInformation) {
+    rpc Buy(google.protobuf.Int64Value) returns (BoughtLotteriesInformation) {
     }
     rpc Draw (DrawInput) returns (google.protobuf.Empty) {
     }
@@ -25,35 +25,35 @@ service LotteryDemoContract {
     }
     
     // Management Actions
-    rpc ResetMaximumBuyAmount (aelf.Int64Value) returns (google.protobuf.Empty) {
+    rpc ResetMaximumBuyAmount (google.protobuf.Int64Value) returns (google.protobuf.Empty) {
     }
-    rpc ResetPrice (aelf.Int64Value) returns (google.protobuf.Empty) {
+    rpc ResetPrice (google.protobuf.Int64Value) returns (google.protobuf.Empty) {
     }
-    rpc ResetDrawingLag (aelf.Int64Value) returns (google.protobuf.Empty) {
+    rpc ResetDrawingLag (google.protobuf.Int64Value) returns (google.protobuf.Empty) {
     }
 
-    rpc GetRewardResult (aelf.Int64Value) returns (GetRewardResultOutput) {
+    rpc GetRewardResult (google.protobuf.Int64Value) returns (GetRewardResultOutput) {
         option (aelf.is_view) = true;
     }
     rpc GetBoughtLotteries (GetBoughtLotteriesInput) returns (GetBoughtLotteriesOutput) {
         option (aelf.is_view) = true;
 	}
-	rpc GetSales (aelf.Int64Value) returns (aelf.Int64Value) {
+	rpc GetSales (google.protobuf.Int64Value) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
-	rpc GetMaximumBuyAmount (google.protobuf.Empty) returns (aelf.Int64Value) {
+	rpc GetMaximumBuyAmount (google.protobuf.Empty) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
-	rpc GetPrice (google.protobuf.Empty) returns (aelf.Int64Value) {
+	rpc GetPrice (google.protobuf.Empty) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
-	rpc GetDrawingLag (google.protobuf.Empty) returns (aelf.Int64Value) {
+	rpc GetDrawingLag (google.protobuf.Empty) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
-	rpc GetCurrentPeriodNumber (google.protobuf.Empty) returns (aelf.Int64Value) {
+	rpc GetCurrentPeriodNumber (google.protobuf.Empty) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
-	rpc GetPeriod (aelf.Int64Value) returns (PeriodBody) {
+	rpc GetPeriod (google.protobuf.Int64Value) returns (PeriodBody) {
         option (aelf.is_view) = true;
     }
 	rpc GetCurrentPeriod (google.protobuf.Empty) returns (PeriodBody) {
@@ -114,7 +114,7 @@ message GetRewardResultOutput {
 
 message GetBoughtLotteriesInput {
     int64 period = 1;
-    int64 start_index = 2;
+    int32 start_index = 2;
     aelf.Address owner = 3;
 }
 

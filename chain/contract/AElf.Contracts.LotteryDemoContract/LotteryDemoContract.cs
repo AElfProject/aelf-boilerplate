@@ -46,7 +46,7 @@ namespace AElf.Contracts.LotteryDemoContract
             return new Empty();
         }
 
-        public override BoughtLotteriesInformation Buy(SInt64Value input)
+        public override BoughtLotteriesInformation Buy(Int64Value input)
         {
             Assert(input.Value < State.MaximumAmount.Value, $"单次购买数量不能超过{State.MaximumAmount.Value} :)");
             Assert(input.Value > 0, "单次购买数量不能低于1");
@@ -157,7 +157,7 @@ namespace AElf.Contracts.LotteryDemoContract
             return new Empty();
         }
 
-        public override GetRewardResultOutput GetRewardResult(SInt64Value input)
+        public override GetRewardResultOutput GetRewardResult(Int64Value input)
         {
             var period = State.Periods[input.Value];
             var rewardIds = period?.RewardIds;
@@ -274,21 +274,21 @@ namespace AElf.Contracts.LotteryDemoContract
             State.Periods[lastPeriodNumber] = period;
         }
 
-        public override Empty ResetPrice(SInt64Value input)
+        public override Empty ResetPrice(Int64Value input)
         {
             AssertSenderIsAdmin();
             State.Price.Value = input.Value;
             return new Empty();
         }
 
-        public override Empty ResetDrawingLag(SInt64Value input)
+        public override Empty ResetDrawingLag(Int64Value input)
         {
             AssertSenderIsAdmin();
             State.DrawingLag.Value = input.Value;
             return new Empty();
         }
 
-        public override Empty ResetMaximumBuyAmount(SInt64Value input)
+        public override Empty ResetMaximumBuyAmount(Int64Value input)
         {
             AssertSenderIsAdmin();
             State.MaximumAmount.Value = input.Value;
@@ -300,13 +300,13 @@ namespace AElf.Contracts.LotteryDemoContract
             Assert(Context.Sender == State.Admin.Value, "Sender should be admin.");
         }
 
-        public override SInt64Value GetSales(SInt64Value input)
+        public override Int64Value GetSales(Int64Value input)
         {
             var period = State.Periods[input.Value];
             Assert(period != null, "Period information not found.");
             if (State.CurrentPeriod.Value == input.Value)
             {
-                return new SInt64Value
+                return new Int64Value
                 {
                     // ReSharper disable once PossibleNullReferenceException
                     Value = State.SelfIncreasingIdForLottery.Value.Sub(period.StartId)
@@ -314,34 +314,34 @@ namespace AElf.Contracts.LotteryDemoContract
             }
 
             var nextPeriod = State.Periods[input.Value.Add(1)];
-            return new SInt64Value
+            return new Int64Value
             {
                 // ReSharper disable once PossibleNullReferenceException
                 Value = nextPeriod.StartId.Sub(period.StartId)
             };
         }
 
-        public override SInt64Value GetPrice(Empty input)
+        public override Int64Value GetPrice(Empty input)
         {
-            return new SInt64Value {Value = State.Price.Value};
+            return new Int64Value {Value = State.Price.Value};
         }
 
-        public override SInt64Value GetDrawingLag(Empty input)
+        public override Int64Value GetDrawingLag(Empty input)
         {
-            return new SInt64Value {Value = State.DrawingLag.Value};
+            return new Int64Value {Value = State.DrawingLag.Value};
         }
 
-        public override SInt64Value GetMaximumBuyAmount(Empty input)
+        public override Int64Value GetMaximumBuyAmount(Empty input)
         {
-            return new SInt64Value {Value = State.MaximumAmount.Value};
+            return new Int64Value {Value = State.MaximumAmount.Value};
         }
 
-        public override SInt64Value GetCurrentPeriodNumber(Empty input)
+        public override Int64Value GetCurrentPeriodNumber(Empty input)
         {
-            return new SInt64Value {Value = State.CurrentPeriod.Value};
+            return new Int64Value {Value = State.CurrentPeriod.Value};
         }
 
-        public override PeriodBody GetPeriod(SInt64Value input)
+        public override PeriodBody GetPeriod(Int64Value input)
         {
             var period = State.Periods[input.Value];
             return period ?? new PeriodBody();
