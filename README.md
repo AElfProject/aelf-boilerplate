@@ -1,5 +1,10 @@
 # AElf-boilerplate - A framework for smart contract and dApp development
 
+BRANCH | AZURE PIPELINES
+-------|----------------
+MASTER |[![Build Status](https://dev.azure.com/AElfProject/aelf-boilerplate/_apis/build/status/AElfProject.aelf-boilerplate?branchName=master)](https://dev.azure.com/AElfProject/aelf-boilerplate/_build/latest?definitionId=1&branchName=master)
+DEV    |[![Build Status](https://dev.azure.com/AElfProject/aelf-boilerplate/_apis/build/status/AElfProject.aelf-boilerplate?branchName=dev)](https://dev.azure.com/AElfProject/AElf/_build/latest?definitionId=1&branchName=dev)
+
 Welcome to AElf Boilerplate's official GitHub repo !
 
 Boilerplate is an environment that is used to develop smart contracts and dApps. Boilerplate shares some code with AElf and internally runs an AElf node.
