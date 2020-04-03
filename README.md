@@ -3,7 +3,7 @@
 BRANCH | AZURE PIPELINES
 -------|----------------
 MASTER |[![Build Status](https://dev.azure.com/AElfProject/aelf-boilerplate/_apis/build/status/AElfProject.aelf-boilerplate?branchName=master)](https://dev.azure.com/AElfProject/aelf-boilerplate/_build/latest?definitionId=1&branchName=master)
-DEV    |[![Build Status](https://dev.azure.com/AElfProject/aelf-boilerplate/_apis/build/status/AElfProject.aelf-boilerplate?branchName=dev)](https://dev.azure.com/AElfProject/AElf/_build/latest?definitionId=1&branchName=dev)
+DEV    |[![Build Status](https://dev.azure.com/AElfProject/aelf-boilerplate/_apis/build/status/AElfProject.aelf-boilerplate?branchName=dev)](https://dev.azure.com/AElfProject/aelf-boilerplate/_build/latest?definitionId=1&branchName=dev)
 
 Welcome to AElf Boilerplate's official GitHub repo !
 
