@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "AElf.Contracts.DAOContract";
+
+service DAOContract {
+    option (aelf.csharp_state) = "AElf.Contracts.DAOContract.DAOContractState";
+    
+    rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    }
+    
+    // DAO Management
+    //   To be a DAO member, need to be approved by parliament.
+    rpc ProposeJoin (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    }
+    //   To not be a DAO member.
+    rpc Quit (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    }
+    //   To expel someone from DAO, need to be approved by parliament.
+    rpc ProposeExpel (aelf.Address) returns (google.protobuf.Empty) {
+    }
+    
+    // Investment Project Management
+    //   Developer propose a project for DAO to approve.
+    rpc ProposeProjectToDAO (ProposeProjectInput) returns (google.protobuf.Empty) {
+    }
+    //   Developer propose a project for parliament to approve (after DAO).
+    rpc ProposeProjectToParliament (ProposeProjectWithBudgetsInput) returns (google.protobuf.Empty) {
+    }
+    
+    // Reward Project Management
+    //   DAO member project a reward project for DAO to approve.
+    rpc ProposeRewardProject (ProposeProjectInput) returns (google.protobuf.Empty) {
+    }
+    //   DAO member project a reward project for parliament to approve (after parliament).
+    rpc ProposeIssueRewardProject (ProposeIssueRewardProjectInput) returns (google.protobuf.Empty) {
+    }
+    //   Developer propose to take over a reward project.
+    rpc ProposeTakeOverRewardProject (ProposeTakeOverRewardProjectInput) returns (google.protobuf.Empty) {
+    }
+    //   Developer propose an audition for all developers to approve.
+    rpc ProposeDevelopersAudition (ProposeAuditionInput) returns (google.protobuf.Empty) {
+    }
+
+    // Common
+    //   Developer propose to deliver project to DAO.
+    rpc ProposeDeliver (ProposeAuditionInput) returns (google.protobuf.Empty) {
+    }
+    
+    // Views
+    rpc GetDAOMemberList (google.protobuf.Empty) returns (MemberList) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetBudgetPlan (GetBudgetPlanInput) returns (BudgetPlan) {
+        option (aelf.is_view) = true;
+    }
+}
+
+message ProposeProjectInput {
+    string pull_request_url = 1;
+    string commit_id = 2;
+    aelf.Hash pre_audition_hash = 3;
+}
+
+message ProposeProjectWithBudgetsInput {
+    string pull_request_url = 1;
+    string commit_id = 2;
+    repeated BudgetPlan budget_plans = 3;
+}
+
+message BudgetPlan {
+    int32 index = 1;
+    int32 phase = 2;
+    string symbol = 3;
+    int64 amount = 4;
+    aelf.Address receiver_address = 5;
+}
+
+message ProposeAuditionInput {
+    string pull_request_url = 1;
+    string commit_id = 2;
+    int32 budget_plan_index = 3;
+}
+
+message ProposeDeliverInput {
+    string pull_request_url = 1;
+    string commit_id = 2;
+}
+
+message ProposeIssueRewardProjectInput {
+    string pull_request_url = 1;
+    string commit_id = 2;
+    repeated BudgetPlan budget_plans = 3;
+}
+
+message ProposeTakeOverRewardProjectInput {
+    string pull_request_url = 1;
+    string commit_id = 2;
+    repeated int32 budget_plan_indices = 3;
+}
+
+message MemberList {
+    repeated aelf.Address value = 1;
+}
+
+message GetBudgetPlanInput {
+    string pull_request_url = 1;
+    string commit_id = 2;
+    int32 budget_plan_index = 3;
+}
