@@ -19,8 +19,14 @@
         <ContractReference Include="..\..\protobuf\acs3.proto">
             <Link>Protobuf/Proto/acs3.proto</Link>
         </ContractReference>
+        <ContractReference Include="..\..\protobuf\acs4.proto">
+            <Link>Protobuf/Proto/acs4.proto</Link>
+        </ContractReference>
         <ContractReference Include="..\..\protobuf\association_contract.proto">
             <Link>Protobuf/Proto/association_contract.proto</Link>
+        </ContractReference>
+        <ContractReference Include="..\..\protobuf\aedpos_contract.proto">
+            <Link>Protobuf/Proto/aedpos_contract.proto</Link>
         </ContractReference>
         
         <ContractCode Include="..\..\protobuf\dao_contract.proto">

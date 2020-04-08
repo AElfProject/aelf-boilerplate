@@ -1,5 +1,8 @@
-﻿using Acs3;
+﻿using System.Linq;
+using Acs3;
 using AElf.Contracts.Association;
+using AElf.Contracts.Consensus.AEDPoS;
+using AElf.Sdk.CSharp;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
 
@@ -7,47 +10,65 @@ namespace AElf.Contracts.DAOContract
 {
     public class DAOContract : DAOContractContainer.DAOContractBase
     {
-        public override Empty Initialize(Empty input)
+        public override Empty Initialize(InitializeInput input)
         {
-            State.AssociationContract.CreateOrganization.Send(new CreateOrganizationInput
+            State.AssociationContract.Value =
+                Context.GetContractAddressByName(SmartContractConstants.AssociationContractSystemName);
+            State.ConsensusContract.Value =
+                Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
+
+            var minerList = State.ConsensusContract.GetMinerList.Call(new GetMinerListInput {TermNumber = 1});
+            var createOrganizationInput = new CreateOrganizationInput();
+            createOrganizationInput.OrganizationMemberList.OrganizationMembers.AddRange(
+                minerList.Pubkeys.Select(p => Address.FromPublicKey(p.ToByteArray())));
+            createOrganizationInput.ProposalReleaseThreshold = new ProposalReleaseThreshold
             {
-                OrganizationMemberList = new OrganizationMemberList
-                {
-                    OrganizationMembers =
-                    {
-                        
-                    }
-                },
-                ProposalReleaseThreshold = new ProposalReleaseThreshold
-                {
-                    
-                },
-                ProposerWhiteList = new ProposerWhiteList()
+                
+            };
+            
+            State.AssociationContract.CreateOrganization.Send(createOrganizationInput);
+
+            State.OrganizationAddress.Value =
+                State.AssociationContract.CalculateOrganizationAddress.Call(createOrganizationInput);
+
+            State.DepositSymbol.Value = Context.Variables.NativeSymbol;
+            State.DepositAmount.Value = input.DepositAmount;
+
+            State.DAOMemberList.Value = new MemberList
+            {
+                Value = {minerList.Pubkeys.Select(p => p.ToHex())}
+            };
+            return new Empty();
+        }
+
+        public override Empty ProposeJoin(StringValue input)
+        {
+            AssertReleasedByParliament();
+            var memberList = State.DAOMemberList.Value;
+            memberList.Value.Add(input.Value);
+            State.AssociationContract.ChangeOrganizationMember.Send(new OrganizationMemberList
+            {
+                
             });
             return new Empty();
         }
 
-        public override Empty ProposeJoin(Empty input)
+        private void AssertReleasedByDecentralizedAutonomousOrganization()
         {
-            if (State.DAOMemberList.Value == null)
-            {
-                State.DAOMemberList.Value = new MemberList
-                {
-                    Value =
-                    {
-                        Context.Sender
-                    }
-                };
-            }
-            return new Empty();
+            
         }
 
-        public override Empty Quit(Empty input)
+        private void AssertReleasedByParliament()
+        {
+            
+        }
+
+        public override Empty Quit(StringValue input)
         {
             return new Empty();
         }
 
-        public override Empty ProposeExpel(Address input)
+        public override Empty ProposeExpel(StringValue input)
         {
             return new Empty();
         }

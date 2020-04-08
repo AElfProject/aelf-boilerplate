@@ -10,18 +10,18 @@ option csharp_namespace = "AElf.Contracts.DAOContract";
 service DAOContract {
     option (aelf.csharp_state) = "AElf.Contracts.DAOContract.DAOContractState";
     
-    rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
     }
     
     // DAO Management
     //   To be a DAO member, need to be approved by parliament.
-    rpc ProposeJoin (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    rpc ProposeJoin (google.protobuf.StringValue) returns (google.protobuf.Empty) {
     }
     //   To not be a DAO member.
-    rpc Quit (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    rpc Quit (google.protobuf.StringValue) returns (google.protobuf.Empty) {
     }
     //   To expel someone from DAO, need to be approved by parliament.
-    rpc ProposeExpel (aelf.Address) returns (google.protobuf.Empty) {
+    rpc ProposeExpel (google.protobuf.StringValue) returns (google.protobuf.Empty) {
     }
     
     // Investment Project Management
@@ -58,6 +58,10 @@ service DAOContract {
     rpc GetBudgetPlan (GetBudgetPlanInput) returns (BudgetPlan) {
         option (aelf.is_view) = true;
     }
+}
+
+message InitializeInput {
+    int64 deposit_amount = 1;
 }
 
 message ProposeProjectInput {
@@ -104,7 +108,7 @@ message ProposeTakeOverRewardProjectInput {
 }
 
 message MemberList {
-    repeated aelf.Address value = 1;
+    repeated string value = 1;
 }
 
 message GetBudgetPlanInput {
