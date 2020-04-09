@@ -23,13 +23,6 @@ namespace AElf.Contracts.LotteryDemoContract
             State.AEDPoSContract.Value =
                 Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
 
-            var tokenInfo = State.TokenContract.GetTokenInfo.Call(new GetTokenInfoInput
-            {
-                Symbol = input.TokenSymbol
-            });
-            State.Decimals.Value = tokenInfo.Decimals;
-            Context.LogDebug(() => $"Set decimals to {tokenInfo.Decimals}.\n{tokenInfo}");
-
             State.Price.Value = input.Price == 0 ? DefaultPrice : input.Price;
             State.DrawingLag.Value = input.DrawingLag == 0 ? DefaultDrawingLag : input.DrawingLag;
             State.MaximumAmount.Value = input.MaximumAmount == 0 ? MaximumBuyAmount : input.MaximumAmount;
@@ -59,7 +52,7 @@ namespace AElf.Contracts.LotteryDemoContract
             }
 
             // 转账到本合约（需要Sender事先调用Token合约的Approve方法进行额度授权）
-            var amount = GetPrecision().Mul(State.Price.Value).Mul(input.Value);
+            var amount = State.Price.Value.Mul(input.Value);
             Context.LogDebug(() => $"Lottery cost {amount} {State.TokenSymbol} tokens.");
             State.TokenContract.TransferToContract.Send(new TransferToContractInput
             {
@@ -351,19 +344,6 @@ namespace AElf.Contracts.LotteryDemoContract
         {
             var period = State.Periods[State.CurrentPeriod.Value];
             return period ?? new PeriodBody();
-        }
-
-        private long GetPrecision()
-        {
-            var precision = 1L;
-            for (var i = 0; i < State.Decimals.Value; i++)
-            {
-                precision = precision.Mul(10);
-            }
-
-            Context.LogDebug(() => $"Precision: {precision}");
-
-            return precision;
         }
     }
 }

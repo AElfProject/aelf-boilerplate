@@ -35,11 +35,6 @@ namespace AElf.Contracts.LotteryDemoContract
         public SingletonState<long> DrawingLag { get; set; }
 
         /// <summary>
-        /// 该合约设置的Token Symbol的小数点后位数（初始化时从Token合约中获取）
-        /// </summary>
-        public SingletonState<long> Decimals { get; set; }
-
-        /// <summary>
         /// 彩票业务最高权限地址
         /// </summary>
         public SingletonState<Address> Admin { get; set; }
