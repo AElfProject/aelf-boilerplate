@@ -59,19 +59,3 @@ jobs:
     displayName: 'Install protobuf'
   - script: bash build.sh -target=Run-Unit-Tests
     displayName: 'Build and Test'
-
-- job: build_app
-  displayName: Build app ios/android (macOS)
-  pool:
-    vmImage: macos-latest
-  variables:
-    CI_TEST: true
-  steps:
-  - task: ReactNativePrepare@0
-    inputs:
-      platform: 'ios'
-      cwd: 'web/ReactNativeBingo/ios/ReactNativeBingo'
-  - task: ReactNativePrepare@0
-    inputs:
-      platform: 'android'
-      cwd: 'web/ReactNativeBingo/android/'
