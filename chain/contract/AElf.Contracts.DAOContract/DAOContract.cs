@@ -8,6 +8,7 @@ using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.DAOContract
 {
+    // ReSharper disable once InconsistentNaming
     public class DAOContract : DAOContractContainer.DAOContractBase
     {
         public override Empty Initialize(InitializeInput input)
@@ -48,7 +49,8 @@ namespace AElf.Contracts.DAOContract
             memberList.Value.Add(input.Value);
             State.AssociationContract.ChangeOrganizationMember.Send(new OrganizationMemberList
             {
-                
+                OrganizationMembers =
+                    {memberList.Value.Select(p => Address.FromPublicKey(ByteArrayHelper.HexStringToByteArray(p)))}
             });
             return new Empty();
         }
@@ -60,7 +62,11 @@ namespace AElf.Contracts.DAOContract
 
         private void AssertReleasedByParliament()
         {
-            
+            if (State.ParliamentContract.Value == null)
+                State.ParliamentContract.Value =
+                    Context.GetContractAddressByName(SmartContractConstants.ParliamentContractSystemName);
+            var defaultAddress = State.ParliamentContract.GetDefaultOrganizationAddress.Call(new Empty());
+            Assert(Context.Sender == defaultAddress, "No permission.");
         }
 
         public override Empty Quit(StringValue input)

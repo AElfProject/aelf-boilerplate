@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.Tester", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.DAOContract", "contract\AElf.Contracts.DAOContract\AElf.Contracts.DAOContract.csproj", "{31AF490B-CDFA-47C4-BD15-82BF18DFFB77}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.DAOContract.Tests", "test\AElf.Contracts.DAOContract.Tests\AElf.Contracts.DAOContract.Tests.csproj", "{CED5D0BD-BB51-49BA-98AA-29342477D109}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +92,10 @@ Global
 		{31AF490B-CDFA-47C4-BD15-82BF18DFFB77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31AF490B-CDFA-47C4-BD15-82BF18DFFB77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31AF490B-CDFA-47C4-BD15-82BF18DFFB77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CED5D0BD-BB51-49BA-98AA-29342477D109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CED5D0BD-BB51-49BA-98AA-29342477D109}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CED5D0BD-BB51-49BA-98AA-29342477D109}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CED5D0BD-BB51-49BA-98AA-29342477D109}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,6 +113,7 @@ Global
 		{B177712A-3005-41CC-965A-62FFA32545DD} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 		{217599C5-2CF0-411E-97B5-5657739CEE5D} = {21D85A91-5BB8-4912-8107-49435A461AAC}
 		{31AF490B-CDFA-47C4-BD15-82BF18DFFB77} = {5C980166-C987-470D-AEE0-3858A170A903}
+		{CED5D0BD-BB51-49BA-98AA-29342477D109} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7426B41-E959-40E4-9ED8-ED8D9C50F133}
