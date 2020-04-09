@@ -19,8 +19,11 @@ namespace AElf.Contracts.DAOContract
         // ReSharper disable once InconsistentNaming
         public SingletonState<MemberList> DAOMemberList { get; set; }
 
+        public MappedState<Hash, InvestmentProject> InvestmentProjects { get; set; }
+        public MappedState<Hash, RewardProject> RewardProjects { get; set; }
         public MappedState<Hash, int, BudgetPlan> BudgetPlans { get; set; }
 
         public SingletonState<Address> OrganizationAddress { get; set; }
+        
     }
 }

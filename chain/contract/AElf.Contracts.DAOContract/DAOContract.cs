@@ -2,8 +2,6 @@
 using Acs3;
 using AElf.Contracts.Association;
 using AElf.Contracts.Consensus.AEDPoS;
-using AElf.Contracts.MultiToken;
-using AElf.CSharp.Core.Extension;
 using AElf.Sdk.CSharp;
 using AElf.Types;
 using Google.Protobuf;
@@ -12,7 +10,7 @@ using Google.Protobuf.WellKnownTypes;
 namespace AElf.Contracts.DAOContract
 {
     // ReSharper disable once InconsistentNaming
-    public class DAOContract : DAOContractContainer.DAOContractBase
+    public partial class DAOContract : DAOContractContainer.DAOContractBase
     {
         public override Empty Initialize(InitializeInput input)
         {
@@ -69,140 +67,77 @@ namespace AElf.Contracts.DAOContract
             return new Empty();
         }
 
-        public override Empty ProposeJoin(StringValue input)
-        {
-            AssertReleasedByParliament();
-            State.TokenContract.TransferFrom.Send(new TransferFromInput
-            {
-                From = Context.Sender,
-                To = Context.Self,
-                Symbol = State.DepositSymbol.Value,
-                Amount = State.DepositAmount.Value
-            });
-            var memberList = State.DAOMemberList.Value;
-            var joinAddress = Address.FromPublicKey(ByteArrayHelper.HexStringToByteArray(input.Value));
-            memberList.Value.Add(joinAddress);
-            SelfProposalProcess(nameof(State.AssociationContract.ChangeOrganizationMember), new OrganizationMemberList
-            {
-                OrganizationMembers = {memberList.Value}
-            }.ToByteString());
-            State.DAOMemberList.Value = memberList;
-            return new Empty();
-        }
-
-        private void SelfProposalProcess(string methodName, ByteString parameter)
-        {
-            var createProposalInput = new CreateProposalInput
-            {
-                ContractMethodName = methodName,
-                Params = parameter,
-                OrganizationAddress = State.OrganizationAddress.Value,
-                ExpiredTime = Context.CurrentBlockTime.AddHours(1),
-                ToAddress = State.AssociationContract.Value
-            };
-            State.AssociationContract.CreateProposal.Send(createProposalInput);
-            // TODO: Association Contract need to help calculating proposal id.
-            var proposalId = State.AssociationContract.CreateProposal.Call(createProposalInput);
-            State.AssociationContract.Approve.Send(proposalId);
-            State.AssociationContract.Release.Send(proposalId);
-        }
-
-        private void AssertReleasedByDecentralizedAutonomousOrganization()
-        {
-            // TODO: Need a way to gather approves in this contract, not in Association Contract.
-        }
-
-        private void AssertReleasedByParliament()
-        {
-            if (State.ParliamentContract.Value == null)
-                State.ParliamentContract.Value =
-                    Context.GetContractAddressByName(SmartContractConstants.ParliamentContractSystemName);
-            var defaultAddress = State.ParliamentContract.GetDefaultOrganizationAddress.Call(new Empty());
-            Assert(Context.Sender == defaultAddress, "No permission.");
-        }
-
-        public override Empty Quit(StringValue input)
-        {
-            State.TokenContract.Transfer.Send(new TransferInput
-            {
-                To = Context.Sender,
-                Symbol = State.DepositSymbol.Value,
-                Amount = State.DepositAmount.Value
-            });
-            var memberList = State.DAOMemberList.Value;
-            var quitAddress = Address.FromPublicKey(ByteArrayHelper.HexStringToByteArray(input.Value));
-            Assert(memberList.Value.Contains(quitAddress), $"DAO Member {input.Value} not found.");
-            memberList.Value.Remove(quitAddress);
-            SelfProposalProcess(nameof(State.AssociationContract.ChangeOrganizationMember), new OrganizationMemberList
-            {
-                OrganizationMembers = {memberList.Value}
-            }.ToByteString());
-            return new Empty();
-        }
-
-        public override Empty ProposeExpel(StringValue input)
-        {
-            AssertReleasedByParliament();
-            AssertReleasedByDecentralizedAutonomousOrganization();
-            var memberList = State.DAOMemberList.Value;
-            var quitAddress = Address.FromPublicKey(ByteArrayHelper.HexStringToByteArray(input.Value));
-            Assert(memberList.Value.Contains(quitAddress), $"DAO Member {input.Value} not found.");
-            memberList.Value.Remove(quitAddress);
-            SelfProposalProcess(nameof(State.AssociationContract.ChangeOrganizationMember), new OrganizationMemberList
-            {
-                OrganizationMembers = {memberList.Value}
-            }.ToByteString());
-            return new Empty();
-        }
-
         public override Empty ProposeProjectToDAO(ProposeProjectInput input)
         {
+            SelfProposalProcess(nameof(AddInvestmentProject), new InvestmentProject
+            {
+                PullRequestUrl = input.PullRequestUrl,
+                CommitId = input.CommitId,
+                PreAuditionHash = input.PreAuditionHash ?? Hash.Empty,
+                Status = InvestmentProjectStatus.IssuedByDevelopers
+            }.ToByteString());
             return new Empty();
         }
 
         public override Empty ProposeProjectToParliament(ProposeProjectWithBudgetsInput input)
         {
+            SelfProposalProcess(nameof(UpdateInvestmentProject), new InvestmentProject
+            {
+                PullRequestUrl = input.PullRequestUrl,
+                CommitId = input.CommitId,
+                Status = InvestmentProjectStatus.IssuedByDevelopers
+            }.ToByteString());
             return new Empty();
         }
 
         public override Empty ProposeDeliver(ProposeAuditionInput input)
         {
+            SelfProposalProcess(nameof(UpdateInvestmentProject), new InvestmentProject
+            {
+                PullRequestUrl = input.PullRequestUrl,
+                CommitId = input.CommitId,
+                Status = InvestmentProjectStatus.Finished
+            }.ToByteString());
             return new Empty();
         }
 
         public override Empty ProposeRewardProject(ProposeProjectInput input)
         {
+            SelfProposalProcess(nameof(AddRewardProject), new RewardProject
+            {
+                PullRequestUrl = input.PullRequestUrl,
+                CommitId = input.CommitId,
+                Status = RewardProjectStatus.ProposedByDaoMember
+            }.ToByteString());
             return new Empty();
         }
 
         public override Empty ProposeIssueRewardProject(ProposeIssueRewardProjectInput input)
         {
+            SelfProposalProcess(nameof(UpdateRewardProject), new RewardProject
+            {
+                PullRequestUrl = input.PullRequestUrl,
+                CommitId = input.CommitId,
+                Status = RewardProjectStatus.ApprovedByParliamentWithBudgets
+            }.ToByteString());
             return new Empty();
         }
 
         public override Empty ProposeTakeOverRewardProject(ProposeTakeOverRewardProjectInput input)
         {
+            SelfProposalProcess(nameof(UpdateRewardProject), new RewardProject
+            {
+                PullRequestUrl = input.PullRequestUrl,
+                CommitId = input.CommitId,
+                Status = RewardProjectStatus.TakenOverByDevelopers
+            }.ToByteString());
             return new Empty();
         }
 
         public override Empty ProposeDevelopersAudition(ProposeAuditionInput input)
         {
+            // TODO: Use new states to record audition result.
             return new Empty();
-        }
-
-        public override BudgetPlan GetBudgetPlan(GetBudgetPlanInput input)
-        {
-            return new BudgetPlan();
-        }
-
-        public override MemberList GetDAOMemberList(Empty input)
-        {
-            var organization = State.AssociationContract.GetOrganization.Call(State.OrganizationAddress.Value);
-
-            return new MemberList
-            {
-                Value = {organization.OrganizationMemberList.OrganizationMembers}
-            };
         }
     }
 }
