@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Volo.Abp.Modularity;
 
-namespace AElf.Contracts.HelloWorldContract
+namespace AElf.Contracts.DAOContract
 {
     [DependsOn(typeof(ContractTestModule))]
     // ReSharper disable once InconsistentNaming

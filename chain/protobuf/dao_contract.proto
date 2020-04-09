@@ -13,6 +13,9 @@ service DAOContract {
     rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
     }
     
+    rpc ReleaseProposal (aelf.Hash) returns (google.protobuf.Empty) {
+    }
+    
     // DAO Management
     //   To be a DAO member, need to be approved by parliament.
     rpc ProposeJoin (google.protobuf.StringValue) returns (google.protobuf.Empty) {
@@ -108,7 +111,7 @@ message ProposeTakeOverRewardProjectInput {
 }
 
 message MemberList {
-    repeated string value = 1;
+    repeated aelf.Address value = 1;
 }
 
 message GetBudgetPlanInput {
