@@ -1,4 +1,7 @@
+using System.Linq;
 using Acs3;
+using AElf.Contracts.Profit;
+using AElf.CSharp.Core;
 using AElf.CSharp.Core.Extension;
 using AElf.Sdk.CSharp;
 using AElf.Types;
@@ -10,7 +13,7 @@ namespace AElf.Contracts.DAOContract
     // ReSharper disable InconsistentNaming
     public partial class DAOContract
     {
-        private void SelfProposalProcess(string methodName, ByteString parameter)
+        private Hash SelfProposalProcess(string methodName, ByteString parameter)
         {
             var createProposalInput = new CreateProposalInput
             {
@@ -25,11 +28,16 @@ namespace AElf.Contracts.DAOContract
             var proposalId = State.AssociationContract.CreateProposal.Call(createProposalInput);
             State.AssociationContract.Approve.Send(proposalId);
             State.AssociationContract.Release.Send(proposalId);
+
+            return proposalId;
         }
 
-        private void AssertApprovedByDecentralizedAutonomousOrganization()
+        private void AssertApprovedByDecentralizedAutonomousOrganization(ProjectInfo projectInfo)
         {
-            // TODO: Need a way to gather approves in this contract, not in Association Contract.
+            var projectId = projectInfo.GetProjectId();
+            var proposalId = State.PreviewProposalIds[projectId];
+            var approvalCount = State.AssociationContract.GetProposal.Call(proposalId).ApprovalCount;
+            AssertApprovalCountMeetThreshold(approvalCount);
         }
 
         private void AssertReleasedByParliament()
@@ -41,9 +49,48 @@ namespace AElf.Contracts.DAOContract
             Assert(Context.Sender == defaultAddress, "No permission.");
         }
 
-        private Hash CalculateProjectHash(string pullRequestUrl, string commitId)
+        private void AdjustApprovalThreshold()
         {
-            return Hash.FromString(commitId.Append(pullRequestUrl));
+            State.ApprovalThreshold.Value = State.DAOMemberList.Value.Value.Count.Mul(2).Div(3).Add(1);
+        }
+
+        private void AssertApprovalCountMeetThreshold(long approvalCount)
+        {
+            Assert(approvalCount >= State.ApprovalThreshold.Value, "Not approved by DAO members yet.");
+        }
+
+        private Hash CreateProfitScheme(ProjectInfo projectInfo)
+        {
+            State.ProfitContract.CreateScheme.Send(new CreateSchemeInput
+            {
+                Manager = projectInfo.VirtualAddress,
+                IsReleaseAllBalanceEveryTimeByDefault = true
+            });
+            var managingSchemeIds = State.ProfitContract.GetManagingSchemeIds.Call(new GetManagingSchemeIdsInput
+            {
+                Manager = projectInfo.VirtualAddress
+            });
+            return managingSchemeIds.SchemeIds.Last();
+        }
+
+        private void PayBudget(ProjectInfo projectInfo)
+        {
+            var projectId = projectInfo.GetProjectId();
+            var budgetPlan = State.BudgetPlans[projectId][projectInfo.CurrentBudgetPlanIndex];
+            Context.SendVirtualInline(projectId, State.ProfitContract.Value,
+                nameof(State.ProfitContract.ContributeProfits), new ContributeProfitsInput
+                {
+                    SchemeId = projectInfo.ProfitSchemeId,
+                    Symbol = budgetPlan.Symbol,
+                    Amount = budgetPlan.Amount
+                });
+            Context.SendVirtualInline(projectId, State.ProfitContract.Value,
+                nameof(State.ProfitContract.DistributeProfits), new DistributeProfitsInput
+                {
+                    SchemeId = projectInfo.ProfitSchemeId,
+                    Period = projectInfo.CurrentBudgetPlanIndex.Add(1),
+                    AmountsMap = {{budgetPlan.Symbol, budgetPlan.Amount}}
+                });
         }
     }
 }

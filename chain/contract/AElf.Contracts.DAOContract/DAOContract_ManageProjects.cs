@@ -5,43 +5,64 @@ namespace AElf.Contracts.DAOContract
     // ReSharper disable InconsistentNaming
     public partial class DAOContract
     {
-        public override Empty AddInvestmentProject(InvestmentProject input)
+        public override Empty AddInvestmentProject(ProjectInfo input)
         {
-            AssertApprovedByDecentralizedAutonomousOrganization();
-            // TODO: Some basic checks.
-            var projectHash = CalculateProjectHash(input.PullRequestUrl, input.CommitId);
-            State.InvestmentProjects[projectHash] = input;
+            AssertApprovedByDecentralizedAutonomousOrganization(input);
+            var projectId = input.GetProjectId();
+            input.VirtualAddress = Context.ConvertVirtualAddressToContractAddress(projectId);
+            State.Projects[projectId] = input;
             return new Empty();
         }
 
-        public override Empty UpdateInvestmentProject(InvestmentProject input)
+        public override Empty UpdateInvestmentProject(ProjectInfo input)
         {
-            AssertApprovedByDecentralizedAutonomousOrganization();
-            // TODO: Some basic checks.
-            var projectHash = CalculateProjectHash(input.PullRequestUrl, input.CommitId);
-            var currentProject = State.InvestmentProjects[projectHash];
+            AssertApprovedByDecentralizedAutonomousOrganization(input);
+            var projectId = input.GetProjectId();
+            var currentProject = State.Projects[projectId];
             currentProject.Status = input.Status;
-            State.InvestmentProjects[projectHash] = currentProject;
+
+            if (input.CurrentBudgetPlanIndex > 0)
+            {
+                currentProject.CurrentBudgetPlanIndex = input.CurrentBudgetPlanIndex;
+            }
+
+            if (input.Status == ProjectStatus.Approved)
+            {
+                foreach (var budgetPlan in input.BudgetPlans)
+                {
+                    State.BudgetPlans[projectId][budgetPlan.Index] = budgetPlan;
+                }
+                var profitSchemeId = CreateProfitScheme(input);
+                currentProject.ProfitSchemeId = profitSchemeId;
+            }
+
+            if (input.Status == ProjectStatus.Delivered)
+            {
+                PayBudget(input);
+                State.PreviewProposalIds.Remove(projectId);
+            }
+
+            State.Projects[projectId] = currentProject;
             return new Empty();
         }
 
-        public override Empty AddRewardProject(RewardProject input)
+        public override Empty AddRewardProject(ProjectInfo input)
         {
-            AssertApprovedByDecentralizedAutonomousOrganization();
+            AssertApprovedByDecentralizedAutonomousOrganization(input);
             // TODO: Some basic checks.
-            var projectHash = CalculateProjectHash(input.PullRequestUrl, input.CommitId);
-            State.RewardProjects[projectHash] = input;
+            var projectId = input.GetProjectId();
+            State.Projects[projectId] = input;
             return new Empty();
         }
 
-        public override Empty UpdateRewardProject(RewardProject input)
+        public override Empty UpdateRewardProject(ProjectInfo input)
         {
-            AssertApprovedByDecentralizedAutonomousOrganization();
+            AssertApprovedByDecentralizedAutonomousOrganization(input);
             // TODO: Some basic checks.
-            var projectHash = CalculateProjectHash(input.PullRequestUrl, input.CommitId);
-            var currentProject = State.RewardProjects[projectHash];
+            var projectId = input.GetProjectId();
+            var currentProject = State.Projects[projectId];
             currentProject.Status = input.Status;
-            State.RewardProjects[projectHash] = currentProject;
+            State.Projects[projectId] = currentProject;
             return new Empty();
         }
     }

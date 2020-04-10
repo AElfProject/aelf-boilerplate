@@ -27,6 +27,7 @@ namespace AElf.Contracts.DAOContract
                 OrganizationMembers = {memberList.Value}
             }.ToByteString());
             State.DAOMemberList.Value = memberList;
+            AdjustApprovalThreshold();
             return new Empty();
         }
 
@@ -46,13 +47,13 @@ namespace AElf.Contracts.DAOContract
             {
                 OrganizationMembers = {memberList.Value}
             }.ToByteString());
+            AdjustApprovalThreshold();
             return new Empty();
         }
 
         public override Empty ProposeExpel(StringValue input)
         {
             AssertReleasedByParliament();
-            AssertApprovedByDecentralizedAutonomousOrganization();
             var memberList = State.DAOMemberList.Value;
             var quitAddress = Address.FromPublicKey(ByteArrayHelper.HexStringToByteArray(input.Value));
             Assert(memberList.Value.Contains(quitAddress), $"DAO Member {input.Value} not found.");
@@ -61,6 +62,7 @@ namespace AElf.Contracts.DAOContract
             {
                 OrganizationMembers = {memberList.Value}
             }.ToByteString());
+            AdjustApprovalThreshold();
             return new Empty();
         }
     }

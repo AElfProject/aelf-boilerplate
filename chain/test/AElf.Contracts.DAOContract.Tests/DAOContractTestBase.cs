@@ -192,8 +192,6 @@ namespace AElf.Contracts.DAOContract
                 var approveResult = await parliamentContractStub.Approve.SendAsync(proposalId);
                 approveResult.TransactionResult.Status.ShouldBe(TransactionResultStatus.Mined);
             }
-
-            //await DaoContractStub.ReleaseProposal.SendAsync(proposalId);
         }
 
         internal Address ParliamentDefaultOrganizationAddress

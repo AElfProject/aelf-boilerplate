@@ -1,3 +1,4 @@
+using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.DAOContract
@@ -18,6 +19,16 @@ namespace AElf.Contracts.DAOContract
             {
                 Value = {organization.OrganizationMemberList.OrganizationMembers}
             };
+        }
+
+        public override Hash GetPreviewProposalId(ProposeProjectInput input)
+        {
+            var projectInfo = new ProjectInfo
+            {
+                PullRequestUrl = input.PullRequestUrl,
+                CommitId = input.CommitId
+            };
+            return State.PreviewProposalIds[projectInfo.GetProjectId()];
         }
     }
 }
