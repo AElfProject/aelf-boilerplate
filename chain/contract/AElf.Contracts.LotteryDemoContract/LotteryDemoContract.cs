@@ -239,14 +239,12 @@ namespace AElf.Contracts.LotteryDemoContract
                     }
                     else
                     {
-                        // 如果已经得过奖，往后顺延一定数量的候选池的Id
-                        var newLuckyIdIndex = luckyId.Add(poolCount.Div(count)) % poolCount;
-                        var newLuckyId = startId.Add(newLuckyIdIndex);
-                        if (alreadyReward.Contains(newLuckyId))
+                        // 如果已经得过奖，往后顺延
+                        var newLuckyId = startId;
+                        do
                         {
-                            // 如果还重复，则往后推
-                            newLuckyId = startId < newLuckyId ? newLuckyId.Sub(1) : newLuckyId.Add(1);
-                        }
+                            newLuckyId = newLuckyId.Add(1);
+                        } while (!alreadyReward.Contains(newLuckyId));
 
                         State.Lotteries[newLuckyId].Level = category;
                         rewardIds.Add(newLuckyId);
