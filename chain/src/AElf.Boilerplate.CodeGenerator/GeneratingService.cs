@@ -35,23 +35,35 @@ namespace AElf.Boilerplate.CodeGenerator
             return Directory.Exists(path) ? new DirectoryInfo(path) : Directory.CreateDirectory(path);
         }
 
+        private string ReplaceContent(string input)
+        {
+            foreach (var replacement in _options.Contents)
+            {
+                input = replacement.Replace(input);
+            }
+
+            return input;
+        }
+
         public void Generate()
         {
             Queue<string> generatedFiles = new Queue<string>();
 
             foreach (var file in _options.Files)
             {
-                File.Copy(file.Origin, file.New, true);
-                Logger.LogInformation($"Copy from {file.Origin} to {file.New}");
 
-                generatedFiles.Enqueue(new FileInfo(file.New).FullName);
+                var fileNew = file.New ?? ReplaceContent(file.Origin);
+                File.Copy(file.Origin, fileNew, true);
+                Logger.LogInformation($"Copy from {file.Origin} to {fileNew}");
+
+                generatedFiles.Enqueue(new FileInfo(fileNew).FullName);
             }
 
             foreach (var folder in _options.Folders)
             {
                 var originDir = new DirectoryInfo(folder.Origin);
 
-                var destDir = CreateDir(folder.New);
+                var destDir = CreateDir(folder.New ?? ReplaceContent(folder.Origin));
 
                 Logger.LogInformation($"Create directory {destDir}");
 
@@ -82,10 +94,8 @@ namespace AElf.Boilerplate.CodeGenerator
                         }
 
                         var destFileName = originFile.FullName.Replace(originDir.FullName, "");
-                        foreach (var replacementRegex in _options.Contents)
-                        {
-                            destFileName = replacementRegex.Replace(destFileName);
-                        }
+
+                        destFileName = ReplaceContent(destFileName);
 
                         destFileName = destDir.FullName + destFileName;
 
@@ -101,11 +111,9 @@ namespace AElf.Boilerplate.CodeGenerator
             {
                 var content =
                     File.ReadAllText(file);
-                foreach (var optionsContent in _options.Contents)
-                {
-                    content = optionsContent.Replace(content);
-                    Logger.LogInformation($"Change from '{optionsContent.Origin}' to '{optionsContent.New}' in {file}");
-                }
+                
+                Logger.LogInformation($"Change {file}");
+                content = ReplaceContent(content);
 
                 File.WriteAllText(file, content);
             }
