@@ -246,6 +246,11 @@ namespace AElf.Contracts.LotteryDemoContract
                             newLuckyId = newLuckyId.Add(1);
                         } while (!alreadyReward.Contains(newLuckyId));
 
+                        if (newLuckyId > endId)
+                        {
+                            newLuckyId = newLuckyId.Sub(poolCount);
+                        }
+
                         State.Lotteries[newLuckyId].Level = category;
                         rewardIds.Add(newLuckyId);
                         alreadyReward.Add(newLuckyId);
