@@ -21,7 +21,7 @@ namespace AElf.Blockchains.MainChain
 
             l.AddGenesisSmartContract(
                 _codes.Single(kv => kv.Key.Contains("Bingo")).Value,
-                Hash.FromString("AElf.ContractNames.BingoGameContract"), GenerateBingoGameInitializationCallList());
+                HashHelper.ComputeFromString("AElf.ContractNames.BingoGameContract"), GenerateBingoGameInitializationCallList());
 
             return l;
         }

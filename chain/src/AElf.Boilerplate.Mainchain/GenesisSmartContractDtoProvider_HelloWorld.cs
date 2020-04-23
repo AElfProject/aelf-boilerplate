@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Acs0;
 using AElf.OS.Node.Application;
-using AElf.Types;
 
 namespace AElf.Blockchains.MainChain
 {
@@ -17,7 +16,7 @@ namespace AElf.Blockchains.MainChain
                 // find the contracts code by name
                 _codes.Single(kv => kv.Key.Contains("HelloWorld")).Value,
                 // the name of the contract is built from the full name
-                Hash.FromString("AElf.ContractNames.HelloWorldContract"), 
+                HashHelper.ComputeFromString("AElf.ContractNames.HelloWorldContract"), 
                 
                 new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList());
 

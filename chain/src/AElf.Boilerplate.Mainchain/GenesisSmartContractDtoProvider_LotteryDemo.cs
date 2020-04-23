@@ -15,7 +15,7 @@ namespace AElf.Blockchains.MainChain
 
             l.AddGenesisSmartContract(
                 _codes.Single(kv => kv.Key.Contains("LotteryDemo")).Value,
-                Hash.FromString("AElf.ContractNames.LotteryDemo"), GenerateLotteryDemoInitializationCallList());
+                HashHelper.ComputeFromString("AElf.ContractNames.LotteryDemo"), GenerateLotteryDemoInitializationCallList());
 
             return l;
         }
