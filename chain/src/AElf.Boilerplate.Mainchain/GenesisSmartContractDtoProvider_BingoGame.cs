@@ -13,6 +13,7 @@ using AElf.Kernel.Infrastructure;
 using AElf.Kernel.SmartContract;
 using Google.Protobuf.WellKnownTypes;
 using Org.BouncyCastle.Asn1.X509;
+using Volo.Abp.DependencyInjection;
 
 namespace AElf.Blockchains.MainChain
 {
@@ -41,7 +42,7 @@ namespace AElf.Blockchains.MainChain
         }
     }
 
-    public class BingoGameSmartContractAddressNameProvider : ISmartContractAddressNameProvider
+    public class BingoGameSmartContractAddressNameProvider : ISmartContractAddressNameProvider, ISingletonDependency
     {
         public static readonly Hash Name = HashHelper.ComputeFromString("AElf.ContractNames.BingoGameContract");
         public static readonly string StringName = Name.ToStorageKey();

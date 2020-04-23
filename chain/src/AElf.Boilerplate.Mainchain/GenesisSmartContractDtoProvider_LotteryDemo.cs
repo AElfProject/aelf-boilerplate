@@ -6,6 +6,7 @@ using AElf.Kernel.Infrastructure;
 using AElf.Kernel.SmartContract;
 using AElf.OS.Node.Application;
 using AElf.Types;
+using Volo.Abp.DependencyInjection;
 
 namespace AElf.Blockchains.MainChain
 {
@@ -37,7 +38,7 @@ namespace AElf.Blockchains.MainChain
         }
     }
     
-    public class LotteryDemoSmartContractAddressNameProvider : ISmartContractAddressNameProvider
+    public class LotteryDemoSmartContractAddressNameProvider : ISmartContractAddressNameProvider, ISingletonDependency
     {
         public static readonly Hash Name = HashHelper.ComputeFromString("AElf.ContractNames.LotteryDemo");
         public static readonly string StringName = Name.ToStorageKey();
