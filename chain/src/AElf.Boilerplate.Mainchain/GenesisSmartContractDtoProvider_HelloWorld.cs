@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Acs0;
+using AElf.Kernel.Infrastructure;
+using AElf.Kernel.SmartContract;
 using AElf.OS.Node.Application;
+using AElf.Types;
 
 namespace AElf.Blockchains.MainChain
 {
@@ -16,11 +19,19 @@ namespace AElf.Blockchains.MainChain
                 // find the contracts code by name
                 _codes.Single(kv => kv.Key.Contains("HelloWorld")).Value,
                 // the name of the contract is built from the full name
-                HashHelper.ComputeFromString("AElf.ContractNames.HelloWorldContract"), 
+                HelloWorldSmartContractAddressNameProvider.Name, 
                 
                 new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList());
 
             return l;
         }
+    }
+    
+    public class HelloWorldSmartContractAddressNameProvider : ISmartContractAddressNameProvider
+    {
+        public static readonly Hash Name = HashHelper.ComputeFromString("AElf.ContractNames.HelloWorldContract");
+        public static readonly string StringName = Name.ToStorageKey();
+        public Hash ContractName => Name;
+        public string ContractStringName => StringName;
     }
 }

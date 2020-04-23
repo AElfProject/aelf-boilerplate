@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Acs0;
+using AElf.Kernel.Infrastructure;
+using AElf.Kernel.SmartContract;
 using AElf.OS.Node.Application;
 using AElf.Types;
 
@@ -14,9 +16,17 @@ namespace AElf.Blockchains.MainChain
 
             l.AddGenesisSmartContract(
                 _codes.Single(kv=>kv.Key.Contains("RandomDemo")).Value,
-                HashHelper.ComputeFromString("AElf.ContractNames.RandomDemoContract"), new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList());
+                RandomDemoSmartContractAddressNameProvider.Name, new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList());
 
             return l;
         }
+    }
+    
+    public class RandomDemoSmartContractAddressNameProvider : ISmartContractAddressNameProvider
+    {
+        public static readonly Hash Name = HashHelper.ComputeFromString("AElf.ContractNames.RandomDemo");
+        public static readonly string StringName = Name.ToStorageKey();
+        public Hash ContractName => Name;
+        public string ContractStringName => StringName;
     }
 }

@@ -9,7 +9,10 @@ using AElf.Kernel.Token;
 using AElf.OS.Node.Application;
 using AElf.Types;
 using AElf.Contracts.BingoGameContract;
+using AElf.Kernel.Infrastructure;
+using AElf.Kernel.SmartContract;
 using Google.Protobuf.WellKnownTypes;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace AElf.Blockchains.MainChain
 {
@@ -21,7 +24,7 @@ namespace AElf.Blockchains.MainChain
 
             l.AddGenesisSmartContract(
                 _codes.Single(kv => kv.Key.Contains("Bingo")).Value,
-                HashHelper.ComputeFromString("AElf.ContractNames.BingoGameContract"), GenerateBingoGameInitializationCallList());
+                BingoGameSmartContractAddressNameProvider.Name, GenerateBingoGameInitializationCallList());
 
             return l;
         }
@@ -36,5 +39,13 @@ namespace AElf.Blockchains.MainChain
                 new Empty());
             return bingoGameContractMethodCallList;
         }
+    }
+
+    public class BingoGameSmartContractAddressNameProvider : ISmartContractAddressNameProvider
+    {
+        public static readonly Hash Name = HashHelper.ComputeFromString("AElf.ContractNames.BingoGameContract");
+        public static readonly string StringName = Name.ToStorageKey();
+        public Hash ContractName => Name;
+        public string ContractStringName => StringName;
     }
 }

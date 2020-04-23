@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Acs0;
 using AElf.Contracts.LotteryDemoContract;
+using AElf.Kernel.Infrastructure;
+using AElf.Kernel.SmartContract;
 using AElf.OS.Node.Application;
 using AElf.Types;
 
@@ -15,7 +17,7 @@ namespace AElf.Blockchains.MainChain
 
             l.AddGenesisSmartContract(
                 _codes.Single(kv => kv.Key.Contains("LotteryDemo")).Value,
-                HashHelper.ComputeFromString("AElf.ContractNames.LotteryDemo"), GenerateLotteryDemoInitializationCallList());
+                LotteryDemoSmartContractAddressNameProvider.Name, GenerateLotteryDemoInitializationCallList());
 
             return l;
         }
@@ -33,5 +35,13 @@ namespace AElf.Blockchains.MainChain
                 });
             return lotteryDemoContractMethodCallList;
         }
+    }
+    
+    public class LotteryDemoSmartContractAddressNameProvider : ISmartContractAddressNameProvider
+    {
+        public static readonly Hash Name = HashHelper.ComputeFromString("AElf.ContractNames.LotteryDemo");
+        public static readonly string StringName = Name.ToStorageKey();
+        public Hash ContractName => Name;
+        public string ContractStringName => StringName;
     }
 }
