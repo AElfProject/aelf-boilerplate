@@ -40,7 +40,7 @@ namespace AElf.Blockchains.MainChain
     
     public class LotteryDemoSmartContractAddressNameProvider : ISmartContractAddressNameProvider, ISingletonDependency
     {
-        public static readonly Hash Name = HashHelper.ComputeFromString("AElf.ContractNames.LotteryDemo");
+        public static readonly Hash Name = HashHelper.ComputeFrom("AElf.ContractNames.LotteryDemo");
         public static readonly string StringName = Name.ToStorageKey();
         public Hash ContractName => Name;
         public string ContractStringName => StringName;

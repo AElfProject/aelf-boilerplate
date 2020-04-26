@@ -44,7 +44,7 @@ namespace AElf.Blockchains.MainChain
 
     public class BingoGameSmartContractAddressNameProvider : ISmartContractAddressNameProvider, ISingletonDependency
     {
-        public static readonly Hash Name = HashHelper.ComputeFromString("AElf.ContractNames.BingoGameContract");
+        public static readonly Hash Name = HashHelper.ComputeFrom("AElf.ContractNames.BingoGameContract");
         public static readonly string StringName = Name.ToStorageKey();
         public Hash ContractName => Name;
         public string ContractStringName => StringName;

@@ -30,7 +30,7 @@ namespace AElf.Blockchains.MainChain
     
     public class HelloWorldSmartContractAddressNameProvider : ISmartContractAddressNameProvider, ISingletonDependency
     {
-        public static readonly Hash Name = HashHelper.ComputeFromString("AElf.ContractNames.HelloWorldContract");
+        public static readonly Hash Name = HashHelper.ComputeFrom("AElf.ContractNames.HelloWorldContract");
         public static readonly string StringName = Name.ToStorageKey();
         public Hash ContractName => Name;
         public string ContractStringName => StringName;

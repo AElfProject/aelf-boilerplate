@@ -10,9 +10,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="1.0.0-preview2-18375"/>
-        <PackageReference Include="AElf.Runtime.CSharp" Version="1.0.0-preview2-18375"/>
-        <PackageReference Include="AElf.RuntimeSetup" Version="1.0.0-preview2-18375"/>
+        <PackageReference Include="AElf.Runtime.CSharp.ExecutiveTokenPlugin" Version="1.0.0-preview2-18378"/>
+        <PackageReference Include="AElf.Runtime.CSharp" Version="1.0.0-preview2-18378"/>
+        <PackageReference Include="AElf.RuntimeSetup" Version="1.0.0-preview2-18378"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -63,32 +63,32 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="1.0.0-preview2-18375">
+        <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="1.0.0-preview2-18378">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
-        <PackageReference Include="AElf.Contracts.Election" Version="1.0.0-preview2-18375">
+        <PackageReference Include="AElf.Contracts.Election" Version="1.0.0-preview2-18378">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
-        <PackageReference Include="AElf.Contracts.Profit" Version="1.0.0-preview2-18375">
+        <PackageReference Include="AElf.Contracts.Profit" Version="1.0.0-preview2-18378">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
-        <PackageReference Include="AElf.Contracts.Vote" Version="1.0.0-preview2-18375">
+        <PackageReference Include="AElf.Contracts.Vote" Version="1.0.0-preview2-18378">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
-        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-preview2-18375">
+        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-preview2-18378">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
-        <PackageReference Include="AElf.Contracts.Configuration" Version="1.0.0-preview2-18375">
+        <PackageReference Include="AElf.Contracts.Configuration" Version="1.0.0-preview2-18378">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -96,11 +96,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.0.0-preview2-18375">
+        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.0.0-preview2-18378">
             <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.chain</PackageName>
         </PackageReference>
-        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.0.0-preview2-18375">
+        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.0.0-preview2-18378">
             <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.net</PackageName>
         </PackageReference>

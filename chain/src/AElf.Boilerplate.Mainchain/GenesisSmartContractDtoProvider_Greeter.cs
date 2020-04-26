@@ -23,7 +23,7 @@ namespace AElf.Blockchains.MainChain
     
     public class GreeterSmartContractAddressNameProvider : ISmartContractAddressNameProvider, ISingletonDependency
     {
-        public static readonly Hash Name = HashHelper.ComputeFromString("AElf.ContractNames.Greeter");
+        public static readonly Hash Name = HashHelper.ComputeFrom("AElf.ContractNames.Greeter");
         public static readonly string StringName = Name.ToStorageKey();
         public Hash ContractName => Name;
         public string ContractStringName => StringName;
