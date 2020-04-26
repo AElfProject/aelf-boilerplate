@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Acs0;
 using AElf.Contracts.Election;
-using AElf.Kernel.Consensus.AEDPoS;
+using AElf.GovernmentSystem;
 using AElf.OS.Node.Application;
-using AElf.Types;
 
 namespace AElf.Blockchains.MainChain
 {

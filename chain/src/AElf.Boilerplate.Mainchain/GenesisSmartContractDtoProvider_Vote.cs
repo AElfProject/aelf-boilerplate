@@ -1,13 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Acs0;
-using AElf.Blockchains.BasicBaseChain.ContractNames;
-using AElf.Contracts.Vote;
-using AElf.Kernel;
-using AElf.Kernel.Token;
+using AElf.GovernmentSystem;
 using AElf.OS.Node.Application;
-using AElf.Types;
-using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Blockchains.MainChain
 {

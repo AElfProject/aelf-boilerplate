@@ -164,7 +164,7 @@ namespace AElf.Contracts.BingoGameContract
             var randomHash = targetRound.RealTimeMinersInformation.Values.First(i => i.PreviousInValue != null).PreviousInValue;
             var isWin = ConvertHashToBool(randomHash);
 
-            var usefulHash = Hash.FromTwoHashes(randomHash, playerInformation.Seed);
+            var usefulHash = HashHelper.ConcatAndCompute(randomHash, playerInformation.Seed);
             var award = CalculateAward(boutInformation.Amount, GetKindFromHash(usefulHash));
             award = isWin ? award : -award;
 

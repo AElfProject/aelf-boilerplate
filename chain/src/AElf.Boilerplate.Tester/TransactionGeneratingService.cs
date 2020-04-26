@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using AElf.Kernel;
 using AElf.Kernel.Account.Application;
 using AElf.Kernel.Blockchain.Application;
+using AElf.Kernel.Infrastructure;
 using AElf.Kernel.SmartContract.Application;
 using AElf.Types;
 using Google.Protobuf;
@@ -37,10 +39,15 @@ namespace AElf.Boilerplate.Tester
         {
             var pubkey = await _accountService.GetPublicKeyAsync();
             var chain = await _blockchainService.GetChainAsync();
+            var address = await _smartContractAddressService.GetAddressByContractNameAsync(new ChainContext
+            {
+                BlockHash = chain.BestChainHash,
+                BlockHeight = chain.BestChainHeight
+            }, contractName.ToStorageKey());
             var transaction = new Transaction
             {
                 From = Address.FromPublicKey(pubkey),
-                To = _smartContractAddressService.GetAddressByContractName(contractName),
+                To = address,
                 MethodName = methodName,
                 Params = param,
                 RefBlockNumber = chain.BestChainHeight,

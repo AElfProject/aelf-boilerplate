@@ -25,7 +25,7 @@ namespace AElf.Contracts.Deployer
             var codes = contractNames.Select(n => (n, GetCode(n))).ToDictionary(x => x.Item1, x => x.Item2);
             foreach (var systemContractDllPath in _systemContractProvider.GetSystemContractDllPaths())
             {
-                codes.Add(systemContractDllPath.Split('.').Reverse().Skip(1).First(),
+                codes.Add(Path.GetFileNameWithoutExtension(systemContractDllPath),
                     File.ReadAllBytes(Assembly.LoadFile(systemContractDllPath).Location));
             }
             return codes;

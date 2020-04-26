@@ -6,10 +6,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.Core" Version="1.0.0-preview1" />
-        <PackageReference Include="AElf.Kernel.Consensus.Core" Version="1.0.0-preview1" />
-        <PackageReference Include="AElf.Kernel.Core" Version="1.0.0-preview1" />
-        <PackageReference Include="AElf.Kernel.SmartContract" Version="1.0.0-preview1" />
+        <PackageReference Include="AElf.Core" Version="1.0.0-preview2" />
+        <PackageReference Include="AElf.Kernel.Consensus.Core" Version="1.0.0-preview2" />
+        <PackageReference Include="AElf.Kernel.Core" Version="1.0.0-preview2" />
+        <PackageReference Include="AElf.Kernel.SmartContract" Version="1.0.0-preview2" />
     </ItemGroup>
 
     <ItemGroup>
