@@ -1,8 +1,17 @@
 # Readme
 
-React Native: 0.62.4
+React Native: 0.62.4 with expo SDK
 
-## New one
+## How to use
+
+```bash
+yarn
+react-native run-ios # react-native run-android
+```
+
+You can get more information from https://reactnative.cn/docs/getting-started.
+
+## Copy from this project
 
 If you copy the package.json from this project.
 
@@ -21,15 +30,9 @@ https://docs.expo.io/versions/latest/
 
 https://github.com/unimodules/react-native-unimodules
 
-### 2.Set react-native-vector-icons manually
-
-Not support autolinking in 6.6.0
+### 2.May you need set react-native-vector-icons manually
 
 https://github.com/oblador/react-native-vector-icons
-
-###
-
-https://www.npmjs.com/package/@react-native-community/progress-bar-android
 
 ### How to set splash Screen
 
@@ -43,13 +46,7 @@ Images.xcassets/LaunchScreen.imageset & Baase.lproj/LaunchScreen.xib
 
 ## Q&A
 
-Make sure you had build your environment for react-native.
-
-https://reactnative.cn/docs/getting-started
-
-```bash
-yarn
-```
+### 1.Pod: CDN: trunk Repo update failed
 
 Run pod install in ./ios
 ```bash
