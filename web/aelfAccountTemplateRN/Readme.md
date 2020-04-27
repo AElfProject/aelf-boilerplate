@@ -2,6 +2,8 @@
 
 React Native: 0.62.4 with expo SDK
 
+AccountTemplate is separated from a third-party project for aelf.
+
 ## How to use
 
 ```bash
@@ -34,6 +36,12 @@ https://github.com/unimodules/react-native-unimodules
 
 https://github.com/oblador/react-native-vector-icons
 
+### 3. face id
+
+https://github.com/naoufal/react-native-touch-id
+
+Todo: use https://www.npmjs.com/package/expo-local-authentication
+
 ### How to set splash Screen
 
 https://github.com/crazycodeboy/react-native-splash-screen
@@ -43,6 +51,10 @@ Tip: iOS, please check
 ```bash
 Images.xcassets/LaunchScreen.imageset & Baase.lproj/LaunchScreen.xib
 ```
+
+## If you want run in your phone
+
+iOS, please config Signing & Capabilities in xCode.
 
 ## Q&A
 

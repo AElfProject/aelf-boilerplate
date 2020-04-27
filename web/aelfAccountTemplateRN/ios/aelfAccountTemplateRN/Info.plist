@@ -79,5 +79,7 @@
     <string>This app needs to access your album function to login your account with the QR code picture in your album</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>This app needs to access your album function to login your account with the QR code picture in your album</string>
+    <key>NSFaceIDUsageDescription</key>
+    <string>Enabling Face ID allows you quick and secure access to your account.</string>
 </dict>
 </plist>

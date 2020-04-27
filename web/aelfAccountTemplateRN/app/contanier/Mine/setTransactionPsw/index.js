@@ -102,7 +102,7 @@ export default class SetTransactionPsw extends React.Component {
                         leftText={"Yes"}
                         leftFunc={() => { this.openTouch() }}
                     />
-                )
+                );
             case "tipTransactionPsw":
                 return (
                     <View>
