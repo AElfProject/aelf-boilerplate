@@ -51,7 +51,6 @@ Task("Build")
 Task("Pack")
     .IsDependentOn("Build")
     .Does(() =>
-<<<<<<< HEAD
     {
         var versionPrefix = EnvironmentVariable("MYGET_VERSION_PREFIX");
         var buildVersion = (DateTime.UtcNow.Ticks - 621355968000000000) / 10000000 / 86400;
@@ -62,7 +61,6 @@ Task("Pack")
             NoRestore = true,
             ArgumentCustomization = args => {
               return args.Append("/clp:ErrorsOnly")
-=======
 {   var versionPrefix = EnvironmentVariable("MYGET_VERSION_PREFIX");
     var buildVersion = (DateTime.UtcNow.Ticks - 621355968000000000) / 10000000 / 86400;
     var buildSetting = new DotNetCoreBuildSettings{
@@ -70,7 +68,6 @@ Task("Pack")
         Configuration = configuration,
         ArgumentCustomization = args => {                   
             return args.Append("/clp:ErrorsOnly")                 
->>>>>>> afba7548d34b5e859827fffa78f15d5dc5e6642b
                        .Append("-v quiet")
                        .Append($"-P:Version={versionPrefix}-{buildVersion}")
                        .Append("-P:Authors=AElf")
@@ -102,7 +99,7 @@ Task("Run-Unit-Tests")
     }
 });
 Task("Publish-MyGet")
-    .IsDependentOn("Build-Release")
+    .IsDependentOn("Build")
     .Does(() => {
         var apiKey = EnvironmentVariable("MYGET_API_KEY");
         var pushSettings = new DotNetCoreNuGetPushSettings 
