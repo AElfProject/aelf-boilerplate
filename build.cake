@@ -1,4 +1,5 @@
 var target = Argument("target", "Default");
+var configuration = Argument("configuration", "Debug");
 var rootPath     = "./";
 var srcPath      = rootPath + "chain/src/";
 var contractPath = rootPath + "chain/contract/";
@@ -46,7 +47,27 @@ Task("Build")
      
     DotNetCoreBuild(solution, buildSetting);
 });
-
+Task("Build-Release")
+    .Description("Compilation project")
+    .IsDependentOn("Clean")
+    .IsDependentOn("Restore")
+    .Does(() =>
+{   var versionPrefix = EnvironmentVariable("MYGET_VERSION_PREFIX");
+    var buildVersion = (DateTime.UtcNow.Ticks - 621355968000000000) / 10000000 / 86400;
+    var buildSetting = new DotNetCoreBuildSettings{
+        NoRestore = true,
+        Configuration = "Release",
+        ArgumentCustomization = args => {                   
+            return args.Append("/clp:ErrorsOnly")                 
+                       .Append("-v quiet")
+                       .Append($"-P:Version={versionPrefix}-{buildVersion}")
+                       .Append("-P:Authors=AElf")
+                       .Append("-o ./nuget")
+;}      
+    };      
+     
+    DotNetCoreBuild(solution, buildSetting);
+});
 
 Task("Run-Unit-Tests")
     .Description("operation test")
@@ -68,6 +89,23 @@ Task("Run-Unit-Tests")
         DotNetCoreTest(testProject.FullPath, testSetting);
     }
 });
+Task("Publish-MyGet")
+    .IsDependentOn("Build-Release")
+    .Does(() => {
+        var apiKey = EnvironmentVariable("MYGET_API_KEY");
+        var pushSettings = new DotNetCoreNuGetPushSettings 
+        {
+            Source = "https://www.myget.org/F/aelf-project-dev/api/v3/index.json",
+            ApiKey = apiKey
+
+        };
+
+        var pkgs = GetFiles("./nuget/*.nupkg");
+        foreach(var pkg in pkgs) 
+        {
+                Information($"Publishing \"{pkg}\".");
+        }
+    });
 Task("Default")
     .IsDependentOn("Run-Unit-Tests");
 
