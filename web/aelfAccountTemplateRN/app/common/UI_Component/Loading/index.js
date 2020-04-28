@@ -4,7 +4,11 @@ import {
     Modal,
     StyleSheet
 } from 'react-native';
-import { ProgressBarAndroid } from '@react-native-community/progress-bar-android';
+// import ProgressBarAndroid from '../ProgressBarAndroid';
+// hava not remove ProgressBarAndroid in 0.62.4 yet. If import the community version,
+// It will throw `register two views with the same name`;
+// import { ProgressBarAndroid } from '@react-native-community/progress-bar-android';
+import { ProgressBarAndroid } from 'react-native';
 
 export default class Loading extends Component {
     // 构造
