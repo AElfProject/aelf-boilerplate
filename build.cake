@@ -39,8 +39,8 @@ Task("Build")
     .Does(() =>
 {
     var buildSetting = new DotNetCoreBuildSettings{
-        Configuration = configuration,
         NoRestore = true,
+        Configuration = configuration,
         ArgumentCustomization = args => {
             return args.Append("/clp:ErrorsOnly")
                        .Append("-v quiet");}
@@ -48,19 +48,11 @@ Task("Build")
      
     DotNetCoreBuild(solution, buildSetting);
 });
-Task("Pack")
-    .IsDependentOn("Build")
+Task("Build-Release")
+    .Description("Compilation project")
+    .IsDependentOn("Clean")
+    .IsDependentOn("Restore")
     .Does(() =>
-    {
-        var versionPrefix = EnvironmentVariable("MYGET_VERSION_PREFIX");
-        var buildVersion = (DateTime.UtcNow.Ticks - 621355968000000000) / 10000000 / 86400;
-        var settings = new DotNetCorePackSettings
-        {
-            Configuration = configuration,
-            NoBuild = true,
-            NoRestore = true,
-            ArgumentCustomization = args => {
-              return args.Append("/clp:ErrorsOnly")
 {   var versionPrefix = EnvironmentVariable("MYGET_VERSION_PREFIX");
     var buildVersion = (DateTime.UtcNow.Ticks - 621355968000000000) / 10000000 / 86400;
     var buildSetting = new DotNetCoreBuildSettings{
@@ -71,12 +63,12 @@ Task("Pack")
                        .Append("-v quiet")
                        .Append($"-P:Version={versionPrefix}-{buildVersion}")
                        .Append("-P:Authors=AElf")
-                       .Append("-o ./nuget");}
-         };
-        GetFiles("./chain/*/*/*.csproj")
-            .ToList()
-            .ForEach(f => DotNetCorePack(f.FullPath, settings));
-    });
+                       .Append("-o ./nuget")
+;}      
+    };      
+     
+    DotNetCoreBuild(solution, buildSetting);
+});
 
 Task("Run-Unit-Tests")
     .Description("operation test")
@@ -99,7 +91,7 @@ Task("Run-Unit-Tests")
     }
 });
 Task("Publish-MyGet")
-    .IsDependentOn("Build")
+    .IsDependentOn("Build-Release")
     .Does(() => {
         var apiKey = EnvironmentVariable("MYGET_API_KEY");
         var pushSettings = new DotNetCoreNuGetPushSettings 
