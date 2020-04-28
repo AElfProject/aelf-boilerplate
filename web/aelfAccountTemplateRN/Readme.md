@@ -11,7 +11,15 @@ yarn
 react-native run-ios # react-native run-android
 ```
 
-You can get more information from https://reactnative.cn/docs/getting-started.
+FYI: https://reactnative.cn/docs/getting-started.
+
+## How to run on device
+
+https://reactnative.dev/docs/running-on-device
+
+## How to publish
+
+Please refer to IOS Android compilation and packaging tutorial
 
 ## Copy from this project
 
