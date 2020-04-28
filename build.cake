@@ -56,7 +56,7 @@ Task("Build-Release")
     var buildVersion = (DateTime.UtcNow.Ticks - 621355968000000000) / 10000000 / 86400;
     var buildSetting = new DotNetCoreBuildSettings{
         NoRestore = true,
-        Configuration = "Release",
+        Configuration = configuration,
         ArgumentCustomization = args => {                   
             return args.Append("/clp:ErrorsOnly")                 
                        .Append("-v quiet")
