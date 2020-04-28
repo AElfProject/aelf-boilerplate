@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using AElf.Contracts.Deployer;
+using AElf.Boilerplate.ContractDeployer;
 using AElf.Kernel.Account.Application;
 using AElf.Kernel.Consensus.AEDPoS;
 using AElf.Kernel.SmartContract.Application;

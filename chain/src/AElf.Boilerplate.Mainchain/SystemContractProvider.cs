@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AElf.Contracts.Deployer;
+using AElf.Boilerplate.ContractDeployer;
 
 namespace AElf.Boilerplate.MainChain
 {

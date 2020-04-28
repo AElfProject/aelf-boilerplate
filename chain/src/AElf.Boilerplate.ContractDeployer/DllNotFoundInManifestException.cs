@@ -1,6 +1,6 @@
 using System;
 
-namespace AElf.Contracts.Deployer
+namespace AElf.Boilerplate.ContractDeployer
 {
     public class DllNotFoundInManifestException : Exception
     {

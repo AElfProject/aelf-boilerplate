@@ -17,8 +17,8 @@
         <PackageReference Include="AElf.WebApp.Web" Version="1.0.0-preview2" />
         <PackageReference Include="AElf.OS" Version="1.0.0-preview2" />
         <PackageReference Include="AElf.Kernel.Token" Version="1.0.0-preview2" />
+        <ProjectReference Include="..\AElf.Boilerplate.ContractDeployer\AElf.Boilerplate.ContractDeployer.csproj" />
         <ProjectReference Include="..\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj" />
-        <ProjectReference Include="..\AElf.Contracts.Deployer\AElf.Contracts.Deployer.csproj" />
     </ItemGroup>
 
     <ItemGroup>

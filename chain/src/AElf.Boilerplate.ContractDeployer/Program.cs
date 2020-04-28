@@ -4,7 +4,7 @@ using System.IO;
 using AElf.CSharp.CodeOps;
 using CommandLine;
 
-namespace AElf.Contracts.Deployer
+namespace AElf.Boilerplate.ContractDeployer
 {
     class Program
     {
