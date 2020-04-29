@@ -108,9 +108,11 @@ https://developer.android.com/studio/intro/studio-config#setup-proxy
 // It will throw `register two views with the same name`;
 import { ProgressBarAndroid } from '@react-native-community/progress-bar-android';
 ```
+
 ## TODO
 
 1. Complete faceID module.
 2. Complete image scan in withdraw page.
-
-
+3. Interactive experience improvement
+    - account QR code in android
+    - button click in android

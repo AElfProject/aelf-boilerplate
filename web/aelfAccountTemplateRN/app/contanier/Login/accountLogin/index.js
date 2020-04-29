@@ -55,22 +55,22 @@ class MyAccountLogin extends Component {
     }
     //请求权限的方法
     async requestCameraPermission() {
-        if (Platform.OS === 'ios') {
-            return;
-        }
-        try {
-            await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.CAMERA,
-                {
-                    title: '申请摄像头权限',
-                    message:
-                        '登录需要使用您的摄像头' +
-                        '扫描您的二维码。',
-
-                    buttonNegative: '不行',
-                    buttonPositive: '好吧',
-                },
-            );
+        // if (Platform.OS === 'ios') {
+        //     return;
+        // }
+        // try {
+            // await PermissionsAndroid.request(
+            //     PermissionsAndroid.PERMISSIONS.CAMERA,
+            //     {
+            //         title: '申请摄像头权限',
+            //         message:
+            //             '登录需要使用您的摄像头' +
+            //             '扫描您的二维码。',
+            //
+            //         buttonNegative: '不行',
+            //         buttonPositive: '好吧',
+            //     },
+            // );
 
             // console.log('granted:', granted);
             // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -79,9 +79,9 @@ class MyAccountLogin extends Component {
                 //console.log('用户并不屌你');
                 // this.props.navigation.goBack()
             // }
-        } catch (err) {
-            console.warn(err);
-        }
+        // } catch (err) {
+        //     console.warn(err);
+        // }
     }
     goRouter(router, params) {
         navigationService.navigate(router, {
@@ -91,7 +91,7 @@ class MyAccountLogin extends Component {
     rightElement() {
         return (
             <TouchableOpacity onPress={() => this.usePhotoAlbum()}>
-                <TextM>相册</TextM>
+                <TextM>Album</TextM>
             </TouchableOpacity>
         )
     }
@@ -176,6 +176,12 @@ class MyAccountLogin extends Component {
                 type={RNCamera.Constants.Type.back}/*切换前后摄像头 front前back后*/
                 flashMode={RNCamera.Constants.FlashMode.off}/*相机闪光模式*/
                 onBarCodeRead={this.onBarCodeRead}
+                androidCameraPermissionOptions={{
+                    title: 'Permission to use camera',
+                    message: 'We need your permission to use your camera',
+                    buttonPositive: 'Ok',
+                    buttonNegative: 'Cancel',
+                }}
             >
                 <View style={{
                     width: 500,
@@ -195,7 +201,7 @@ class MyAccountLogin extends Component {
                 </View>
 
                 <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', width: 500, alignItems: 'center' }}>
-                    <Text style={styles.rectangleText}>将二维码放入框内，即可自动扫描</Text>
+                    <Text style={styles.rectangleText}>Scan the QR code</Text>
                 </View>
             </RNCamera>
         )
@@ -286,11 +292,11 @@ class MyAccountLogin extends Component {
                             secureTextEntry={true}
                             onChangeText={(text) => this.onChangeText(text)}
                             style={styles.inputStyle}
-                            placeholder="请输入登陆密码" />
+                            placeholder="Please input login password" />
 
                         <View style={{ justifyContent: "center", alignItems: "center", marginBottom: pTd(80) }}>
                             <Button
-                                title="确认登陆"
+                                title="Confirm"
                                 onPress={async () => {
                                     this.showLoading().then(res=>{
                                         this.accountLogin().then((res)=>{
@@ -336,7 +342,7 @@ class MyAccountLogin extends Component {
         const { enterAccount, modalVisible } = this.state;
         return (
             <View style={Gstyle.container}>
-                {!enterAccount && <CommonHeader canBack title="登陆账号" rightElement={this.rightElement()} />}
+                {!enterAccount && <CommonHeader canBack title="LOGIN" rightElement={this.rightElement()} />}
                 {
                     enterAccount ? (
                         this.enterPsw()
