@@ -105,6 +105,7 @@ Task("Publish-MyGet")
         foreach(var pkg in pkgs) 
         {
                 Information($"Publishing \"{pkg}\".");
+                DotNetCoreNuGetPush(pkg.FullPath, pushSettings);
         }
     });
 Task("Default")
