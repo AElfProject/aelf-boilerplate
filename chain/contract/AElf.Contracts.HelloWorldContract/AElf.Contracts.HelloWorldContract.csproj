@@ -3,7 +3,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <!-- The root namespace -->
     <RootNamespace>AElf.Contracts.HelloWorldContract</RootNamespace>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!-- Mark this project as a contract -->
     <IsContract>true</IsContract>
   </PropertyGroup>

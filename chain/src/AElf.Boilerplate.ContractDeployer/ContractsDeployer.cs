@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace AElf.Contracts.Deployer
+namespace AElf.Boilerplate.ContractDeployer
 {
     public class ContractsDeployer
     {

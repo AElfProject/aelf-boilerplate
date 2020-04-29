@@ -2,7 +2,7 @@
 using System.Linq;
 using AElf.Blockchains.MainChain;
 using AElf.Boilerplate.Tester;
-using AElf.Contracts.Deployer;
+using AElf.Boilerplate.ContractDeployer;
 using AElf.Contracts.Genesis;
 using AElf.Database;
 using AElf.EconomicSystem;
