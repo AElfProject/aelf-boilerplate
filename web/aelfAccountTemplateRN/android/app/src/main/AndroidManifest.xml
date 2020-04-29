@@ -7,10 +7,10 @@
     <!-- Required -->
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- Include this only if you are planning to use the camera roll -->
-<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
-<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- Include this only if you are planning to use the microphone for video recording -->
-<!--    <uses-permission android:name="android.permission.RECORD_AUDIO"/>-->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <application
       android:name=".MainApplication"
@@ -33,7 +33,7 @@
 
       <meta-data
         android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-        android:value="barcode" /> <!-- choose models that you will use -->
+        android:value="barcode" />
     </application>
 
 </manifest>

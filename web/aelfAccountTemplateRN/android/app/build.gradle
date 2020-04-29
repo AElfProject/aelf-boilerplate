@@ -138,9 +138,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-//        missingDimensionStrategy 'react-native-camera', 'mlkit'
-        // TODO:use mlkit throw error: Duplicate class
-        missingDimensionStrategy 'react-native-camera', 'general'
+        missingDimensionStrategy 'react-native-camera', 'mlkit'
+//        missingDimensionStrategy 'react-native-camera', 'general'
     }
     splits {
         abi {
@@ -170,6 +169,17 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+    configurations {
+        all {
+            // If you use `missingDimensionStrategy 'react-native-camera', 'mlkit'`
+            // Duplicate class com.google.android.gms.internal.vision.zzbm found in modules
+            // classes.jar (com.google.android.gms:play-services-vision-common:19.0.0)
+            // and classes.jar (com.google.firebase:firebase-ml-vision-face-model:17.0.2)
+            exclude group: "com.google.firebase", module: "firebase-ml-vision-face-model"
+        }
+    }
+
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
@@ -189,13 +199,13 @@ android {
 apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
 
 dependencies {
-    addUnimodulesDependencies()
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.facebook.react:react-native:+"  // From node_modules
     // add the Firebase SDK for Google Analytics
     implementation 'com.google.firebase:firebase-analytics:17.4.0'
     // add SDKs for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.facebook.react:react-native:+"  // From node_modules
+    addUnimodulesDependencies()
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
