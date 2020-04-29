@@ -21,6 +21,10 @@
         <ProjectReference Include="..\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj" />
     </ItemGroup>
 
+    <PropertyGroup>
+        <NoWarn>0436</NoWarn>
+    </PropertyGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\..\contract\AElf.Contracts.GreeterContract\AElf.Contracts.GreeterContract.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

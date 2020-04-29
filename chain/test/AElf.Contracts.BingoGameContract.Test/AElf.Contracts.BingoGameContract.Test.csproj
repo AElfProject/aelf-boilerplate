@@ -4,6 +4,9 @@
     <IsPackable>false</IsPackable>
     <RootNamespace>BingoGameContract.Test</RootNamespace>
   </PropertyGroup>
+  <PropertyGroup>
+    <NoWarn>0436</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="1.0.0-preview2" />
     <PackageReference Include="AElf.Contracts.TestKit" Version="1.0.0-preview2" />
