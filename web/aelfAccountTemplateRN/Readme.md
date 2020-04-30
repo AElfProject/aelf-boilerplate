@@ -17,9 +17,11 @@ react-native run-ios # react-native run-android
 
 https://reactnative.dev/docs/running-on-device
 
+`iOS: please config Signing & Capabilities in xCode.`
+
 ## How to publish
 
-Please refer to IOS Android compilation and packaging tutorial
+Please refer to iOS Android compilation and packaging tutorial
 
 ## Copy from this project
 
@@ -79,9 +81,19 @@ Tips:
 
 - Android: You need register your app in Firebase console
 
-## If you want run in your phone
+### 7.others
 
-iOS, please config Signing & Capabilities in xCode.
+Please check the components you use.
+
+## Package
+
+### Android APK
+
+FYI: https://reactnative.dev/docs/signed-apk-android#generating-the-release-apk
+
+We set a default keystore for you in android/app/src
+
+`#file: aelf-template-key.keystore  #password: loveaelf`
 
 ## Q&A
 

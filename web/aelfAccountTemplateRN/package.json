@@ -7,14 +7,14 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build:android": "cd android/ && ./gradlew assembleRelease"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.7.1",
     "@react-native-community/cameraroll": "^1.5.2",
     "@react-native-community/clipboard": "^1.2.2",
     "@react-native-community/netinfo": "^2.0.10",
-    "@react-native-community/progress-bar-android": "^1.0.1",
     "aelf-sdk": "^3.2.26",
     "big-number": "^2.0.0",
     "expo-barcode-scanner": "^8.1.0",
@@ -22,7 +22,7 @@
     "moment": "^2.24.0",
     "react": "16.11.0",
     "react-native": "0.62.2",
-    "react-native-camera": "^2.10.2",
+    "react-native-camera": "^3.23.1",
     "react-native-device-info": "^2.3.2",
     "react-native-elements": "^1.2.7",
     "react-native-fs": "^2.13.3",
@@ -31,7 +31,6 @@
     "react-native-gifted-form": "^0.1.1",
     "react-native-image-crop-picker": "^0.28.0",
     "react-native-password-pay": "^1.0.5",
-    "react-native-picker": "^4.3.7",
     "react-native-qrcode-svg": "^6.0.3",
     "react-native-render-html": "^4.1.2",
     "react-native-root-siblings": "^4.0.6",
