@@ -5,35 +5,42 @@ using System.Reflection;
 
 namespace AElf.Boilerplate.ContractDeployer
 {
-    public class ContractsDeployer
+    public class ContractDeployer
     {
         private readonly ISystemContractProvider _systemContractProvider;
 
-        public ContractsDeployer(ISystemContractProvider systemContractProvider)
+        public ContractDeployer(ISystemContractProvider systemContractProvider)
         {
             _systemContractProvider = systemContractProvider;
         }
 
-        public IReadOnlyDictionary<string, byte[]> GetContractCodes<T>()
+        public IReadOnlyDictionary<string, byte[]> GetContractCodes<T>(string contractDir = null,
+            bool isPatched = false)
         {
             var contractNames = GetContractNames(typeof(T).Assembly).ToList();
             if (contractNames.Count == 0)
             {
-                throw new DllNotFoundInManifestException();
+                throw new NoContractDllFoundInManifestException();
             }
 
-            var codes = contractNames.Select(n => (n, GetCode(n))).ToDictionary(x => x.Item1, x => x.Item2);
+            var codes = contractNames.Select(n => (n, GetCode(n, contractDir, isPatched)))
+                .ToDictionary(x => x.Item1, x => x.Item2);
             foreach (var systemContractDllPath in _systemContractProvider.GetSystemContractDllPaths())
             {
                 codes.Add(Path.GetFileNameWithoutExtension(systemContractDllPath),
                     File.ReadAllBytes(Assembly.LoadFile(systemContractDllPath).Location));
             }
+
             return codes;
         }
 
-        private static byte[] GetCode(string dllName)
+        private static byte[] GetCode(string dllName, string contractDir, bool isPatched)
         {
-            return File.ReadAllBytes(Assembly.Load(dllName).Location);
+            var dllPath = Directory.Exists(contractDir)
+                ? Path.Combine(contractDir, isPatched ? $"{dllName}.dll.patched" : $"{dllName}.dll")
+                : Assembly.Load(dllName).Location;
+
+            return File.ReadAllBytes(dllPath);
         }
 
         private static IEnumerable<string> GetContractNames(Assembly assembly)
@@ -41,17 +48,15 @@ namespace AElf.Boilerplate.ContractDeployer
             var manifestName = "Contracts.manifest";
 
             var resourceName = assembly.GetManifestResourceNames().FirstOrDefault(n => n.EndsWith(manifestName));
-            if (resourceName == default(string))
+            if (resourceName == default)
             {
                 return new string[0];
             }
 
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            using (var reader = new StreamReader(stream))
-            {
-                var result = reader.ReadToEnd();
-                return result.Trim().Split('\n').Select(f => f.Trim()).ToArray();
-            }
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            using var reader = new StreamReader(stream);
+            var result = reader.ReadToEnd();
+            return result.Trim().Split('\n').Select(f => f.Trim()).ToArray();
         }
     }
 }
