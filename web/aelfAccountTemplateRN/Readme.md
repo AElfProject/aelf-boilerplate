@@ -4,7 +4,7 @@ React Native: 0.62.4 with expo SDK
 
 AccountTemplate is separated from a third-party project for aelf.
 
-## How to use
+## 1.How to dev
 
 Follow this doc: https://reactnative.cn/docs/getting-started.
 
@@ -13,17 +13,13 @@ yarn
 react-native run-ios # react-native run-android
 ```
 
-## How to run on device
+## 2.How to run on device
 
 https://reactnative.dev/docs/running-on-device
 
 `iOS: please config Signing & Capabilities in xCode.`
 
-## How to publish
-
-Please refer to iOS Android compilation and packaging tutorial
-
-## Copy from this project
+## 3.Copy from this project
 
 If you copy the package.json from this project.
 
@@ -35,31 +31,31 @@ FYI MainApplication.java android/settings.gradle android/app/build.gradle androi
 # You can get more information of config from the different components docs of this project.
 ```
 
-### 0.Check the version of Expo
+### 3.1.Check the version of Expo
 
 Each Expo SDK version depends on a React Native version 
 
 https://docs.expo.io/versions/latest/
 
-### 1.Config react-native-unimodules iOS & Android
+### 3.2.Config react-native-unimodules iOS & Android
 
 https://github.com/unimodules/react-native-unimodules
 
-### 2.May you need set react-native-vector-icons manually iOS & Android
+### 3.3.May you need set react-native-vector-icons manually iOS & Android
 
 https://github.com/oblador/react-native-vector-icons
 
-### 3. face id  iOS & Android
+### 3.4. face id  iOS & Android
 
 https://github.com/naoufal/react-native-touch-id
 
 Todo: use https://www.npmjs.com/package/expo-local-authentication
 
-### 4. react-native-image-crop-picker
+### 3.5. react-native-image-crop-picker
 
 https://www.npmjs.com/package/react-native-image-crop-picker
 
-### 5.How to set splash Screen iOS & Android
+### 3.6.How to set splash Screen iOS & Android
 
 https://github.com/crazycodeboy/react-native-splash-screen
 
@@ -69,7 +65,7 @@ Tip: iOS, please check
 Images.xcassets/LaunchScreen.imageset & Baase.lproj/LaunchScreen.xib
 ```
 
-### 6.react-native-camera iOS & Android
+### 3.7.react-native-camera iOS & Android
 
 https://react-native-community.github.io/react-native-camera/docs/installation.html
 
@@ -81,11 +77,11 @@ Tips:
 
 - Android: You need register your app in Firebase console
 
-### 7.others
+### 3.8.others
 
 Please check the components you use.
 
-## Package
+## 4.Package && Production && Publish
 
 ### Android APK
 
@@ -95,7 +91,15 @@ We set a default keystore for you in android/app/src
 
 `#file: aelf-template-key.keystore  #password: loveaelf`
 
-## Q&A
+### iOS ipa
+
+https://wiki.genexus.com/commwiki/servlet/wiki?34616,HowTo%3A+Create+an+.ipa+file+from+XCode
+
+## 5.Continuous integration
+
+FYI: https://www.betaqr.com 
+
+## 6.Q&A
 
 ### 1.iOS: pod, CDN: trunk Repo update failed
 
