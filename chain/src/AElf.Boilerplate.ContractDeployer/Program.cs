@@ -4,7 +4,7 @@ using System.IO;
 using AElf.CSharp.CodeOps;
 using CommandLine;
 
-namespace AElf.Boilerplate.ContractDeployer
+namespace AElf.Contracts.Deployer
 {
     class Program
     {
@@ -70,7 +70,7 @@ namespace AElf.Boilerplate.ContractDeployer
                         // Print error in parsable format so that it can be shown in IDE
                         Console.WriteLine($"error: {finding.ToString()}");
                     }
-                }  
+                }
             }
 
             File.WriteAllBytes(saveAsPath, patchedCode);

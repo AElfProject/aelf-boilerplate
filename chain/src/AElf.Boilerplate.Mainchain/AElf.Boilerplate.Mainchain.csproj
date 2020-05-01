@@ -4,22 +4,15 @@
         <RootNamespace>AElf.Boilerplate.MainChain</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="AElf.EconomicSystem" Version="1.0.0-preview2" />
-        <PackageReference Include="AElf.GovernmentSystem" Version="1.0.0-preview2" />
-        <PackageReference Include="AElf.Contracts.Genesis" Version="1.0.0-preview2" />
-        <PackageReference Include="AElf.Sdk.CSharp" Version="1.0.0-preview2" />
-        <PackageReference Include="AElf.CrossChain.Grpc" Version="1.0.0-preview2" />
-        <PackageReference Include="AElf.Kernel.Consensus.AEDPoS" Version="1.0.0-preview2" />
-        <PackageReference Include="AElf.Kernel.SmartContract.Parallel" Version="1.0.0-preview2" />
-        <PackageReference Include="AElf.Kernel.Token" Version="1.0.0-preview2" />
-        <PackageReference Include="AElf.Runtime.CSharp" Version="1.0.0-preview2" />
-        <PackageReference Include="AElf.RuntimeSetup" Version="1.0.0-preview2" />
-        <PackageReference Include="AElf.WebApp.Web" Version="1.0.0-preview2" />
-        <PackageReference Include="AElf.OS" Version="1.0.0-preview2" />
+        <PackageReference Include="AElf.Blockchains.BasicBaseChain" Version="1.0.0-preview2" />
         <PackageReference Include="AElf.Kernel.Token" Version="1.0.0-preview2" />
         <ProjectReference Include="..\AElf.Boilerplate.ContractDeployer\AElf.Boilerplate.ContractDeployer.csproj" />
         <ProjectReference Include="..\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj" />
     </ItemGroup>
+
+    <PropertyGroup>
+        <NoWarn>0436</NoWarn>
+    </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\contract\AElf.Contracts.GreeterContract\AElf.Contracts.GreeterContract.csproj">
@@ -45,50 +38,98 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="AElf.Contracts.Configuration" Version="1.0.0-preview2">
+        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
         <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="1.0.0-preview2">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
+        <PackageReference Include="AElf.Contracts.CrossChain" Version="1.0.0-preview2">
+        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
         <PackageReference Include="AElf.Contracts.Election" Version="1.0.0-preview2">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
         <PackageReference Include="AElf.Contracts.Profit" Version="1.0.0-preview2">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-            <OutputItemType>Contract</OutputItemType>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </PackageReference>
-        <PackageReference Include="AElf.Contracts.Vote" Version="1.0.0-preview2">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
         <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-preview2">
+        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
+        <PackageReference Include="AElf.Contracts.Parliament" Version="1.0.0-preview2">
+        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
+        <PackageReference Include="AElf.Contracts.Vote" Version="1.0.0-preview2">
+        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
+        <PackageReference Include="AElf.Contracts.TokenConverter" Version="1.0.0-preview2">
+        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
+        <PackageReference Include="AElf.Contracts.Treasury" Version="1.0.0-preview2">
+        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
+        <PackageReference Include="AElf.Contracts.Economic" Version="1.0.0-preview2">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
-        <PackageReference Include="AElf.Contracts.Configuration" Version="1.0.0-preview2">
+        <PackageReference Include="AElf.Contracts.Referendum" Version="1.0.0-preview2">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
+        <PackageReference Include="AElf.Contracts.Association" Version="1.0.0-preview2">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PackageReference>
+        <PackageReference Include="AElf.Contracts.TokenHolder" Version="1.0.0-preview2">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
     </ItemGroup>
-
     <ItemGroup>
-        <ContractMessage Include="..\..\protobuf\acs1.proto">
-            <Link>Protobuf\Proto\acs1.proto</Link>
-        </ContractMessage>
         <ContractMessage Include="..\..\protobuf\acs3.proto">
             <Link>Protobuf\Proto\acs3.proto</Link>
         </ContractMessage>
+        <ContractStub Include="..\..\protobuf\acs1.proto">
+            <Link>Protobuf\Proto\acs1.proto</Link>
+        </ContractStub>
         <ContractStub Include="..\..\protobuf\acs4.proto">
             <Link>Protobuf\Proto\acs4.proto</Link>
         </ContractStub>
+        <ContractStub Include="..\..\protobuf\acs5.proto">
+            <Link>Protobuf\Proto\acs5.proto</Link>
+        </ContractStub>
         <ContractStub Include="..\..\protobuf\acs6.proto">
             <Link>Protobuf\Proto\acs6.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\acs7.proto">
+            <Link>Protobuf\Proto\acs7.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\acs10.proto">
+            <Link>Protobuf\Proto\acs10.proto</Link>
         </ContractStub>
         <ContractStub Include="..\..\protobuf\aedpos_contract.proto">
             <Link>Protobuf\Proto\aedpos_contract.proto</Link>
@@ -96,11 +137,17 @@
         <ContractStub Include="..\..\protobuf\aedpos_contract_impl.proto">
             <Link>Protobuf\Proto\aedpos_contract_impl.proto</Link>
         </ContractStub>
+        <ContractStub Include="..\..\protobuf\cross_chain_contract.proto">
+            <Link>Protobuf\Proto\cross_chain_contract.proto</Link>
+        </ContractStub>
         <ContractStub Include="..\..\protobuf\profit_contract.proto">
             <Link>Protobuf\Proto\profit_contract.proto</Link>
         </ContractStub>
         <ContractStub Include="..\..\protobuf\election_contract.proto">
             <Link>Protobuf\Proto\election_contract.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\parliament_contract.proto">
+            <Link>Protobuf\Proto\parliament_contract.proto</Link>
         </ContractStub>
         <ContractStub Include="..\..\protobuf\token_contract.proto">
             <Link>Protobuf\Proto\token_contract.proto</Link>
@@ -108,17 +155,23 @@
         <ContractStub Include="..\..\protobuf\vote_contract.proto">
             <Link>Protobuf\Proto\vote_contract.proto</Link>
         </ContractStub>
-        <ContractStub Include="..\..\protobuf\bingo_game_contract.proto">
-            <Link>Protobuf\Proto\bingo_game_contract.proto</Link>
+        <ContractStub Include="..\..\protobuf\treasury_contract.proto">
+            <Link>Protobuf\Proto\treasury_contract.proto</Link>
         </ContractStub>
-        <ContractStub Include="..\..\protobuf\hello_world_contract.proto">
-            <Link>Protobuf\Proto\hello_world_contract.proto</Link>
+        <ContractStub Include="..\..\protobuf\token_converter_contract.proto">
+            <Link>Protobuf\Proto\token_converter_contract.proto</Link>
         </ContractStub>
-        <ContractStub Include="..\..\protobuf\lottery_demo_contract.proto">
-            <Link>Protobuf\Proto\lottery_demo_contract.proto</Link>
+        <ContractStub Include="..\..\protobuf\economic_contract.proto">
+            <Link>Protobuf\Proto\economic_contract.proto</Link>
         </ContractStub>
-        <ContractStub Include="..\..\protobuf\greeter_contract.proto">
-            <Link>Protobuf\Proto\greeter_contract.proto</Link>
+        <ContractStub Include="..\..\protobuf\referendum_contract.proto">
+            <Link>Protobuf\Proto\referendum_contract.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\association_contract.proto">
+            <Link>Protobuf\Proto\association_contract.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\configuration_contract.proto">
+            <Link>Protobuf\Proto\configuration_contract.proto</Link>
         </ContractStub>
     </ItemGroup>
 </Project>
