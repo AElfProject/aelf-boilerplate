@@ -24,7 +24,7 @@ namespace AElf.Boilerplate.MainChain
                 typeof(Contracts.Economic.EconomicContract),
                 typeof(Contracts.TokenHolder.TokenHolderContract),
                 typeof(Contracts.TokenConverter.TokenConverterContract),
-                typeof(Contracts.CrossChain.CrossChainContract),
+                typeof(Contracts.CrossChain.CrossChainContract)
             }.Select(t => t.Assembly.Location).ToList();
         }
     }
