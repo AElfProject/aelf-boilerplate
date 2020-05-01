@@ -4,6 +4,9 @@ using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.ACS1DemoContract
 {
+    /// <summary>
+    /// ACS1 can only used by system contracts.
+    /// </summary>
     public class ACS1DemoContract : ACS1DemoContractContainer.ACS1DemoContractBase
     {
         public override Empty ChangeMethodFeeController(AuthorityInfo input)

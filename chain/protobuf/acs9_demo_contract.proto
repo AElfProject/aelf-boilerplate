@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "acs9.proto";
+
+option csharp_namespace = "AElf.Contracts.ACS9DemoContract";
+
+service ACS9DemoContract {
+    option (aelf.csharp_state) = "AElf.Contracts.ACS9DemoContract.ACS9DemoContractState";
+    option (aelf.base) = "acs9.proto";
+}
