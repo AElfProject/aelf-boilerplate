@@ -7,8 +7,17 @@
     
     <ItemGroup>
         <ContractBase Include="..\..\protobuf\acs8.proto">
-            <Link>Protobuf\Proto\reference\acs8.proto</Link>
+            <Link>Protobuf\Proto\base\acs8.proto</Link>
         </ContractBase>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ContractReference Include="..\..\protobuf\token_converter_contract.proto">
+            <Link>Protobuf\Proto\reference\token_converter_contract.proto</Link>
+        </ContractReference>
+        <ContractReference Include="..\..\protobuf\acs1.proto">
+            <Link>Protobuf\Proto\reference\acs1.proto</Link>
+        </ContractReference>
     </ItemGroup>
 
     <ItemGroup>

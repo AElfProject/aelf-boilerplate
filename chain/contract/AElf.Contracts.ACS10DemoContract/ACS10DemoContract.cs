@@ -9,6 +9,5 @@ namespace AElf.Contracts.ACS10DemoContract
     /// </summary>
     public class ACS10DemoContract : ACS10DemoContractContainer.ACS10DemoContractBase
     {
-        
     }
 }
