@@ -99,6 +99,13 @@ https://wiki.genexus.com/commwiki/servlet/wiki?34616,HowTo%3A+Create+an+.ipa+fil
 
 FYI: https://www.betaqr.com 
 
+Integrate fastlane & firim
+
+```bash
+# after set your faslane & firim
+cd android && fastlane fir_im
+```
+
 ## 6.Q&A
 
 ### 1.iOS: pod, CDN: trunk Repo update failed
