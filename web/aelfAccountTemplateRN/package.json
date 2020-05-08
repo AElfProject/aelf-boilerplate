@@ -9,7 +9,9 @@
     "test": "jest",
     "lint": "eslint .",
     "build:android": "cd android/ && ./gradlew assembleRelease",
-    "firim:android": "cd android/ && fastlane fir_im"
+    "firim:android": "cd android/ && fastlane fir_im",
+    "firim:ios": "cd ios/ && fastlane fir_im",
+    "firim": "npm run firim:android && npm run firim:ios"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.7.1",
