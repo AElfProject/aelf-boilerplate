@@ -21,9 +21,9 @@ or alternatively using `brew cask install fastlane`
 fastlane ios release
 ```
 Push a new release build to the App Store
-### ios firim
+### ios fir_im
 ```
-fastlane ios firim
+fastlane ios fir_im
 ```
 Push a new release build to the firm
 
