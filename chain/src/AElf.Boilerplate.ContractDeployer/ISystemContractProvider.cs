@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace AElf.Contracts.Deployer
+namespace AElf.Boilerplate.ContractDeployer
 {
     public interface ISystemContractProvider
     {

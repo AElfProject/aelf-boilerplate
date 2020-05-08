@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AElf.Contracts.Deployer;
+using AElf.Boilerplate.ContractDeployer;
 
 namespace AElf.Boilerplate.MainChain
 {
@@ -16,7 +16,15 @@ namespace AElf.Boilerplate.MainChain
                 typeof(Contracts.Election.ElectionContract),
                 typeof(Contracts.Consensus.AEDPoS.AEDPoSContract),
                 typeof(Contracts.MultiToken.TokenContract),
-                typeof(Contracts.Configuration.ConfigurationContract)
+                typeof(Contracts.Configuration.ConfigurationContract),
+                typeof(Contracts.Treasury.TreasuryContract),
+                typeof(Contracts.Parliament.ParliamentContract),
+                typeof(Contracts.Association.AssociationContract),
+                typeof(Contracts.Referendum.ReferendumContract),
+                typeof(Contracts.Economic.EconomicContract),
+                typeof(Contracts.TokenHolder.TokenHolderContract),
+                typeof(Contracts.TokenConverter.TokenConverterContract),
+                typeof(Contracts.CrossChain.CrossChainContract)
             }.Select(t => t.Assembly.Location).ToList();
         }
     }

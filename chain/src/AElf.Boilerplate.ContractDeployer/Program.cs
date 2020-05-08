@@ -70,7 +70,7 @@ namespace AElf.Contracts.Deployer
                         // Print error in parsable format so that it can be shown in IDE
                         Console.WriteLine($"error: {finding.ToString()}");
                     }
-                }  
+                }
             }
 
             File.WriteAllBytes(saveAsPath, patchedCode);

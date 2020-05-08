@@ -3,7 +3,7 @@
     <PropertyGroup>
         <ProtoBaseDir>..\..\protobuf</ProtoBaseDir>
         <PatcherDir>..\..\scripts\patcher</PatcherDir>
-        <PatcherProjectName>AElf.Contracts.Deployer</PatcherProjectName>
+        <PatcherProjectName>AElf.Boilerplate.ContractDeployer</PatcherProjectName>
     </PropertyGroup>
 
     <ItemGroup>

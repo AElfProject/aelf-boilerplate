@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <PackageId>AElf.Contracts.Deployer</PackageId>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>AElf.Boilerplate.ContractDeployer</PackageId>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <OutputType>Exe</OutputType>
         <Description>Smart contract deployer.</Description>
