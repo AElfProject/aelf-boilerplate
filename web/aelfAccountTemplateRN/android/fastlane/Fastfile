@@ -47,6 +47,11 @@ platform :android do
     # android.defaultConfig
 
     # update to fir.im
-    fir_cli api_token: "",  changelog: "Hello fir.im", dingtalk_access_token: ""
+    fir_cli(
+      api_token: "",
+      short: "anaelfaccountdemo",
+      changelog: "Hello fir.im",
+      dingtalk_access_token: "",
+    )
   end
 end

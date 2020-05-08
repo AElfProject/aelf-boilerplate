@@ -103,7 +103,8 @@ Integrate fastlane & firim
 
 ```bash
 # after set your faslane & firim
-cd android && fastlane fir_im
+# set api_token in android/fastlane/Fastfile
+npm run firmim:android
 ```
 
 ## 6.Q&A
