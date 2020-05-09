@@ -14,11 +14,20 @@ namespace AElf.Contracts.ACS9DemoContract
 {
     public class ACS9Test : ACS9DemoContractTestBase
     {
-        [Fact]
+        [Fact(Skip = "Need acs10 demo contract.")]
         public async Task Test()
         {
-            var keyPair = SampleECKeyPairs.KeyPairs[0];
+            var keyPair = UserKeyPairs[0];
+            var address = Address.FromPublicKey(keyPair.PublicKey);
             var acs8DemoContractStub = GetACS9DemoContractStub(keyPair);
+            
+            // Transfer some ELFs to user.
+            await TokenContractStub.Transfer.SendAsync(new TransferInput
+            {
+                To = address,
+                Symbol = "ELF",
+                Amount = 1000_00000000
+            });
 
             // Prepare stubs.
             var userTokenStub =
@@ -37,7 +46,7 @@ namespace AElf.Contracts.ACS9DemoContract
             // User has to Approve an amount of ELF tokens before deposit to the DApp.
             await userTokenStub.Approve.SendAsync(new ApproveInput
             {
-                Amount = 100_00000000,
+                Amount = 1000_00000000,
                 Spender = ACS9DemoContractAddress,
                 Symbol = "ELF"
             });
@@ -60,6 +69,13 @@ namespace AElf.Contracts.ACS9DemoContract
                 Amount = 57_00000000
             });
 
+            await userTokenStub.Approve.SendAsync(new ApproveInput
+            {
+                Amount = long.MaxValue,
+                Spender = ACS9DemoContractAddress,
+                Symbol = "APP"
+            });
+
             // User uses 10 times of this DApp. (APP -3)
             for (var i = 0; i < 10; i++)
             {
@@ -69,7 +85,7 @@ namespace AElf.Contracts.ACS9DemoContract
             // Now user has 50 APP tokens.
             (await GetFirstUserBalance("APP")).ShouldBe(50_00000000);
 
-            const long baseBalance = (long) (ACS9DemoContractTestConstants.NativeTokenTotalSupply * 0.1);
+            const long baseBalance = 0;
 
             {
                 var balance = await TokenContractStub.GetBalance.CallAsync(new GetBalanceInput

@@ -19,7 +19,7 @@ namespace AElf.Contracts.ACS9DemoContract
                     MethodName = nameof(ACS9DemoContract.Initialize),
                     Params = new InitializeInput
                     {
-                        ProfitReceiver = Address.FromPublicKey(SampleECKeyPairs.KeyPairs.Skip(2).First().PublicKey)
+                        ProfitReceiver = Address.FromPublicKey(SampleECKeyPairs.KeyPairs.Skip(3).First().PublicKey)
                     }.ToByteString()
                 }
             };
