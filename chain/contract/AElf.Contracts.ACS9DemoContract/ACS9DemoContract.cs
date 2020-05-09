@@ -82,7 +82,7 @@ namespace AElf.Contracts.ACS9DemoContract
             State.Symbol.Value = input.Symbol == string.Empty ? "APP" : input.Symbol;
             State.ProfitReceiver.Value = input.ProfitReceiver;
 
-            CreateToken(input.ProfitReceiver, true);
+            CreateToken(input.ProfitReceiver);
             // To test TokenHolder Contract.
             CreateTokenHolderProfitScheme();
             // To test ACS9 workflow.

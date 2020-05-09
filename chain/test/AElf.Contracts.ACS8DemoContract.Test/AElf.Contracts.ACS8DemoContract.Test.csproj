@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>AElf.Contracts.ACS1DemoContract</RootNamespace>
+        <RootNamespace>AElf.Contracts.ACS8DemoContract</RootNamespace>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
@@ -28,16 +28,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ContractStub Include="..\..\protobuf\acs1.proto">
-            <Link>Protobuf\Proto\acs1.proto</Link>
+        <ContractStub Include="..\..\protobuf\acs8.proto">
+            <Link>Protobuf\Proto\acs8.proto</Link>
         </ContractStub>
-        <ContractStub Include="..\..\protobuf\acs1_demo_contract.proto">
-            <Link>Protobuf\Proto\acs1_demo_contract.proto</Link>
+        <ContractStub Include="..\..\protobuf\acs8_demo_contract.proto">
+            <Link>Protobuf\Proto\acs8_demo_contract.proto</Link>
         </ContractStub>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\contract\AElf.Contracts.ACS1DemoContract\AElf.Contracts.ACS1DemoContract.csproj" />
+        <ProjectReference Include="..\..\contract\AElf.Contracts.ACS8DemoContract\AElf.Contracts.ACS8DemoContract.csproj" />
         <ProjectReference Include="..\..\src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj" />
     </ItemGroup>
 </Project>

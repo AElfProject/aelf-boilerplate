@@ -3,6 +3,7 @@ using System.Linq;
 using AElf.Boilerplate.ContractDeployer;
 using AElf.Contracts.TestKit;
 using AElf.ContractTestBase;
+using AElf.Kernel.SmartContractInitialization;
 using AElf.OS.Node.Application;
 using AElf.Runtime.CSharp;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,7 @@ namespace AElf.Boilerplate.TestBase
             context.Services.AddSingleton<IRefBlockInfoProvider, RefBlockInfoProvider>();
             context.Services.AddSingleton<IGenesisSmartContractDtoProvider, GenesisSmartContractDtoProvider>();
             context.Services.AddSingleton<IContractCodeProvider, ContractCodeProvider>();
+            context.Services.AddSingleton<IContractDeploymentListProvider, SideChainDAppContractTestDeploymentListProvider>();
             context.Services.AddSingleton<ISystemContractProvider, SystemContractProvider>();
         }
 
@@ -57,6 +59,7 @@ namespace AElf.Boilerplate.TestBase
             context.Services.AddSingleton<IRefBlockInfoProvider, RefBlockInfoProvider>();
             context.Services.AddSingleton<IGenesisSmartContractDtoProvider, GenesisSmartContractDtoProvider>();
             context.Services.AddSingleton<IContractCodeProvider, ContractCodeProvider>();
+            context.Services.AddSingleton<IContractDeploymentListProvider, MainChainDAppContractTestDeploymentListProvider>();
             context.Services.AddSingleton<ISystemContractProvider, SystemContractProvider>();
         }
 
