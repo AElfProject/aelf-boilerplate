@@ -12,6 +12,7 @@ import {
 // import Modal from "react-native-modal";
 import pTd from "../../utils/unit";
 
+// Todo: use react-native-elements overlay rewrite.
 const CommonModal = props => {
     const { visible, changeModalStatus, title, content, okText, footer, containerStyle,noScroll=false } = props;
 
@@ -27,7 +28,7 @@ const CommonModal = props => {
                 <TouchableOpacity
                     onPress={() => changeModalStatus()}
                     style={styles.modal_mask}
-                ></TouchableOpacity>
+                />
                 <View style={[styles.modal_contanier, containerStyle]}>
                     {title && <Text style={styles.modal_title}>{title}</Text>}
                     {content ? ( noScroll ? content : <ScrollView>{content}</ScrollView>) : <View><Text>内容</Text></View>}

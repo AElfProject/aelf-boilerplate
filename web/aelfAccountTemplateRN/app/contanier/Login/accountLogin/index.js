@@ -17,7 +17,7 @@ import Storage from  "../../../constants/storage"
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import ImagePicker from "react-native-image-crop-picker"
 // import Password from 'react-native-password-pay'
-import { Button } from "react-native-elements"
+import { Button, Overlay, Input } from "react-native-elements"
 import Icon from 'react-native-vector-icons/AntDesign';
 
 import CommonHeader from '../../../common/Components/CommonHeader/CommonHeader';
@@ -43,7 +43,9 @@ class MyAccountLogin extends Component {
             psw: "",
             keyStore: "",
             loadingVisible: false,
-            tipStatus: false
+            tipStatus: false,
+            overlayVisible: true,
+            inputErrorMessage: ''
         };
         this.requestCameraPermission = this.requestCameraPermission.bind(this)
     }
@@ -272,48 +274,60 @@ class MyAccountLogin extends Component {
             psw: text
         })
     }
+
     /* 输入密码 */
     enterPsw() {
         let ks = JSON.parse(this.state.keyStore);
+        const {overlayVisible, inputErrorMessage} = this.state;
 
         return (
             <View style={{
-                backgroundColor: "#BFBFBF", justifyContent: "center",
+                backgroundColor: "#FFF", justifyContent: "center",
                 alignItems: "center", flex: 1
             }}>
-                <View style={styles.psw_wrap}>
-
-                    <TouchableOpacity style={styles.icon_style} onPress={() => this.setState({ enterAccount: false })}>
-                        <Icon name="close" size={32} />
-                    </TouchableOpacity>
+                <Overlay isVisible={overlayVisible} onBackdropPress={() => this.setState({ enterAccount: false })}>
                     <View style={{ justifyContent: "center", alignItems: "center" }}>
-                        <TextL style={{ marginTop: pTd(50) }}>请输入账户{ks.nickName}的登陆密码</TextL>
-                        <TextInput
-                            secureTextEntry={true}
-                            onChangeText={(text) => this.onChangeText(text)}
-                            style={styles.inputStyle}
-                            placeholder="Please input login password" />
+                        <TextL
+                          style={{ marginTop: pTd(50), marginLeft: pTd(50), marginRight: pTd(50) }}
+                        >请输入账户{ks.nickName}的登陆密码</TextL>
 
-                        <View style={{ justifyContent: "center", alignItems: "center", marginBottom: pTd(80) }}>
+                        <Input
+                          secureTextEntry={true}
+                          placeholder="Please input login password"
+                          onChangeText={(text) => this.onChangeText(text)}
+                          errorStyle={{ color: 'red' }}
+                          errorMessage={inputErrorMessage}
+                        />
+
+                        <View style={{ justifyContent: "center", alignItems: "center", marginBottom: pTd(30) }}>
                             <Button
                                 title="Confirm"
                                 onPress={async () => {
-                                    this.showLoading().then(res=>{
-                                        this.accountLogin().then((res)=>{
-                                            res == true && setTimeout(()=>{
+                                    this.showLoading().then(()=>{
+                                        this.accountLogin().then(res =>{
+                                            if (!res) {
+                                                this.setState({
+                                                    inputErrorMessage: 'Login failed'
+                                                });
+                                                return;
+                                            }
+                                            setTimeout(()=>{
+                                                this.setState({
+                                                    overlayVisible: false
+                                                });
                                                 this.goRouter("SetTransactionPsw");
-                                            }, 1000)}
-                                            )
+                                            }, 1000)}).catch(error => {
+                                                console.log('accountLogin error', error);
+                                        });
                                     })}
                                     }
                                 buttonStyle={styles.btnStyle}
                             />
                         </View>
                     </View>
-                </View>
+                </Overlay>
                 {this.state.loadingVisible && (<Loading />)}
             </View>
-
         )
     }
     /* 改变状态 */
