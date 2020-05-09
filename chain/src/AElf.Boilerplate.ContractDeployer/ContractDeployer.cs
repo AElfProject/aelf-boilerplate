@@ -25,10 +25,10 @@ namespace AElf.Boilerplate.ContractDeployer
 
             var codes = contractNames.Select(n => (n, GetCode(n, contractDir, isPatched)))
                 .ToDictionary(x => x.Item1, x => x.Item2);
-            foreach (var systemContractDllPath in _systemContractProvider.GetSystemContractDllPaths())
+            foreach (var systemContractDllPath in _systemContractProvider.GetSystemContractInfo())
             {
-                codes.Add(Path.GetFileNameWithoutExtension(systemContractDllPath),
-                    File.ReadAllBytes(Assembly.LoadFile(systemContractDllPath).Location));
+                codes.Add(Path.GetFileNameWithoutExtension(systemContractDllPath.Value),
+                    File.ReadAllBytes(Assembly.LoadFile(systemContractDllPath.Value).Location));
             }
 
             return codes;

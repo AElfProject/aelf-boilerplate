@@ -24,6 +24,7 @@
     <ItemGroup>
         <PackageReference Include="AElf.Contracts.TestKit" Version="1.0.0-preview2" />
         <PackageReference Include="AElf.ContractTestBase" Version="1.0.0-preview2" />
+        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-preview2" />
     </ItemGroup>
 
     <ItemGroup>
@@ -57,18 +58,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\contract\AElf.Contracts.ACS1DemoContract\AElf.Contracts.ACS1DemoContract.csproj">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-            <OutputItemType>Contract</OutputItemType>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ProjectReference>
-
-        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-preview2">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-            <OutputItemType>Contract</OutputItemType>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </PackageReference>
-
+        <ProjectReference Include="..\..\contract\AElf.Contracts.ACS1DemoContract\AElf.Contracts.ACS1DemoContract.csproj" />
         <ProjectReference Include="..\..\src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj" />
     </ItemGroup>
 </Project>

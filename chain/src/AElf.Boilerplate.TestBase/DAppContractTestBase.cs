@@ -1,4 +1,3 @@
-using AElf.Contracts.DAppContractTestBase;
 using AElf.Contracts.TestKit;
 
 namespace AElf.Boilerplate.TestBase

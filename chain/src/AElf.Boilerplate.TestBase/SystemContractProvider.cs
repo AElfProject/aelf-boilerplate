@@ -9,7 +9,7 @@ using AElf.Kernel.Proposal;
 using AElf.Kernel.Token;
 using AElf.Types;
 
-namespace AElf.Boilerplate.MainChain
+namespace AElf.Boilerplate.TestBase
 {
     public class SystemContractProvider : ISystemContractProvider
     {

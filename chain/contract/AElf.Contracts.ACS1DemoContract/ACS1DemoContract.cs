@@ -36,6 +36,7 @@ namespace AElf.Contracts.ACS1DemoContract
 
             State.TransactionFees[input.MethodName] = new MethodFees
             {
+                MethodName = input.MethodName,
                 Fees = {input.Fees}
             };
 

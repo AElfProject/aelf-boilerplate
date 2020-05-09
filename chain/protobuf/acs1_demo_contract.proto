@@ -7,4 +7,7 @@ option csharp_namespace = "AElf.Contracts.ACS1DemoContract";
 service ACS1DemoContract {
     option (aelf.csharp_state) = "AElf.Contracts.ACS1DemoContract.ACS1DemoContractState";
     option (aelf.base) = "acs1.proto";
+    
+    rpc Foo (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    }
 }
