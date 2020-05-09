@@ -1,8 +1,9 @@
 import React from "react"
-import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, StatusBar, ScrollView, TextInput } from "react-native"
+import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, StatusBar, ScrollView, Alert, Linking } from "react-native"
 import Icon from 'react-native-vector-icons/AntDesign';
-import { Button } from "react-native-elements"
+import { Button, Input } from "react-native-elements"
 import Password from 'react-native-password-pay'
+import QRCode from 'react-native-qrcode-svg';
 
 import navigationService from "../../../common/utils/navigationService";
 import CommonHeader from "../../../common/Components/CommonHeader/CommonHeader";
@@ -15,6 +16,8 @@ import Storage from  "../../../constants/storage"
 
 import {aelfInstance} from '../../../common/utils/aelfProvider';
 import connect from "../../../common/utils/myReduxConnect";
+import {config} from "../../../common/utils/config";
+
 const {unitConverter} = require('../../../common/utils/unitConverter');
 
 /*
@@ -31,7 +34,7 @@ class MyWithdraw extends React.Component {
             transactionPsw: "",
             originTransactionPsw: "123456",
             transactionPswStatus: false,   //密码正确还是错误
-            toAddress: "2ADXLcyKMGGrRe9aGC7XMXECv8cxz3Tos1z6PJHSfyXguSaVb5"
+            toAddress: config.customerAddress
         }
     }
     componentDidMount() {
@@ -114,7 +117,7 @@ class MyWithdraw extends React.Component {
             transactionPsw: text
         }, () => {
 
-            if (this.state.transactionPsw == originTransactionPsw) {
+            if (this.state.transactionPsw === originTransactionPsw) {
                 this.changeModalStatus();
                 //给账户转账
                 this.confirmWithdraw();
@@ -124,7 +127,7 @@ class MyWithdraw extends React.Component {
                     transactionPswStatus:false
                 })
             }
-            else if (this.state.transactionPsw.length == 6 && (this.state.transactionPsw != originTransactionPsw)) {
+            else if (this.state.transactionPsw.length === 6 && (this.state.transactionPsw !== originTransactionPsw)) {
                 this.setState({
                     transactionPsw: "",
                     transactionPswStatus: true
@@ -167,15 +170,36 @@ class MyWithdraw extends React.Component {
         )
 
     }
+
+    callCustomer() {
+        let tel = 'tel:' + config.customerTel; // 目标电话
+        Alert.alert('Call', config.customerTel,
+          [ { text: 'Cancel', onPress: () => { console.log('取消') } },
+              { text: 'OK',
+                  onPress: () => {
+                      Linking.canOpenURL(tel).then((supported) => {
+                          if (!supported) {
+                              console.log('Can not handle tel:' + tel)
+                          } else {
+                              return Linking.openURL(tel)
+                          }
+                      }).catch(error => console.log('tel error', error))
+                  } }]);
+    }
+
     render() {
         const { modalVisible } = this.state;
         return (
             <View style={Gstyle.container}>
                 <CommonHeader canBack title="Withdraw" />
                 <ScrollView>
-                    <View style={[Gstyle.frcc, Gstyle.marginArg(pTd(30), 0)]}>
-                        <TextM>Amount：</TextM>
-                        <TextInput
+                    <View style={[Gstyle.frcc, Gstyle.marginArg(pTd(30), 0, 0, 0)]}>
+                        {/*<TextM>Amount：</TextM>*/}
+                        <Input
+                           label='1. Withdraw Amount'
+                           labelStyle={{
+                               color: Colors.primaryColor
+                           }}
                            style={styles.inputStyle}
                            onChangeText={text=>this.onChangeAmountText(text)}
                            placeholder={`Withdrawable balance ${this.props.ReduxStore.balance}`}
@@ -183,12 +207,37 @@ class MyWithdraw extends React.Component {
                         {/*<TextM>金币</TextM>*/}
                     </View>
                     {/*  */}
-                    <View style={{ justifyContent: "center", alignItems: "center", ...Gstyle.marginArg(0, 0, pTd(100), 0) }}>
-                        <View style={[Gstyle.frc, Gstyle.marginArg(pTd(40), 0)]}>
-                            <Icon name="customerservice" size={18} color={Colors.primaryColor} />
-                            <TextM style={{ color: Colors.primaryColor, marginLeft: pTd(20) }}>Contact customer service</TextM>
-                        </View>
-                        <Image style={{ width: pTd(300), height: pTd(300) }} source={require("../../../assets/images/mine/qrcode.png")} />
+                    <View>
+                        {/*<Icon name="customerservice" size={18} color={Colors.primaryColor} />*/}
+                        <TextM style={{
+                            color: Colors.primaryColor,
+                            marginLeft: pTd(18),
+                            marginBottom: pTd(16),
+                            fontSize: pTd(32),
+                            fontWeight: '500' }}>
+                            2. Contact customer service and withdraw.
+                        </TextM>
+                    </View>
+                    <View style={{ justifyContent: "center", alignItems: "center", ...Gstyle.marginArg(pTd(0), 0, 0, 0) }}>
+                        {/*<View style={[Gstyle.frc, Gstyle.marginArg(pTd(0), 0)]}>*/}
+                        {/*    <Icon name="customerservice" size={18} color={Colors.primaryColor} />*/}
+                        {/*    <TextM style={{ color: Colors.primaryColor, marginLeft: pTd(20) }}>2. Contact customer service</TextM>*/}
+                        {/*</View>*/}
+                        <TouchableOpacity
+                          onPress={() => this.callCustomer()}
+                        >
+                            <QRCode
+                              value={config.customerAddress}
+                              getRef={(c) => (this.svg = c)}
+                              logo={require("../../../assets/images/home/aelf_blue.jpg")}
+                              logoSize={38}
+                              logoMargin={4}
+                              logoBackgroundColor={"#fff"}
+                              size={200}
+                            />
+                        </TouchableOpacity>
+                        <Text>Click qr code to contact</Text>
+                        {/*<Image style={{ width: pTd(300), height: pTd(300) }} source={require("../../../assets/images/mine/qrcode.png")} />*/}
                     </View>
                     {/*<View style={{ justifyContent: "center", alignItems: "center", marginBottom: pTd(50) }}>*/}
                     {/*    <View style={[Gstyle.frcc]}>*/}
@@ -197,24 +246,30 @@ class MyWithdraw extends React.Component {
                     {/*        <TextM style={{ fontWeight: '500', marginLeft: pTd(20) }}>客服转账，自动提现</TextM>*/}
                     {/*    </View>*/}
                     {/*</View>*/}
-                    <View style={Gstyle.marginArg(0, pTd(100))}>
-                        <View style={[Gstyle.frc,]}>
-                            <View style={Gstyle.frcc}>
-                                <Icon name="logout" size={12} />
-                                <TextM style={{ fontWeight: '500', marginLeft: pTd(20) }}>Transfer to exchange or other account</TextM>
-                            </View>
-                            <Icon name="scan1" size={18} />
-                        </View>
-                        <TextInput
+                    {/*<View style={Gstyle.marginArg(0, pTd(100))}>*/}
+                    {/*    <View style={[Gstyle.frc,]}>*/}
+                    {/*        <View style={Gstyle.frcc}>*/}
+                    {/*            <Icon name="logout" size={12} />*/}
+                    {/*            <TextM style={{ fontWeight: '500', marginLeft: pTd(20) }}>Transfer to exchange or other account</TextM>*/}
+                    {/*        </View>*/}
+                    {/*        <Icon name="scan1" size={18} />*/}
+                    {/*    </View>*/}
+                    {/*</View>*/}
+                    <View style={{ justifyContent: "center", alignItems: "center", ...Gstyle.marginArg(pTd(32), 0, 0, 0) }}>
+                        <Input
+                          label='Extra: Transfer to exchange or other account'
+                          labelStyle={{
+                              color: Colors.primaryColor
+                          }}
                           style={styles.moneyAddress}
                           onChangeText={
                               text=>this.onChangeAddressText(text)
                           }
-                          placeholder="Please input account"
-                          defaultValue="2ADXLcyKMGGrRe9aGC7XMXECv8cxz3Tos1z6PJHSfyXguSaVb5"
+                          placeholder="Please input address"
+                          defaultValue=''
                         />
                     </View>
-                    <View style={{ justifyContent: "center", alignItems: "center", ...Gstyle.marginArg(pTd(50), 0) }}>
+                    <View style={{ justifyContent: "center", alignItems: "center", ...Gstyle.marginArg(pTd(20), 0) }}>
                         <Button
                             title="Withdraw"
                             onPress={() => this.changeModalStatus()}
