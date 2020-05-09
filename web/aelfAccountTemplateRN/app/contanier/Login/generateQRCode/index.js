@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity ,Platform, TouchableWit
 import CameraRoll from "@react-native-community/cameraroll"
 import QRCode from 'react-native-qrcode-svg';
 import RNFS from "react-native-fs"
+import ViewShot from "react-native-view-shot";
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Button } from "react-native-elements"
 import AsyncStorage from "@react-native-community/async-storage"
@@ -113,28 +114,22 @@ class MyGenerateQRCode extends React.Component {
     }
 
     /* 保存图片至相册 */
-    savePicture() {
+    async savePicture() {
         const storeLocation = `${RNFS.DocumentDirectoryPath}`;
-        let pathName = new Date().getTime() + "QRcode.jpg"
+        let pathName = new Date().getTime() + "QRcode.jpg";
         let downloadDest = `${storeLocation}/${pathName}`;
 
-        this.svg.toDataURL((data) => {
+        const viewShotTmpUri = await this.refs.viewShot.capture();
 
-            RNFS.writeFile(downloadDest, data, 'base64')
-            .then(() => {
-                try{
-                    return CameraRoll.saveToCameraRoll(`file://${downloadDest}`, 'photo')
-                }
-                catch (error) {
-                    console.error(error)
-                }
+        const fileInfo = await RNFS.readFile(viewShotTmpUri, 'base64');
 
-            })
-            .then(() => {
-                this.tipMsg("保存成功")
-            })
-
-        })
+        RNFS.writeFile(downloadDest, fileInfo, 'base64')
+          .then(() => {
+              return CameraRoll.saveToCameraRoll(`file://${downloadDest}`, 'photo')
+          })
+          .then(() => {
+              this.tipMsg("Success");
+          });
     }
     render() {
         const { QRCodeValue, data } = this.state
@@ -149,15 +144,22 @@ class MyGenerateQRCode extends React.Component {
                     </View>
                     <View style={[Gstyle.marginArg(0, pTd(80)), { justifyContent: "center", alignItems: "center" }]}>
                         <MutilText style={{ textAlign: "center", marginBottom: pTd(60) }}> 丢失、二维码等同于丢失账号，您的资产将无法找回，请务必妥善保管您的二维码账号 </MutilText>
-                        <QRCode
-                            value={ QRCodeValue }
-                            getRef={(c) => (this.svg = c)}
-                            logo={require("../../../assets/images/home/aelf_blue.jpg")}
-                            logoSize={38}
-                            logoMargin={4}
-                            logoBackgroundColor={"#fff"}
-                            size={200}
-                        />
+                        <ViewShot
+                          ref="viewShot" options={{ format: "jpg", quality: 0.9 }}
+                          style={{width: 200}}
+                        >
+                            <QRCode
+                              value={ QRCodeValue }
+                              getRef={(c) => (this.svg = c)}
+                              logo={require("../../../assets/images/home/aelf_blue.jpg")}
+                              logoSize={38}
+                              logoMargin={4}
+                              logoBackgroundColor={"#fff"}
+                              size={200}
+                            />
+                            <Text style={{marginTop: 2}}>Account: {JSON.parse(QRCodeValue).nickName}</Text>
+                        </ViewShot>
+
                     </View>
                     <Image style={{width:pTd(50), height:pTd(50)}} source={{uri:`data:image/jpg;base64,${data}`}}/>
                     <View style={{ justifyContent: "center", alignItems: "center", marginTop: pTd(120) }}>
