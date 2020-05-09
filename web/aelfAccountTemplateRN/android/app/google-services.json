@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "59520025194",
+    "firebase_url": "https://aelfaccounttemplatern.firebaseio.com",
+    "project_id": "aelfaccounttemplatern",
+    "storage_bucket": "aelfaccounttemplatern.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59520025194:android:632bd1d3ba0c5069654013",
+        "android_client_info": {
+          "package_name": "com.aelfaccounttemplatern"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "59520025194-hi3n2am6ld7rm6q4cfue95jvtg67ud3g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkM0X4aeanMqKfMz2YMpbH9Kbemhj7yzg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "59520025194-hi3n2am6ld7rm6q4cfue95jvtg67ud3g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

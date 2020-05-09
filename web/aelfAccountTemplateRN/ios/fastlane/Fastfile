@@ -1,0 +1,48 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Push a new release build to the App Store"
+  lane :release do
+    increment_build_number(xcodeproj: "aelfAccountTemplateRN.xcodeproj")
+    build_app(workspace: "aelfAccountTemplateRN.xcworkspace", scheme: "aelfAccountTemplateRN")
+    upload_to_app_store
+  end
+
+  desc "Push a new release build to the firm"
+  lane :fir_im do
+    sync_code_signing(
+      type: "adhoc",
+      readonly: true,
+      app_identifier: ["com.aelf.aelfAccountTemplateRN"],
+      username: ''
+      )
+    gym(
+      scheme: "aelfAccountTemplateRN",
+      export_method: "ad-hoc",
+      silent: true,  # 隐藏没有必要的信息
+      clean: true,  # 在构建前先clean
+    )
+    # update to fir.im
+    fir_cli(
+      api_token: "",
+      short: "iosaelfaccountdemo",
+      changelog: "Hello fir.im",
+      dingtalk_access_token: "",
+    )
+  end
+end
