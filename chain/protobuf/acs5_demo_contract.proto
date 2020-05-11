@@ -1,8 +1,8 @@
 syntax = "proto3";
 
 import "acs5.proto";
-import "google/protobuf/empty.proto";
 import "aelf/options.proto";
+import "google/protobuf/empty.proto";
 
 option csharp_namespace = "AElf.Contracts.ACS5DemoContract";
 
