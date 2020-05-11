@@ -78,7 +78,7 @@ namespace AElf.Contracts.ACS9DemoContract
             State.TokenContract.Value =
                 Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
             State.DividendPoolContract.Value =
-                Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
+                Context.GetContractAddressByName(input.DividendPoolContractName.Value.ToBase64());
             State.Symbol.Value = input.Symbol == string.Empty ? "APP" : input.Symbol;
             State.ProfitReceiver.Value = input.ProfitReceiver;
 

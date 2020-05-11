@@ -28,6 +28,7 @@ service ACS9DemoContract {
 message InitializeInput {
     aelf.Address profit_receiver = 1;
     string symbol = 2;
+    aelf.Hash dividend_pool_contract_name = 3;
 }
 
 message DepositInput {

@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using AElf.Boilerplate.TestBase;
-using AElf.Contracts.Consensus.AEDPoS;
-using AElf.Contracts.Genesis;
+using AElf.Contracts.ACS10DemoContract;
 using AElf.Contracts.MultiToken;
-using AElf.Contracts.Parliament;
 using AElf.Contracts.Profit;
 using AElf.Contracts.TestKit;
 using AElf.Contracts.TokenHolder;
@@ -12,7 +10,6 @@ using AElf.Cryptography.ECDSA;
 using AElf.EconomicSystem;
 using AElf.Kernel;
 using AElf.Kernel.Blockchain.Application;
-using AElf.Kernel.Consensus;
 using AElf.Kernel.SmartContract.Application;
 using AElf.Kernel.Token;
 using AElf.Types;
@@ -30,11 +27,12 @@ namespace AElf.Contracts.ACS9DemoContract
 
         protected Address TokenContractAddress => GetAddress(TokenSmartContractAddressNameProvider.StringName);
         protected Address ProfitContractAddress => GetAddress(ProfitSmartContractAddressNameProvider.StringName);
-        protected Address TokenHolderContractAddress => GetAddress(TokenHolderSmartContractAddressNameProvider.StringName);
 
-        internal Address ACS9DemoContractAddress => GetAddress(TestContractAddressNameProvider.StringName);
+        protected Address TokenHolderContractAddress =>
+            GetAddress(TokenHolderSmartContractAddressNameProvider.StringName);
 
-        protected Address ConsensusContractAddress => GetAddress(ConsensusSmartContractAddressNameProvider.StringName);
+        internal Address ACS9DemoContractAddress => GetAddress(ACS9DemoSmartContractNameProvider.StringName);
+        internal Address ACS10DemoContractAddress => GetAddress(ACS10DemoSmartContractNameProvider.StringName);
 
         internal TokenContractImplContainer.TokenContractImplStub TokenContractStub
         {
@@ -84,6 +82,13 @@ namespace AElf.Contracts.ACS9DemoContract
         {
             var factory = Application.ServiceProvider.GetRequiredService<IContractTesterFactory>();
             return factory.Create<ACS9DemoContractContainer.ACS9DemoContractStub>(ACS9DemoContractAddress,
+                senderKeyPair);
+        }
+
+        internal ACS10DemoContractContainer.ACS10DemoContractStub GetACS10DemoContractStub(ECKeyPair senderKeyPair)
+        {
+            var factory = Application.ServiceProvider.GetRequiredService<IContractTesterFactory>();
+            return factory.Create<ACS10DemoContractContainer.ACS10DemoContractStub>(ACS10DemoContractAddress,
                 senderKeyPair);
         }
     }

@@ -8,7 +8,7 @@ using Google.Protobuf;
 
 namespace AElf.Contracts.ACS9DemoContract
 {
-    public class ACS9DemoContractInitializationProvider : IContractInitializationProvider
+    public class ACS10DemoContractInitializationProvider : IContractInitializationProvider
     {
         public List<InitializeMethod> GetInitializeMethodList(byte[] contractCode)
         {
@@ -19,14 +19,13 @@ namespace AElf.Contracts.ACS9DemoContract
                     MethodName = nameof(ACS9DemoContract.Initialize),
                     Params = new InitializeInput
                     {
-                        ProfitReceiver = Address.FromPublicKey(SampleECKeyPairs.KeyPairs.Skip(3).First().PublicKey),
-                        DividendPoolContractName = ACS10DemoSmartContractNameProvider.Name
+                        ProfitReceiver = Address.FromPublicKey(SampleECKeyPairs.KeyPairs.Skip(3).First().PublicKey)
                     }.ToByteString()
                 }
             };
         }
 
-        public Hash SystemSmartContractName { get; } = ACS9DemoSmartContractNameProvider.Name;
-        public string ContractCodeName { get; } = "AElf.Contracts.ACS9DemoContract";
+        public Hash SystemSmartContractName { get; } = ACS10DemoSmartContractNameProvider.Name;
+        public string ContractCodeName { get; } = "AElf.Contracts.ACS10DemoContract";
     }
 }

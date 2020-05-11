@@ -17,17 +17,24 @@ namespace AElf.Contracts.ACS9DemoContract
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             context.Services.AddSingleton<IContractInitializationProvider, ACS9DemoContractInitializationProvider>();
+            context.Services.AddSingleton<IContractInitializationProvider, ACS10DemoContractInitializationProvider>();
+            context.Services.AddSingleton<IContractDeploymentListProvider, ACS9DemoContractDeploymentList>();
         }
 
         public override void OnPreApplicationInitialization(ApplicationInitializationContext context)
         {
             var contractCodeProvider = context.ServiceProvider.GetService<IContractCodeProvider>();
-            var contractDllLocation = typeof(ACS9DemoContract).Assembly.Location;
+            var contractDllLocationOfACS9DemoContract = typeof(ACS9DemoContract).Assembly.Location;
+            var contractDllLocationOfACS10DemoContract = typeof(ACS10DemoContract.ACS10DemoContract).Assembly.Location;
             var contractCodes = new Dictionary<string, byte[]>(contractCodeProvider.Codes)
             {
                 {
                     new ACS9DemoContractInitializationProvider().ContractCodeName,
-                    File.ReadAllBytes(contractDllLocation)
+                    File.ReadAllBytes(contractDllLocationOfACS9DemoContract)
+                },
+                {
+                    new ACS10DemoContractInitializationProvider().ContractCodeName,
+                    File.ReadAllBytes(contractDllLocationOfACS10DemoContract)
                 }
             };
             contractCodeProvider.Codes = contractCodes;

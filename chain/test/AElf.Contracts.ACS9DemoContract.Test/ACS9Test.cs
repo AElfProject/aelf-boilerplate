@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using Acs9;
 using AElf.Contracts.MultiToken;
 using AElf.Contracts.Profit;
-using AElf.Contracts.TestKit;
 using AElf.Contracts.TokenHolder;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
@@ -14,12 +13,15 @@ namespace AElf.Contracts.ACS9DemoContract
 {
     public class ACS9Test : ACS9DemoContractTestBase
     {
-        [Fact(Skip = "Need acs10 demo contract.")]
+        [Fact]
         public async Task Test()
         {
             var keyPair = UserKeyPairs[0];
             var address = Address.FromPublicKey(keyPair.PublicKey);
-            var acs8DemoContractStub = GetACS9DemoContractStub(keyPair);
+            var acs9DemoContractStub = GetACS9DemoContractStub(keyPair);
+            var acs10DemoContractStub = GetACS10DemoContractStub(keyPair);
+
+            await acs10DemoContractStub.Initialize.SendAsync(new ACS10DemoContract.InitializeInput());
             
             // Transfer some ELFs to user.
             await TokenContractStub.Transfer.SendAsync(new TransferInput
@@ -36,7 +38,7 @@ namespace AElf.Contracts.ACS9DemoContract
                 GetTester<TokenHolderContractContainer.TokenHolderContractStub>(TokenHolderContractAddress,
                     UserKeyPairs[0]);
 
-            await acs8DemoContractStub.SignUp.SendAsync(new Empty());
+            await acs9DemoContractStub.SignUp.SendAsync(new Empty());
 
             // User has 10 APP tokens because of signing up.
             (await GetFirstUserBalance("APP")).ShouldBe(10_00000000);
@@ -50,7 +52,7 @@ namespace AElf.Contracts.ACS9DemoContract
                 Spender = ACS9DemoContractAddress,
                 Symbol = "ELF"
             });
-            await acs8DemoContractStub.Deposit.SendAsync(new DepositInput
+            await acs9DemoContractStub.Deposit.SendAsync(new DepositInput
             {
                 Amount = 100_00000000
             });
@@ -79,7 +81,7 @@ namespace AElf.Contracts.ACS9DemoContract
             // User uses 10 times of this DApp. (APP -3)
             for (var i = 0; i < 10; i++)
             {
-                await acs8DemoContractStub.Use.SendAsync(new Record());
+                await acs9DemoContractStub.Use.SendAsync(new Record());
             }
 
             // Now user has 50 APP tokens.
@@ -96,7 +98,7 @@ namespace AElf.Contracts.ACS9DemoContract
             }
 
             // Profits receiver claim 10 ELF profits.
-            await acs8DemoContractStub.TakeContractProfits.SendAsync(new TakeContractProfitsInput
+            await acs9DemoContractStub.TakeContractProfits.SendAsync(new TakeContractProfitsInput
             {
                 Symbol = "ELF",
                 Amount = 10_0000_0000
@@ -113,7 +115,7 @@ namespace AElf.Contracts.ACS9DemoContract
 
             // And Side Chain Dividends Pool should have 0.1 ELF tokens.
             {
-                var scheme = await TokenHolderContractStub.GetScheme.CallAsync(ConsensusContractAddress);
+                var scheme = await TokenHolderContractStub.GetScheme.CallAsync(ACS10DemoContractAddress);
                 var virtualAddress = await ProfitContractStub.GetSchemeAddress.CallAsync(new SchemePeriod
                 {
                     SchemeId = scheme.SchemeId,

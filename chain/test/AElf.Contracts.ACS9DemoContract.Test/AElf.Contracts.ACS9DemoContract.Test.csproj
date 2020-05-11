@@ -29,10 +29,16 @@
 
     <ItemGroup>
         <ContractStub Include="..\..\protobuf\acs9.proto">
-            <Link>Protobuf\Proto\acs8.proto</Link>
+            <Link>Protobuf\Proto\acs9.proto</Link>
         </ContractStub>
         <ContractStub Include="..\..\protobuf\acs9_demo_contract.proto">
-            <Link>Protobuf\Proto\acs8_demo_contract.proto</Link>
+            <Link>Protobuf\Proto\acs9_demo_contract.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\acs10.proto">
+            <Link>Protobuf\Proto\acs10.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\acs10_demo_contract.proto">
+            <Link>Protobuf\Proto\acs10_demo_contract.proto</Link>
         </ContractStub>
         <ContractStub Include="..\..\protobuf\acs1.proto">
             <Link>Protobuf/Proto/acs1.proto</Link>
@@ -64,12 +70,6 @@
         <ContractStub Include="..\..\protobuf\parliament_contract.proto">
             <Link>Protobuf\Proto\parliament_contract.proto</Link>
         </ContractStub>
-        <ContractStub Include="..\..\protobuf\aedpos_contract.proto">
-            <Link>Protobuf\Proto\aedpos_contract.proto</Link>
-        </ContractStub>
-        <ContractStub Include="..\..\protobuf\aedpos_contract_impl.proto">
-            <Link>Protobuf\Proto\aedpos_contract_impl.proto</Link>
-        </ContractStub>
         <ContractBase Include="..\..\protobuf\acs4.proto">
             <Link>Protobuf\Proto\acs4.proto</Link>
         </ContractBase>
@@ -86,6 +86,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\contract\AElf.Contracts.ACS9DemoContract\AElf.Contracts.ACS9DemoContract.csproj" />
+        <ProjectReference Include="..\..\contract\AElf.Contracts.ACS10DemoContract\AElf.Contracts.ACS10DemoContract.csproj" />
         <ProjectReference Include="..\..\src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj" />
     </ItemGroup>
 </Project>

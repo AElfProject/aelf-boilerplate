@@ -1,11 +1,11 @@
 using AElf.Kernel.Infrastructure;
 using AElf.Types;
 
-namespace AElf.Boilerplate.TestBase
+namespace AElf.Contracts.ACS9DemoContract
 {
-    public class DAppContractAddressNameProvider
+    public class ACS9DemoSmartContractNameProvider
     {
-        public static readonly Hash Name = HashHelper.ComputeFrom("AElf.ContractNames.Test");
+        public static readonly Hash Name = HashHelper.ComputeFrom("AElf.ContractNames.ACS9DemoContract");
 
         public static readonly string StringName = Name.ToStorageKey();
         public Hash ContractName => Name;
