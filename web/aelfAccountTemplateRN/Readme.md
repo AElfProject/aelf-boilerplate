@@ -31,6 +31,12 @@ FYI MainApplication.java android/settings.gradle android/app/build.gradle androi
 # You can get more information of config from the different components docs of this project.
 ```
 
+```bash
+Replace the android/app/google-services.json
+
+https://console.firebase.google.com/
+```
+
 ### 3.1.Check the version of Expo
 
 Each Expo SDK version depends on a React Native version 
@@ -97,7 +103,8 @@ https://wiki.genexus.com/commwiki/servlet/wiki?34616,HowTo%3A+Create+an+.ipa+fil
 
 ## 5.Build & Publish (Integrate fastlane & firim)
 
-You can find more operations in build&publish.md.
+You can find more operations in 
+[build&publish.md](https://github.com/AElfProject/aelf-boilerplate/blob/dev/web/aelfAccountTemplateRN/build%26publish.md).
 
 ### Install fasltlane
 

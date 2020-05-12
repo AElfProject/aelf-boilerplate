@@ -97,6 +97,7 @@ Check package_name & json_key_file
 #### Android Fastfile
 
 ```bash
+# Replace your own configuration for fir_cli.
 desc "Deploy a new version to the fir.im"
   lane :fir_im do
     gradle(
@@ -130,11 +131,14 @@ Docs: https://docs.fastlane.tools/actions/match/
 We recommend `match` to manage certificates & provisioning profiles.
 
 ```bash
-# Clear your certificates at first
+# Clear your certificates at first.
+# Don't worry, just clear it. I will not influence your app online.
 fastlane match nuke development
 fastlane match nuke distribution
 fastlane match nuke enterprise
 ```
+
+Follow the notice in terminal. 
 
 ```bash
 # Init new certificates & provisioning profiles in Storage.
@@ -193,6 +197,69 @@ In xCode, you can find and change you Bundle Identifier
 And maybe you need create a new app.
 
 https://appstoreconnect.apple.com/WebObjects/iTunesConnect.woa/ra/ng/app
+
+## Auto-incrementing Build Numbers And Versions for Users
+
+Build: For dev & test.
+
+Version: For normal users.
+
+### iOS Build Version
+
+- In xCode `Build Phases`, add `Run Script` and following script.
+- Or change `Info.plist` directly.
+
+`CFBundleVersion`(Build) for developers
+
+`CFBundleShortVersionString`(Version) for normal users
+
+Extra: `CFBundleDisplayName` allows you install different name of this app in your device.
+
+FYI: 
+
+https://www.jianshu.com/p/4cab21fd5517, https://www.jianshu.com/p/a2e10a56fa89
+
+https://medium.com/xcblog/agvtool-automating-ios-build-and-version-numbers-454cab6f1bbe
+
+```bash
+# In xCode: navigate into `Build Phases`, add `Run Script`
+# Type a script or drag a script file from your workspace to insert its path.
+DATE=`date +%y%m%d`
+GITCITIMES=`git rev-list HEAD | wc -l | awk '{print $1}'`
+REV="${DATE}-git${GITCITIMES}"
+/usr/libexec/PlistBuddy -c "Set CFBundleVersion ${REV}" "${PROJECT_DIR}"/${INFOPLIST_FILE}
+#/usr/libexec/PlistBuddy -c "Set CFBundleShortVersionString ${REV}" "${PROJECT_DIR}"/${INFOPLIST_FILE}
+```
+
+### Android Build Version
+
+in `app/build.gradle`
+
+`VersionCode`(Int, Build) for developers. 
+
+`VersionName`(String, Version) for normal users.
+
+```.gradle
+# example
+def getGitVersionCmd = 'git rev-list HEAD --first-parent --count'
+def gitVersion = getGitVersionCmd.execute().text.trim();
+def releaseTime() {
+    return new Date().format("yyMMdd", TimeZone.getTimeZone("UTC"))
+}
+def versionCodeString = releaseTime() + gitVersion
+def versionCodeInt = Integer.parseInt(versionCodeString);
+
+android {
+    ...
+    defaultConfig {
+        ...
+        versionCode versionCodeInt
+        versionName "1.0.1"
+       ...
+    }
+    ...
+}
+```
 
 ## Q & A
 
