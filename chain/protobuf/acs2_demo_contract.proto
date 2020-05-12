@@ -10,6 +10,10 @@ service ACS2DemoContract {
     option (aelf.csharp_state) = "AElf.Contracts.ACS2DemoContract.ACS2DemoContractState";
     option (aelf.base) = "acs2.proto";
     
-    rpc Foo (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    rpc TransferCredits (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
+}
+
+message TransferCreditsInput {
+    
 }
