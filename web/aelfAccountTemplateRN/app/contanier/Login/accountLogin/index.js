@@ -226,12 +226,16 @@ class MyAccountLogin extends Component {
                 modalVisible: true,
                 tipStatus: true,
                 loadingVisible: false
-            })
+            });
 
             const { mnemonic: ksMn, privateKey } = AElf.wallet.keyStore.unlockKeystore(keyStoreTemp, psw);
             this.setToken(privateKey, keyStore);
             try {
-                this.props.onLoginSuccess({contracts: await appInit(privateKey),address: keyStoreTemp.address});
+                this.props.onLoginSuccess({
+                    contracts: await appInit(privateKey),
+                    address: keyStoreTemp.address,
+                    keystore: keyStoreTemp
+                });
             } catch (error) {
                 console.warn(error,"连接合约失败");
             }

@@ -96,7 +96,11 @@ class MyGenerateQRCode extends React.Component {
     }
 
     async initProvider(data){
-        this.props.onLoginSuccess({contracts: await appInit(data.privateKey),address: data.address});
+        this.props.onLoginSuccess({
+            contracts: await appInit(data.privateKey),
+            address: data.address,
+            keystore: data
+        });
     }
 
     goRouter(router, params) {

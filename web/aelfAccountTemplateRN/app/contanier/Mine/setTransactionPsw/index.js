@@ -1,7 +1,7 @@
-import React from "react"
-import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, StatusBar } from "react-native"
-import Password from 'react-native-password-pay'
-import AsyncStorage from "@react-native-community/async-storage"
+import React from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, StatusBar } from "react-native";
+import Password from 'react-native-password-pay';
+import AsyncStorage from "@react-native-community/async-storage";
 import TouchID from 'react-native-touch-id';
 import Storage from "../../../constants/storage"
 import navigationService from "../../../common/utils/navigationService";
