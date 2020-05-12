@@ -4,10 +4,25 @@
         <RootNamespace>AElf.Contracts.ACS10DemoContract</RootNamespace>
         <IsContract>true</IsContract>
     </PropertyGroup>
+
+    <ItemGroup>
+        <ContractReference Include="..\..\protobuf\acs1.proto">
+            <Link>Protobuf\Proto\reference\acs1.proto</Link>
+        </ContractReference>
+        <ContractReference Include="..\..\protobuf\profit_contract.proto">
+            <Link>Protobuf\Proto\reference\profit_contract.proto</Link>
+        </ContractReference>
+        <ContractReference Include="..\..\protobuf\token_contract.proto">
+            <Link>Protobuf\Proto\reference\token_contract.proto</Link>
+        </ContractReference>
+        <ContractReference Include="..\..\protobuf\token_holder_contract.proto">
+            <Link>Protobuf\Proto\reference\token_holder_contract.proto</Link>
+        </ContractReference>
+    </ItemGroup>
     
     <ItemGroup>
         <ContractBase Include="..\..\protobuf\acs10.proto">
-            <Link>Protobuf\Proto\reference\acs10.proto</Link>
+            <Link>Protobuf\Proto\base\acs10.proto</Link>
         </ContractBase>
     </ItemGroup>
 

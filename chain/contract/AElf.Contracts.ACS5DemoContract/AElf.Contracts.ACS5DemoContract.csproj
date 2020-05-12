@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>AElf.Contracts.ACS5DemoContract</RootNamespace>
+        <IsContract>true</IsContract>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <ContractBase Include="..\..\protobuf\acs5.proto">
+            <Link>Protobuf\Proto\base\acs5.proto</Link>
+        </ContractBase>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ContractCode Include="..\..\protobuf\acs5_demo_contract.proto">
+            <Link>Protobuf\Proto\acs5_demo_contract.proto</Link>
+        </ContractCode>
+    </ItemGroup>
+</Project>

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+import "acs3.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "AElf.Contracts.ACS3DemoContract";
+
+service ACS3DemoContract {
+    option (aelf.csharp_state) = "AElf.Contracts.ACS3DemoContract.ACS3DemoContractState";
+    option (aelf.base) = "acs3.proto";
+    
+    rpc Foo (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    }
+}
