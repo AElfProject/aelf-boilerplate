@@ -25,17 +25,12 @@ module.exports.getContract = function (aelf, wallet, contractNameAddressKeyValue
   });
 
   const otherPromise = Object.entries(contractAddresses).map(([contractName, contractAdress]) => {
-    try {
-      return aelf.chain.contractAt(contractAdress, wallet).then(contractInstance => {
-        contractInstances[contractName] = contractInstance;
-      });
-    } catch (error) {
-      console.log(error);
-    }
-
+    return aelf.chain.contractAt(contractAdress, wallet).then(contractInstance => {
+      contractInstances[contractName] = contractInstance;
+    });
   });
 
-  return Promise.all([promise, otherPromise]).then(() => {
+  return Promise.all([...promise, ...otherPromise]).then(() => {
     return contractInstances;
   });
 };

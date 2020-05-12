@@ -26,7 +26,8 @@ class MyHomePage extends React.Component {
         super(props);
         this.state = {
             chainStatus: {},
-            address: null
+            address: null,
+            balance: '-'
         }
     }
     componentWillMount(){
@@ -55,15 +56,37 @@ class MyHomePage extends React.Component {
 
         // TODO: rewrite contract init logic
         const contracts = await appInit(privateKey);
-        let keystore =  await AsyncStorage.getItem(Storage.userKeyStore) || '{}';
-
+        const keystore =  await AsyncStorage.getItem(Storage.userKeyStore) || '{}';
+        const address = JSON.parse(keystore).address;
+        // console.log('contracts 23333', contracts);
         this.props.onSetTempContracts({contracts: contracts});
-        loggedIn && this.props.onLoginSuccess({contracts: contracts,address: JSON.parse(keystore).address});
+        loggedIn && this.props.onLoginSuccess({
+            contracts: contracts,
+            address
+        });
 
         this.setState({
-            contracts: contracts
+            contracts
         });
+        this.getTokenBalance(contracts, address);
         return contracts;
+    }
+
+    async getTokenBalance(contracts, address) {
+        // const { contracts, address } = this.state;
+        // tokenContract is config in ./config.js
+        const { tokenContract } = contracts;
+        console.log(contracts, address, address && tokenContract && tokenContract.GetBalance);
+        if (address && tokenContract && tokenContract.GetBalance) {
+            const balance = await tokenContract.GetBalance.call({
+                symbol: 'ELF',
+                owner: address
+            });
+            // console.log('balance: ', balance);
+            this.setState({
+                balance: balance.balance / (10 ** 8)
+            });
+        }
     }
 
     /* 跳转路由 */
@@ -92,7 +115,7 @@ class MyHomePage extends React.Component {
     }
 
     render() {
-        const { chainStatus } = this.state;
+        const { chainStatus, balance } = this.state;
         const reduxStoreData = this.props.ReduxStore;
         const { address } = reduxStoreData;
         return (
@@ -103,8 +126,9 @@ class MyHomePage extends React.Component {
                     rightElement={this.rightElement()}
                 />
                 <ScrollView>
-                    <Text>Address: {address || 'Please login'}</Text>
-                    <Text>BestChainHeight: {chainStatus.BestChainHeight}</Text>
+                    <Text style={styles.basicText}>Address: {address || 'Please login'}</Text>
+                    <Text style={styles.basicText}>ELF Balance: {address && balance}</Text>
+                    <Text style={styles.basicText}>BestChainHeight: {chainStatus.BestChainHeight}</Text>
                     <Button
                       buttonStyle={styles.btnStyle}
                       title="Refresh BestChainHeight"
@@ -122,6 +146,9 @@ const HomePage = connect(BackHandlerHoc(MyHomePage));
 export default HomePage;
 
 const styles = StyleSheet.create({
+    basicText: {
+      marginBottom: 2
+    },
     btnStyle: {
         backgroundColor: "#817AFD",
         ...Gstyle.radiusArg(pTd(6)),

@@ -6,6 +6,7 @@ module.exports.config = {
   httpProvider: 'http://3.25.10.185:8000', //'http://192.168.1.4:1235',
   walletURL: 'https://wallet-test.aelf.io',
   explorerURL: 'https://explorer-test.aelf.io',
+  // contractNames & contractAddressedNeedInit will be init by appInit of `/common/utils/aelfProvider`;
   contractNames: {
     consensusContract: 'AElf.ContractNames.Consensus',
     tokenContract: 'AElf.ContractNames.Token',

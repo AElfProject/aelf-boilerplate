@@ -97,7 +97,7 @@ export default class SetTransactionPsw extends React.Component {
                 return (
                     <ConfirmTip
                         rightText="No"
-                        tipMsg="Enable fingerprint payment？"
+                        tipMsg="Enable biometric payment？"
                         rightFunc={() => this.changeModalStatus()}
                         leftText={"Yes"}
                         leftFunc={() => { this.openTouch() }}
