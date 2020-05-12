@@ -52,5 +52,15 @@ namespace AElf.Contracts.ACS1DemoContract
         {
             return State.MethodFeeController.Value;
         }
+
+        /// <summary>
+        /// Toy.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public override Empty Foo(Empty input)
+        {
+            return new Empty();
+        }
     }
 }
