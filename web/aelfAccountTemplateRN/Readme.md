@@ -173,3 +173,4 @@ import { ProgressBarAndroid } from '@react-native-community/progress-bar-android
 3. Interactive experience improvement
     - account QR code in android
     - button click in android
+4. Rewrite: use react hook

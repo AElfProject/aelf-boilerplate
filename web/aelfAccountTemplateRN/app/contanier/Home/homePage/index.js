@@ -1,5 +1,5 @@
 import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl } from "react-native"
 import { Button, Divider } from "react-native-elements"
 import Icon from 'react-native-vector-icons/AntDesign';
 import navigationService from "../../../common/utils/navigationService";
@@ -29,7 +29,8 @@ class MyHomePage extends React.Component {
             chainStatus: {},
             address: null,
             balance: '-',
-            symbol: '-'
+            symbol: '-',
+            pullRefreshing: false
         }
     }
     componentWillMount(){
@@ -46,9 +47,6 @@ class MyHomePage extends React.Component {
         this.setState({
             chainStatus
         });
-    }
-    componentWillUnmount(){
-        clearInterval(this.downTime)
     }
 
     async initProvider(){
@@ -74,8 +72,11 @@ class MyHomePage extends React.Component {
         return contracts;
     }
 
-    async getTokenBalance(contracts, address) {
-        // const { contracts, address } = this.state;
+    async getTokenBalance(contractsInput, addressInput) {
+        const reduxStoreData = this.props.ReduxStore;
+        const { address: addressStore, contracts: contractsStore } = reduxStoreData;
+        const address = addressInput || addressStore;
+        const contracts = contractsInput || contractsStore;
         // tokenContract is config in ./config.js
         const { tokenContract } = contracts;
         if (address && tokenContract && tokenContract.GetBalance) {
@@ -83,7 +84,6 @@ class MyHomePage extends React.Component {
                 symbol: 'ELF',
                 owner: address
             });
-            // console.log('balance: ', balance);
             this.setState({
                 balance: balance.balance / (10 ** 8),
                 symbol: balance.symbol
@@ -116,8 +116,21 @@ class MyHomePage extends React.Component {
         )
     }
 
+    onRefresh() {
+        this.setState({
+            pullRefreshing: true
+        });
+        setTimeout(async () => {
+            await this.getTokenBalance();
+            await this.getChainStatus();
+            this.setState({
+                pullRefreshing: false
+            });
+        }, 1000);
+    }
+
     render() {
-        const { chainStatus, balance, symbol } = this.state;
+        const { chainStatus, balance, symbol, pullRefreshing } = this.state;
         const reduxStoreData = this.props.ReduxStore;
         const { address, keystore } = reduxStoreData;
         const { nickName } = keystore || {};
@@ -128,7 +141,11 @@ class MyHomePage extends React.Component {
                     title="Hello aelf"
                     rightElement={this.rightElement()}
                 />
-                <ScrollView>
+                <ScrollView
+                  refreshControl={
+                      <RefreshControl refreshing={pullRefreshing} onRefresh={() => this.onRefresh()} />
+                  }
+                >
                     <Text style={styles.title}>1.Get information of aelf chain.</Text>
                     <Text style={styles.basicText}>ChainId: {chainStatus.ChainId}</Text>
                     <Text style={styles.basicText}>BestChainHeight: {chainStatus.BestChainHeight}</Text>
@@ -148,6 +165,7 @@ class MyHomePage extends React.Component {
                     <Text style={styles.basicText}>We use token contract for example.</Text>
                     <Text style={styles.basicText}>Symbol: {symbol}</Text>
                     <Text style={styles.basicText}>ELF Balance: {balance}</Text>
+                    <Text style={styles.basicText}>「Pull down to refresh」</Text>
                     <Divider style={styles.divider} />
 
                     <Text style={styles.title}>4.Use icon.</Text>
