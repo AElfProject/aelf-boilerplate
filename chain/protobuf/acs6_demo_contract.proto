@@ -9,7 +9,13 @@ option csharp_namespace = "AElf.Contracts.ACS6DemoContract";
 service ACS6DemoContract {
     option (aelf.csharp_state) = "AElf.Contracts.ACS6DemoContract.ACS6DemoContractState";
     option (aelf.base) = "acs6.proto";
-    
-    rpc Foo (google.protobuf.Empty) returns (google.protobuf.Empty) {
+
+    rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
+}
+
+message RequestSlot {
+    sint64 round_number = 1;
+    sint32 order = 2;
+    sint64 block_height = 3;
 }

@@ -4,13 +4,17 @@
         <RootNamespace>AElf.Contracts.ACS6DemoContract</RootNamespace>
         <IsContract>true</IsContract>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <ContractBase Include="..\..\protobuf\acs6.proto">
-            <Link>Protobuf\Proto\base\acs6.proto</Link>
+            <Link>Protobuf\Proto\reference\acs6.proto</Link>
         </ContractBase>
     </ItemGroup>
-
+    <ItemGroup>
+        <ContractReference Include="..\..\protobuf\aedpos_contract.proto">
+            <Link>Protobuf\Proto\reference\aedpos_contract.proto</Link>
+        </ContractReference>
+    </ItemGroup>
     <ItemGroup>
         <ContractCode Include="..\..\protobuf\acs6_demo_contract.proto">
             <Link>Protobuf\Proto\acs6_demo_contract.proto</Link>
