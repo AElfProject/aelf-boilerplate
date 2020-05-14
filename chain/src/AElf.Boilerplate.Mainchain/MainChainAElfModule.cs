@@ -29,8 +29,6 @@ namespace AElf.Boilerplate.MainChain
             services.AddTransient<IContractDeploymentListProvider, MainChainContractDeploymentListProvider>();
             services.AddTransient<IGenesisSmartContractDtoProvider, MainChainGenesisSmartContractDtoProvider>();
 
-            services.AddSingleton(typeof(ContractDeployer.ContractDeployer));
-            
             services.AddKeyValueDbContext<BlockchainKeyValueDbContext>(p => p.UseInMemoryDatabase());
             services.AddKeyValueDbContext<StateKeyValueDbContext>(p => p.UseInMemoryDatabase());
         }

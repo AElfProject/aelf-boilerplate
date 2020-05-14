@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AElf.Blockchains.BasicBaseChain;
+using AElf.Contracts.Deployer;
 using AElf.Kernel.SmartContract;
 using AElf.Kernel.SmartContractInitialization;
 using Microsoft.Extensions.Options;
@@ -8,21 +9,19 @@ namespace AElf.Boilerplate.MainChain
 {
     public class MainChainGenesisSmartContractDtoProvider : GenesisSmartContractDtoProviderBase
     {
-        private readonly ContractDeployer.ContractDeployer _contractDeployer;
         private readonly ContractOptions _contractOptions;
 
         public MainChainGenesisSmartContractDtoProvider(IContractDeploymentListProvider contractDeploymentListProvider,
             IServiceContainer<IContractInitializationProvider> contractInitializationProviders,
-            IOptionsSnapshot<ContractOptions> contractOptions, ContractDeployer.ContractDeployer contractDeployer)
+            IOptionsSnapshot<ContractOptions> contractOptions)
             : base(contractDeploymentListProvider, contractInitializationProviders)
         {
-            _contractDeployer = contractDeployer;
             _contractOptions = contractOptions.Value;
         }
 
         protected override IReadOnlyDictionary<string, byte[]> GetContractCodes()
         {
-            return _contractDeployer.GetContractCodes<MainChainGenesisSmartContractDtoProvider>(_contractOptions
+            return ContractsDeployer.GetContractCodes<MainChainGenesisSmartContractDtoProvider>(_contractOptions
                 .GenesisContractDir);
         }
     }
