@@ -29,10 +29,8 @@ class MyWithdraw extends React.Component {
         super(props)
         this.state = {
             modalVisible: false,
-            avaliableBalance: 100,
             amountToWithdraw: 0,
             transactionPsw: "",
-            originTransactionPsw: "123456",
             transactionPswStatus: false,   //密码正确还是错误
             toAddress: config.customerAddress
         }
@@ -99,8 +97,9 @@ class MyWithdraw extends React.Component {
     }
     /* 改变modal状态 */
     changeModalStatus() {
-        const { amountToWithdraw, avaliableBalance } = this.state;
-        if (amountToWithdraw >= avaliableBalance) {
+        const { amountToWithdraw } = this.state;
+        const { balance } = this.props.ReduxStore;
+        if (amountToWithdraw >= balance) {
             this.tipMsg("Insufficient balance", 2000);
         }
         else {
@@ -108,7 +107,6 @@ class MyWithdraw extends React.Component {
                 modalVisible: !prev.modalVisible
             }))
         }
-
     }
     /* onChangeText */
     async onChangeText(text) {
