@@ -66,6 +66,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.LotteryContr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.LotteryContract.Tests", "test\AElf.Contracts.LotteryContract.Tests\AElf.Contracts.LotteryContract.Tests.csproj", "{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.DAppContract", "src\AElf.Boilerplate.DAppContract\AElf.Boilerplate.DAppContract.csproj", "{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -192,6 +194,10 @@ Global
 		{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -224,6 +230,7 @@ Global
 		{8CBF24AC-83B8-4D43-A4AE-CB1015F91621} = {BB8D5781-446C-4B7A-A3BA-68206918B046}
 		{A279E5A3-8D80-4362-BBC7-2EADDAAAEBAE} = {BB8D5781-446C-4B7A-A3BA-68206918B046}
 		{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
+		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C} = {21D85A91-5BB8-4912-8107-49435A461AAC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7426B41-E959-40E4-9ED8-ED8D9C50F133}
