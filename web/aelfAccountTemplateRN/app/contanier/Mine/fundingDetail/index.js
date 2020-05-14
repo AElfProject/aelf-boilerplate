@@ -1,5 +1,15 @@
 import React from "react"
-import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, StatusBar, ScrollView } from "react-native"
+import {
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    StatusBar,
+    ScrollView,
+    RefreshControl
+} from "react-native"
 import Icon from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import navigationService from "../../../common/utils/navigationService";
@@ -20,20 +30,29 @@ class MyFundingDetail extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            address : '2gaQh4uxg6tzyH1ADLoDxvHA14FMpzEiMqsQ6sDG5iHT8cmjp8',
+            address : '',
             date: ["2020", "02"],
             items:[],
             total:0,
             withdrawAmount:0,
-            depositAmount:0
+            depositAmount:0,
+            pullRefreshing: false
         };
         this.dataApi = walletURL + '/api/token/txs?';
     }
     componentDidMount() {
         this.getFirstRequest();
     }
+    async onPullRefresh() {
+        this.setState({
+            pullRefreshing: true
+        });
+        await this.getFirstRequest();
+        this.setState({
+            pullRefreshing: false
+        });
+    }
     async getFirstRequest() {
-        console.log('getFirstRequest');
         // TODO: pages
         let url = this.dataApi;
         let args = {
@@ -55,8 +74,7 @@ class MyFundingDetail extends React.Component {
         for(let key in param){
             url += key + "=" + param[key] + "&";
         }
-        console.log(url);
-        fetch(url, args)
+        return fetch(url, args)
             .then((response)=>{
                 return response.json();
             })
@@ -64,12 +82,11 @@ class MyFundingDetail extends React.Component {
                 this.setState({
                     items: responseJson.transactions,
                     total:responseJson.total
-                })
+                });
             })
             .catch((error)=>{
                 console.error(error);
             })
-
     }
     goRouter(router, params) {
         navigationService.navigate(router, {
@@ -125,10 +142,12 @@ class MyFundingDetail extends React.Component {
     // }
 
     renderItem(item){
+        const reduxStoreData = this.props.ReduxStore;
+        const { address } = reduxStoreData;
         const params = JSON.parse(item.params);
         const amount = params.amount / (10 ** 8);
         const timeFormatted = moment(item.time).format('YYYY-MM-DD HH:mm');
-        const isWithdraw = item.address_from === this.state.address;
+        const isWithdraw = item.address_from === address;
         const textShow = isWithdraw ? 'WithDraw' : 'Recharge';
         const onPressFn = () => this.goRouter("TransactionDetail",{
             item:item, title: textShow, txId: item.tx_id
@@ -150,11 +169,22 @@ class MyFundingDetail extends React.Component {
             </TouchableOpacity>
         )
     }
+    // TODO: fee and other txs will cost the token too.
+    // It means that balance <= recharge + withdraw
     render() {
+        const {pullRefreshing} = this.state;
         return (
             <View style={[Gstyle.container, { backgroundColor: "#efefef" }]}>
                 <CommonHeader canBack title="Details" />
-                <ScrollView>
+                {/*<View>*/}
+                {/*    <Text>Fee and other txs will cost your token too.</Text>*/}
+                {/*    <Text>It means that balance less than recharge + withdraw</Text>*/}
+                {/*</View>*/}
+                <ScrollView
+                  refreshControl={
+                      <RefreshControl refreshing={pullRefreshing} onRefresh={() => this.onPullRefresh()} />
+                  }
+                >
                     {/*{this.title()}*/}
                     <View style={Gstyle.marginArg(0, pTd(30))}>
                         <View >
@@ -164,7 +194,6 @@ class MyFundingDetail extends React.Component {
                             })}
                             {/* 充值 */}
                         </View>
-
                     </View>
                 </ScrollView>
             </View>
