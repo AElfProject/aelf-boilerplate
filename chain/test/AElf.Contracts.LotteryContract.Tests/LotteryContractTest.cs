@@ -76,7 +76,7 @@ namespace AElf.Contracts.LotteryContract
             await InitializeAndCheckStatus();
 
             var result = await LotteryContractStub.PrepareDraw.SendWithExceptionAsync(new Empty());
-            result.TransactionResult.Error.ShouldContain("Unable to terminate this period.");
+            result.TransactionResult.Error.ShouldContain("No valid lottery exists");
         }
 
         [Fact]
