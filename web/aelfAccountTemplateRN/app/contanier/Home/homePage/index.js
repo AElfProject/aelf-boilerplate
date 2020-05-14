@@ -38,6 +38,7 @@ class MyHomePage extends React.Component {
             SplashScreen.hide()
         }, splashScreenShowTime);
     }
+
     async componentDidMount() {
         this.initProvider();
         this.getChainStatus();
@@ -48,6 +49,12 @@ class MyHomePage extends React.Component {
             chainStatus
         });
     }
+
+    // TODO:
+    // componentDidUpdate(prevProps, prevState, snapshot) {
+    //     this.props.ReduxStore;
+    //     prevProps.ReduxStore;
+    // }
 
     async initProvider(){
 
