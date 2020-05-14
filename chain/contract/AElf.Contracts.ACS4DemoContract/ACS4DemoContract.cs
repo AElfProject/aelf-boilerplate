@@ -5,7 +5,7 @@ using Google.Protobuf.WellKnownTypes;
 namespace AElf.Contracts.ACS4DemoContract
 {
     /// <summary>
-    /// ACS1 can only used by system contracts.
+    /// Implement ACS4 if you want to customize a consensus mechanism.
     /// </summary>
     public class ACS4DemoContract : ACS4DemoContractContainer.ACS4DemoContractBase
     {

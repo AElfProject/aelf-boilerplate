@@ -6,7 +6,7 @@ using Google.Protobuf.WellKnownTypes;
 namespace AElf.Contracts.ACS2DemoContract
 {
     /// <summary>
-    /// ACS1 can only used by system contracts.
+    /// ACS2 defines one interface to provide resource paths for smart contract parallel executing.
     /// </summary>
     public class ACS2DemoContract : ACS2DemoContractContainer.ACS2DemoContractBase
     {
