@@ -1,5 +1,5 @@
 import React from "react"
-import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, StatusBar, ScrollView, Alert, Linking } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, Linking, KeyboardAvoidingView } from "react-native"
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Button, Input } from "react-native-elements"
 import Password from 'react-native-password-pay'
@@ -190,7 +190,10 @@ class MyWithdraw extends React.Component {
     render() {
         const { modalVisible } = this.state;
         return (
-            <View style={Gstyle.container}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              style={Gstyle.container}
+            >
                 <CommonHeader canBack title="Withdraw" />
                 <ScrollView>
                     <View style={[Gstyle.frcc, Gstyle.marginArg(pTd(30), 0, 0, 0)]}>
@@ -214,7 +217,7 @@ class MyWithdraw extends React.Component {
                             marginLeft: pTd(18),
                             marginBottom: pTd(16),
                             fontSize: pTd(32),
-                            fontWeight: '500' }}>
+                            fontWeight: '700' }}>
                             2. Contact customer service and withdraw.
                         </TextM>
                     </View>
@@ -286,7 +289,7 @@ class MyWithdraw extends React.Component {
                     noScroll={true}
                     containerStyle={styles.containerStyle}
                     content={this.modalContent()} />
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 }
@@ -299,7 +302,7 @@ const styles = StyleSheet.create({
         ...Gstyle.borderArg(),
         ...Gstyle.marginArg(0, pTd(20)),
         ...Gstyle.paddingArg(pTd(10), pTd(20)),
-        width: pTd(400),
+        width: pTd(500),
         textAlign: "right"
     },
     moneyAddress: {

@@ -62,6 +62,7 @@ class AboutUs extends React.Component {
                                 aboutUs.map(item => {
                                     return (
                                         <ListItem
+                                            key={item.name}
                                             title={item.name}
                                             bottomDivider
                                             chevron

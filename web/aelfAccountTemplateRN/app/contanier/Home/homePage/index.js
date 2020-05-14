@@ -1,6 +1,6 @@
 import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native"
-import { Button } from "react-native-elements"
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl } from "react-native"
+import { Button, Divider } from "react-native-elements"
 import Icon from 'react-native-vector-icons/AntDesign';
 import navigationService from "../../../common/utils/navigationService";
 import CommonHeader from "../../../common/Components/CommonHeader/CommonHeader";
@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-community/async-storage"
 import Storage from  "../../../constants/storage"
 import connect from "../../../common/utils/myReduxConnect";
 import {config} from "../../../common/utils/config";
+import {format} from "../../../common/utils/address";
 const { splashScreenShowTime } = config;
 
 const {appInit, aelfInstance} = require('../../../common/utils/aelfProvider');
@@ -27,7 +28,9 @@ class MyHomePage extends React.Component {
         this.state = {
             chainStatus: {},
             address: null,
-            balance: '-'
+            balance: '-',
+            symbol: '-',
+            pullRefreshing: false
         }
     }
     componentWillMount(){
@@ -35,6 +38,7 @@ class MyHomePage extends React.Component {
             SplashScreen.hide()
         }, splashScreenShowTime);
     }
+
     async componentDidMount() {
         this.initProvider();
         this.getChainStatus();
@@ -45,9 +49,12 @@ class MyHomePage extends React.Component {
             chainStatus
         });
     }
-    componentWillUnmount(){
-        clearInterval(this.downTime)
-    }
+
+    // TODO:
+    // componentDidUpdate(prevProps, prevState, snapshot) {
+    //     this.props.ReduxStore;
+    //     prevProps.ReduxStore;
+    // }
 
     async initProvider(){
 
@@ -58,11 +65,11 @@ class MyHomePage extends React.Component {
         const contracts = await appInit(privateKey);
         const keystore =  await AsyncStorage.getItem(Storage.userKeyStore) || '{}';
         const address = JSON.parse(keystore).address;
-        // console.log('contracts 23333', contracts);
         this.props.onSetTempContracts({contracts: contracts});
         loggedIn && this.props.onLoginSuccess({
             contracts: contracts,
-            address
+            address,
+            keystore: JSON.parse(keystore)
         });
 
         this.setState({
@@ -72,19 +79,21 @@ class MyHomePage extends React.Component {
         return contracts;
     }
 
-    async getTokenBalance(contracts, address) {
-        // const { contracts, address } = this.state;
+    async getTokenBalance(contractsInput, addressInput) {
+        const reduxStoreData = this.props.ReduxStore;
+        const { address: addressStore, contracts: contractsStore } = reduxStoreData;
+        const address = addressInput || addressStore;
+        const contracts = contractsInput || contractsStore;
         // tokenContract is config in ./config.js
         const { tokenContract } = contracts;
-        console.log(contracts, address, address && tokenContract && tokenContract.GetBalance);
         if (address && tokenContract && tokenContract.GetBalance) {
             const balance = await tokenContract.GetBalance.call({
                 symbol: 'ELF',
                 owner: address
             });
-            // console.log('balance: ', balance);
             this.setState({
-                balance: balance.balance / (10 ** 8)
+                balance: balance.balance / (10 ** 8),
+                symbol: balance.symbol
             });
         }
     }
@@ -114,10 +123,24 @@ class MyHomePage extends React.Component {
         )
     }
 
+    onRefresh() {
+        this.setState({
+            pullRefreshing: true
+        });
+        setTimeout(async () => {
+            await this.getTokenBalance();
+            await this.getChainStatus();
+            this.setState({
+                pullRefreshing: false
+            });
+        }, 1000);
+    }
+
     render() {
-        const { chainStatus, balance } = this.state;
+        const { chainStatus, balance, symbol, pullRefreshing } = this.state;
         const reduxStoreData = this.props.ReduxStore;
-        const { address } = reduxStoreData;
+        const { address, keystore } = reduxStoreData;
+        const { nickName } = keystore || {};
         return (
             <View style={Gstyle.container}>
                 <CommonHeader
@@ -125,15 +148,34 @@ class MyHomePage extends React.Component {
                     title="Hello aelf"
                     rightElement={this.rightElement()}
                 />
-                <ScrollView>
-                    <Text style={styles.basicText}>Address: {address || 'Please login'}</Text>
-                    <Text style={styles.basicText}>ELF Balance: {address && balance}</Text>
+                <ScrollView
+                  refreshControl={
+                      <RefreshControl refreshing={pullRefreshing} onRefresh={() => this.onRefresh()} />
+                  }
+                >
+                    <Text style={styles.title}>1.Get information of aelf chain.</Text>
+                    <Text style={styles.basicText}>ChainId: {chainStatus.ChainId}</Text>
                     <Text style={styles.basicText}>BestChainHeight: {chainStatus.BestChainHeight}</Text>
                     <Button
                       buttonStyle={styles.btnStyle}
                       title="Refresh BestChainHeight"
                       onPress={async () => this.getChainStatus()}
                     />
+                    <Divider style={styles.divider} />
+
+                    <Text style={styles.title}>2.Get account information.</Text>
+                    <Text style={styles.basicText}>NickName: {nickName || 'Please login'}</Text>
+                    <Text style={styles.basicText}>Address: {address && format(address) || 'Please login'}</Text>
+                    <Divider style={styles.divider} />
+
+                    <Text style={styles.title}>3.Call Contract.</Text>
+                    <Text style={styles.basicText}>We use token contract for example.</Text>
+                    <Text style={styles.basicText}>Symbol: {symbol}</Text>
+                    <Text style={styles.basicText}>ELF Balance: {balance}</Text>
+                    <Text style={styles.basicText}>「Pull down to refresh」</Text>
+                    <Divider style={styles.divider} />
+
+                    <Text style={styles.title}>4.Use icon.</Text>
                     <Text>Icon: </Text><Icon name="clockcircleo" size={20} />
                 </ScrollView>
             </View>
@@ -146,10 +188,21 @@ const HomePage = connect(BackHandlerHoc(MyHomePage));
 export default HomePage;
 
 const styles = StyleSheet.create({
+    title: {
+      fontSize: 18,
+      fontWeight: '500',
+      color: Colors.fontColor
+    },
+    divider: {
+        backgroundColor: Colors.borderColor,
+        marginTop: 8,
+        marginBottom: 8
+    },
     basicText: {
       marginBottom: 2
     },
     btnStyle: {
+        width: 300,
         backgroundColor: "#817AFD",
         ...Gstyle.radiusArg(pTd(6)),
     }

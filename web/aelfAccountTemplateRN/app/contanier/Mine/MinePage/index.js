@@ -133,7 +133,9 @@ class MyMinePage extends React.Component {
 
         !loggedIn && this.props.onLoginSuccess({
             contracts: contracts,
-            address: userAddress});
+            address: userAddress,
+            keystore: keyStoreObject
+        });
 
     }
     goRouter(router, params) {
