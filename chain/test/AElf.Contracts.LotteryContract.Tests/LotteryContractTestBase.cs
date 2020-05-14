@@ -1,8 +1,6 @@
 using System.Linq;
-using Acs0;
 using AElf.Boilerplate.TestBase;
 using AElf.Contracts.MultiToken;
-using AElf.Contracts.Parliament;
 using AElf.Contracts.TestKit;
 using AElf.Cryptography.ECDSA;
 using AElf.Kernel;
@@ -39,18 +37,12 @@ namespace AElf.Contracts.LotteryContract
 
         internal TokenContractContainer.TokenContractStub TokenContractStub =>
             GetTokenContractStub(SampleECKeyPairs.KeyPairs[0]);
-        internal ParliamentContractContainer.ParliamentContractStub ParliamentContractStub { get; set; }
 
         internal ECKeyPair AliceKeyPair { get; set; } = SampleECKeyPairs.KeyPairs.Last();
         internal ECKeyPair BobKeyPair { get; set; } = SampleECKeyPairs.KeyPairs.Reverse().Skip(1).First();
-        internal ECKeyPair DefaultKeyPair { get; set; } = SampleECKeyPairs.KeyPairs.First();
-
         internal Address AliceAddress => Address.FromPublicKey(AliceKeyPair.PublicKey);
         internal Address BobAddress => Address.FromPublicKey(BobKeyPair.PublicKey);
         internal Address TokenContractAddress => GetAddress(TokenSmartContractAddressNameProvider.StringName);
-        internal Address ParliamentContractAddress { get; set; }
-        internal Address AssociationContractAddress { get; set; }
-        internal Address ConsensusContractAddress { get; set; }
 
         private Address GetAddress(string contractStringName)
         {

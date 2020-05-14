@@ -39,10 +39,27 @@ namespace AElf.Contracts.LotteryContract
         {
             List<long> returnLotteryIds;
             var owner = input.Owner ?? Context.Sender;
-            var lotteryList = State.OwnerToLotteries[owner][input.Period];
-            if (lotteryList == null)
+
+            var lotteryList = new LotteryList();
+            if (input.Period == 0)
             {
-                return new GetBoughtLotteriesOutput();
+                for (var period = 1; period <= State.CurrentPeriod.Value; period++)
+                {
+                    var list = State.OwnerToLotteries[owner][period];
+                    if (list != null)
+                    {
+                        // TODO: Optimize this if current period number is big enough.
+                        lotteryList.Ids.Add(list.Ids.Where(i => i > input.StartId));
+                    }
+                }
+            }
+            else
+            {
+                lotteryList = State.OwnerToLotteries[owner][input.Period];
+                if (lotteryList == null)
+                {
+                    return new GetBoughtLotteriesOutput();
+                }
             }
 
             var allLotteryIds = lotteryList.Ids.ToList();
@@ -52,9 +69,9 @@ namespace AElf.Contracts.LotteryContract
             }
             else
             {
-                Assert(input.StartIndex < allLotteryIds.Count, "Invalid start index.");
-                var takeAmount = Math.Min(allLotteryIds.Count.Sub(input.StartIndex), MaximumReturnAmount);
-                returnLotteryIds = allLotteryIds.Skip(input.StartIndex).Take((int) takeAmount).ToList();
+                Assert(input.StartId < allLotteryIds.Last(), "Start id is too big.");
+                var takeAmount = Math.Min(allLotteryIds.Count(i => i > input.StartId), MaximumReturnAmount);
+                returnLotteryIds = allLotteryIds.Where(i => i > input.StartId).Take(takeAmount).ToList();
             }
 
             return new GetBoughtLotteriesOutput
