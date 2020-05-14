@@ -7,7 +7,7 @@ using Google.Protobuf.WellKnownTypes;
 namespace AElf.Contracts.ACS8DemoContract
 {
     /// <summary>
-    /// ACS1 can only used by system contracts.
+    /// If one contract implement ACS8, every execution of transactions will consume resource tokens of this contract.
     /// </summary>
     public class ACS8DemoContract : ACS8DemoContractContainer.ACS8DemoContractBase
     {

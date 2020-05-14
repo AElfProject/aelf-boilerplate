@@ -5,6 +5,7 @@ using Google.Protobuf.WellKnownTypes;
 namespace AElf.Contracts.ACS1DemoContract
 {
     /// <summary>
+    /// ACS1 defines interfaces of setting and getting method fee and who has the right to do so.
     /// ACS1 can only used by system contracts.
     /// </summary>
     public class ACS1DemoContract : ACS1DemoContractContainer.ACS1DemoContractBase

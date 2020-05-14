@@ -12,7 +12,7 @@ using DistributeProfitsInput = AElf.Contracts.TokenHolder.DistributeProfitsInput
 namespace AElf.Contracts.ACS10DemoContract
 {
     /// <summary>
-    /// ACS10 can only used by system contracts.
+    /// You can build a dividend pool via implementing ACS10.
     /// </summary>
     public class ACS10DemoContract : ACS10DemoContractContainer.ACS10DemoContractBase
     {

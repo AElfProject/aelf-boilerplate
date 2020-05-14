@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AElf.Contracts.MultiToken;
@@ -136,7 +137,6 @@ namespace AElf.Contracts.LotteryContract
             await AliceLotteryContractStub.TakeReward.SendAsync(new TakeRewardInput
             {
                 LotteryId = reward.Id,
-                Period = rewardResult.Period,
                 RegistrationInformation = registrationInformation
             });
 
@@ -201,6 +201,30 @@ namespace AElf.Contracts.LotteryContract
             });
             boughtOutput.Lotteries.First().Id.ShouldBe(boughtInformation.StartId);
             return boughtOutput.Lotteries;
+        }
+
+        [Fact]
+        public void TestGetRanks()
+        {
+            var levelsCount = new List<int> {0, 1, 2, 3, 4};
+            var ranks = GetRanks(levelsCount);
+            ranks.Count.ShouldBe(10);
+            ranks.ShouldBe(new List<int> {2, 3, 3, 4, 4, 4, 5, 5, 5, 5});
+        }
+
+        private List<int> GetRanks(List<int> levelsCount)
+        {
+            var ranks = new List<int>();
+
+            for (var i = 0; i < levelsCount.Count; i++)
+            {
+                for (var j = 0; j < levelsCount[i]; j++)
+                {
+                    ranks.Add(i + 1);
+                }
+            }
+
+            return ranks;
         }
     }
 }
