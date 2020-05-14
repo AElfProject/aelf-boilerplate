@@ -82,14 +82,14 @@ export default class transactionDetail extends React.Component {
                         </View>
                         <View style={{ flexDirection: "row", marginBottom: pTd(20) }}>
                             <TextM style={ styles.textKey }>From：</TextM>
-                            <TextM style={ styles.textValue }>{addressUtils.format(Transaction.To)}</TextM>
+                            <TextM style={ styles.textValue }>{addressUtils.format(Transaction.From)}</TextM>
                             <TouchableOpacity onPress={() => this.copyAddress()}>
                                 <Icon name="copy1" size={18} color="#000" />
                             </TouchableOpacity>
                         </View>
                         <View style={{ flexDirection: "row", marginBottom: pTd(20) }}>
                             <TextM style={ styles.textKey }>To：</TextM>
-                            <TextM style={ styles.textValue }>{addressUtils.format(Transaction.From)}</TextM>
+                            <TextM style={ styles.textValue }>{addressUtils.format(params.to || Transaction.To)}</TextM>
                             <TouchableOpacity onPress={() => this.copyAddress()}>
                                 <Icon name="copy1" size={18} color="#000" />
                             </TouchableOpacity>

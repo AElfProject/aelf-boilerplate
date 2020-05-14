@@ -83,7 +83,6 @@ class MyMinePage extends React.Component {
     componentDidMount() {
 
         this.requestOrder();
-        //console.log(this.props);
     }
     componentWillUnmount(){
         this.didBlurSubscription.remove();
@@ -159,8 +158,6 @@ class MyMinePage extends React.Component {
           appContract
         } = this.props.ReduxStore.contracts;
 
-        console.log('this.props.ReduxStore', this.props.ReduxStore);
-
         //获取余额
         try {
             const res = await tokenContract.GetBalance.call({
@@ -185,14 +182,14 @@ class MyMinePage extends React.Component {
         try {
             const res = await tokenContract.GetAllowance.call({
                 symbol : "ELF",
-                owner : this.state.accountAddress ,
+                owner : this.state.accountAddress,
                 spender: appContract.address
             });
             allowance = unitConverter.toLower(res.allowance,8);
             this.setState({
                 accountAllowance: allowance.toString(),
             });
-            console.log('allowance:', res, allowance);
+            console.log('token allowance:', res, allowance, allowance < 500);
         } catch (error) {
             //出错的话重连
             //this.initProvider();
@@ -227,7 +224,7 @@ class MyMinePage extends React.Component {
         const { accountAddress, modalContentType, keyStore } = this.state;
         return (modalContentType === 0 ) ? (
             <View style={{ justifyContent: "center", alignItems: "center", height: pTd(550) }}>
-                <TextL >QR Code Account</TextL>
+                <TextL>Account QR Code</TextL>
                 <QRCode
                             value={ keyStore }
                             getRef={(c) => (this.svg = c)}
