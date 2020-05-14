@@ -77,7 +77,6 @@ message BoughtLotteriesInformation {
 message TakeRewardInput {
     int64 lottery_id = 1;
     string registration_information = 2;
-    int64 period = 3;
 }
 
 message DrawInput {
@@ -115,7 +114,7 @@ message GetRewardResultOutput {
 
 message GetBoughtLotteriesInput {
     int64 period = 1;
-    int32 start_index = 2;
+    int32 start_id = 2;
     aelf.Address owner = 3;
 }
 

@@ -1,5 +1,5 @@
 import React from "react"
-import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, StatusBar, ScrollView, Linking } from "react-native"
+import { View, StyleSheet, TouchableOpacity, ScrollView, Linking } from "react-native"
 import Clipboard from "@react-native-community/clipboard";
 import Icon from 'react-native-vector-icons/AntDesign';
 import moment from "moment"

@@ -1,4 +1,5 @@
 ﻿using AElf.Blockchains.BasicBaseChain;
+using AElf.Boilerplate.DAppContract;
 using AElf.Database;
 using AElf.Kernel.Infrastructure;
 using AElf.Kernel.SmartContractInitialization;
@@ -12,7 +13,8 @@ using Volo.Abp.Modularity;
 namespace AElf.Boilerplate.MainChain
 {
     [DependsOn(
-        typeof(BasicBaseChainAElfModule)
+        typeof(BasicBaseChainAElfModule),
+        typeof(DAppContractModule)
     )]
     public class MainChainAElfModule : AElfModule
     {

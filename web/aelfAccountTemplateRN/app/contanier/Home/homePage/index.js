@@ -38,6 +38,7 @@ class MyHomePage extends React.Component {
             SplashScreen.hide()
         }, splashScreenShowTime);
     }
+
     async componentDidMount() {
         this.initProvider();
         this.getChainStatus();
@@ -48,6 +49,12 @@ class MyHomePage extends React.Component {
             chainStatus
         });
     }
+
+    // TODO:
+    // componentDidUpdate(prevProps, prevState, snapshot) {
+    //     this.props.ReduxStore;
+    //     prevProps.ReduxStore;
+    // }
 
     async initProvider(){
 
@@ -116,17 +123,15 @@ class MyHomePage extends React.Component {
         )
     }
 
-    onRefresh() {
+    async onRefresh() {
         this.setState({
             pullRefreshing: true
         });
-        setTimeout(async () => {
-            await this.getTokenBalance();
-            await this.getChainStatus();
-            this.setState({
-                pullRefreshing: false
-            });
-        }, 1000);
+        await this.getTokenBalance();
+        await this.getChainStatus();
+        this.setState({
+            pullRefreshing: false
+        });
     }
 
     render() {

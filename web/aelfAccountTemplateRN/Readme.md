@@ -174,3 +174,4 @@ import { ProgressBarAndroid } from '@react-native-community/progress-bar-android
     - account QR code in android
     - button click in android
 4. Rewrite: use react hook
+5. Bug check: componentDidUpdate get the same value when use 

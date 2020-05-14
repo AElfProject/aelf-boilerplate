@@ -25,18 +25,22 @@ namespace AElf.Contracts.LotteryContract
                 // Only can happen in test cases.
                 randomHash = HashHelper.ComputeFrom(Context.PreviousBlockHash);
             }
+
             period.RandomHash = randomHash;
 
             var rewardCount = levelsCount.Sum();
+            State.RewardCount.Value = State.RewardCount.Value.Add(rewardCount);
             Assert(rewardCount > 0, "Reward pool cannot be empty.");
-            Assert(poolCount >= rewardCount, $"Too many rewards, we just sells {poolCount} lotteries.");
+            Assert(poolCount >= State.RewardCount.Value,
+                $"Too many rewards, lottery pool size: {poolCount.Sub(State.RewardCount.Value)}.");
 
             var ranks = new List<int>();
-            foreach (var count in levelsCount)
+
+            for (var i = 0; i < levelsCount.Count; i++)
             {
-                for (var i = 0; i < count; i++)
+                for (var j = 0; j < levelsCount[i]; j++)
                 {
-                    ranks.Add(count);
+                    ranks.Add(i.Add(1));
                 }
             }
 
@@ -55,38 +59,6 @@ namespace AElf.Contracts.LotteryContract
                 rewardIds.Add(rewardId);
                 State.Lotteries[rewardId].Level = ranks[i];
             }
-
-            /*
-            var rewardIdIndices = new List<long>();
-            var luckyIndex = Math.Abs(randomHash.ToInt64() % poolCount);
-            for (var i = 0; i < rewardCount; i++)
-            {
-                while (rewardIdIndices.Contains(luckyIndex))
-                {
-                    // Keep update luckyIndex
-                    randomHash = HashHelper.ComputeFrom(randomHash);
-                    luckyIndex = Math.Abs(randomHash.ToInt64() % poolCount);
-                }
-
-                rewardIdIndices.Add(luckyIndex);
-            }
-
-            Assert(rewardIdIndices.Count == rewardCount, "Incorrect reward count.");
-            var rewardIds = rewardIdIndices.Select(i => i.Add(startId)).ToList();
-
-            var rewardIndex = 0;
-            for (var rewardRank = 1; rewardRank <= levelsCount.Count; rewardRank++)
-            {
-                var rewardAmount = levelsCount[rewardRank.Sub(1)];
-                for (var i = 0; i < rewardAmount; i++)
-                {
-                    var rewardId = rewardIds[rewardIndex];
-                    State.Lotteries[rewardId].Level = rewardRank;
-                    rewardIndex++;
-                }
-            }
-            
-            */
 
             period.RewardIds.Add(rewardIds);
             State.Periods[previousPeriodNumber] = period;

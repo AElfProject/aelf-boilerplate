@@ -11,7 +11,7 @@ using Google.Protobuf.WellKnownTypes;
 namespace AElf.Contracts.ACS9DemoContract
 {
     /// <summary>
-    /// ACS9 can only used by system contracts.
+    /// ACS9 is used to describe and handle stuff of DApp profits.
     /// </summary>
     public class ACS9DemoContract : ACS9DemoContractContainer.ACS9DemoContractBase
     {

@@ -98,12 +98,11 @@ namespace AElf.Contracts.LotteryContract
                     $"Period {State.CurrentPeriod.Value} hasn't drew.");
             }
 
-            var currentPeriod = State.Periods[State.CurrentPeriod.Value];
-            Assert(currentPeriod.StartId < State.SelfIncreasingIdForLottery.Value,
-                "Unable to terminate this period because no one bought.");
+            Assert(State.SelfIncreasingIdForLottery.Value > State.RewardCount.Value.Add(1), "No valid lottery exists.");
 
             State.CurrentPeriod.Value = State.CurrentPeriod.Value.Add(1);
 
+            // 初始化下一届基本信息
             State.Periods[State.CurrentPeriod.Value] = new PeriodBody
             {
                 StartId = State.SelfIncreasingIdForLottery.Value,
@@ -116,8 +115,10 @@ namespace AElf.Contracts.LotteryContract
 
         public override Empty Draw(DrawInput input)
         {
+            var currentPeriod = State.CurrentPeriod.Value;
+            Assert(currentPeriod > 1, "Not ready to draw.");
             Assert(Context.Sender == State.Admin.Value, "No permission to draw!");
-            Assert(State.Periods[State.CurrentPeriod.Value].RandomHash == Hash.Empty, "Latest period already drawn.");
+            Assert(State.Periods[currentPeriod.Sub(1)].RandomHash == Hash.Empty, "Latest period already drawn.");
             var expectedBlockNumber = State.Periods[State.CurrentPeriod.Value].BlockNumber;
             Assert(Context.CurrentHeight >= expectedBlockNumber, "Block height not enough.");
 
@@ -134,11 +135,14 @@ namespace AElf.Contracts.LotteryContract
 
         public override Empty TakeReward(TakeRewardInput input)
         {
-            Assert(State.OwnerToLotteries[Context.Sender][input.Period] != null, $"Lottery of period {input.Period} not found :)");
-            Assert(State.OwnerToLotteries[Context.Sender][input.Period].Ids.Contains(input.LotteryId),
-                "No permission");
-            Assert(State.Lotteries[input.LotteryId].Level != 0, "Not lucky :(");
-            Assert(!State.Lotteries[input.LotteryId].RegistrationInformation.Any(),
+            var lottery = State.Lotteries[input.LotteryId];
+            if (lottery == null)
+            {
+                throw new AssertionException("Lottery id not found.");
+            }
+            Assert(lottery.Owner == Context.Sender,   "No permission");
+            Assert(lottery.Level != 0, "Sry but you're not lucky :(");
+            Assert(string.IsNullOrEmpty(lottery.RegistrationInformation),
                 $"Reward already taken！Registration information：{State.Lotteries[input.LotteryId].RegistrationInformation}");
 
             State.Lotteries[input.LotteryId].RegistrationInformation = input.RegistrationInformation;
