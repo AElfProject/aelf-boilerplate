@@ -127,7 +127,7 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 def getGitVersionCmd = 'git rev-list HEAD --first-parent --count'
 def gitVersion = getGitVersionCmd.execute().text.trim();
 def releaseTime() {
-    return new Date().format("yyyyMMdd", TimeZone.getTimeZone("UTC"))
+    return new Date().format("MMdd", TimeZone.getTimeZone("UTC"))
 }
 def versionCodeString = releaseTime() + gitVersion
 def versionCodeInt = Integer.parseInt(versionCodeString);
