@@ -5,7 +5,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="AElf.Blockchains.BasicBaseChain" Version="1.0.0-preview2" />
-        <PackageReference Include="AElf.Contracts.Deployer" Version="1.0.0-preview3-18396" />
+        <PackageReference Include="AElf.Contracts.Deployer" Version="1.0.0-preview3-18397" />
         <PackageReference Include="AElf.Kernel.Token" Version="1.0.0-preview2" />
         <PackageReference Include="AElf.EconomicSystem" Version="1.0.0-preview2" />
         <PackageReference Include="AElf.GovernmentSystem" Version="1.0.0-preview2" />
