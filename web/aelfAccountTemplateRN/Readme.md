@@ -4,12 +4,21 @@ React Native: 0.62.4 with expo SDK
 
 AccountTemplate is separated from a third-party project for aelf.
 
+## Extra Dependencies
+
+Expo: https://docs.expo.io/
+
+```bash
+npm install --global expo-cli
+```
+
 ## 1.How to dev
 
 Follow this doc: https://reactnative.cn/docs/getting-started.
 
 ```bash
 yarn
+cd ios && pod install
 react-native run-ios # react-native run-android
 ```
 
@@ -104,6 +113,10 @@ We set a default keystore for you in android/app/src
 https://wiki.genexus.com/commwiki/servlet/wiki?34616,HowTo%3A+Create+an+.ipa+file+from+XCode
 
 ## 5.Build & Publish (Integrate fastlane & firim)
+
+Make sure you install the dependencies for react-native.
+
+You can follow this doc: https://reactnative.cn/docs/getting-started.
 
 You can find more operations in 
 [build&publish.md](https://github.com/AElfProject/aelf-boilerplate/blob/dev/web/aelfAccountTemplateRN/build%26publish.md).
