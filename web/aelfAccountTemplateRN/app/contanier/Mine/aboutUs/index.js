@@ -1,6 +1,7 @@
 import React from "react"
-import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, StatusBar, ScrollView } from "react-native"
+import { View, StyleSheet, Image, ScrollView } from "react-native"
 import { ListItem } from 'react-native-elements'
+import Constants from 'expo-constants';
 import navigationService from "../../../common/utils/navigationService";
 import CommonHeader from "../../../common/Components/CommonHeader/CommonHeader";
 
@@ -10,10 +11,9 @@ import { TextM, TextL } from "../../../common/UI_Component/CommonText";
 /*
  * 关于我们
  **/
-
 class AboutUs extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             isLastVersion: false,
             aboutUs: [
@@ -28,19 +28,7 @@ class AboutUs extends React.Component {
             ]
         }
     }
-    componentDidMount() {
-        this.requestOrder()
-    }
-    requestOrder() {
-        Promise.resolve().then(res => {
-            return this.getFirstRequest();
-        })
-    }
-    async getFirstRequest() {
-        let params = this.props.navigation.getParam("params");
 
-
-    }
     goRouter(router, params) {
         navigationService.navigate(router, {
             params
@@ -56,7 +44,19 @@ class AboutUs extends React.Component {
                         <Image resizeMode={"stretch"} style={{ width: pTd(180), height: pTd(180) }} source={require("../../../assets/images/home/aelf_blue.jpg")} />
                         <TextL style={{ fontWeight: '500', fontSize: pTd(38), marginTop: pTd(20), }}>aelf</TextL>
                     </View>
-                    <View >
+                    <View>
+                        <ListItem
+                          key={'App Version' + Constants.nativeAppVersion}
+                          title={'App Version'}
+                          rightTitle={Constants.nativeAppVersion}
+                          bottomDivider
+                        />
+                        <ListItem
+                          key={'Build Version' + Constants.nativeBuildVersion}
+                          title={'Build Version'}
+                          rightTitle={Constants.nativeBuildVersion}
+                          bottomDivider
+                        />
                         {
                             isLastVersion ? <TextM style={{ textAlign: "center", marginTop: pTd(80) }}>Newest Version</TextM> : (
                                 aboutUs.map(item => {
@@ -79,6 +79,6 @@ class AboutUs extends React.Component {
     }
 }
 
-export default AboutUs
+export default AboutUs;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

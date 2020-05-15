@@ -13,6 +13,8 @@ yarn
 react-native run-ios # react-native run-android
 ```
 
+You can find some advice about how to write your project by this framework in `appDev.md`.
+
 ## 2.How to run on device
 
 https://reactnative.dev/docs/running-on-device
@@ -165,6 +167,10 @@ https://developer.android.com/studio/intro/studio-config#setup-proxy
 // It will throw `register two views with the same name`;
 import { ProgressBarAndroid } from '@react-native-community/progress-bar-android';
 ```
+
+### iOS keyboard
+
+https://github.com/rccoder/blog/issues/25
 
 ## TODO
 
