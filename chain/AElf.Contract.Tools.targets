@@ -57,31 +57,4 @@
             <Compile Include="Protobuf/Generated/*.cs"/>
         </ItemGroup>
     </Target>
-    <!-- Build patcher before building the contract -->
-    <Target Name="PatcherBuild" BeforeTargets="BeforeBuild">
-        <MSBuild Condition="'$(IsContract)' != '' AND '$(IsContract)'"
-                 Projects="$(ProjectDir)/../../src/$(PatcherProjectName)/$(PatcherProjectName).csproj"/>
-    </Target>
-    <!-- Patch the contract dll after building the contract -->
-    <Target Name="PatchContractCode" Condition="'$(IsContract)' != '' AND '$(IsContract)'" AfterTargets="AfterBuild">
-        <PropertyGroup>
-            <CmdPatchOverwrite></CmdPatchOverwrite>
-            <CmdPatchOverwrite Condition="'$(PatchOverwrite)' != '' AND '$(PatchOverwrite)'">-w </CmdPatchOverwrite>
-            <CmdSkipAudit></CmdSkipAudit>
-            <CmdSkipAudit Condition="'$(SkipAudit)' != '' AND '$(SkipAudit)'">-s </CmdSkipAudit>
-        </PropertyGroup>
-        <Exec WorkingDirectory = "$(PatcherDir)"
-              Command="dotnet $(PatcherProjectName).dll $(CmdPatchOverwrite)$(CmdSkipAudit)-p $(TargetDir)$(TargetName).dll"
-              ConsoleToMSBuild="true">
-            <Output TaskParameter="ConsoleOutput" ItemName="PatchContractCodeOutput" />
-        </Exec>
-        <Message Text="$(PatchContractCodeOutput)"/>
-    </Target>
-    <!-- Copy patched contract dll after publish to include in publish directory -->
-    <Target Name="CopyPatchedContractCodeToPublish" AfterTargets="Publish">
-        <Copy Condition="'$(IsContract)' != '' AND '$(IsContract)' AND Exists('$(TargetDir)$(TargetName).dll.patched')"
-              SourceFiles="$(TargetDir)$(TargetName).dll.patched"
-              DestinationFiles="$(PublishDir)/$(TargetName).dll"
-              SkipUnchangedFiles="true" />
-    </Target>
 </Project>
