@@ -18,7 +18,7 @@ using Volo.Abp.Threading;
 
 namespace AElf.Contracts.ACS10DemoContract
 {
-    public class ACS10DemoContractTestBase : ContractTestBase<ACS10DemoContractTestModule>
+    public class ACS10DemoContractTestBase : DAppContractTestBase<ACS10DemoContractTestModule>
     {
         protected List<ECKeyPair> UserKeyPairs => SampleECKeyPairs.KeyPairs.Skip(2).Take(3).ToList();
 
@@ -27,24 +27,9 @@ namespace AElf.Contracts.ACS10DemoContract
 
         internal Address ACS10DemoContractAddress => GetAddress(DAppContractAddressNameProvider.StringName);
 
-        private Address GetAddress(string contractStringName)
-        {
-            var addressService = Application.ServiceProvider.GetRequiredService<ISmartContractAddressService>();
-            var blockchainService = Application.ServiceProvider.GetRequiredService<IBlockchainService>();
-            var chain = AsyncHelper.RunSync(blockchainService.GetChainAsync);
-            var address = AsyncHelper.RunSync(() => addressService.GetSmartContractAddressAsync(new ChainContext
-            {
-                BlockHash = chain.BestChainHash,
-                BlockHeight = chain.BestChainHeight
-            }, contractStringName)).SmartContractAddress.Address;
-            return address;
-        }
+        internal Address TokenContractAddress => GetAddress(TokenSmartContractAddressNameProvider.StringName);
 
-        internal ACS10DemoContractContainer.ACS10DemoContractStub GetACS10DemoContractStub(ECKeyPair senderKeyPair)
-        {
-            var factory = Application.ServiceProvider.GetRequiredService<IContractTesterFactory>();
-            return factory.Create<ACS10DemoContractContainer.ACS10DemoContractStub>(ACS10DemoContractAddress,
-                senderKeyPair);
-        }
+        internal Address TokenHolderContractAddress =>
+            GetAddress(TokenHolderSmartContractAddressNameProvider.StringName);
     }
 }

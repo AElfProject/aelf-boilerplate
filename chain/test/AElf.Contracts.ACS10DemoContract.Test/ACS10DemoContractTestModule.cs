@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using AElf.Boilerplate.TestBase;
+using AElf.Contracts.TestKit;
 using AElf.ContractTestBase;
+using AElf.Kernel.Consensus.AEDPoS;
 using AElf.Kernel.SmartContractInitialization;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
@@ -10,9 +12,9 @@ using Volo.Abp.Modularity;
 namespace AElf.Contracts.ACS10DemoContract
 {
     [DependsOn(
-        typeof(SideChainDAppContractTestModule)
+        typeof(MainChainDAppContractTestModule)
     )]
-    public class ACS10DemoContractTestModule : SideChainDAppContractTestModule
+    public class ACS10DemoContractTestModule : MainChainDAppContractTestModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
