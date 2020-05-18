@@ -16,18 +16,19 @@ namespace AElf.Contracts.ACS1DemoContract
         {
             var keyPair = SampleECKeyPairs.KeyPairs[0];
             var address = Address.FromPublicKey(keyPair.PublicKey);
-            var acs1DemoContractStub = GetACS1DemoContractStub(keyPair);
+            var acs1DemoContractStub =
+                GetTester<ACS1DemoContractContainer.ACS1DemoContractStub>(DAppContractAddress, keyPair);
             
             // Set Method Fee Controller
             await acs1DemoContractStub.ChangeMethodFeeController.SendAsync(new AuthorityInfo
             {
-                ContractAddress = ACS1DemoContractAddress,
+                ContractAddress = DAppContractAddress,
                 OwnerAddress = address
             });
             
             // Check Method Fee Controller
             var methodFeeController = await acs1DemoContractStub.GetMethodFeeController.CallAsync(new Empty());
-            methodFeeController.ContractAddress.ShouldBe(ACS1DemoContractAddress);
+            methodFeeController.ContractAddress.ShouldBe(DAppContractAddress);
             methodFeeController.OwnerAddress.ShouldBe(address);
             
             // Set Method Fee

@@ -20,7 +20,7 @@ namespace AElf.Contracts.ACS10DemoContract
             var keyPair = SampleECKeyPairs.KeyPairs[0];
             var address = Address.FromPublicKey(keyPair.PublicKey);
             var acs10DemoContractStub =
-                GetTester<ACS10DemoContractContainer.ACS10DemoContractStub>(ACS10DemoContractAddress, keyPair);
+                GetTester<ACS10DemoContractContainer.ACS10DemoContractStub>(DAppContractAddress, keyPair);
             var tokenContractStub =
                 GetTester<TokenContractContainer.TokenContractStub>(TokenContractAddress, keyPair);
             var tokenHolderContractStub =
@@ -36,14 +36,14 @@ namespace AElf.Contracts.ACS10DemoContract
 
             await tokenContractStub.Approve.SendAsync(new ApproveInput
             {
-                Spender = ACS10DemoContractAddress,
+                Spender = DAppContractAddress,
                 Symbol = "ELF",
                 Amount = long.MaxValue
             });
 
             await tokenHolderContractStub.RegisterForProfits.SendAsync(new RegisterForProfitsInput
             {
-                SchemeManager = ACS10DemoContractAddress,
+                SchemeManager = DAppContractAddress,
                 Amount = amount
             });
 

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using AElf.Boilerplate.TestBase;
 using AElf.ContractTestBase;
+using AElf.Kernel.SmartContract.Parallel;
 using AElf.Kernel.SmartContractInitialization;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
@@ -10,7 +11,8 @@ using Volo.Abp.Modularity;
 namespace AElf.Contracts.ACS2DemoContract
 {
     [DependsOn(
-        typeof(SideChainDAppContractTestModule)
+        typeof(SideChainDAppContractTestModule),
+        typeof(ParallelExecutionModule)
     )]
     public class ACS2DemoContractTestModule : SideChainDAppContractTestModule
     {

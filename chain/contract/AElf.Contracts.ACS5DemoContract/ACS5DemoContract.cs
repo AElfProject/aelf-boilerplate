@@ -1,5 +1,4 @@
 using Acs5;
-using AElf.Sdk.CSharp;
 using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.ACS5DemoContract
@@ -9,6 +8,12 @@ namespace AElf.Contracts.ACS5DemoContract
     /// </summary>
     public class ACS5DemoContract : ACS5DemoContractContainer.ACS5DemoContractBase
     {
+        public override Empty Initialize(InitializeInput input)
+        {
+            State.Admin.Value = input.Admin;
+            return new Empty();
+        }
+
         public override Empty SetMethodCallingThreshold(SetMethodCallingThresholdInput input)
         {
             Assert(State.Admin.Value == Context.Sender, "No permission.");

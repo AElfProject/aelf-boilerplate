@@ -19,6 +19,11 @@ namespace AElf.Contracts.ACS3DemoContract
         {
             State.TokenContract.Value =
                 Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
+            State.ProposalReleaseThreshold.Value = new ProposalReleaseThreshold
+            {
+                MinimalApprovalThreshold = 1,
+                MinimalVoteThreshold = 1
+            };
             return new Empty();
         }
 
@@ -95,9 +100,13 @@ namespace AElf.Contracts.ACS3DemoContract
         public override Empty Release(Hash input)
         {
             var proposal = State.Proposals[input];
-            Assert(proposal != null, "Proposal not found.");
+            if (proposal == null)
+            {
+                throw new AssertionException("Proposal not found.");
+            }
             Assert(IsReleaseThresholdReached(proposal), "Didn't reach release threshold.");
-            return base.Release(input);
+            Context.SendInline(proposal.ToAddress, proposal.ContractMethodName, proposal.Params);
+            return new Empty();
         }
 
         private bool IsReleaseThresholdReached(ProposalInfo proposal)
@@ -134,6 +143,18 @@ namespace AElf.Contracts.ACS3DemoContract
                 proposal.Abstentions.Concat(proposal.Approvals).Concat(proposal.Rejections).Count() >=
                 State.ProposalReleaseThreshold.Value.MinimalVoteThreshold;
             return isVoteThresholdReached;
+        }
+
+        public override StringValue GetSlogan(Empty input)
+        {
+            return State.Slogan.Value == null ? new StringValue() : new StringValue {Value = State.Slogan.Value};
+        }
+
+        public override Empty SetSlogan(StringValue input)
+        {
+            Assert(Context.Sender == Context.Self, "No permission.");
+            State.Slogan.Value = input.Value;
+            return new Empty();
         }
     }
 }

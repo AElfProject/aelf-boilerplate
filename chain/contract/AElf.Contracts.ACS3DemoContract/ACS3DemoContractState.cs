@@ -12,5 +12,7 @@ namespace AElf.Contracts.ACS3DemoContract
         public MappedState<Hash, ProposalInfo> Proposals { get; set; }
 
         public SingletonState<ProposalReleaseThreshold> ProposalReleaseThreshold { get; set; }
+
+        public StringState Slogan { get; set; }
     }
 }

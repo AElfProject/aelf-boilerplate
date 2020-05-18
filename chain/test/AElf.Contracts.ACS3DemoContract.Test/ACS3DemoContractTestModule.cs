@@ -10,9 +10,9 @@ using Volo.Abp.Modularity;
 namespace AElf.Contracts.ACS3DemoContract
 {
     [DependsOn(
-        typeof(SideChainDAppContractTestModule)
+        typeof(MainChainDAppContractTestModule)
     )]
-    public class ACS3DemoContractTestModule : SideChainDAppContractTestModule
+    public class ACS3DemoContractTestModule : MainChainDAppContractTestModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
