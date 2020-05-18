@@ -11,12 +11,22 @@ namespace AElf.Contracts.ACS5DemoContract
     {
         public override Empty SetMethodCallingThreshold(SetMethodCallingThresholdInput input)
         {
-            return base.SetMethodCallingThreshold(input);
+            Assert(State.Admin.Value == Context.Sender, "No permission.");
+            State.MethodCallingThresholds[input.Method] = new MethodCallingThreshold
+            {
+                SymbolToAmount = {input.SymbolToAmount}
+            };
+            return new Empty();
         }
 
         public override MethodCallingThreshold GetMethodCallingThreshold(StringValue input)
         {
-            return base.GetMethodCallingThreshold(input);
+            return State.MethodCallingThresholds[input.Value];
+        }
+
+        public override Empty Foo(Empty input)
+        {
+            return new Empty();
         }
     }
 }

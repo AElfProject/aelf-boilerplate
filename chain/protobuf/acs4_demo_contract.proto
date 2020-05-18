@@ -10,6 +10,6 @@ service ACS4DemoContract {
     option (aelf.csharp_state) = "AElf.Contracts.ACS4DemoContract.ACS4DemoContractState";
     option (aelf.base) = "acs4.proto";
     
-    rpc Foo (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    rpc Record (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
 }
