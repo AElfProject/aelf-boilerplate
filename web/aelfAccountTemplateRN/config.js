@@ -3,7 +3,7 @@ module.exports.config = {
   lotteryAdminPrivateKey: 'e506064311aefba208d0fefa150fc7d48f1c6f6e00369504dc7ec7784594463d',
   customerAddress: '2hxkDg6Pd2d4yU1A16PTZVMMrEDYEPR8oQojMDwWdax5LsBaxX',
   customerTel: '10086',
-  httpProvider: 'http://3.25.10.185:8000', //'http://192.168.1.4:1235',
+  httpProvider: 'https://wallet-test.aelf.io/chain', //'http://192.168.1.4:1235',
   walletURL: 'https://wallet-test.aelf.io',
   explorerURL: 'https://explorer-test.aelf.io',
   // contractNames & contractAddressedNeedInit will be init by appInit of `/common/utils/aelfProvider`;

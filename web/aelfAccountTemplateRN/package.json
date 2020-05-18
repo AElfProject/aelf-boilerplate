@@ -21,6 +21,7 @@
     "aelf-sdk": "^3.2.26",
     "big-number": "^2.0.0",
     "expo-barcode-scanner": "^8.1.0",
+    "expo-constants": "^9.0.0",
     "install": "^0.13.0",
     "moment": "^2.24.0",
     "react": "16.11.0",

@@ -21,6 +21,7 @@ const {unitConverter} = require('../../../common/utils/unitConverter');
 
 import connect from "../../../common/utils/myReduxConnect";
 import {config} from "../../../common/utils/config";
+import { approveApp } from '../../../common/utils/tokenContract';
 const { balanceRefreshInterval } = config;
 
 //余额刷新频率
@@ -40,7 +41,6 @@ class MyMinePage extends React.Component {
             accountAddress: '',
             nickName: '-',
             accountBalance: 0,
-            accountAllowance: 0,
             contracts : 0,
             sets: [
                 {
@@ -81,7 +81,6 @@ class MyMinePage extends React.Component {
 
     }
     componentDidMount() {
-
         this.requestOrder();
     }
     componentWillUnmount(){
@@ -103,6 +102,8 @@ class MyMinePage extends React.Component {
         })
 
     }
+
+    // TODO: do not use interval; use event, when we focus, we update.
     async getFirstRequest() {
         this.updateBalance = setInterval(()=>{
             this.freshBalance();
@@ -148,11 +149,11 @@ class MyMinePage extends React.Component {
             modalContentType:0,
             modalVisible:true,
         });
-
     }
     async freshBalance(){
         //在这测试了下钱包
         //let privateKey =  await AsyncStorage.getItem(Storage.userPrivateKey);
+        const {accountAddress} = this.state;
         const {
           tokenContract,
           appContract
@@ -162,7 +163,7 @@ class MyMinePage extends React.Component {
         try {
             const res = await tokenContract.GetBalance.call({
                 symbol : "ELF",
-                owner : this.state.accountAddress ,
+                owner : accountAddress,
             });
             this.setState({
                 accountBalance: unitConverter.toLower(res.balance,8).toString(),
@@ -177,37 +178,7 @@ class MyMinePage extends React.Component {
             console.log(error);
         }
 
-        //获取allowance
-        let allowance = -1;
-        try {
-            const res = await tokenContract.GetAllowance.call({
-                symbol : "ELF",
-                owner : this.state.accountAddress,
-                spender: appContract.address
-            });
-            allowance = unitConverter.toLower(res.allowance,8);
-            this.setState({
-                accountAllowance: allowance.toString(),
-            });
-            console.log('token allowance:', res, allowance, allowance < 500);
-        } catch (error) {
-            //出错的话重连
-            //this.initProvider();
-            console.log(error);
-        }
-        // allowance不足时approve
-        if(allowance !== -1 && allowance < 500){
-            try {
-                await tokenContract.Approve({
-                    symbol : "ELF",
-                    spender: appContract.address,
-                    amount : 100000000000,
-                });
-            } catch (error) {
-                //this.initProvider();
-                console.log(error);
-            }
-        }
+        await approveApp(tokenContract, 'ELF', accountAddress, appContract.address);
     }
     /* changeModestatus */
     changeModalStatus() {
@@ -226,14 +197,14 @@ class MyMinePage extends React.Component {
             <View style={{ justifyContent: "center", alignItems: "center", height: pTd(550) }}>
                 <TextL>Account QR Code</TextL>
                 <QRCode
-                            value={ keyStore }
-                            getRef={(c) => (this.svg = c)}
-                            logo={require("../../../assets/images/home/aelf_blue.jpg")}
-                            logoSize={38}
-                            logoMargin={4}
-                            logoBackgroundColor={"#fff"}
-                            size={200}
-                        />
+                    value={ keyStore }
+                    getRef={(c) => (this.svg = c)}
+                    logo={require("../../../assets/images/home/aelf_blue.jpg")}
+                    logoSize={38}
+                    logoMargin={4}
+                    logoBackgroundColor={"#fff"}
+                    size={200}
+                />
                 <View style={Gstyle.frcc}>
                     <TextS>Address：</TextS>
                     <TextS style={{ width: pTd(300) }}>{addressUtils.format(accountAddress)}</TextS>

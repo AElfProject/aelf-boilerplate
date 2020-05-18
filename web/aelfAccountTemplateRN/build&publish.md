@@ -1,5 +1,14 @@
 # Build & Publsih
 
+- Make sure you install the dependencies for react-native.
+
+You can follow this doc: https://reactnative.cn/docs/getting-started.
+
+- Extra Dependencies: [Expo](https://docs.expo.io/)
+
+```bash
+npm install --global expo-cli
+```
 
 ## fir.im CLI publish test application
 

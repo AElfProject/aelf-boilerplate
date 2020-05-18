@@ -4,14 +4,25 @@ React Native: 0.62.4 with expo SDK
 
 AccountTemplate is separated from a third-party project for aelf.
 
+## Extra Dependencies
+
+Expo: https://docs.expo.io/
+
+```bash
+npm install --global expo-cli
+```
+
 ## 1.How to dev
 
 Follow this doc: https://reactnative.cn/docs/getting-started.
 
 ```bash
 yarn
+cd ios && pod install
 react-native run-ios # react-native run-android
 ```
+
+You can find some advice about how to write your project by this framework in `appDev.md`.
 
 ## 2.How to run on device
 
@@ -103,6 +114,10 @@ https://wiki.genexus.com/commwiki/servlet/wiki?34616,HowTo%3A+Create+an+.ipa+fil
 
 ## 5.Build & Publish (Integrate fastlane & firim)
 
+Make sure you install the dependencies for react-native.
+
+You can follow this doc: https://reactnative.cn/docs/getting-started.
+
 You can find more operations in 
 [build&publish.md](https://github.com/AElfProject/aelf-boilerplate/blob/dev/web/aelfAccountTemplateRN/build%26publish.md).
 
@@ -165,6 +180,10 @@ https://developer.android.com/studio/intro/studio-config#setup-proxy
 // It will throw `register two views with the same name`;
 import { ProgressBarAndroid } from '@react-native-community/progress-bar-android';
 ```
+
+### iOS keyboard
+
+https://github.com/rccoder/blog/issues/25
 
 ## TODO
 

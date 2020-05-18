@@ -504,7 +504,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nDATE=`date +%y%m%d`\nGITCITIMES=`git rev-list HEAD | wc -l | awk '{print $1}'`\nREV=\"${DATE}${GITCITIMES}\"\n/usr/libexec/PlistBuddy -c \"Set CFBundleVersion ${REV}\" \"${PROJECT_DIR}\"/${INFOPLIST_FILE}\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nDATE=`date +%Y%m%d`\nGITCITIMES=`git rev-list HEAD | wc -l | awk '{print $1}'`\nREV=\"${DATE}${GITCITIMES}\"\n/usr/libexec/PlistBuddy -c \"Set CFBundleVersion ${REV}\" \"${PROJECT_DIR}\"/${INFOPLIST_FILE}\n";
 		};
 		C8C2703F3A25CE74798006E2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
