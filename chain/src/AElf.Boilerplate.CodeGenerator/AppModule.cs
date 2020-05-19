@@ -40,7 +40,6 @@ namespace AElf.Boilerplate.CodeGenerator
     public class GeneratingOptions
     {
         public List<Replacement> Contents { get; set; }
-        //public List<Replacement> Paths { get; set; }
 
         public List<Replacement> Folders { get; set; }
 
