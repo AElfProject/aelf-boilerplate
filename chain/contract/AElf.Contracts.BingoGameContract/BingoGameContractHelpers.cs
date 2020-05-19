@@ -26,6 +26,12 @@ namespace AElf.Contracts.BingoGameContract
                 return State.LagHeight.Value;
             }
 
+            if (State.ConsensusContract.Value == null)
+            {
+                State.ConsensusContract.Value =
+                    Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
+            }
+
             var minersCount = State.ConsensusContract.GetCurrentMinerList.Call(new Empty()).Pubkeys.Count;
             State.LagHeight.Value = minersCount.Mul(8);
 

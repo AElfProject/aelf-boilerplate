@@ -14,7 +14,8 @@ namespace AElf.Contracts.HelloWorldContract
         public async Task Test()
         {
             // Get a stub for testing.
-            var stub = GetHelloWorldContractStub(SampleECKeyPairs.KeyPairs[0]);
+            var keyPair = SampleECKeyPairs.KeyPairs[0];
+            var stub = GetHelloWorldContractStub(keyPair);
 
             // Use CallAsync or SendAsync method of this stub to test.
             // await stub.Hello.SendAsync(new Empty())

@@ -9,14 +9,14 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Volo.Abp;
 using Volo.Abp.Modularity;
 
-namespace AElf.Contracts.BingoGameContract
+namespace AElf.Contracts.BingoContract
 {
     [DependsOn(typeof(MainChainDAppContractTestModule))]
-    public class BingoGameContractTestModule : MainChainDAppContractTestModule
+    public class BingoContractTestModule : MainChainDAppContractTestModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddSingleton<IContractInitializationProvider, BingoGameContractInitializationProvider>();
+            context.Services.AddSingleton<IContractInitializationProvider, BingoContractInitializationProvider>();
 
             context.Services.RemoveAll<IPreExecutionPlugin>();
             context.Services.RemoveAll<IPostExecutionPlugin>();
@@ -25,11 +25,11 @@ namespace AElf.Contracts.BingoGameContract
         public override void OnPreApplicationInitialization(ApplicationInitializationContext context)
         {
             var contractCodeProvider = context.ServiceProvider.GetService<IContractCodeProvider>();
-            var contractDllLocation = typeof(BingoGameContract).Assembly.Location;
+            var contractDllLocation = typeof(BingoContract).Assembly.Location;
             var contractCodes = new Dictionary<string, byte[]>(contractCodeProvider.Codes)
             {
                 {
-                    new BingoGameContractInitializationProvider().ContractCodeName,
+                    new BingoContractInitializationProvider().ContractCodeName,
                     File.ReadAllBytes(contractDllLocation)
                 }
             };

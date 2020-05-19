@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>AElf.Contracts.BingoGameContract</RootNamespace>
+    <RootNamespace>AElf.Contracts.BingoContract</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -27,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ContractStub Include="..\..\protobuf\bingo_game_contract.proto">
-      <Link>Protobuf\Proto\bingo_game_contract.proto</Link>
+    <ContractStub Include="..\..\protobuf\bingo_contract.proto">
+      <Link>Protobuf\Proto\bingo_contract.proto</Link>
     </ContractStub>
     <ContractStub Include="..\..\protobuf\token_contract.proto">
       <Link>Protobuf\Proto\token_contract.proto</Link>
@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj" />
+    <ProjectReference Include="..\..\contract\AElf.Contracts.BingoContract\AElf.Contracts.BingoContract.csproj" />
     <ProjectReference Include="..\..\src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj" />
   </ItemGroup>
 

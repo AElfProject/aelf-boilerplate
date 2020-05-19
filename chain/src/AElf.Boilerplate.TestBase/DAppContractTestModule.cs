@@ -5,10 +5,12 @@ using AElf.Contracts.Deployer;
 using AElf.Contracts.TestKit;
 using AElf.ContractTestBase;
 using AElf.Kernel.Consensus.AEDPoS;
+using AElf.Kernel.Miner.Application;
 using AElf.Kernel.SmartContractInitialization;
 using AElf.OS.Node.Application;
 using AElf.Runtime.CSharp;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Volo.Abp;
 using Volo.Abp.Modularity;
 
@@ -36,6 +38,8 @@ namespace AElf.Boilerplate.TestBase
                 options.MiningInterval = 4000;
                 options.InitialMinerList = new List<string> {SampleECKeyPairs.KeyPairs[0].PublicKey.ToHex()};
             });
+            
+            context.Services.RemoveAll<ISystemTransactionGenerator>();
         }
 
         public override void OnPreApplicationInitialization(ApplicationInitializationContext context)
@@ -67,6 +71,8 @@ namespace AElf.Boilerplate.TestBase
                 options.MiningInterval = 4000;
                 options.InitialMinerList = new List<string> {SampleECKeyPairs.KeyPairs[0].PublicKey.ToHex()};
             });
+
+            context.Services.RemoveAll<ISystemTransactionGenerator>();
         }
 
         public override void OnPreApplicationInitialization(ApplicationInitializationContext context)

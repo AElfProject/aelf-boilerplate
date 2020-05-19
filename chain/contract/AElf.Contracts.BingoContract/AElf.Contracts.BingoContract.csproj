@@ -1,8 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-      <RootNamespace>AElf.Contracts.BingoGameContract</RootNamespace>
-      <IsContract>true</IsContract>
+    <!-- The root namespace -->
+    <RootNamespace>AElf.Contracts.BingoContract</RootNamespace>
+    <!-- Mark this project as a contract -->
+    <IsContract>true</IsContract>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
@@ -11,14 +13,15 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <ItemGroup>
-    <ContractCode Include="..\..\protobuf\bingo_game_contract.proto">
-      <Link>Protobuf/Proto/bingo_game_contract.proto</Link>
+    <!-- Reference the protobuf definition of the contract -->
+    <ContractCode Include="..\..\protobuf\bingo_contract.proto">
+      <Link>Protobuf\Proto\bingo_contract.proto</Link>
     </ContractCode>
     <ContractReference Include="..\..\protobuf\token_contract.proto">
-      <Link>Protobuf/Proto/token_contract.proto</Link>
+      <Link>Protobuf\Proto\reference\token_contract.proto</Link>
     </ContractReference>
     <ContractReference Include="..\..\protobuf\aedpos_contract.proto">
-      <Link>Protobuf/Proto/aedpos_contract.proto</Link>
+      <Link>Protobuf\Proto\reference\aedpos_contract.proto</Link>
     </ContractReference>
   </ItemGroup>
 </Project>
