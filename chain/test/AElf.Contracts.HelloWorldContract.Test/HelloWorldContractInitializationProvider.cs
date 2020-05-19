@@ -3,9 +3,9 @@ using AElf.Boilerplate.TestBase;
 using AElf.Kernel.SmartContractInitialization;
 using AElf.Types;
 
-namespace AElf.Contracts.ACS2DemoContract
+namespace AElf.Contracts.HelloWorldContract
 {
-    public class ACS2DemoContractInitializationProvider : IContractInitializationProvider
+    public class HelloWorldContractInitializationProvider : IContractInitializationProvider
     {
         public List<InitializeMethod> GetInitializeMethodList(byte[] contractCode)
         {
@@ -13,6 +13,6 @@ namespace AElf.Contracts.ACS2DemoContract
         }
 
         public Hash SystemSmartContractName { get; } = DAppSmartContractAddressNameProvider.Name;
-        public string ContractCodeName { get; } = "AElf.Contracts.ACS2DemoContract";
+        public string ContractCodeName { get; } = "AElf.Contracts.HelloWorldContract";
     }
 }

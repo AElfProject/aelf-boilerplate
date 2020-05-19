@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
@@ -22,9 +22,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.TestBase",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.Tester", "src\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj", "{217599C5-2CF0-411E-97B5-5657739CEE5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.HelloWorldContract", "contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj", "{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewCompany.HaloContract", "contract\NewCompany.HaloContract\NewCompany.HaloContract.csproj", "{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.HelloWorldContract.Test", "test\AElf.Contracts.HelloWorldContract.Test\AElf.Contracts.HelloWorldContract.Test.csproj", "{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewCompany.HaloContract.Test", "test\NewCompany.HaloContract.Test\NewCompany.HaloContract.Test.csproj", "{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

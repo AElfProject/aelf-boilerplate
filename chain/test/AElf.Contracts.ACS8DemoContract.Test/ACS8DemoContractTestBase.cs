@@ -23,7 +23,7 @@ namespace AElf.Contracts.ACS8DemoContract
                 {
                     BlockHash = chain.BestChainHash,
                     BlockHeight = chain.BestChainHeight
-                }, DAppContractAddressNameProvider.StringName)).SmartContractAddress.Address;
+                }, DAppSmartContractAddressNameProvider.StringName)).SmartContractAddress.Address;
                 return address;
             }
         }

@@ -10,7 +10,7 @@ namespace AElf.Boilerplate.TestBase
 {
     public class DAppContractTestBase<TModule> : ContractTestBase<TModule> where TModule : ContractTestModule
     {
-        public Address DAppContractAddress => GetAddress(DAppContractAddressNameProvider.StringName);
+        public Address DAppContractAddress => GetAddress(DAppSmartContractAddressNameProvider.StringName);
 
         public Address GetAddress(string contractStringName)
         {

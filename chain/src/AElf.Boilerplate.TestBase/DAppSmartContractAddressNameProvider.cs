@@ -3,7 +3,7 @@ using AElf.Types;
 
 namespace AElf.Boilerplate.TestBase
 {
-    public class DAppContractAddressNameProvider
+    public class DAppSmartContractAddressNameProvider
     {
         public static readonly Hash Name = HashHelper.ComputeFrom("AElf.ContractNames.Test");
 

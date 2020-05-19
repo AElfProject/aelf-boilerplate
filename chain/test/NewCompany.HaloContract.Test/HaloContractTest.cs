@@ -6,15 +6,15 @@ using Google.Protobuf.WellKnownTypes;
 using Shouldly;
 using Xunit;
 
-namespace AElf.Contracts.HelloWorldContract
+namespace NewCompany.HaloContract
 {
-    public class HelloWorldContractTest : HelloWorldContractTestBase
+    public class HaloContractTest : HaloContractTestBase
     {
         [Fact]
         public async Task Test()
         {
             // Get a stub for testing.
-            var stub = GetHelloWorldContractStub(SampleECKeyPairs.KeyPairs[0]);
+            var stub = GetHaloContractStub(SampleECKeyPairs.KeyPairs[0]);
 
             // Use CallAsync or SendAsync method of this stub to test.
             // await stub.Hello.SendAsync(new Empty())

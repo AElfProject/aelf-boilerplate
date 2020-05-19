@@ -1,53 +1,16 @@
-using System.IO;
-using System.Linq;
-using Acs0;
-using AElf.Contracts.TestKit;
+using AElf.Boilerplate.TestBase;
 using AElf.Cryptography.ECDSA;
-using AElf.EconomicSystem;
-using AElf.Kernel;
-using AElf.Types;
-using Google.Protobuf;
-using Volo.Abp.Threading;
 
 namespace AElf.Contracts.HelloWorldContract
 {
-    public class HelloWorldContractTestBase : ContractTestBase<HelloWorldContractTestModule>
+    public class HelloWorldContractTestBase : DAppContractTestBase<HelloWorldContractTestModule>
     {
-        internal HelloWorldContractContainer.HelloWorldContractStub HelloWorldContractStub { get; set; }
-        private ACS0Container.ACS0Stub ZeroContractStub { get; set; }
+        // You can get address of any contract via GetAddress method, for example:
+        // internal Address DAppContractAddress => GetAddress(DAppSmartContractAddressNameProvider.StringName);
 
-        private Address HelloWorldContractAddress { get; set; }
-
-        protected HelloWorldContractTestBase()
+        internal HelloWorldContractContainer.HelloWorldContractStub GetHelloWorldContractStub(ECKeyPair senderKeyPair)
         {
-            InitializeContracts();
-        }
-
-        private void InitializeContracts()
-        {
-            ZeroContractStub = GetZeroContractStub(SampleECKeyPairs.KeyPairs.First());
-
-            HelloWorldContractAddress = AsyncHelper.RunSync(() =>
-                ZeroContractStub.DeploySystemSmartContract.SendAsync(
-                    new SystemContractDeploymentInput
-                    {
-                        Category = KernelConstants.DefaultRunnerCategory,
-                        Code = ByteString.CopyFrom(File.ReadAllBytes(typeof(HelloWorldContract).Assembly.Location)),
-                        Name = ProfitSmartContractAddressNameProvider.Name,
-                        TransactionMethodCallList =
-                            new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList()
-                    })).Output;
-            HelloWorldContractStub = GetHelloWorldContractStub(SampleECKeyPairs.KeyPairs.First());
-        }
-
-        private ACS0Container.ACS0Stub GetZeroContractStub(ECKeyPair keyPair)
-        {
-            return GetTester<ACS0Container.ACS0Stub>(ContractZeroAddress, keyPair);
-        }
-
-        private HelloWorldContractContainer.HelloWorldContractStub GetHelloWorldContractStub(ECKeyPair keyPair)
-        {
-            return GetTester<HelloWorldContractContainer.HelloWorldContractStub>(HelloWorldContractAddress, keyPair);
+            return GetTester<HelloWorldContractContainer.HelloWorldContractStub>(DAppContractAddress, senderKeyPair);
         }
     }
 }

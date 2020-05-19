@@ -12,7 +12,7 @@ namespace AElf.Contracts.ACS1DemoContract
             return new List<InitializeMethod>();
         }
 
-        public Hash SystemSmartContractName { get; } = DAppContractAddressNameProvider.Name;
+        public Hash SystemSmartContractName { get; } = DAppSmartContractAddressNameProvider.Name;
         public string ContractCodeName { get; } = "AElf.Contracts.ACS1DemoContract";
     }
 }

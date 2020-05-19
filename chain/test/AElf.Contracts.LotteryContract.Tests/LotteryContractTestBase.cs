@@ -16,7 +16,7 @@ namespace AElf.Contracts.LotteryContract
     // ReSharper disable InconsistentNaming
     public class LotteryContractTestBase : ContractTestBase<LotteryContractTestModule>
     {
-        internal Address LotteryContractAddress => GetAddress(DAppContractAddressNameProvider.StringName);
+        internal Address LotteryContractAddress => GetAddress(DAppSmartContractAddressNameProvider.StringName);
 
         internal LotteryContractContainer.LotteryContractStub LotteryContractStub =>
             GetLotteryContractStub(SampleECKeyPairs.KeyPairs[0]);

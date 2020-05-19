@@ -24,7 +24,7 @@ namespace AElf.Contracts.ACS5DemoContract
             };
         }
 
-        public Hash SystemSmartContractName { get; } = DAppContractAddressNameProvider.Name;
+        public Hash SystemSmartContractName { get; } = DAppSmartContractAddressNameProvider.Name;
         public string ContractCodeName { get; } = "AElf.Contracts.ACS5DemoContract";
     }
 }

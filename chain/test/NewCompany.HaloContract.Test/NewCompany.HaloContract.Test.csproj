@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>AElf.Contracts.HelloWorldContract</RootNamespace>
+    <RootNamespace>NewCompany.HaloContract</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -30,13 +30,13 @@
     <ContractStub Include="..\..\protobuf\acs0.proto">
       <Link>Protobuf\Proto\acs0.proto</Link>
     </ContractStub>
-    <ContractStub Include="..\..\protobuf\hello_world_contract.proto">
-      <Link>Protobuf\Proto\hello_world_contract.proto</Link>
+    <ContractStub Include="..\..\protobuf\halo_contract.proto">
+      <Link>Protobuf\Proto\halo_contract.proto</Link>
     </ContractStub>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj" />
+    <ProjectReference Include="..\..\contract\NewCompany.HaloContract\NewCompany.HaloContract.csproj" />
     <ProjectReference Include="..\..\src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj" />
   </ItemGroup>
 
