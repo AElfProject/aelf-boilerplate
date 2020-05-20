@@ -9,6 +9,7 @@ import Storage from  "../../../constants/storage"
 import QRCode from 'react-native-qrcode-svg';
 
 import pTd from "../../../common/utils/unit";
+import { format } from "../../../common/utils/address";
 import { TextM, TextL } from "../../../common/UI_Component/CommonText";
 
 /*
@@ -74,7 +75,7 @@ class Recharge extends React.Component {
                     <View style={{ justifyContent: "center", alignItems: "center" }}>
                         <View style={{ flexDirection: "row", ...Gstyle.marginArg(pTd(20), 0) }}>
                             <TextM>Account: </TextM>
-                            <TextM style={{ width: pTd(450) }}>{accountAddress}</TextM>
+                            <TextM style={{ width: pTd(450) }}>{format(accountAddress)}</TextM>
                             <TouchableOpacity onPress={() => this.copyAddress()}>
                                 <Icon name="copy1" size={18} color="#000" />
                             </TouchableOpacity>
