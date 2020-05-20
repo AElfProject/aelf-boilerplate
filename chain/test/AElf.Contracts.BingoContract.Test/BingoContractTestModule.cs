@@ -2,10 +2,8 @@ using System.Collections.Generic;
 using System.IO;
 using AElf.Boilerplate.TestBase;
 using AElf.ContractTestBase;
-using AElf.Kernel.SmartContract.Application;
 using AElf.Kernel.SmartContractInitialization;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Volo.Abp;
 using Volo.Abp.Modularity;
 
@@ -17,9 +15,6 @@ namespace AElf.Contracts.BingoContract
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             context.Services.AddSingleton<IContractInitializationProvider, BingoContractInitializationProvider>();
-
-            context.Services.RemoveAll<IPreExecutionPlugin>();
-            context.Services.RemoveAll<IPostExecutionPlugin>();
         }
 
         public override void OnPreApplicationInitialization(ApplicationInitializationContext context)

@@ -103,9 +103,10 @@ namespace AElf.Contracts.BingoContract
                 randomHash = HashHelper.XorAndCompute(input, Context.PreviousBlockHash);
             }
 
-            var isWin = ConvertHashToBool(randomHash);
             var usefulHash = HashHelper.ConcatAndCompute(randomHash, playerInformation.Seed);
-            var award = CalculateAward(boutInformation.Amount, GetKindFromHash(usefulHash));
+            var bitArraySum = SumHash(usefulHash);
+            var isWin = ConvertHashToBool(bitArraySum);
+            var award = CalculateAward(boutInformation.Amount, GetKind(bitArraySum));
             award = isWin ? award : -award;
             var transferAmount = boutInformation.Amount.Add(award);
             if (transferAmount > 0)
@@ -180,18 +181,17 @@ namespace AElf.Contracts.BingoContract
         /// 40%: 48...95, 160...207
         /// 10%: 96...159
         /// </summary>
-        /// <param name="hash"></param>
+        /// <param name="bitArraySum"></param>
         /// <returns></returns>
-        private int GetKindFromHash(Hash hash)
+        private int GetKind(int bitArraySum)
         {
-            var sum = SumHash(hash);
-            if (sum <= 15 || sum >= 240)
+            if (bitArraySum <= 15 || bitArraySum >= 240)
                 return 4;
 
-            if (sum <= 47 || sum >= 208)
+            if (bitArraySum <= 47 || bitArraySum >= 208)
                 return 3;
 
-            if (sum <= 95 || sum >= 160)
+            if (bitArraySum <= 95 || bitArraySum >= 160)
                 return 2;
 
             return 1;
@@ -227,9 +227,9 @@ namespace AElf.Contracts.BingoContract
             return value;
         }
 
-        private bool ConvertHashToBool(Hash hash)
+        private bool ConvertHashToBool(int bitArraySum)
         {
-            return SumHash(hash) % 2 == 0;
+            return bitArraySum % 2 == 0;
         }
     }
 }

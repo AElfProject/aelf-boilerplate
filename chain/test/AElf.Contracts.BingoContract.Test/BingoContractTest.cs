@@ -42,13 +42,12 @@ namespace AElf.Contracts.BingoContract
             }
 
             // Play.
-            var txResult = (await tokenStub.Approve.SendAsync(new ApproveInput
+            await tokenStub.Approve.SendAsync(new ApproveInput
             {
                 Spender = DAppContractAddress,
                 Symbol = "ELF",
                 Amount = 10000
-            })).TransactionResult;
-            txResult.Status.ShouldBe(TransactionResultStatus.Mined);
+            });
 
             await stub.Play.SendAsync(new Int64Value {Value = 10000});
 

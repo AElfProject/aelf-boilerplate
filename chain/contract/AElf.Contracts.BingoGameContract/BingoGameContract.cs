@@ -96,9 +96,10 @@ namespace AElf.Contracts.BingoGameContract
                 throw new AssertionException("Still preparing your game result, please wait for a while :)");
             }
 
-            var isWin = ConvertHashToBool(randomHash);
             var usefulHash = HashHelper.ConcatAndCompute(randomHash, playerInformation.Seed);
-            var award = CalculateAward(boutInformation.Amount, GetKindFromHash(usefulHash));
+            var bitArraySum = SumHash(usefulHash);
+            var isWin = ConvertHashToBool(bitArraySum);
+            var award = CalculateAward(boutInformation.Amount, GetKind(bitArraySum));
             award = isWin ? award : -award;
             var transferAmount = boutInformation.Amount.Add(award);
             if (transferAmount > 0)
