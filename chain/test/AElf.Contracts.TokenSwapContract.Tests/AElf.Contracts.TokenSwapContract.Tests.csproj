@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>AElf.Contracts.TokenSwapContract</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="AElf.Contracts.TestKit" Version="1.0.0-preview2" />
+        <PackageReference Include="AElf.ContractTestBase" Version="1.0.0-preview2" />
+        <ProjectReference Include="..\..\contract\AElf.Contracts.TokenSwapContract\AElf.Contracts.TokenSwapContract.csproj" />
+        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-preview2" />
+        <ProjectReference Include="..\..\src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ContractStub Include="..\..\protobuf\acs0.proto">
+            <Link>Protobuf\Proto\stub\acs0.proto</Link>
+        </ContractStub>
+        <ContractBase Include="..\..\protobuf\acs1.proto">
+            <Link>Protobuf\Proto\base\acs1.proto</Link>
+        </ContractBase>
+        <ContractStub Include="..\..\protobuf\token_swap_contract.proto">
+            <Link>Protobuf\Proto\stub\token_swap_contract.proto</Link>
+        </ContractStub>
+        <ContractBase Include="..\..\protobuf\token_contract.proto">
+            <Link>Protobuf/Proto/token_contract.proto</Link>
+        </ContractBase>
+        <ContractStub Include="..\..\protobuf\token_contract_impl.proto">
+            <Link>Protobuf/Proto/token_contract_impl.proto</Link>
+        </ContractStub>
+        <ContractBase Include="..\..\protobuf\transaction_fee.proto">
+            <Link>Protobuf\Proto\transaction_fee.proto</Link>
+        </ContractBase>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
+        <PackageReference Include="Shouldly" Version="3.0.2" />
+        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="xunit.runner.console" Version="2.4.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
+    </ItemGroup>
+    
+</Project>

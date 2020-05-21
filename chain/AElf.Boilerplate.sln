@@ -80,6 +80,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS10DemoCon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.TokenSwapContract", "contract\AElf.Contracts.TokenSwapContract\AElf.Contracts.TokenSwapContract.csproj", "{FD64F281-9821-49E0-BDB0-D5E43C831A08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.TokenSwapContract.Tests", "test\AElf.Contracts.TokenSwapContract.Tests\AElf.Contracts.TokenSwapContract.Tests.csproj", "{EB2A658B-B0A4-4E3A-9135-194D30FDE7C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -234,6 +236,10 @@ Global
 		{FD64F281-9821-49E0-BDB0-D5E43C831A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD64F281-9821-49E0-BDB0-D5E43C831A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD64F281-9821-49E0-BDB0-D5E43C831A08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB2A658B-B0A4-4E3A-9135-194D30FDE7C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB2A658B-B0A4-4E3A-9135-194D30FDE7C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB2A658B-B0A4-4E3A-9135-194D30FDE7C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB2A658B-B0A4-4E3A-9135-194D30FDE7C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -273,6 +279,7 @@ Global
 		{A8373241-AFAB-43C1-9075-BB91CE1176C6} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 		{E74130E4-3AAF-44C9-9D5A-D1B2155FA4D7} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 		{FD64F281-9821-49E0-BDB0-D5E43C831A08} = {5C980166-C987-470D-AEE0-3858A170A903}
+		{EB2A658B-B0A4-4E3A-9135-194D30FDE7C5} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7426B41-E959-40E4-9ED8-ED8D9C50F133}
