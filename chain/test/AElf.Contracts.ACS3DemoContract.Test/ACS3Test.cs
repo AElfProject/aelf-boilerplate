@@ -20,9 +20,16 @@ namespace AElf.Contracts.ACS3DemoContract
             var keyPair = SampleECKeyPairs.KeyPairs[0];
             var acs3DemoContractStub =
                 GetTester<ACS3DemoContractContainer.ACS3DemoContractStub>(DAppContractAddress, keyPair);
+
             var tokenContractStub =
                 GetTester<TokenContractContainer.TokenContractStub>(
                     GetAddress(TokenSmartContractAddressNameProvider.StringName), keyPair);
+            await tokenContractStub.Approve.SendAsync(new ApproveInput
+            {
+                Spender = DAppContractAddress,
+                Symbol = "ELF",
+                Amount = long.MaxValue
+            });
 
             var proposalId = (await acs3DemoContractStub.CreateProposal.SendAsync(new CreateProposalInput
             {
@@ -33,21 +40,14 @@ namespace AElf.Contracts.ACS3DemoContract
                 Token = HashHelper.ComputeFrom("AElf")
             })).Output;
 
-            await tokenContractStub.Approve.SendAsync(new ApproveInput
-            {
-                Spender = DAppContractAddress,
-                Symbol = "ELF",
-                Amount = long.MaxValue
-            });
-
-            await acs3DemoContractStub.Approve.SendAsync(proposalId);
-            
             // Check slogan
             {
                 var slogan = await acs3DemoContractStub.GetSlogan.CallAsync(new Empty());
                 slogan.Value.ShouldBeEmpty();
             }
 
+            await acs3DemoContractStub.Approve.SendAsync(proposalId);
+            
             await acs3DemoContractStub.Release.SendAsync(proposalId);
             
             // Check slogan

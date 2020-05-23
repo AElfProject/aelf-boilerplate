@@ -25,6 +25,7 @@
         <PackageReference Include="AElf.Contracts.TestKit" Version="1.0.0-preview2" />
         <PackageReference Include="AElf.ContractTestBase" Version="1.0.0-preview2" />
         <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-preview2" />
+        <PackageReference Include="AElf.Kernel.SmartContract.ExecutionPluginForCallThreshold" Version="1.0.0-preview2" />
     </ItemGroup>
 
     <ItemGroup>

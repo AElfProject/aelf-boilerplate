@@ -24,7 +24,7 @@ namespace AElf.Contracts.ACS5DemoContract
                 });
             methodResult.SymbolToAmount.Count.ShouldBe(0);
 
-            var setResult = await acs5DemoContractStub.SetMethodCallingThreshold.SendAsync(
+            await acs5DemoContractStub.SetMethodCallingThreshold.SendAsync(
                 new SetMethodCallingThresholdInput
                 {
                     Method = nameof(acs5DemoContractStub.Foo),
@@ -34,7 +34,6 @@ namespace AElf.Contracts.ACS5DemoContract
                     },
                     ThresholdCheckType = ThresholdCheckType.Balance
                 });
-            setResult.TransactionResult.Status.ShouldBe(TransactionResultStatus.Mined);
 
             methodResult = await acs5DemoContractStub.GetMethodCallingThreshold.CallAsync(
                 new StringValue
@@ -44,8 +43,20 @@ namespace AElf.Contracts.ACS5DemoContract
             methodResult.SymbolToAmount.Count.ShouldBe(1);
             methodResult.ThresholdCheckType.ShouldBe(ThresholdCheckType.Balance);
 
-            var executionResult = await acs5DemoContractStub.Foo.SendAsync(new Empty());
-            executionResult.TransactionResult.Status.ShouldBe(TransactionResultStatus.Mined);
+            // Call with enough balance.
+            {
+                var executionResult = await acs5DemoContractStub.Foo.SendAsync(new Empty());
+                executionResult.TransactionResult.Status.ShouldBe(TransactionResultStatus.Mined);
+            }
+
+            // Call without enough balance.
+            {
+                var poorStub =
+                    GetTester<ACS5DemoContractContainer.ACS5DemoContractStub>(DAppContractAddress,
+                        SampleECKeyPairs.KeyPairs[1]);
+                var executionResult = await poorStub.Foo.SendWithExceptionAsync(new Empty());
+                executionResult.TransactionResult.Error.ShouldContain("Cannot meet the calling threshold.");
+            }
         }
     }
 }

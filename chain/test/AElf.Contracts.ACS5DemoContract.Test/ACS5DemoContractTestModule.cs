@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.IO;
 using AElf.Boilerplate.TestBase;
 using AElf.ContractTestBase;
+using AElf.Kernel.SmartContract.Application;
+using AElf.Kernel.SmartContract.ExecutionPluginForCallThreshold;
 using AElf.Kernel.SmartContractInitialization;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
@@ -10,9 +12,10 @@ using Volo.Abp.Modularity;
 namespace AElf.Contracts.ACS5DemoContract
 {
     [DependsOn(
-        typeof(SideChainDAppContractTestModule)
+        typeof(MainChainDAppContractTestModule),
+        typeof(ExecutionPluginForCallThresholdModule)
     )]
-    public class ACS5DemoContractTestModule : SideChainDAppContractTestModule
+    public class ACS5DemoContractTestModule : MainChainDAppContractTestModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
