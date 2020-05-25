@@ -18,8 +18,15 @@ namespace AElf.Contracts.ACS9DemoContract
         {
             var keyPair = UserKeyPairs[0];
             var address = Address.FromPublicKey(keyPair.PublicKey);
+
+            // Prepare stubs.
             var acs9DemoContractStub = GetACS9DemoContractStub(keyPair);
             var acs10DemoContractStub = GetACS10DemoContractStub(keyPair);
+            var userTokenStub =
+                GetTester<TokenContractImplContainer.TokenContractImplStub>(TokenContractAddress, UserKeyPairs[0]);
+            var userTokenHolderStub =
+                GetTester<TokenHolderContractContainer.TokenHolderContractStub>(TokenHolderContractAddress,
+                    UserKeyPairs[0]);
 
             await acs10DemoContractStub.Initialize.SendAsync(new ACS10DemoContract.InitializeInput());
             
@@ -30,13 +37,6 @@ namespace AElf.Contracts.ACS9DemoContract
                 Symbol = "ELF",
                 Amount = 1000_00000000
             });
-
-            // Prepare stubs.
-            var userTokenStub =
-                GetTester<TokenContractImplContainer.TokenContractImplStub>(TokenContractAddress, UserKeyPairs[0]);
-            var userTokenHolderStub =
-                GetTester<TokenHolderContractContainer.TokenHolderContractStub>(TokenHolderContractAddress,
-                    UserKeyPairs[0]);
 
             await acs9DemoContractStub.SignUp.SendAsync(new Empty());
 
@@ -139,7 +139,7 @@ namespace AElf.Contracts.ACS9DemoContract
             // Profits should be 1 ELF.
             (await GetFirstUserBalance("ELF")).ShouldBe(elfBalanceAfter + 1_0000_0000);
 
-            //withdraw
+            // Withdraw
             var beforeBalance =
                 await userTokenStub.GetBalance.CallAsync(new GetBalanceInput
                 {
