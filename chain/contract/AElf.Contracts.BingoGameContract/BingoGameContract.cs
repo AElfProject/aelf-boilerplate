@@ -27,24 +27,24 @@ namespace AElf.Contracts.BingoGameContract
                 Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
 
             // Create and issue token of this contract.
-            State.TokenContract.Create.Send(new CreateInput
-            {
-                Symbol = BingoGameContractConstants.CardSymbol,
-                TokenName = "Bingo Card",
-                Decimals = 0,
-                Issuer = Context.Self,
-                IsBurnable = true,
-                TotalSupply = long.MaxValue,
-                LockWhiteList = {Context.Self}
-            });
+//            State.TokenContract.Create.Send(new CreateInput
+//            {
+//                Symbol = BingoGameContractConstants.CardSymbol,
+//                TokenName = "Bingo Card",
+//                Decimals = 0,
+//                Issuer = Context.Self,
+//                IsBurnable = true,
+//                TotalSupply = long.MaxValue,
+//                LockWhiteList = {Context.Self}
+//            });
 
-            State.TokenContract.Issue.Send(new IssueInput
-            {
-                Symbol = BingoGameContractConstants.CardSymbol,
-                Amount = long.MaxValue,
-                To = Context.Self,
-                Memo = "All to issuer."
-            });
+//            State.TokenContract.Issue.Send(new IssueInput
+//            {
+//                Symbol = BingoGameContractConstants.CardSymbol,
+//                Amount = long.MaxValue,
+//                To = Context.Self,
+//                Memo = "All to issuer."
+//            });
             State.Initialized.Value = true;
             return new Empty();
         }
@@ -56,6 +56,8 @@ namespace AElf.Contracts.BingoGameContract
         /// <returns></returns>
         public override Empty Register(Empty input)
         {
+            // Register is not necessary now.
+            // But we can
             Assert(State.PlayerInformation[Context.Sender] == null, $"User {Context.Sender} already registered.");
             var information = new PlayerInformation
             {
@@ -64,38 +66,38 @@ namespace AElf.Contracts.BingoGameContract
             };
             State.PlayerInformation[Context.Sender] = information;
 
-            State.TokenContract.Transfer.Send(new TransferInput
-            {
-                Symbol = BingoGameContractConstants.CardSymbol,
-                Amount = BingoGameContractConstants.InitialCards,
-                To = Context.Sender,
-                Memo = "Initial Bingo Cards for player."
-            });
+//            State.TokenContract.Transfer.Send(new TransferInput
+//            {
+//                Symbol = BingoGameContractConstants.CardSymbol,
+//                Amount = BingoGameContractConstants.InitialCards,
+//                To = Context.Sender,
+//                Memo = "Initial Bingo Cards for player."
+//            });
 
             return new Empty();
         }
 
         public override Empty Deposit(SInt64Value input)
         {
-            var playerInformation = State.PlayerInformation[Context.Sender];
-            Assert(playerInformation != null, $"User {Context.Sender} not registered before.");
-            Assert(input.Value > 0, "At least you should buy 1 CARD.");
-            var elfAmount = input.Value.Mul(1_0000_0000);
-            State.TokenContract.TransferFrom.Send(new TransferFromInput
-            {
-                Symbol = Context.Variables.NativeSymbol,
-                Amount = elfAmount,
-                From = Context.Sender,
-                To = Context.Self,
-                Memo = "Thanks for recharging:)"
-            });
-            State.TokenContract.Transfer.Send(new TransferInput
-            {
-                Symbol = BingoGameContractConstants.CardSymbol,
-                Amount = input.Value,
-                To = Context.Sender,
-                Memo = "Now you are stronger:)"
-            });
+//            var playerInformation = State.PlayerInformation[Context.Sender];
+//            Assert(playerInformation != null, $"User {Context.Sender} not registered before.");
+//            Assert(input.Value > 0, "At least you should buy 1 CARD.");
+//            var elfAmount = input.Value.Mul(1_0000_0000);
+//            State.TokenContract.TransferFrom.Send(new TransferFromInput
+//            {
+//                Symbol = Context.Variables.NativeSymbol,
+//                Amount = elfAmount,
+//                From = Context.Sender,
+//                To = Context.Self,
+//                Memo = "Thanks for recharging:)"
+//            });
+//            State.TokenContract.Transfer.Send(new TransferInput
+//            {
+//                Symbol = BingoGameContractConstants.CardSymbol,
+//                Amount = input.Value,
+//                To = Context.Sender,
+//                Memo = "Now you are stronger:)"
+//            });
 
             return new Empty();
         }
@@ -184,7 +186,7 @@ namespace AElf.Contracts.BingoGameContract
             boutInformation.IsComplete = true;
             State.PlayerInformation[Context.Sender] = playerInformation;
 
-            return new BoolValue {Value = true};
+            return new BoolValue {Value = isWin};
         }
 
         public override SInt64Value GetAward(Hash input)

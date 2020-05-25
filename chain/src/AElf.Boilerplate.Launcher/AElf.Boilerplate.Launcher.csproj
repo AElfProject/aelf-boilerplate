@@ -4,17 +4,17 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ServerGarbageCollection>true</ServerGarbageCollection>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <ProjectReference Include="..\AElf.Boilerplate.Mainchain\AElf.Boilerplate.Mainchain.csproj" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="1.1.2" />
         <PackageReference Include="Volo.Abp.Autofac" Version="1.1.2" />
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.0.0-preview2">
             <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
@@ -24,6 +24,11 @@
             <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.net</PackageName>
         </PackageReference>
+        <ProjectReference Include="..\..\contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </ProjectReference>
     </ItemGroup>
 
     <ItemGroup>

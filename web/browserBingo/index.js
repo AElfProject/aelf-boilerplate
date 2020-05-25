@@ -8,9 +8,9 @@ import AElf from 'aelf-sdk';
 
 const { sha256 } = AElf.utils;
 
-// const defaultPrivateKey = 'a59c14882c023d63e84e5faf36558fdc8dbf1063eed45ce7e507f1cd9bcde1d9';
-const wallet = AElf.wallet.createNewWallet();
-// const wallet = AElf.wallet.getWalletByPrivateKey(defaultPrivateKey);
+const defaultPrivateKey = '845dadc4609852818f3f7466b63adad0504ee77798b91853fdab6af80d3a4eba';
+// const wallet = AElf.wallet.createNewWallet();
+const wallet = AElf.wallet.getWalletByPrivateKey(defaultPrivateKey);
 // link to local Blockchain, you can learn how to run a local node in https://docs.aelf.io/main/main/setup
 // const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
 const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
@@ -26,6 +26,8 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   const siteBody = document.getElementById('site-body');
   const play = document.getElementById('play');
   const bingo = document.getElementById('bingo');
+  const bingoMa = document.getElementById('bingo-manually');
+  const getAward = document.getElementById('get-award');
   const buttonBox = document.querySelector('.button-box');
   const balanceInput = document.getElementById('balance-input');
   const refreshButton = document.getElementById('refresh-button');
@@ -35,7 +37,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   // Update your card number,Returns the change in the number of your cards
   function getBalance() {
     const payload = {
-      symbol: 'CARD',
+      symbol: 'ELF',
       owner: wallet.address
     };
 
@@ -153,7 +155,9 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
 
   // return to game results
   bingo.onclick = () => {
-    bingoGameContract.Bingo(txId)
+    bingoGameContract.Bingo(txId).then(bingo => {
+      console.log('bingo:', bingo);
+    })
       .then(
         getBalance
       )
@@ -173,6 +177,18 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
         console.log(err);
       });
   };
+
+  bingoMa.onclick = () => {
+    bingoGameContract.Bingo('280bb9b4b6cc910123a138f1f1a0707350d4767313fb9c0415c5c80ffe7f13d9').then(bingo => {
+      console.log('bingoMa:', bingo);
+    });
+  };
+
+  getAward.onclick = () => {
+    bingoGameContract.GetAward.call('280bb9b4b6cc910123a138f1f1a0707350d4767313fb9c0415c5c80ffe7f13d9').then(bingo => {
+      console.log('bingoMa:', bingo);
+    });
+  }
 }
 
 function init() {
@@ -191,7 +207,10 @@ function init() {
       aelf.chain.contractAt(bingoAddress, wallet)
     ]))
     .then(([multiTokenContract, bingoGameContract]) => {
+      window.bingoGameContract = bingoGameContract;
       initDomEvent(multiTokenContract, bingoGameContract);
+      document.getElementById('register').innerText = 'Click into game';
+      document.getElementById('address').innerText = wallet.address;
     })
     .catch(err => {
       console.log(err);
