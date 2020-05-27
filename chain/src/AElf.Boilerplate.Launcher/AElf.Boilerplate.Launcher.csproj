@@ -57,9 +57,8 @@
 
     <Target Name="CopyPackages" AfterTargets="AfterBuild">
         <ItemGroup>
-            <PackageReferenceFiles Condition="%(PackageReference.CopyToOutputDirectory) != 'PreserveNewest' And %(PackageReference.CopyToOutputDirectory) != ''"
-                                   Include="$(NugetPackageRoot)%(PackageReference.PackageName)\%(PackageReference.Version)\%(PackageReference.CopyToOutputDirectory)"/>
+            <PackageReferenceFiles Condition="%(PackageReference.CopyToOutputDirectory) != 'PreserveNewest' And %(PackageReference.CopyToOutputDirectory) != ''" Include="$(NugetPackageRoot)%(PackageReference.PackageName)\%(PackageReference.Version)\%(PackageReference.CopyToOutputDirectory)" />
         </ItemGroup>
-        <Copy SourceFiles="@(PackageReferenceFiles)" DestinationFolder="$(OutDir)"/>
+        <Copy SourceFiles="@(PackageReferenceFiles)" DestinationFolder="$(OutDir)" />
     </Target>
 </Project>

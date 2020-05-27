@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using AElf.Boilerplate.DAppContract;
 using AElf.CrossChain;
 using AElf.EconomicSystem;
 using AElf.GovernmentSystem;
@@ -31,9 +30,7 @@ namespace AElf.Boilerplate.MainChain
                 ConsensusSmartContractAddressNameProvider.Name,
                 TokenConverterSmartContractAddressNameProvider.Name,
                 TokenHolderSmartContractAddressNameProvider.Name,
-                EconomicSmartContractAddressNameProvider.Name,
-                BingoGameSmartContractAddressNameProvider.Name,
-                LotterySmartContractAddressNameProvider.Name
+                EconomicSmartContractAddressNameProvider.Name
             };
         }
     }

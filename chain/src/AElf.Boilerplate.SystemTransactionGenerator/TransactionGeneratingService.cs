@@ -10,7 +10,7 @@ using Google.Protobuf;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace AElf.Boilerplate.Tester
+namespace AElf.Boilerplate.SystemTransactionGenerator
 {
     public interface ITransactionGeneratingService
     {

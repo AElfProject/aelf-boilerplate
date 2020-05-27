@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.GreeterContr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.GreeterContract.Tests", "test\AElf.Contracts.GreeterContract.Tests\AElf.Contracts.GreeterContract.Tests.csproj", "{B177712A-3005-41CC-965A-62FFA32545DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.Tester", "src\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj", "{217599C5-2CF0-411E-97B5-5657739CEE5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.SystemTransactionGenerator", "src\AElf.Boilerplate.SystemTransactionGenerator\AElf.Boilerplate.SystemTransactionGenerator.csproj", "{217599C5-2CF0-411E-97B5-5657739CEE5D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.CodeGenerator", "src\AElf.Boilerplate.CodeGenerator\AElf.Boilerplate.CodeGenerator.csproj", "{1E374BCA-7093-43A4-A419-23999B147B1A}"
 EndProject
@@ -63,8 +63,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.LotteryContract", "contract\AElf.Contracts.LotteryContract\AElf.Contracts.LotteryContract.csproj", "{A279E5A3-8D80-4362-BBC7-2EADDAAAEBAE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.LotteryContract.Tests", "test\AElf.Contracts.LotteryContract.Tests\AElf.Contracts.LotteryContract.Tests.csproj", "{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.DAppContract", "src\AElf.Boilerplate.DAppContract\AElf.Boilerplate.DAppContract.csproj", "{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS2DemoContract.Test", "test\AElf.Contracts.ACS2DemoContract.Test\AElf.Contracts.ACS2DemoContract.Test.csproj", "{DE01548C-FD1D-4A0C-A518-46D91AF9D00A}"
 EndProject
@@ -200,10 +198,6 @@ Global
 		{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DE01548C-FD1D-4A0C-A518-46D91AF9D00A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DE01548C-FD1D-4A0C-A518-46D91AF9D00A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE01548C-FD1D-4A0C-A518-46D91AF9D00A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -259,7 +253,6 @@ Global
 		{8CBF24AC-83B8-4D43-A4AE-CB1015F91621} = {BB8D5781-446C-4B7A-A3BA-68206918B046}
 		{A279E5A3-8D80-4362-BBC7-2EADDAAAEBAE} = {BB8D5781-446C-4B7A-A3BA-68206918B046}
 		{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
-		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C} = {21D85A91-5BB8-4912-8107-49435A461AAC}
 		{DE01548C-FD1D-4A0C-A518-46D91AF9D00A} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 		{E8200E30-FAC3-4C34-A0B8-7152E7A95E87} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 		{58ED9344-2073-484D-98C4-A56CC5F3F79F} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}

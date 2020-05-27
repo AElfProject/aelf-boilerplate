@@ -9,8 +9,7 @@
         <PackageReference Include="AElf.Kernel.Token" Version="1.0.0-preview2" />
         <PackageReference Include="AElf.EconomicSystem" Version="1.0.0-preview2" />
         <PackageReference Include="AElf.GovernmentSystem" Version="1.0.0-preview2" />
-        <ProjectReference Include="..\AElf.Boilerplate.DAppContract\AElf.Boilerplate.DAppContract.csproj" />
-        <ProjectReference Include="..\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj" />
+        <ProjectReference Include="..\AElf.Boilerplate.SystemTransactionGenerator\AElf.Boilerplate.SystemTransactionGenerator.csproj" />
     </ItemGroup>
 
     <PropertyGroup>
@@ -18,12 +17,12 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\..\contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj" >
+        <ProjectReference Include="..\..\contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </ProjectReference>
-        <ProjectReference Include="..\..\contract\AElf.Contracts.LotteryContract\AElf.Contracts.LotteryContract.csproj" >
+        <ProjectReference Include="..\..\contract\AElf.Contracts.LotteryContract\AElf.Contracts.LotteryContract.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

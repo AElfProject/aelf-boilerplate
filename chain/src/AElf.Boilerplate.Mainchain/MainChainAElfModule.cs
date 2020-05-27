@@ -1,5 +1,5 @@
 ﻿using AElf.Blockchains.BasicBaseChain;
-using AElf.Boilerplate.DAppContract;
+using AElf.Boilerplate.SystemTransactionGenerator;
 using AElf.Database;
 using AElf.Kernel.Infrastructure;
 using AElf.Kernel.SmartContractInitialization;
@@ -14,7 +14,7 @@ namespace AElf.Boilerplate.MainChain
 {
     [DependsOn(
         typeof(BasicBaseChainAElfModule),
-        typeof(DAppContractModule)
+        typeof(SystemTransactionGeneratorModule)
     )]
     public class MainChainAElfModule : AElfModule
     {

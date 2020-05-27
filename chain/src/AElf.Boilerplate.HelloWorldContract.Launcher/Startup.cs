@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using AElf.Boilerplate.MainChain;
+using AElf.Kernel.Miner.Application;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Modularity;
 
-namespace AElf.Boilerplate.Launcher
+namespace AElf.Boilerplate.HelloWorldContract.Launcher
 {
     public class Startup
     {
@@ -44,9 +45,10 @@ namespace AElf.Boilerplate.Launcher
                     }
                 });
             });
+            services.AddSingleton<ISystemTransactionGenerator, DeployContractsSystemTransactionGenerator>();
         }
-        
-        private static void AddApplication<T>(IServiceCollection services) where T: IAbpModule
+
+        private static void AddApplication<T>(IServiceCollection services) where T : IAbpModule
         {
             services.AddApplication<T>();
         }
