@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.CodeGenera
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.Launcher", "src\AElf.Boilerplate.Launcher\AElf.Boilerplate.Launcher.csproj", "{7691E8CC-C427-4361-AF9A-D769A92C2318}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.Mainchain", "src\AElf.Boilerplate.Mainchain\AElf.Boilerplate.Mainchain.csproj", "{F5B9CE98-80B4-46F0-A040-1BE75C276411}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.MainChain", "src\AElf.Boilerplate.MainChain\AElf.Boilerplate.MainChain.csproj", "{F5B9CE98-80B4-46F0-A040-1BE75C276411}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.TestBase", "src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj", "{F72731A8-5803-4362-834F-0C066E64D4CD}"
 EndProject
