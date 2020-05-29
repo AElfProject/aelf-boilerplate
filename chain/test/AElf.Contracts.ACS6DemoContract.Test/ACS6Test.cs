@@ -1,9 +1,6 @@
-using System.Linq;
 using System.Threading.Tasks;
-using Acs1;
 using AElf.Contracts.TestKit;
 using AElf.Types;
-using Google.Protobuf.WellKnownTypes;
 using Shouldly;
 using Xunit;
 
@@ -15,10 +12,19 @@ namespace AElf.Contracts.ACS6DemoContract
         public async Task Test()
         {
             var keyPair = SampleECKeyPairs.KeyPairs[0];
-            var address = Address.FromPublicKey(keyPair.PublicKey);
             var acs6DemoContractStub = GetACS6DemoContractStub(keyPair);
-            
-            
+
+            var secret = HashHelper.ComputeFrom("Test");
+            var commitment = HashHelper.ComputeFrom(secret);
+
+            await acs6DemoContractStub.RequestRandomNumber.SendAsync(commitment);
+
+            var wrongCommitment = HashHelper.ComputeFrom("Wrong");
+            var errorMessage = await acs6DemoContractStub.GetRandomNumber.CallWithExceptionAsync(wrongCommitment);
+            errorMessage.Value.ShouldContain("Incorrect commitment.");
+
+            var randomHash = await acs6DemoContractStub.GetRandomNumber.CallAsync(secret);
+            randomHash.ShouldNotBeNull();
         }
     }
 }
