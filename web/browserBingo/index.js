@@ -23,6 +23,7 @@ if (!aelf.isConnected()) {
 function initDomEvent(multiTokenContract, bingoGameContract) {
   const register = document.getElementById('register');
   const balance = document.getElementById('balance');
+  const allowance = document.getElementById('allowance');
   const siteBody = document.getElementById('site-body');
   const play = document.getElementById('play');
   const bingo = document.getElementById('bingo');
@@ -30,7 +31,9 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   const getAward = document.getElementById('get-award');
   const buttonBox = document.querySelector('.button-box');
   const balanceInput = document.getElementById('balance-input');
+  const allowanceInput = document.getElementById('allowance-input');
   const refreshButton = document.getElementById('refresh-button');
+  const refreshAllowance = document.getElementById('refresh-allowance');
   const loader = document.getElementById('loader');
   let txId = 0;
 
@@ -53,6 +56,15 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
         .catch(err => {
           console.log(err);
         });
+
+      multiTokenContract.GetAllowance.call({
+        symbol: 'ELF',
+        owner: wallet.address,
+        spender: window.bingoGameContractAddress
+      }).then(result => {
+        console.log('result Allowance:', result);
+        allowance.innerHTML = result.allowance;
+      });
     }, 3000);
 
     return multiTokenContract.GetBalance.call(payload)
@@ -70,6 +82,21 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
 
   refreshButton.onclick = () => {
     getBalance();
+  };
+
+  refreshAllowance.onclick = () => {
+    multiTokenContract.Approve({
+      symbol: 'ELF',
+      amount: parseInt(allowanceInput.value, 10),
+      spender: window.bingoGameContractAddress
+    }).then(result => {
+      console.log('result Approve:', result);
+      allowance.innerHTML = 'loading...';
+      setTimeout(() => {
+        getBalance();
+      }, 3000);
+      // allowance.innerHTML = result.allowance;
+    });
   };
 
   // register game, update the number of cards, display game interface
@@ -202,10 +229,12 @@ function init() {
       zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.BingoGameContract'))
     ]))
     // return contract's instance and you can call the methods on this instance
-    .then(([tokenAddress, bingoAddress]) => Promise.all([
+    .then(([tokenAddress, bingoAddress]) => {
+      window.bingoGameContractAddress = bingoAddress;
+      return Promise.all([
       aelf.chain.contractAt(tokenAddress, wallet),
       aelf.chain.contractAt(bingoAddress, wallet)
-    ]))
+    ])})
     .then(([multiTokenContract, bingoGameContract]) => {
       window.bingoGameContract = bingoGameContract;
       initDomEvent(multiTokenContract, bingoGameContract);
