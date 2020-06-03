@@ -1,6 +1,11 @@
 # Application develop
 
-You can find the code in `app/container/Home/homePage/index.js`
+You can find the examples in `app/container/Home/homePage/index.js`
+
+- how to connect redux. 
+  find `const HomePage = connect(BackHandlerHoc(MyHomePage));`
+- how to get account.
+- how init & call contract.
 
 ## How to get account
 
