@@ -1,5 +1,6 @@
 # Consensus Contract
-The Consensus contract is essentially used for managing block producers and synchronizing data.
+
+The Consensus contract is essentially used for managing block producers and synchronizing data. You can get some information about bp or each round.
 
 ## view methods
 

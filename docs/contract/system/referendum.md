@@ -1,5 +1,7 @@
 # Referendum Contract
 
+AELF provides permission management using organizations. This contract can create a organization that its members are who has "vote token". 
+
 ### **CreateOrganization**
 
 ```Protobuf

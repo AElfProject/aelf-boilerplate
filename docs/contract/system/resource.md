@@ -1,6 +1,6 @@
 # resource
 
-The TokenConverter contract is most essentially used for managing resources.
+The TokenConverter contract is most essentially used for managing resources. You can build a connection between ELF and the designated token according to 'Banchor' model.
 
 ## **Buying and selling resources**:
 
