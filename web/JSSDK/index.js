@@ -45,7 +45,8 @@ const {
     GenesisContractAddress
 } = aelf.chain.getChainStatus({sync: true});
 const zeroC = aelf.chain.contractAt(GenesisContractAddress, wallet, {sync: true});
-const helloWorldContractAddress = zeroC.GetContractAddressByName.call(sha256(helloWorldContractName), {
+// const helloWorldContractAddress = zeroC.GetContractAddressByName.call(sha256(helloWorldContractName), {
+const helloWorldContractAddress = zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.HelloWorldContract'), {
     sync: true
 });
 

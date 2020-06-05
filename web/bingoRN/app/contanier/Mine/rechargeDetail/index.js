@@ -10,6 +10,9 @@ import CommonHeader from "../../../common/Components/CommonHeader/CommonHeader";
 import { TextM, TextS, TextL } from "../../../common/UI_Component/CommonText";
 
 import pTd from "../../../common/utils/unit";
+import {config} from "../../../common/utils/config";
+
+const {tokenDecimalFormat} = config;
 
 /*
  * 充值详情
@@ -57,7 +60,7 @@ class RechargeDetail extends React.Component {
         };
         const txStatus = txStatusList[item.tx_status] || 'Error';
         const params = JSON.parse(item.params);
-        const amount = params.amount / (10 ** 8) || '-';
+        const amount = params.amount / tokenDecimalFormat || '-';
 
         const routerParams = this.props.navigation.getParam("params");
         const txType = routerParams === 'withdraw' ? 'WithDraw' : 'Recharge';

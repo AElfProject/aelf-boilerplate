@@ -14,7 +14,7 @@ import { config } from "../../../common/utils/config";
 import { aelfInstance } from "../../../common/utils/aelfProvider";
 import addressUtils from "../../../common/utils/address";
 
-const { explorerURL } = config;
+const { explorerURL, tokenDecimalFormat } = config;
 
 export default class transactionDetail extends React.Component {
     constructor(props) {
@@ -61,7 +61,7 @@ export default class transactionDetail extends React.Component {
         const { txResult } = this.state;
         const { Transaction } = txResult;
         const params = JSON.parse(Transaction.Params);
-        const amount = params.amount / (10 ** 8) || '-';
+        const amount = params.amount / tokenDecimalFormat || '-';
 
         const routerParams = this.props.navigation.getParam("params");
         const txType = routerParams.title === 'withdraw' ? 'WithDraw' : 'Recharge';

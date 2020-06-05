@@ -53,7 +53,7 @@ class MyWithdraw extends React.Component {
         //获取余额
         try {
             const res = await tokenContract.GetBalance.call({
-                symbol : "ELF",
+                symbol : config.tokenSymbol,
                 owner : address ,
             });
             this.props.onFreshBalance({
@@ -74,7 +74,7 @@ class MyWithdraw extends React.Component {
         //也就是转账
         try {
             const transaction = await tokenContract.Transfer({
-              symbol : "ELF",
+              symbol : config.tokenSymbol,
               to : toAddress,//'x7G7VYqqeVAH8aeAsb7gYuTQ12YS1zKuxur9YES3cUj72QMxJ',//'SkMGjviAAs9bnYvv6cKcafbhf6tbRGQGK93WgKvZoCoS5amMK' ,
               amount : unitConverter.toHigher(amountToWithdraw,8).toString(),
             });
@@ -242,7 +242,7 @@ class MyWithdraw extends React.Component {
                     </View>
                     {/*<View style={{ justifyContent: "center", alignItems: "center", marginBottom: pTd(50) }}>*/}
                     {/*    <View style={[Gstyle.frcc]}>*/}
-
+                    
                     {/*        <Icon name="wallet" size={18} />*/}
                     {/*        <TextM style={{ fontWeight: '500', marginLeft: pTd(20) }}>客服转账，自动提现</TextM>*/}
                     {/*    </View>*/}
@@ -256,20 +256,20 @@ class MyWithdraw extends React.Component {
                     {/*        <Icon name="scan1" size={18} />*/}
                     {/*    </View>*/}
                     {/*</View>*/}
-                    {/*<View style={{ justifyContent: "center", alignItems: "center", ...Gstyle.marginArg(pTd(32), 0, 0, 0) }}>*/}
-                    {/*    <Input*/}
-                    {/*      label='Extra: Transfer to exchange or other account'*/}
-                    {/*      labelStyle={{*/}
-                    {/*          color: Colors.primaryColor*/}
-                    {/*      }}*/}
-                    {/*      style={styles.moneyAddress}*/}
-                    {/*      onChangeText={*/}
-                    {/*          text=>this.onChangeAddressText(text)*/}
-                    {/*      }*/}
-                    {/*      placeholder="Please input address"*/}
-                    {/*      defaultValue=''*/}
-                    {/*    />*/}
-                    {/*</View>*/}
+                    <View style={{ justifyContent: "center", alignItems: "center", ...Gstyle.marginArg(pTd(32), 0, 0, 0) }}>
+                        <Input
+                          label='Extra: Transfer to exchange or other account'
+                          labelStyle={{
+                              color: Colors.primaryColor
+                          }}
+                          style={styles.moneyAddress}
+                          onChangeText={
+                              text=>this.onChangeAddressText(text)
+                          }
+                          placeholder="Please input address"
+                          defaultValue=''
+                        />
+                    </View>
                     <View style={{ justifyContent: "center", alignItems: "center", ...Gstyle.marginArg(pTd(20), 0) }}>
                         <Button
                             title="Withdraw"

@@ -1,21 +1,22 @@
 import React from "react"
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl, Linking, TextInput } from "react-native"
-import { Button, Divider, Input, PricingCard } from "react-native-elements"
+import { Button, Divider, Input, PricingCard, Card } from "react-native-elements"
 import Icon from 'react-native-vector-icons/AntDesign';
+import AsyncStorage from "@react-native-community/async-storage"
+import SplashScreen from "react-native-splash-screen"
+
 import navigationService from "../../../common/utils/navigationService";
 import CommonHeader from "../../../common/Components/CommonHeader/CommonHeader";
-import SplashScreen from "react-native-splash-screen"
 import BackHandlerHoc from "../../../common/Hoc/BackHandlerHoc/backHandlerHoc";
-import { TextM } from "../../../common/UI_Component/CommonText/index"
-
-import pTd from "../../../common/utils/unit";
-
-import AsyncStorage from "@react-native-community/async-storage"
+import { TextM, TextTitle } from "../../../common/UI_Component/CommonText/index"
 import Storage from  "../../../constants/storage"
 import connect from "../../../common/utils/myReduxConnect";
 import {config} from "../../../common/utils/config";
 import {format} from "../../../common/utils/address";
-const { splashScreenShowTime } = config;
+
+import styles from './style';
+import DevInformation from './develop';
+const { splashScreenShowTime, tokenSymbol, tokenDecimalFormat } = config;
 
 const {appInit, aelfInstance} = require('../../../common/utils/aelfProvider');
 
@@ -27,13 +28,22 @@ const defautState = JSON.stringify({
     bingoGameAllowance: '-',
     pullRefreshing: false,
     betCount: '',
+    lastBetCount: null,
+    lastBetType: null,
     transactionId: null,
+    bingoTxId: '',
     showBingo: false,
     bingoResult: null,
     checkPlayBingoStatusTimes: 0,
     debug: false,
     devInfoVisible: false,
-    addressRegistedInThisPhone: false
+    betType: 0,
+    bingoOutputUnpacked: {
+        random: '',
+        isWin: true,
+        boutType: '',
+        award: '',
+    }
 });
 /*
  * 主页
@@ -69,6 +79,7 @@ class MyHomePage extends React.Component {
 
     async componentDidMount() {
         this.initProvider();
+        this.onRefresh();
     }
 
     async initProvider(){
@@ -80,7 +91,7 @@ class MyHomePage extends React.Component {
         const contracts = await appInit(privateKey);
         const keystore =  await AsyncStorage.getItem(Storage.userKeyStore) || '{}';
         const address = JSON.parse(keystore).address;
-        const addressRegistedInThisPhone =  await AsyncStorage.getItem(address) || '';
+        console.log('address', address);
         this.props.onSetTempContracts({contracts: contracts});
         loggedIn && this.props.onLoginSuccess({
             contracts: contracts,
@@ -90,12 +101,10 @@ class MyHomePage extends React.Component {
 
         this.setState({
             contracts,
-            addressRegistedInThisPhone
         });
         await this.getUserBalance(contracts, address);
         await this.getApprovedNumber();
         this.getBingoGameContractBalane();
-        // this.registerBingo();
         return contracts;
     }
 
@@ -108,7 +117,7 @@ class MyHomePage extends React.Component {
         const { tokenContract } = contracts;
         if (address && tokenContract && tokenContract.GetBalance) {
             return await tokenContract.GetBalance.call({
-                symbol: 'ELF',
+                symbol: tokenSymbol,
                 owner: address
             });
         }
@@ -120,7 +129,7 @@ class MyHomePage extends React.Component {
             return;
         }
         this.setState({
-            balance: balance.balance / (10 ** 8),
+            balance: balance.balance / tokenDecimalFormat,
             symbol: balance.symbol
         });
     }
@@ -135,16 +144,15 @@ class MyHomePage extends React.Component {
         const { tokenContract, bingoGameContract } = contracts;
         if (address && tokenContract && tokenContract.GetAllowance) {
             const allowance = await tokenContract.GetAllowance.call({
-                symbol: 'ELF',
+                symbol: tokenSymbol,
                 spender: bingoGameContract.address,
                 owner: address
             });
 
             this.setState({
-                bingoGameAllowance: allowance.allowance / (10 ** 8)
+                bingoGameAllowance: allowance.allowance / tokenDecimalFormat
             });
         }
-        return false;
     }
 
     async getBingoGameContractBalane() {
@@ -161,25 +169,7 @@ class MyHomePage extends React.Component {
             return;
         }
         this.setState({
-            jackpot: balance.balance / (10 ** 8),
-        });
-    }
-
-    async registerBingo() {
-        if (this.lock || this.registed) {
-            return;
-        }
-        this.lock = true;
-        const reduxStoreData = this.props.ReduxStore;
-        const { contracts, address } = reduxStoreData;
-        const { bingoGameContract } = contracts;
-        const result = await bingoGameContract.Register();
-        // const init = await bingoGameContract.Initial();
-        this.lock = false;
-        this.registed = true;
-        AsyncStorage.setItem(address, 'true');
-        this.setState({
-            addressRegistedInThisPhone: true
+            jackpot: balance.balance / tokenDecimalFormat,
         });
     }
 
@@ -212,9 +202,15 @@ class MyHomePage extends React.Component {
         this.setState({
             pullRefreshing: true
         });
-        await this.getUserBalance();
-        await this.getBingoGameContractBalane();
-        await this.getApprovedNumber();
+        try {
+            await this.getLastBuyInfo();
+            await this.getUserBalance();
+            await this.getBingoGameContractBalane();
+            await this.getApprovedNumber();
+        } catch(e) {
+            this.tipMsg('Refresh error');
+            console.log('onRefresh: ', e);
+        }
         this.setState({
             pullRefreshing: false
         });
@@ -232,11 +228,44 @@ class MyHomePage extends React.Component {
         });
     }
 
+    onBetTypeButtonClick(betType) {
+        this.setState({
+            betType
+        });
+    }
+
     getBingoContract() {
         const reduxStoreData = this.props.ReduxStore;
         const { contracts } = reduxStoreData;
         const { bingoGameContract } = contracts;
         return bingoGameContract;
+    }
+
+    async getLastBuyInfo() {
+        const lastBuyInfo = JSON.parse(await AsyncStorage.getItem('lastBuy') || '{}');
+        if (lastBuyInfo && !lastBuyInfo.hadDrawed) {
+            this.setState({
+                transactionId: lastBuyInfo.buyTxId,
+                showBingo: true,
+                lastBetCount: lastBuyInfo.lastBetCount,
+                lastBetType: lastBuyInfo.lastBetType
+            });
+        }
+        return lastBuyInfo;
+    }
+
+    async setLastBuyInStorage(txId, hadDrawed = false) {
+        let lastBuyId;
+        if (!txId) {
+            lastBuyId = (await this.getLastBuyInfo()).transactionId;
+        }
+        const { betCount, lastBetType } = this.state;
+        await AsyncStorage.setItem('lastBuy', JSON.stringify({
+            buyTxId: txId || lastBuyId,
+            hadDrawed: hadDrawed,
+            lastBetCount: betCount,
+            lastBetType
+        }));
     }
 
     async playBingo() {
@@ -250,9 +279,13 @@ class MyHomePage extends React.Component {
             return;
         }
 
-        const { balance, betCount, bingoGameAllowance } = this.state;
-        if (betCount <= 0) {
-            this.tipMsg('Please bet');
+        const { balance, betCount, bingoGameAllowance, betType } = this.state;
+        if (betType === 0) {
+            this.tipMsg('Please select bet type');
+            return;
+        }
+        if (betCount <= 0 || betCount != +betCount) {
+            this.tipMsg('Please input bet amount');
             return;
         }
         if (betCount >= balance) {
@@ -260,20 +293,27 @@ class MyHomePage extends React.Component {
             return;
         }
         if (betCount > bingoGameAllowance) {
-            this.tipMsg('Insufficient allowance');
+            this.tipMsg('Insufficient allowance, please turn to homepage and pull refresh the page.');
             return;
         }
         this.playLock = true;
         const { bingoGameContract } = contracts;
 
         const transactionId = await bingoGameContract.Play({
-            value: betCount * (10 ** 8)
+            buyAmount: betCount * tokenDecimalFormat,
+            buyType: betType,
+            tokenSymbol: tokenSymbol
         });
         this.setState({
             transactionId: transactionId.TransactionId,
             showBingo: true,
-            bingoResult: null
+            bingoResult: null,
+            bingoOutputUnpacked: JSON.parse(defautState).bingoOutputUnpacked,
+            lastBetCount: betCount,
+            lastBetType: betType
         });
+
+        await this.setLastBuyInStorage(transactionId.TransactionId);
 
         setTimeout(async () => {
             await this.checkPlayBingoStatus(transactionId.TransactionId);
@@ -316,10 +356,10 @@ class MyHomePage extends React.Component {
     }
 
     async bingoBingo() {
-
         if (this.bingoBingoLock) {
             return;
         }
+        this.tipMsg('Loading...', 10000);
         this.bingoBingoLock = true;
         const { transactionId } = this.state;
 
@@ -331,17 +371,27 @@ class MyHomePage extends React.Component {
             this.bingoBingoLock = false;
             return;
         }
-        this.tipMsg('Loading...');
         await this.getBingoResult(bingoTxId.TransactionId);
+        await this.setLastBuyInStorage(null, true);
         this.bingoBingoLock = false;
     }
 
     async getBingoResult(transactionId) {
-        const txResult = await aelfInstance.chain.getTxResult(transactionId);
+        let txResult;
+        try {
+            txResult = await aelfInstance.chain.getTxResult(transactionId);
+        } catch(e) {
+            if (e && e.Status === 'FAILED') {
+                this.tipMsg('Not ready yet, please wait a second.');
+                return;
+            }
+        }
         if (txResult.Status === 'PENDING') {
-            setTimeout(() => {
-                this.getBingoResult(transactionId);
-            }, 1000);
+            this.tipMsg('Loading...');
+            setTimeout(async () => {
+                await this.getBingoResult(transactionId);
+            }, 2000);
+            return;
         }
         if (txResult.Status === 'FAILED') {
             this.tipMsg('Bingo Transaction failed.');
@@ -350,15 +400,18 @@ class MyHomePage extends React.Component {
         if (txResult.Status === 'MINED') {
             const { transactionId: transactionIdPlay  } = this.state;
             const bingoGameContract = this.getBingoContract();
+            const bingoOutputUnpacked = bingoGameContract.Bingo.unpackOutput(txResult.ReturnValue);
             const awardResult = await bingoGameContract.GetAward.call(transactionIdPlay);
-            const bingoResult = awardResult.value / (10**8);
+            const bingoResult = awardResult.value / tokenDecimalFormat;
             this.setState({
                 showBingo: false,
-                bingoResult
+                bingoResult,
+                bingoTxId: transactionId,
+                bingoOutputUnpacked
             });
 
-            const tipMsg = (bingoResult > 0 ? 'You win ' : 'You lose ') + Math.abs(bingoResult);
-            this.tipMsg(tipMsg);
+            const tipMsg = (bingoResult > 0 ? 'You win ' : 'You lose ') + Math.abs(bingoResult) + ' ' + tokenSymbol;
+            this.tipMsg(tipMsg, 3000);
 
             await this.getUserBalance();
             await this.getBingoGameContractBalane();
@@ -367,39 +420,79 @@ class MyHomePage extends React.Component {
     }
 
     renderBingoResult() {
-        const {bingoResult} = this.state;
+        const {bingoResult, bingoTxId, bingoOutputUnpacked} = this.state;
         if (!bingoResult) {
             return;
         }
-        const result = (bingoResult > 0 ? 'You win ' : 'You lose ') + Math.abs(bingoResult);
+        const result = (bingoResult > 0 ? 'You win ' : 'You lose ') + Math.abs(bingoResult) + ' ' + tokenSymbol;
 
         return (
           <View style={{
               marginTop: 3
           }}>
+              <TextTitle>Latest draw transaction</TextTitle>
               <Text>Bingo Result:{result}</Text>
+              <Text>Lottery Code: {bingoOutputUnpacked.random}</Text>
+              <TouchableOpacity>
+                  <Text style={{ color: Colors.fontColor }} onPress={() =>
+                    Linking.openURL(config.explorerURL + '/tx/' +  bingoTxId)
+                  }>Tx ID (Click to turn to aelf explorer): {bingoTxId}</Text>
+              </TouchableOpacity>
+              {/*<Text>{bingoOutputUnpacked.isWin ? 'You win' : 'You lose'}</Text>*/}
+              {/*<Text>Your bout type: {bingoOutputUnpacked.boutType === '1' ? 'Small' : 'Big'}</Text>*/}
+              {/*<Text>Award: {bingoOutputUnpacked.award}</Text>*/}
           </View>
         );
     }
 
-    renderBingoTx() {
-        const { transactionId } = this.state;
+    renderBuyTx() {
+        const { transactionId, lastBetCount, lastBetType } = this.state;
         if (!transactionId) {
             return;
         }
         return (
             <View>
-                <Text>Bingo Tx: </Text>
+                <TextTitle>Lastest bet transaction</TextTitle>
+                <Text>
+                    Bet Type: {lastBetType === 1 ? 'Small' : 'Big'}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Bet Amount: {lastBetCount} {tokenSymbol}</Text>
+                <Text>Waiting seconds, then you can draw the prize.</Text>
                 <TouchableOpacity>
                     <Text style={{ color: Colors.fontColor }} onPress={() =>
                       Linking.openURL(config.explorerURL + '/tx/' +  transactionId)
-                    }>{transactionId}</Text>
-                    <Text>Click to turn to aelf explorer.</Text>
+                    }>Tx ID (Click to turn to aelf blockchain explorer): {transactionId}</Text>
                 </TouchableOpacity>
-                <Text>Waiting seconds, then you can draw the prize.</Text>
-                <Text>And please do not refresh the page now.</Text>
             </View>
         );
+    }
+
+    renderLotteryCode(optionsInput) {
+        const {
+            address, jackpot, tokenSymbol, bingoOutputUnpacked, bingoResult, showBingo, lastBetType
+        } = optionsInput;
+
+        const jackpotButtonText = (() => {
+            if (!address) {
+                return 'Please Login';
+            }
+            return `Prize Pool: ${jackpot} ${tokenSymbol}`;
+        })();
+
+        const boughtInfo = `You bought ${lastBetType === 1 ? 'Small' : 'Big'} `;
+        let lotteryInfo = showBingo ? boughtInfo : 'Please bet.'
+
+        if (bingoResult) {
+            lotteryInfo = boughtInfo + (bingoResult > 0 ? 'You win ' : 'You lose ') + Math.abs(bingoResult) + ' ' + tokenSymbol;
+        }
+
+        return  <PricingCard
+          color="#817AFD"
+          title="Lottery code"
+          price={bingoOutputUnpacked.random}
+          button={{title: jackpotButtonText}}
+          info={[lotteryInfo]}
+        />;
     }
 
     render() {
@@ -407,27 +500,19 @@ class MyHomePage extends React.Component {
             balance, bingoGameAllowance,
             symbol, pullRefreshing, jackpot, betCount, transactionId,
             showBingo, bingoResult, devInfoVisible,
-            addressRegistedInThisPhone
+            bingoOutputUnpacked,
+            betType, lastBetType
         } = this.state;
         const reduxStoreData = this.props.ReduxStore;
         const { address, keystore, contracts } = reduxStoreData;
         const { nickName } = keystore || {};
 
         const {bingoGameContract} = contracts || {};
-        const bingoTxHTML = this.renderBingoTx();
+        const buyTxHTML = this.renderBuyTx();
         const bingoResultHTML = this.renderBingoResult();
-
-        const jackpotButtonText = (() => {
-            if (!address) {
-                return 'Please Login';
-            }
-            if (!addressRegistedInThisPhone) {
-                return 'Click to register the game'
-            }
-            if (address && addressRegistedInThisPhone) {
-                return 'My Chips: ' + balance;
-            }
-        })();
+        const lotteryCodeHTML = this.renderLotteryCode({
+            address, jackpot, tokenSymbol, bingoOutputUnpacked, bingoResult, showBingo, lastBetType
+        });
 
         return (
             <View style={Gstyle.container}>
@@ -441,71 +526,58 @@ class MyHomePage extends React.Component {
                       <RefreshControl refreshing={pullRefreshing} onRefresh={() => this.onRefresh()} />
                   }
                 >
-
                     <View>
-                        <PricingCard
-                          color="#817AFD"
-                          title="Jackpot"
-                          price={jackpot}
-                          button={{title: jackpotButtonText}}
-                          onButtonPress={() => {
-                              if (address) {
-                                  if (!addressRegistedInThisPhone) {
-                                      if (balance < 0.5) {
-                                          this.tipMsg('Insufficient balance to register. Please recharge.');
-                                          return;
-                                      }
-                                    this.registerBingo();
-                                  }
-                                  return;
-                              }
-                              this.goRouter("MinePage");
-                          }}
-                        />
+                        {lotteryCodeHTML}
                     </View>
+
+                    <Card title='Bet Type (Click to select)' titleStyle={{textAlign: 'left'}}>
+                        <View style={styles.buttonContainer}>
+                            <Button
+                              buttonStyle={betType === 1 ? styles.lotteryBuyTypeButton : styles.lotteryBuyTypeButtonHide}
+                              title={'Small'} onPress={() => this.onBetTypeButtonClick(1)}/>
+                            <Button
+                              buttonStyle={betType === 2 ? styles.lotteryBuyTypeButton : styles.lotteryBuyTypeButtonHide}
+                              title={'Big'} onPress={() => this.onBetTypeButtonClick(2)}/>
+                        </View>
+                    </Card>
+
+                    <Card title={`Bet Amount (My balance: ${Math.floor(balance)} ${tokenSymbol})` } titleStyle={{textAlign: 'left'}}>
+                        <View style={styles.buttonContainer}>
+                            <TextInput
+                              style={styles.inputStyle}
+                              placeholder="Please input bet amount"
+                              onChangeText={betCount => this.onBetChange(betCount)}
+                              value={betCount + ''}
+                            />
+                            <Button buttonStyle={styles.bingoButton} title={'half'} onPress={() => this.onBetButtonClick(Math.floor(balance) / 2)}/>
+                            <Button buttonStyle={styles.bingoButton} title={'all in'} onPress={() => this.onBetButtonClick(Math.floor(balance))}/>
+                        </View>
+                    </Card>
+
                     <View style={styles.buttonContainer}>
-                        <TextInput
-                          style={styles.inputStyle}
-                          placeholder="Please bet"
-                          onChangeText={betCount => this.onBetChange(betCount)}
-                          value={betCount + ''}
-                        />
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        <Button buttonStyle={styles.bingoButton} title={'50'} onPress={() => this.onBetButtonClick(50)}/>
-                        <Button buttonStyle={styles.bingoButton} title={'100'} onPress={() => this.onBetButtonClick(100)}/>
-                        <Button buttonStyle={styles.bingoButton} title={'200'} onPress={() => this.onBetButtonClick(200)}/>
-                        <Button buttonStyle={styles.bingoButton} title={'500'} onPress={() => this.onBetButtonClick(500)}/>
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        <Button buttonStyle={styles.bingoButton} title={'1000'} onPress={() => this.onBetButtonClick(1000)}/>
-                        <Button buttonStyle={styles.bingoButton} title={'2000'} onPress={() => this.onBetButtonClick(2000)}/>
-                        <Button buttonStyle={styles.bingoButton} title={'half'} onPress={() => this.onBetButtonClick(Math.floor(balance) / 2)}/>
-                        <Button buttonStyle={styles.bingoButton} title={'all in'} onPress={() => this.onBetButtonClick(Math.floor(balance))}/>
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        {!showBingo && <Button buttonStyle={styles.bingoButtonSubmit} title={'Buy'} onPress={() => this.playBingo()}/>}
-                        {showBingo && <Button buttonStyle={styles.bingoButtonSubmit} title={'Award'} onPress={() => this.bingoBingo()}/>}
+                        {!showBingo && <Button buttonStyle={styles.bingoButtonSubmit} title={'Bet'} onPress={() => this.playBingo()}/>}
+                        {showBingo && <Button buttonStyle={styles.drawButton} title={'Click to draw'} onPress={() => this.bingoBingo()}/>}
                     </View>
 
                     <Divider style={styles.divider} />
                     <View style={styles.rules}>
                         <Text>Game Rules</Text>
                         <Text>
-                            Use the current height and the user's seed to calculate a random number, and then regard the hash value as bit array, and each addition will get a number in the range of 0-256.
+                            Use the current height and the user's seed to calculate a random number in the range of [0, 255]
                         </Text>
                         <Text>
-                            Whether the number can be divided by 2 determines whether the user wins or loses this prize.
+                            1.Small bet [0,126], Big bet [129,255].
+                        </Text>
+                        <Text>
+                            2.When get 127 or 128, the contract wins the token.
                         </Text>
 
                         <Divider style={styles.divider} />
-
-                        {bingoTxHTML}
+                        {buyTxHTML}
                         {bingoResultHTML}
                     </View>
 
                     <Divider style={styles.divider} />
-
 
                     <Button
                         buttonStyle={styles.devButton}
@@ -516,36 +588,17 @@ class MyHomePage extends React.Component {
                             });
                         }}
                     />
-                    <View style={{
-                        display: devInfoVisible ? 'flex' : 'none'
-                    }}>
-                        <Text style={styles.title}>1.Bingo Game Dev Demo</Text>
-                        <Text>In this demo, you can</Text>
-                        <Text>1.How to use random numbers in elf.</Text>
-                        <Text>2.How to register account in an aelf contract.</Text>
-                        <Text>3.How to call inline contract.</Text>
 
-                        <Divider style={styles.divider} />
-
-                        <Text style={styles.title}>2.Abount your account.「Pull down to refresh」</Text>
-                        <Text style={styles.basicText}>NickName: {nickName || 'Please login'}</Text>
-                        <Text style={styles.basicText}>Address: {address && format(address) || 'Please login'}</Text>
-                        <Text style={styles.basicText}>Symbol: {symbol}</Text>
-                        <Text style={styles.basicText}>ELF Balance: {balance}</Text>
-                        <Text style={styles.basicText}>Allowance for the app: {bingoGameAllowance}</Text>
-                        <Divider style={styles.divider} />
-
-                        <Text style={styles.title}>3.About the Game</Text>
-                        <Text>Contract Address: </Text>
-                        <Text>{bingoGameContract && bingoGameContract.address && format(bingoGameContract.address)}</Text>
-                        <Text>Jackpot: {jackpot}</Text>
-                        <Text>Contract on Explorer</Text>
-                        <TouchableOpacity>
-                            <Text style={{ color: Colors.fontColor }} onPress={() =>
-                              Linking.openURL(config.contractExplorerURL + '' +  (bingoGameContract && bingoGameContract.address))
-                            }>Click and ture to aelf block chain explore to get more information of the contract.</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <DevInformation
+                      devInfoVisible={devInfoVisible}
+                      nickName={nickName}
+                      address={address}
+                      symbol={symbol}
+                      balance={balance}
+                      bingoGameAllowance={bingoGameAllowance}
+                      bingoGameContract={bingoGameContract}
+                      jackpot={jackpot}
+                    />
                 </ScrollView>
             </View>
         )
@@ -555,58 +608,3 @@ class MyHomePage extends React.Component {
 //连接redux
 const HomePage = connect(BackHandlerHoc(MyHomePage));
 export default HomePage;
-
-const styles = StyleSheet.create({
-    title: {
-      fontSize: 18,
-      fontWeight: '500',
-      color: Colors.fontColor
-    },
-    divider: {
-        backgroundColor: Colors.borderColor,
-        marginTop: 8,
-        marginBottom: 8
-    },
-    basicText: {
-      marginBottom: 2
-    },
-    btnStyle: {
-        width: 300,
-        backgroundColor: "#817AFD",
-        ...Gstyle.radiusArg(pTd(6)),
-    },
-    buttonContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-    },
-    bingoButton: {
-        flex: 1,
-        width: 66,
-        margin: 2,
-        backgroundColor: "#817AFD",
-    },
-    bingoButtonSubmit: {
-        flex: 1,
-        width: 120,
-        margin: 6,
-        backgroundColor: "#817AFD",
-    },
-    devButton: {
-        width: 240,
-        margin: 6,
-        backgroundColor: "#817AFD",
-    },
-    rules: {
-        marginLeft: 8,
-        marginRight: 8
-    },
-    inputStyle: {
-        margin: 3,
-        width: 300,
-        height: 40,
-        borderColor: "#817AFD",
-        borderWidth: 1,
-        borderRadius: 3
-    }
-});

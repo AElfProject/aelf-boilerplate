@@ -22,7 +22,7 @@ const {unitConverter} = require('../../../common/utils/unitConverter');
 import connect from "../../../common/utils/myReduxConnect";
 import {config} from "../../../common/utils/config";
 import { approveApp } from '../../../common/utils/tokenContract';
-const { balanceRefreshInterval } = config;
+const { balanceRefreshInterval, tokenSymbol  } = config;
 
 //余额刷新频率
 const periodInterval = 10;  //每期间隔20s
@@ -162,7 +162,7 @@ class MyMinePage extends React.Component {
         //获取余额
         try {
             const res = await tokenContract.GetBalance.call({
-                symbol : "ELF",
+                symbol : tokenSymbol,
                 owner : accountAddress,
             });
             this.setState({
@@ -178,7 +178,7 @@ class MyMinePage extends React.Component {
             console.log(error);
         }
 
-        await approveApp(tokenContract, 'ELF', accountAddress, appContract.address);
+        await approveApp(tokenContract, config.tokenSymbol, accountAddress, appContract.address);
     }
     /* changeModestatus */
     changeModalStatus() {

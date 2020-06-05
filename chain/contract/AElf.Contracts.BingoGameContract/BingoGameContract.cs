@@ -25,97 +25,34 @@ namespace AElf.Contracts.BingoGameContract
                 Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
             State.ConsensusContract.Value =
                 Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
-
-            // Create and issue token of this contract.
-//            State.TokenContract.Create.Send(new CreateInput
-//            {
-//                Symbol = BingoGameContractConstants.CardSymbol,
-//                TokenName = "Bingo Card",
-//                Decimals = 0,
-//                Issuer = Context.Self,
-//                IsBurnable = true,
-//                TotalSupply = long.MaxValue,
-//                LockWhiteList = {Context.Self}
-//            });
-
-//            State.TokenContract.Issue.Send(new IssueInput
-//            {
-//                Symbol = BingoGameContractConstants.CardSymbol,
-//                Amount = long.MaxValue,
-//                To = Context.Self,
-//                Memo = "All to issuer."
-//            });
+            
             State.Initialized.Value = true;
             return new Empty();
         }
 
-        /// <summary>
-        /// Give user a certain amount of CARD tokens for free.
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public override Empty Register(Empty input)
+        public override SInt64Value Play(PlayInput input)
         {
-            // Register is not necessary now.
-            // But we can
-            Assert(State.PlayerInformation[Context.Sender] == null, $"User {Context.Sender} already registered.");
-            var information = new PlayerInformation
-            {
-                // The value of seed will influence user's game result in some aspects.
-                Seed = Context.TransactionId
-            };
-            State.PlayerInformation[Context.Sender] = information;
-
-//            State.TokenContract.Transfer.Send(new TransferInput
-//            {
-//                Symbol = BingoGameContractConstants.CardSymbol,
-//                Amount = BingoGameContractConstants.InitialCards,
-//                To = Context.Sender,
-//                Memo = "Initial Bingo Cards for player."
-//            });
-
-            return new Empty();
-        }
-
-        public override Empty Deposit(SInt64Value input)
-        {
-//            var playerInformation = State.PlayerInformation[Context.Sender];
-//            Assert(playerInformation != null, $"User {Context.Sender} not registered before.");
-//            Assert(input.Value > 0, "At least you should buy 1 CARD.");
-//            var elfAmount = input.Value.Mul(1_0000_0000);
-//            State.TokenContract.TransferFrom.Send(new TransferFromInput
-//            {
-//                Symbol = Context.Variables.NativeSymbol,
-//                Amount = elfAmount,
-//                From = Context.Sender,
-//                To = Context.Self,
-//                Memo = "Thanks for recharging:)"
-//            });
-//            State.TokenContract.Transfer.Send(new TransferInput
-//            {
-//                Symbol = BingoGameContractConstants.CardSymbol,
-//                Amount = input.Value,
-//                To = Context.Sender,
-//                Memo = "Now you are stronger:)"
-//            });
-
-            return new Empty();
-        }
-
-        public override SInt64Value Play(SInt64Value input)
-        {
-            Assert(input.Value > 1, "Invalid bet amount.");
+            Assert(input.BuyAmount > 1, "Invalid bet amount.");
             var playerInformation = State.PlayerInformation[Context.Sender];
-            Assert(playerInformation != null, $"User {Context.Sender} not registered before.");
 
-            Context.LogDebug(() => $"Playing with amount {input.Value}");
+            if (playerInformation == null)
+            {
+                playerInformation = new PlayerInformation
+                {
+                    // The value of seed will influence user's game result in some aspects.
+                    Seed = Context.TransactionId
+                };
+                State.PlayerInformation[Context.Sender] = playerInformation;
+            }
+
+            Context.LogDebug(() => $"Playing with amount {input.BuyAmount}");
 
             State.TokenContract.TransferFrom.Send(new TransferFromInput
             {
                 From = Context.Sender,
                 To = Context.Self,
-                Amount = input.Value,
-                Symbol = BingoGameContractConstants.CardSymbol,
+                Amount = input.BuyAmount,
+                Symbol = input.TokenSymbol,
                 Memo = "Enjoy!"
             });
 
@@ -125,8 +62,10 @@ namespace AElf.Contracts.BingoGameContract
             {
                 // Record current round number.
                 PlayRoundNumber = currentRound.RoundNumber,
-                Amount = input.Value,
-                PlayId = Context.TransactionId
+                Amount = input.BuyAmount,
+                PlayId = Context.TransactionId,
+                BoutType = input.BuyType,
+                TokenSymbol = input.TokenSymbol,
             });
 
             State.PlayerInformation[Context.Sender] = playerInformation;
@@ -142,7 +81,7 @@ namespace AElf.Contracts.BingoGameContract
             return (expectedTimeOfGettingRandomNumber - Context.CurrentBlockTime).Milliseconds();
         }
 
-        public override BoolValue Bingo(Hash input)
+        public override BingoOutput Bingo(Hash input)
         {
             Context.LogDebug(() => $"Getting game result of play id: {input.ToHex()}");
 
@@ -164,18 +103,19 @@ namespace AElf.Contracts.BingoGameContract
             Assert(targetRound != null, "Still preparing your game result, please wait for a while :)");
 
             var randomHash = targetRound.RealTimeMinersInformation.Values.First(i => i.PreviousInValue != null).PreviousInValue;
-            var isWin = ConvertHashToBool(randomHash);
 
             var usefulHash = HashHelper.ConcatAndCompute(randomHash, playerInformation.Seed);
-            var award = CalculateAward(boutInformation.Amount, GetKindFromHash(usefulHash));
-            award = isWin ? award : -award;
+            var randomResult = SumHash(usefulHash) % 256;
+            var isPlayerWin = DrawThePrize(randomResult, boutInformation.BoutType);
+
+            var award = isPlayerWin ? boutInformation.Amount : -boutInformation.Amount;
 
             var transferAmount = boutInformation.Amount.Add(award);
             if (transferAmount > 0)
             {
                 State.TokenContract.Transfer.Send(new TransferInput
                 {
-                    Symbol = BingoGameContractConstants.CardSymbol,
+                    Symbol = boutInformation.TokenSymbol,
                     Amount = transferAmount,
                     To = Context.Sender,
                     Memo = "Thx for playing my game."
@@ -185,8 +125,14 @@ namespace AElf.Contracts.BingoGameContract
             boutInformation.Award = award;
             boutInformation.IsComplete = true;
             State.PlayerInformation[Context.Sender] = playerInformation;
-
-            return new BoolValue {Value = isWin};
+            
+            return new BingoOutput
+            {
+                Random = randomResult,
+                IsWin = isPlayerWin,
+                BoutType = boutInformation.BoutType,
+                Award = award,
+            };
         }
 
         public override SInt64Value GetAward(Hash input)
@@ -199,39 +145,6 @@ namespace AElf.Contracts.BingoGameContract
             return boutInformation == null
                 ? new SInt64Value {Value = 0}
                 : new SInt64Value {Value = boutInformation.Award};
-        }
-
-        public override Empty Quit(Empty input)
-        {
-            var playerInformation = State.PlayerInformation[Context.Sender];
-            Assert(playerInformation != null, "Not registered.");
-            State.PlayerInformation[Context.Sender] = new PlayerInformation();
-
-            var balance = State.TokenContract.GetBalance.Call(new GetBalanceInput
-            {
-                Symbol = BingoGameContractConstants.CardSymbol,
-                Owner = Context.Sender
-            }).Balance;
-            if (balance > BingoGameContractConstants.InitialCards)
-            {
-                State.TokenContract.Transfer.Send(new TransferInput
-                {
-                    Symbol = Context.Variables.NativeSymbol,
-                    To = Context.Sender,
-                    Amount = balance - BingoGameContractConstants.InitialCards,
-                    Memo = "Give elf tokens back."
-                });
-            }
-
-            State.TokenContract.TransferFrom.Send(new TransferFromInput
-            {
-                Symbol = BingoGameContractConstants.CardSymbol,
-                From = Context.Sender,
-                To = Context.Self,
-                Amount = balance,
-                Memo = "Return cards back."
-            });
-            return new Empty();
         }
 
         public override PlayerInformation GetPlayerInformation(Address input)
@@ -261,24 +174,7 @@ namespace AElf.Contracts.BingoGameContract
 
             return 1;
         }
-
-        private long CalculateAward(long amount, int kind)
-        {
-            switch (kind)
-            {
-                case 1:
-                    return amount.Div(10);
-                case 2:
-                    return amount.Mul(4).Div(10);
-                case 3:
-                    return amount.Mul(7).Div(10);
-                case 4:
-                    return amount;
-                default:
-                    return 0;
-            }
-        }
-
+        
         private int SumHash(Hash hash)
         {
             var bitArray = new BitArray(hash.Value.ToByteArray());
@@ -291,10 +187,21 @@ namespace AElf.Contracts.BingoGameContract
 
             return value;
         }
-
-        private bool ConvertHashToBool(Hash hash)
+        
+        private bool DrawThePrize(long randomResult, long boutType)
         {
-            return SumHash(hash) % 2 == 0;
+            var isWin = false;
+            if (randomResult < 127)
+            {
+                isWin = boutType == 1;
+            }
+
+            if (randomResult > 128)
+            {
+                isWin = boutType == 2;
+            }
+
+            return isWin;
         }
     }
 }

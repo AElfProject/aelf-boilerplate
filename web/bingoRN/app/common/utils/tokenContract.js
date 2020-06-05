@@ -1,4 +1,6 @@
 import {unitConverter} from './unitConverter';
+import {config} from './config';
+const {tokenDecimalFormat} = config;
 let approveLock = false;
 
 function sleep(sleepTime) {
@@ -27,7 +29,7 @@ module.exports.approveApp = async (tokenContract, tokenSymbol, userAddress, appC
       await tokenContract.Approve({
         symbol : tokenSymbol,
         spender: appContractAddress,
-        amount : 50000 * (10 ** 8),
+        amount : 50000 * tokenDecimalFormat,
       });
     }
 

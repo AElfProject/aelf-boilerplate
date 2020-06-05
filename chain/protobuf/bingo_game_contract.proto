@@ -13,17 +13,10 @@ service BingoGameContract {
     // Actions
     rpc Initial (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
-    rpc Register (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    rpc Play (PlayInput) returns (aelf.SInt64Value) {
     }
-    rpc Deposit (aelf.SInt64Value) returns (google.protobuf.Empty) {
+    rpc Bingo (aelf.Hash) returns (BingoOutput) {
     }
-    rpc Play (aelf.SInt64Value) returns (aelf.SInt64Value) {
-    }
-    rpc Bingo (aelf.Hash) returns (google.protobuf.BoolValue) {
-    }
-    rpc Quit (google.protobuf.Empty) returns (google.protobuf.Empty) {
-    }
-    
     // Views
     rpc GetAward (aelf.Hash) returns (aelf.SInt64Value) {
         option (aelf.is_view) = true;
@@ -31,6 +24,19 @@ service BingoGameContract {
     rpc GetPlayerInformation (aelf.Address) returns (PlayerInformation) {
         option (aelf.is_view) = true;
     }
+}
+
+message PlayInput {
+    sint64 buy_amount = 1;
+    sint64 buy_type = 2;
+    string token_symbol = 3;
+}
+
+message BingoOutput {
+    sint64 random = 1;
+    bool is_win = 2;
+    sint64 bout_type = 3;
+    sint64 award = 4;
 }
 
 message PlayerInformation {
@@ -45,4 +51,6 @@ message BoutInformation {
     bool is_complete = 4;
     aelf.Hash play_id = 5;
     sint64 bingo_round_number = 6;
+    sint64 bout_type = 7;
+    string token_symbol = 8;
 }

@@ -8,6 +8,8 @@ import QRCode from 'react-native-qrcode-svg';
 import navigationService from "../../../common/utils/navigationService";
 import CommonHeader from "../../../common/Components/CommonHeader/CommonHeader";
 import { TextM, TextS, TextL } from "../../../common/UI_Component/CommonText";
+import { config } from "../../../common/utils/config";
+const {tokenDecimalFormat} = config;
 
 import pTd from "../../../common/utils/unit";
 
@@ -57,7 +59,7 @@ class WithdrawDetail extends React.Component {
         };
         const txStatus = txStatusList[item.tx_status] || 'Error';
         const params = JSON.parse(item.params);
-        const amount = params.amount / (10 ** 8) || '-';
+        const amount = params.amount / tokenDecimalFormat || '-';
 
         return (
             <View style={Gstyle.container}>

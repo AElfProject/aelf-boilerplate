@@ -22,7 +22,7 @@ import { TextM, TextS } from "../../../common/UI_Component/CommonText";
 import connect from "../../../common/utils/myReduxConnect";
 
 // const {unitConverter} = require('../../../common/utils/unitConverter');
-const { walletURL } = config;
+const { walletURL, tokenSymbol, tokenDecimalFormat } = config;
 /*
  * 资金明细
  **/
@@ -65,7 +65,7 @@ class MyFundingDetail extends React.Component {
             }
         };
         let param = {
-            symbol: 'ELF',
+            symbol: tokenSymbol,
             order : 'desc',
             limit : 20,
             page : 0,
@@ -145,7 +145,7 @@ class MyFundingDetail extends React.Component {
         const reduxStoreData = this.props.ReduxStore;
         const { address } = reduxStoreData;
         const params = JSON.parse(item.params);
-        const amount = params.amount / (10 ** 8);
+        const amount = params.amount / tokenDecimalFormat;
         const timeFormatted = moment(item.time).format('YYYY-MM-DD HH:mm');
         const isWithdraw = item.address_from === address;
         const textShow = isWithdraw ? 'WithDraw' : 'Recharge';

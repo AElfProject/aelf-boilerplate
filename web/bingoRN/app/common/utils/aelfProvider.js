@@ -2,7 +2,7 @@ const AElf = require('aelf-sdk');
 const {config} = require('./config');
 const {getContract, getContractAddresses} = require('./getContract');
 
-const { contractAddressedNeedInit } = config;
+const { contractAddresses } = config;
 
 // link to Blockchain
 const aelf = new AElf(new AElf.providers.HttpProvider(config.httpProvider));
@@ -20,7 +20,7 @@ async function initContracts(privateKey) {
 
   return await getContract(aelf, wallet, {
     ...contractNameAddressSets,
-    ...contractAddressedNeedInit
+    ...contractAddresses
   });
 }
 
