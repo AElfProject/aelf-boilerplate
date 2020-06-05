@@ -19,14 +19,14 @@ module.exports.config = {
       cipher: 'aes-128-ctr'
     }
   },
-  // httpProvider: 'https://wallet-test.aelf.io/chain', //'http://192.168.1.4:1235',
+  httpProvider: 'https://wallet-test.aelf.io/chain', //'http://192.168.1.4:1235',
   // We can not use 127.0.0.1 or localhost in Android. We need use local ip.
   // httpProvider: 'http://192.168.199.113:1235', //'http://192.168.1.4:1235',
-  httpProvider: 'http://1.119.195.50:11105/chain', //'http://192.168.1.4:1235',
-  // walletURL: 'https://wallet-test.aelf.io',
-  walletURL: 'http://1.119.195.50:11105',
-  // explorerURL: 'https://explorer-test.aelf.io',
-  explorerURL: 'http://1.119.195.50:11104',
+  // httpProvider: 'http://1.119.195.50:11105/chain', //'http://192.168.1.4:1235',
+  walletURL: 'https://wallet-test.aelf.io',
+  // walletURL: 'http://1.119.195.50:11105',
+  explorerURL: 'https://explorer-test.aelf.io',
+  // explorerURL: 'http://1.119.195.50:11104',
   // contractExplorerURL: 'http://1.119.195.50:11104/contract?#http%3A%2F%2F1.119.195.50%3A11104%2Fviewer%2Faddress.html%23%2Fcontract%2Finfo%3Faddress%3D',
   contractExplorerURL: 'https://explorer-test.aelf.io/contract?#http%3A%2F%2F1.119.195.50%3A11104%2Fviewer%2Faddress.html%23%2Fcontract%2Finfo%3Faddress%3D',
   // contractNames & contractAddresses will be init by appInit of `/common/utils/aelfProvider`;
@@ -38,8 +38,8 @@ module.exports.config = {
   contractAddresses: {
     // bingoGameContract: '2LUmicHyH4RXrMjG4beDwuDsiWJESyLkgkwPdGTR8kahRzq5XS',
     // appContract: '2LUmicHyH4RXrMjG4beDwuDsiWJESyLkgkwPdGTR8kahRzq5XS',
-    bingoGameContract: 'xsnQafDAhNTeYcooptETqWnYBksFGGXxfcQyJJ5tmu6Ak9ZZt',
-    appContract: 'xsnQafDAhNTeYcooptETqWnYBksFGGXxfcQyJJ5tmu6Ak9ZZt',
+    bingoGameContract: '2WHXRoLRjbUTDQsuqR5CntygVfnDb125qdJkudev4kVNbLhTdG',
+    appContract: '2WHXRoLRjbUTDQsuqR5CntygVfnDb125qdJkudev4kVNbLhTdG',
   },
   address: {
     prefix: 'ELF',

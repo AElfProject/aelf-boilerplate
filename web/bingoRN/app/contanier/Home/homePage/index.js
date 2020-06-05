@@ -89,6 +89,8 @@ class MyHomePage extends React.Component {
 
         // TODO: rewrite contract init logic
         const contracts = await appInit(privateKey);
+        // const { bingoGameContract } = contracts;
+        // console.log('122222', await bingoGameContract.Initial());
         const keystore =  await AsyncStorage.getItem(Storage.userKeyStore) || '{}';
         const address = JSON.parse(keystore).address;
         console.log('address', address);
@@ -206,6 +208,10 @@ class MyHomePage extends React.Component {
                 <TextM style={{ color: Colors.fontColor }}>My</TextM>
             </TouchableOpacity>
         )
+    }
+
+    resetState() {
+        this.setState(JSON.parse(defautState));
     }
 
     async onRefresh() {
@@ -380,6 +386,7 @@ class MyHomePage extends React.Component {
         const bingoGameContract = this.getBingoContract();
         const bingoTxId = await bingoGameContract.Bingo(transactionId);
         const txResult = await aelfInstance.chain.getTxResult(bingoTxId.TransactionId);
+        console.log('bingoTxId', bingoTxId, txResult);
         if (txResult.Status === 'NotExisted') {
             setTimeout(() => {
                 this.tipMsg('Not ready to award, please wait a second.');
@@ -476,7 +483,7 @@ class MyHomePage extends React.Component {
                     Bet Type: {lastBetType === 1 ? 'Small' : 'Big'}
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     Bet Amount: {lastBetCount} {tokenSymbol}</Text>
-                <Text>Waiting seconds, then you can draw the prize.</Text>
+                <Text>Waiting about 60s, then you can draw the prize.</Text>
                 <TouchableOpacity>
                     <Text style={{ color: Colors.fontColor }} onPress={() =>
                       Linking.openURL(config.explorerURL + '/tx/' +  transactionId)
@@ -632,6 +639,7 @@ class MyHomePage extends React.Component {
                       bingoGameAllowance={bingoGameAllowance}
                       bingoGameContract={bingoGameContract}
                       jackpot={jackpot}
+                      clear={() => this.resetState}
                     />
                 </ScrollView>
             </View>

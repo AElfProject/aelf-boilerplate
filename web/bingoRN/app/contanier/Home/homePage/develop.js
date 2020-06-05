@@ -11,7 +11,7 @@ import styles from './style';
 export default function DevInformation(props) {
   const {
     devInfoVisible, nickName, address, symbol, feeTokenSymbol, balance, feeBalance,
-    bingoGameAllowance, bingoGameContract, jackpot
+    bingoGameAllowance, bingoGameContract, jackpot, clear
   } = props;
 
   return (
@@ -52,6 +52,7 @@ export default function DevInformation(props) {
         title={'Clear'}
         onPress={() => {
           alert('clear');
+          props.clear();
           AsyncStorage.removeItem('lastBuy');
         }}
       />
