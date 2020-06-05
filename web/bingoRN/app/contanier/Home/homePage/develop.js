@@ -10,7 +10,8 @@ import styles from './style';
 
 export default function DevInformation(props) {
   const {
-    devInfoVisible, nickName, address, symbol, balance, bingoGameAllowance, bingoGameContract, jackpot
+    devInfoVisible, nickName, address, symbol, feeTokenSymbol, balance, feeBalance,
+    bingoGameAllowance, bingoGameContract, jackpot
   } = props;
 
   return (
@@ -29,7 +30,8 @@ export default function DevInformation(props) {
       <Text style={styles.basicText}>NickName: {nickName || 'Please login'}</Text>
       <Text style={styles.basicText}>Address: {address && format(address) || 'Please login'}</Text>
       <Text style={styles.basicText}>Symbol: {symbol}</Text>
-      <Text style={styles.basicText}>ELF Balance: {balance}</Text>
+      <Text style={styles.basicText}>{symbol} Balance: {balance}</Text>
+      <Text style={styles.basicText}>{feeTokenSymbol} Balance: {feeBalance}</Text>
       <Text style={styles.basicText}>Allowance for the app: {bingoGameAllowance}</Text>
       <Divider style={styles.divider} />
 

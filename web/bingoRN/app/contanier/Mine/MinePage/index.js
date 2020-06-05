@@ -22,7 +22,7 @@ const {unitConverter} = require('../../../common/utils/unitConverter');
 import connect from "../../../common/utils/myReduxConnect";
 import {config} from "../../../common/utils/config";
 import { approveApp } from '../../../common/utils/tokenContract';
-const { balanceRefreshInterval, tokenSymbol  } = config;
+const { balanceRefreshInterval, tokenSymbol, tokenDecimal  } = config;
 
 //余额刷新频率
 const periodInterval = 10;  //每期间隔20s
@@ -166,10 +166,10 @@ class MyMinePage extends React.Component {
                 owner : accountAddress,
             });
             this.setState({
-                accountBalance: unitConverter.toLower(res.balance,8).toString(),
+                accountBalance: res.balance /  unitConverter.toLower(res.balance, tokenDecimal).toString(),
             });
             this.props.onFreshBalance({
-                balance: unitConverter.toLower(res.balance,8).toString(),
+                balance: unitConverter.toLower(res.balance, tokenDecimal).toString(),
             });
             //console.log(res);
         } catch (error) {
@@ -250,7 +250,7 @@ class MyMinePage extends React.Component {
                 <TouchableWithoutFeedback onPress={() => this.goRouter("FundingDetail")}>
                     <View style={styles.overage}>
                         <TextM style={{ color: "#fff" }}>Balance</TextM>
-                        <TextM style={{ color: "#fff", marginLeft: pTd(50) }}>{balance}</TextM>
+                        <TextM style={{ color: "#fff", marginLeft: pTd(50) }}>{balance} {tokenSymbol}</TextM>
                     </View>
                 </TouchableWithoutFeedback>
             </View>

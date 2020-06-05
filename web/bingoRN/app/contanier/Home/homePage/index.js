@@ -16,13 +16,14 @@ import {format} from "../../../common/utils/address";
 
 import styles from './style';
 import DevInformation from './develop';
-const { splashScreenShowTime, tokenSymbol, tokenDecimalFormat } = config;
+const { splashScreenShowTime, tokenSymbol, feeTokenSymbol, feeTokenDecimalFormat, tokenDecimalFormat } = config;
 
 const {appInit, aelfInstance} = require('../../../common/utils/aelfProvider');
 
 const defautState = JSON.stringify({
     address: 0,
     balance: '-',
+    feeBalance: '-',
     jackpot: '-',
     symbol: '-',
     bingoGameAllowance: '-',
@@ -66,7 +67,6 @@ class MyHomePage extends React.Component {
         const { address } = reduxStoreData;
         if (this.lastAddress !== address) {
             this.lastAddress = address;
-            console.log('address: ', address);
             if (address) {
                 await this.getUserBalance();
                 await this.getBingoGameContractBalane();
@@ -116,6 +116,16 @@ class MyHomePage extends React.Component {
         // tokenContract is config in ./config.js
         const { tokenContract } = contracts;
         if (address && tokenContract && tokenContract.GetBalance) {
+            // Check fee balance, todo: refator
+            if (contractsInput) {
+                const feeBalance = await tokenContract.GetBalance.call({
+                    symbol: feeTokenSymbol,
+                    owner: address
+                });
+                this.setState({
+                    feeBalance: feeBalance.balance / feeTokenDecimalFormat,
+                });
+            }
             return await tokenContract.GetBalance.call({
                 symbol: tokenSymbol,
                 owner: address
@@ -279,7 +289,7 @@ class MyHomePage extends React.Component {
             return;
         }
 
-        const { balance, betCount, bingoGameAllowance, betType } = this.state;
+        const { balance, betCount, bingoGameAllowance, betType, feeBalance } = this.state;
         if (betType === 0) {
             this.tipMsg('Please select bet type');
             return;
@@ -290,6 +300,10 @@ class MyHomePage extends React.Component {
         }
         if (betCount >= balance) {
             this.tipMsg('Insufficient balance');
+            return;
+        }
+        if (feeBalance < 0.5) {
+            this.tipMsg('Insufficient fee balance');
             return;
         }
         if (betCount > bingoGameAllowance) {
@@ -359,7 +373,7 @@ class MyHomePage extends React.Component {
         if (this.bingoBingoLock) {
             return;
         }
-        this.tipMsg('Loading...', 10000);
+        this.tipMsg('Loading...');
         this.bingoBingoLock = true;
         const { transactionId } = this.state;
 
@@ -367,7 +381,10 @@ class MyHomePage extends React.Component {
         const bingoTxId = await bingoGameContract.Bingo(transactionId);
         const txResult = await aelfInstance.chain.getTxResult(bingoTxId.TransactionId);
         if (txResult.Status === 'NotExisted') {
-            this.tipMsg('Not ready to award, please wait a second.');
+            setTimeout(() => {
+                this.tipMsg('Not ready to award, please wait a second.');
+            }, 2000);
+
             this.bingoBingoLock = false;
             return;
         }
@@ -380,7 +397,9 @@ class MyHomePage extends React.Component {
         let txResult;
         try {
             txResult = await aelfInstance.chain.getTxResult(transactionId);
+            console.log('txResult txResult: ', txResult);
         } catch(e) {
+            console.log('txResult txResult txResult: ', e);
             if (e && e.Status === 'FAILED') {
                 this.tipMsg('Not ready yet, please wait a second.');
                 return;
@@ -502,7 +521,7 @@ class MyHomePage extends React.Component {
 
     render() {
         const {
-            balance, bingoGameAllowance,
+            balance, feeBalance, bingoGameAllowance,
             symbol, pullRefreshing, jackpot, betCount, transactionId,
             showBingo, bingoResult, devInfoVisible,
             bingoOutputUnpacked,
@@ -546,7 +565,14 @@ class MyHomePage extends React.Component {
                         </View>
                     </Card>
 
-                    <Card title={`Bet Amount (My balance: ${Math.floor(balance)} ${tokenSymbol})` } titleStyle={{textAlign: 'left'}}>
+                    <Card
+                      title={`Bet Amount` }
+                      titleStyle={{textAlign: 'left'}}
+                    >
+                        <View style={styles.balanceContainer}>
+                            <Text>My balance: {Math.floor(balance)} {tokenSymbol}</Text>
+                            <Text>My fee balance : {feeBalance} {feeTokenSymbol} {feeBalance < 1 ? '(Insufficient)' : ''}</Text>
+                        </View>
                         <View style={styles.buttonContainer}>
                             <TextInput
                               style={styles.inputStyle}
@@ -562,7 +588,7 @@ class MyHomePage extends React.Component {
 
                     <View style={styles.buttonContainer}>
                         {!showBingo && <Button buttonStyle={styles.bingoButtonSubmit} title={'Bet'} onPress={() => this.playBingo()}/>}
-                        {showBingo && <Button buttonStyle={styles.drawButton} title={'Click to draw'} onPress={() => this.bingoBingo()}/>}
+                        {showBingo && <Button buttonStyle={styles.drawButton} title={'Click to draw'} onPress={async () => this.bingoBingo()}/>}
                     </View>
 
                     <Divider style={styles.divider} />
@@ -600,7 +626,9 @@ class MyHomePage extends React.Component {
                       nickName={nickName}
                       address={address}
                       symbol={symbol}
+                      feeTokenSymbol={feeTokenSymbol}
                       balance={balance}
+                      feeBalance={feeBalance}
                       bingoGameAllowance={bingoGameAllowance}
                       bingoGameContract={bingoGameContract}
                       jackpot={jackpot}

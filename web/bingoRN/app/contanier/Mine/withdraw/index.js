@@ -57,7 +57,7 @@ class MyWithdraw extends React.Component {
                 owner : address ,
             });
             this.props.onFreshBalance({
-                balance: unitConverter.toLower(res.balance,8).toString(),
+                balance: unitConverter.toLower(res.balance, tokenDecimal).toString(),
             })
             //console.log(res);
         } catch (error) {
@@ -76,7 +76,7 @@ class MyWithdraw extends React.Component {
             const transaction = await tokenContract.Transfer({
               symbol : config.tokenSymbol,
               to : toAddress,//'x7G7VYqqeVAH8aeAsb7gYuTQ12YS1zKuxur9YES3cUj72QMxJ',//'SkMGjviAAs9bnYvv6cKcafbhf6tbRGQGK93WgKvZoCoS5amMK' ,
-              amount : unitConverter.toHigher(amountToWithdraw,8).toString(),
+              amount : unitConverter.toHigher(amountToWithdraw, tokenDecimal).toString(),
             });
 
             console.log('transaction: ', transaction);

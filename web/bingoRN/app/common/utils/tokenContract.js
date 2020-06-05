@@ -1,6 +1,6 @@
 import {unitConverter} from './unitConverter';
 import {config} from './config';
-const {tokenDecimalFormat} = config;
+const {tokenDecimalFormat, tokenDecimal} = config;
 let approveLock = false;
 
 function sleep(sleepTime) {
@@ -24,13 +24,14 @@ module.exports.approveApp = async (tokenContract, tokenSymbol, userAddress, appC
       owner : userAddress,
       spender: appContractAddress
     });
-    allowance = unitConverter.toLower(res.allowance,8);
+    allowance = unitConverter.toLower(res.allowance, tokenDecimal);
     if(allowance !== -1 && allowance < 50000){
-      await tokenContract.Approve({
+      const tx = await tokenContract.Approve({
         symbol : tokenSymbol,
         spender: appContractAddress,
         amount : 50000 * tokenDecimalFormat,
       });
+      console.log('approveApp tx', tokenSymbol, appContractAddress, tokenDecimalFormat, tx);
     }
 
     // console.log('token allowance:', res, allowance, allowance < 500, approveLock);
@@ -38,6 +39,7 @@ module.exports.approveApp = async (tokenContract, tokenSymbol, userAddress, appC
     // console.log('sleep', approveLock);
     approveLock = false;
   } catch (error) {
+    console.log('approveApp res:', error);
     await sleep(3000);
     approveLock = false;
     console.log(error);

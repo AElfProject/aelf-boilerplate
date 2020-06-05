@@ -72,5 +72,9 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderRadius: 3,
     color: '#666'
+  },
+  balanceContainer: {
+    paddingLeft: 6,
+    paddingBottom: 2
   }
 });
