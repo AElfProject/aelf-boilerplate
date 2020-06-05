@@ -30,7 +30,7 @@ async function appInit(privateKeyInput) {
     return await initContracts(privateKey);
   } catch (error) {
     // TODO: show Error message
-    console.warn(error);
+    console.warn('appInit: ',error);
   }
 }
 

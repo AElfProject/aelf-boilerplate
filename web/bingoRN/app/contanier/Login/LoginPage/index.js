@@ -3,10 +3,10 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedba
 import { Button } from "react-native-elements"
 import navigationService from "../../../common/utils/navigationService";
 
- 
+
 import pTd from "../../../common/utils/unit";
 
-/* 
+/*
  * 登录主页
  **/
 class LoginPage extends React.Component {
@@ -24,7 +24,7 @@ class LoginPage extends React.Component {
     async getFirstRequest() {
         let params = this.props.navigation.getParam("params");
 
-      
+
     }
     goRouter(router, params) {
         navigationService.navigate(router, {
@@ -39,12 +39,12 @@ class LoginPage extends React.Component {
                 </View>
                 <View style={{ justifyContent: "center", alignItems: "center", marginTop: pTd(200) }}>
                     <Button
-                        title="登陆"
+                        title="Login"
                         onPress={()=>this.goRouter("AccountLogin")}
                         buttonStyle={[styles.btnStyle,{marginBottom:pTd(30)}]}
                     />
                     <Button
-                        title="注册"
+                        title="Register"
                         onPress={()=>this.goRouter("Registered")}
                         buttonStyle={styles.btnStyle}
                     />

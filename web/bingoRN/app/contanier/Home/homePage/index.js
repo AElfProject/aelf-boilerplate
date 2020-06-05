@@ -242,7 +242,7 @@ class MyHomePage extends React.Component {
     }
 
     async getLastBuyInfo() {
-        const lastBuyInfo = JSON.parse(await AsyncStorage.getItem('lastBuy') || '{}');
+        const lastBuyInfo = JSON.parse(await AsyncStorage.getItem('lastBuy'));
         if (lastBuyInfo && !lastBuyInfo.hadDrawed) {
             this.setState({
                 transactionId: lastBuyInfo.buyTxId,
@@ -492,6 +492,11 @@ class MyHomePage extends React.Component {
           price={bingoOutputUnpacked.random}
           button={{title: jackpotButtonText}}
           info={[lotteryInfo]}
+          onButtonPress={() => {
+              if (!address) {
+                  this.goRouter("MinePage")
+              }
+          }}
         />;
     }
 
@@ -546,6 +551,7 @@ class MyHomePage extends React.Component {
                             <TextInput
                               style={styles.inputStyle}
                               placeholder="Please input bet amount"
+                              placeholderTextColor="#999"
                               onChangeText={betCount => this.onBetChange(betCount)}
                               value={betCount + ''}
                             />

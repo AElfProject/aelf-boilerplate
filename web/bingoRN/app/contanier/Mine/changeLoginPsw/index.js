@@ -144,20 +144,24 @@ class ChangeLoginPsw extends React.Component {
         const { modalVisible, pswRule, pswConfirmRule, pswDifferent } = this.state;
         return (
             <View style={Gstyle.container}>
-                <CommonHeader leftElement={this.leftElement()} title="修改登录密码" />
+                <CommonHeader leftElement={this.leftElement()} title="Change password" />
                 <ScrollView>
                     <View style={[Gstyle.marginArg(pTd(100)), { justifyContent: "center", alignItems: "center" }]}>
-                        <TextM style={{ fontWeight: '500', marginBottom: pTd(20), }}>您可以通过二维码账号+密码登陆</TextM>
+                        <TextM style={{ fontWeight: '500', marginBottom: pTd(20), }}>You can login by qrcode and password</TextM>
                         <TextM style={{ fontWeight: '500', }}>Login</TextM>
                     </View>
                     <View style={Gstyle.marginArg(pTd(50), pTd(80))}>
-                        <Input secureTextEntry={true} onChangeText={(text) => this.originPsw(text)} placeholder='旧密码' />
+                        <Input secureTextEntry={true} onChangeText={(text) => this.originPsw(text)}
+                               placeholder='password'
+                               placeholderTextColor="#999"
+                        />
                         <View style={{position:"relative"}}>
                             <Input
                                 secureTextEntry={true}
                                 onBlur={() => this.pswBlur()}
                                 onChangeText={(text) => this.psw("psw", text)}
-                                placeholder='新密码'
+                                placeholder='new password'
+                                placeholderTextColor="#999"
                             />
                             { pswRule && <TextM style={styles.pswTip}>密码格式错误</TextM> }
                         </View>
@@ -166,7 +170,8 @@ class ChangeLoginPsw extends React.Component {
                                 secureTextEntry={true}
                                 onBlur={() => this.pswComfirmBlur()}
                                 onChangeText={(text) => this.psw("pswConfirm", text)}
-                                placeholder='确认密码'
+                                placeholder='confirm password'
+                                placeholderTextColor="#999"
                             />
                             { pswConfirmRule && <TextM style={styles.pswConfirm}>密码格式错误</TextM> }
                         </View>

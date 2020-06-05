@@ -9,19 +9,17 @@ import { Button } from "react-native-elements"
 import AsyncStorage from "@react-native-community/async-storage"
 import Storage from  "../../../constants/storage"
 
-
 import navigationService from "../../../common/utils/navigationService";
 import CommonHeader from "../../../common/Components/CommonHeader/CommonHeader";
 
 import pTd from "../../../common/utils/unit";
 import { TextL, TextM, TextS, MutilText } from "../../../common/UI_Component/CommonText";
 import Loading from '../../../common/UI_Component/Loading';
+import {config} from '../../../common/utils/config';
 
 import AElf from 'aelf-sdk';
 import connect from "../../../common/utils/myReduxConnect";
 const {appInit} = require('../../../common/utils/aelfProvider');
-
-
 
 /*
  * 生成二维码
@@ -30,16 +28,13 @@ class MyGenerateQRCode extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            QRCodeValue: "111",
-            data:"222",
+            QRCodeValue: "1",
+            data:"2",
             loadingVisible: false
         }
     }
     componentDidMount() {
-
         this.requestOrder();
-
-
     }
     async requestOrder() {
         Promise.resolve()
@@ -71,16 +66,14 @@ class MyGenerateQRCode extends React.Component {
         // } catch (error) {
         //     console.error(error);
         // }
-
+        const keystoreCustomOptions = Platform.OS === 'android'
+          ? config.keystoreOptions.android : config.keystoreOptions.ios;
         const keyStore = JSON.stringify(AElf.wallet.keyStore.getKeystore({
             mnemonic: newWallet.mnemonic,
             privateKey: newWallet.privateKey,
             address: newWallet.address,
             nickName:params.username,
-          }, params.psw));
-
-
-        //console.log(newWallet.privateKey);
+          }, params.psw, keystoreCustomOptions));
 
         await AsyncStorage.setItem(Storage.userToken,"userToken");
         await AsyncStorage.setItem(Storage.userPrivateKey,newWallet.privateKey);
@@ -92,7 +85,6 @@ class MyGenerateQRCode extends React.Component {
         });
 
         return {privateKey: newWallet.privateKey, address: newWallet.address};
-
     }
 
     async initProvider(data){
@@ -112,7 +104,7 @@ class MyGenerateQRCode extends React.Component {
     rightElement() {
         return (
             <TouchableOpacity onPress={() => this.goRouter("SetTransactionPsw")}>
-                <TextM>完成</TextM>
+                <TextM>Done</TextM>
             </TouchableOpacity>
         )
     }
@@ -139,15 +131,15 @@ class MyGenerateQRCode extends React.Component {
         const { QRCodeValue, data } = this.state
         return (
             <View style={Gstyle.container}>
-                <CommonHeader title="备份二维码" rightElement={this.rightElement()} />
+                <CommonHeader title="Qrcode Backup" rightElement={this.rightElement()} />
                 <ScrollView>
 
                     <View style={{ justifyContent: "center", alignItems: "center", marginTop: pTd(120), marginBottom: pTd(80) }}>
 
-                        <TextM style={styles.tip}>此二维码即是您的账号</TextM>
+                        <TextM style={styles.tip}>This qrcode is your account</TextM>
                     </View>
                     <View style={[Gstyle.marginArg(0, pTd(80)), { justifyContent: "center", alignItems: "center" }]}>
-                        <MutilText style={{ textAlign: "center", marginBottom: pTd(60) }}> 丢失、二维码等同于丢失账号，您的资产将无法找回，请务必妥善保管您的二维码账号 </MutilText>
+                        <MutilText style={{ textAlign: "center", marginBottom: pTd(60) }}>Lost or QR code is the same as lost account. Your assets will not be recovered. Please keep your QR code account properly</MutilText>
                         <ViewShot
                           ref="viewShot" options={{ format: "jpg", quality: 0.9 }}
                           style={{width: 200}}
@@ -168,7 +160,7 @@ class MyGenerateQRCode extends React.Component {
                     <Image style={{width:pTd(50), height:pTd(50)}} source={{uri:`data:image/jpg;base64,${data}`}}/>
                     <View style={{ justifyContent: "center", alignItems: "center", marginTop: pTd(120) }}>
                         <Button
-                            title="保存至相册"
+                            title="Save to album"
                             onPress={() => this.savePicture()}
 
                             buttonStyle={styles.btnStyle}

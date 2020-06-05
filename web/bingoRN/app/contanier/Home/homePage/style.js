@@ -70,6 +70,7 @@ export default StyleSheet.create({
     height: 40,
     borderColor: "#817AFD",
     borderWidth: 1,
-    borderRadius: 3
+    borderRadius: 3,
+    color: '#666'
   }
 });

@@ -190,7 +190,7 @@ class Registered extends React.Component {
         return (
             <View style={Gstyle.container}>
                 {this.state.loadingVisible && (<Loading />)}
-                <CommonHeader canBack title="注册" />
+                <CommonHeader canBack title="Register" />
                 <TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={() => this.windowOnBlur()}>
                     <View style={Gstyle.marginArg(pTd(200), pTd(50), 0)}>
 
@@ -199,9 +199,10 @@ class Registered extends React.Component {
                                 ref={u => this.user = u}
                                 onBlur={() => this.userNameBlur()}
                                 onChangeText={(text) => this.onChangeText(text)}
-                                placeholder='用户名'
+                                placeholder='Nick Name'
+                                placeholderTextColor="#999"
                             />
-                            {userNameRule && <TextM style={styles.pswTip}>用户名格式错误</TextM>}
+                            {userNameRule && <TextM style={styles.pswTip}>Nickname format error</TextM>}
                         </View>
                         <View style={{ position: "relative" }}>
                             <Input
@@ -209,9 +210,10 @@ class Registered extends React.Component {
                                 secureTextEntry={true}
                                 onBlur={() => this.pswBlur()}
                                 onChangeText={(text) => this.psw("psw", text)}
-                                placeholder='新密码'
+                                placeholder='New password'
+                                placeholderTextColor="#999"
                             />
-                            {pswRule && <TextM style={styles.pswTip}>密码格式错误</TextM>}
+                            {pswRule && <TextM style={styles.pswTip}>Password format error</TextM>}
                         </View>
                         <View style={{ position: "relative" }}>
                             <Input
@@ -219,22 +221,23 @@ class Registered extends React.Component {
                                 secureTextEntry={true}
                                 onBlur={() => this.pswComfirmBlur()}
                                 onChangeText={(text) => this.psw("pswConfirm", text)}
-                                placeholder='确认密码'
+                                placeholder='Confirm password'
+                                placeholderTextColor="#999"
                             />
-                            {pswConfirmRule && <TextM style={styles.pswConfirm}>密码格式错误</TextM>}
+                            {pswConfirmRule && <TextM style={styles.pswConfirm}>Password format error</TextM>}
                         </View>
                         {
-                            pswDifferent && <TextM style={{ color: "red", ...Gstyle.marginArg(pTd(20)) }}>您两次输入的密码不一致</TextM>
+                            pswDifferent && <TextM style={{ color: "red", ...Gstyle.marginArg(pTd(20)) }}>The password you entered twice is inconsistent</TextM>
                         }
 
-                        <TextS style={{ color: Colors.fontGray, marginTop: pTd(20) }}>*用户名中的字符只能是英文或数字</TextS>
-                        <TextS style={{ color: Colors.fontGray, marginTop: pTd(20) }}>*密码必须大于等于12位，而且同时包含大写字母、小写字母、数字和字符</TextS>
+                        <TextS style={{ color: Colors.fontGray, marginTop: pTd(20) }}>*The characters in the username can only be letters or numbers</TextS>
+                        <TextS style={{ color: Colors.fontGray, marginTop: pTd(20) }}>*The password must be greater than or equal to 12 digits, and contain both uppercase letters, lowercase letters, numbers, and characters</TextS>
 
                     </View>
 
                     <View style={{ justifyContent: "center", alignItems: "center", marginTop: pTd(80) }}>
                         <Button
-                            title="注册"
+                            title="Register"
                             onPress={async () => {
                                 this.submitInfo();
                             }}

@@ -203,6 +203,7 @@ class MyWithdraw extends React.Component {
                            }}
                            style={styles.inputStyle}
                            onChangeText={text=>this.onChangeAmountText(text)}
+                           placeholderTextColor="#999"
                            placeholder={`Withdrawable balance ${this.props.ReduxStore.balance}`}
                         />
                         {/*<TextM>金币</TextM>*/}
@@ -242,7 +243,7 @@ class MyWithdraw extends React.Component {
                     </View>
                     {/*<View style={{ justifyContent: "center", alignItems: "center", marginBottom: pTd(50) }}>*/}
                     {/*    <View style={[Gstyle.frcc]}>*/}
-                    
+
                     {/*        <Icon name="wallet" size={18} />*/}
                     {/*        <TextM style={{ fontWeight: '500', marginLeft: pTd(20) }}>客服转账，自动提现</TextM>*/}
                     {/*    </View>*/}
@@ -267,6 +268,7 @@ class MyWithdraw extends React.Component {
                               text=>this.onChangeAddressText(text)
                           }
                           placeholder="Please input address"
+                          placeholderTextColor="#999"
                           defaultValue=''
                         />
                     </View>

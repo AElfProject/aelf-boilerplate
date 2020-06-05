@@ -293,11 +293,12 @@ class MyAccountLogin extends Component {
                     <View style={{ justifyContent: "center", alignItems: "center" }}>
                         <TextL
                           style={{ marginTop: pTd(50), marginLeft: pTd(50), marginRight: pTd(50) }}
-                        >请输入账户{ks.nickName}的登陆密码</TextL>
+                        >Please input the password of {ks.nickName}</TextL>
 
                         <Input
                           secureTextEntry={true}
                           placeholder="Please input login password"
+                          placeholderTextColor="#999"
                           onChangeText={(text) => this.onChangeText(text)}
                           errorStyle={{ color: 'red' }}
                           errorMessage={inputErrorMessage}
@@ -347,12 +348,12 @@ class MyAccountLogin extends Component {
         return tipStatus ? (
             <View style={styles.tip}>
                 <Icon name="checkcircle" size={38} color={"green"} />
-                <TextL style={{marginTop:pTd(20)}}>登陆成功</TextL>
+                <TextL style={{marginTop:pTd(20)}}>Success</TextL>
             </View>
         ) : (
                 <View style={styles.tip}>
                     <Icon name="closecircle" size={38} color={Colors.primaryColor} />
-                    <TextL style={{marginTop:pTd(20)}}>密码错误</TextL>
+                    <TextL style={{marginTop:pTd(20)}}>Password error</TextL>
                 </View>
             )
     }

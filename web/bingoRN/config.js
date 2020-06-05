@@ -2,8 +2,26 @@ module.exports.config = {
   commonPrivateKey: 'b7a6b643f2a66848cb2229bf26c8330d5384e0eac325709a66f4baacc89d3108',
   customerAddress: '2hxkDg6Pd2d4yU1A16PTZVMMrEDYEPR8oQojMDwWdax5LsBaxX',
   customerTel: 'Just a dev show case, you can input a phone number here.',
+  // You can change the params for keystore here
+  keystoreOptions: {
+    ios: {
+      dklen: 32,
+      n: 8192, // 2048 4096 8192 16384
+      r: 8,
+      p: 1,
+      cipher: 'aes-128-ctr'
+    },
+    android: {
+      dklen: 32,
+      n: 2048, // 2048 4096 8192 16384
+      r: 8,
+      p: 1,
+      cipher: 'aes-128-ctr'
+    }
+  },
   // httpProvider: 'https://wallet-test.aelf.io/chain', //'http://192.168.1.4:1235',
-  httpProvider: 'http://127.0.0.1:1235', //'http://192.168.1.4:1235',
+  // We can not use 127.0.0.1 or localhost in Android. We need use local ip.
+  httpProvider: 'http://192.168.199.113:1235', //'http://192.168.1.4:1235',
   // httpProvider: 'http://1.119.195.50:11105/chain', //'http://192.168.1.4:1235',
   walletURL: 'https://wallet-test.aelf.io',
   // walletURL: 'http://1.119.195.50:11105',
