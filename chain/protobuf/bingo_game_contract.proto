@@ -11,10 +11,14 @@ service BingoGameContract {
     option (aelf.csharp_state) = "AElf.Contracts.BingoGameContract.BingoGameContractState";
     
     // Actions
+    // 1. call Initial at first if you deploy the contract to blockchain.
     rpc Initial (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
+    // Buy or Bet 
     rpc Play (PlayInput) returns (aelf.SInt64Value) {
     }
+    // Waiting few seconds, you can draw the prize.
+    // Play -> waiting seconds -> Bingo
     rpc Bingo (aelf.Hash) returns (BingoOutput) {
     }
     // Views
@@ -28,6 +32,7 @@ service BingoGameContract {
 
 message PlayInput {
     sint64 buy_amount = 1;
+    // type = {1: small, 2: big}
     sint64 buy_type = 2;
     string token_symbol = 3;
 }
