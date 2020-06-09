@@ -1,24 +1,28 @@
+// We use keystore to store the private key and use information
+// You can custom your keystore config for different device.
+const keystoreOptions = {
+  ios: {
+    dklen: 32,
+    n: 8192, // 2048 4096 8192 16384
+    r: 8,
+    p: 1,
+    cipher: 'aes-128-ctr'
+  },
+  android: {
+    dklen: 32,
+    n: 2048, // 2048 4096 8192 16384
+    r: 8,
+    p: 1,
+    cipher: 'aes-128-ctr'
+  }
+};
+
 module.exports.config = {
   commonPrivateKey: 'b7a6b643f2a66848cb2229bf26c8330d5384e0eac325709a66f4baacc89d3108',
   customerAddress: '2hxkDg6Pd2d4yU1A16PTZVMMrEDYEPR8oQojMDwWdax5LsBaxX',
   customerTel: 'Just a dev show case, you can input a phone number here.',
   // You can change the params for keystore here
-  keystoreOptions: {
-    ios: {
-      dklen: 32,
-      n: 8192, // 2048 4096 8192 16384
-      r: 8,
-      p: 1,
-      cipher: 'aes-128-ctr'
-    },
-    android: {
-      dklen: 32,
-      n: 2048, // 2048 4096 8192 16384
-      r: 8,
-      p: 1,
-      cipher: 'aes-128-ctr'
-    }
-  },
+  keystoreOptions,
   httpProvider: 'https://wallet-test.aelf.io/chain', //'http://192.168.1.4:1235',
   // We can not use 127.0.0.1 or localhost in Android. We need use local ip.
   // httpProvider: 'http://192.168.199.113:1235', //'http://192.168.1.4:1235',
