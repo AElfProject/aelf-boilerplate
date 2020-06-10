@@ -2,6 +2,7 @@
 using AElf.Boilerplate.SystemTransactionGenerator;
 using AElf.Database;
 using AElf.Kernel.Infrastructure;
+using AElf.Kernel.SmartContract;
 using AElf.Kernel.SmartContractInitialization;
 using AElf.Modularity;
 using AElf.OS.Node.Application;
@@ -33,6 +34,8 @@ namespace AElf.Boilerplate.MainChain
 
             services.AddKeyValueDbContext<BlockchainKeyValueDbContext>(p => p.UseInMemoryDatabase());
             services.AddKeyValueDbContext<StateKeyValueDbContext>(p => p.UseInMemoryDatabase());
+            
+            Configure<ContractOptions>(o => o.ContractDeploymentAuthorityRequired = false);
         }
     }
 }
