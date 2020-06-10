@@ -14,17 +14,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{DBC47323-E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.CodeGenerator", "src\AElf.Boilerplate.CodeGenerator\AElf.Boilerplate.CodeGenerator.csproj", "{1E374BCA-7093-43A4-A419-23999B147B1A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.Launcher", "src\AElf.Boilerplate.Launcher\AElf.Boilerplate.Launcher.csproj", "{7691E8CC-C427-4361-AF9A-D769A92C2318}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.BingoContract.Launcher", "src\AElf.Boilerplate.BingoContract.Launcher\AElf.Boilerplate.BingoContract.Launcher.csproj", "{7691E8CC-C427-4361-AF9A-D769A92C2318}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.MainChain", "src\AElf.Boilerplate.MainChain\AElf.Boilerplate.MainChain.csproj", "{F5B9CE98-80B4-46F0-A040-1BE75C276411}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.TestBase", "src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj", "{F72731A8-5803-4362-834F-0C066E64D4CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.Tester", "src\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj", "{217599C5-2CF0-411E-97B5-5657739CEE5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.SystemTransactionGenerator", "src\AElf.Boilerplate.SystemTransactionGenerator\AElf.Boilerplate.SystemTransactionGenerator.csproj", "{217599C5-2CF0-411E-97B5-5657739CEE5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.BingoContract", "contract\AElf.Contracts.BingoContract\AElf.Contracts.BingoContract.csproj", "{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.BingContract", "contract\AElf.Contracts.BingContract\AElf.Contracts.BingContract.csproj", "{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.BingoContract.Test", "test\AElf.Contracts.BingoContract.Test\AElf.Contracts.BingoContract.Test.csproj", "{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.BingContract.Test", "test\AElf.Contracts.BingContract.Test\AElf.Contracts.BingContract.Test.csproj", "{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
