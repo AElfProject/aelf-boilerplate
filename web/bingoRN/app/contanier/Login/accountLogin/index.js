@@ -8,7 +8,7 @@ import {
     PermissionsAndroid,
     default as Easing,
     ImageBackground,
-    TextInput, Platform,
+    TextInput, Platform, ActivityIndicator,
 } from 'react-native';
 import { RNCamera } from 'react-native-camera'
 import AsyncStorage from "@react-native-community/async-storage"
@@ -45,7 +45,7 @@ class MyAccountLogin extends Component {
             loadingVisible: false,
             tipStatus: false,
             overlayVisible: true,
-            inputErrorMessage: ''
+            inputErrorMessage: '',
         };
         this.requestCameraPermission = this.requestCameraPermission.bind(this)
     }
@@ -321,7 +321,7 @@ class MyAccountLogin extends Component {
                                                     overlayVisible: false
                                                 });
                                                 this.goRouter("SetTransactionPsw");
-                                            }, 1000)}).catch(error => {
+                                            }, 1)}).catch(error => {
                                                 console.log('accountLogin error', error);
                                         });
                                     })}
@@ -347,7 +347,8 @@ class MyAccountLogin extends Component {
         const { tipStatus } = this.state
         return tipStatus ? (
             <View style={styles.tip}>
-                <Icon name="checkcircle" size={38} color={"green"} />
+                {/* <Icon name="checkcircle" size={38} color={"green"} /> */}
+                <ActivityIndicator size="large" color={'green'} />
                 <TextL style={{marginTop:pTd(20)}}>Success</TextL>
             </View>
         ) : (
