@@ -177,8 +177,12 @@ class MyMinePage extends React.Component {
             this.initProvider();
             console.log(error);
         }
-
-        await approveApp(tokenContract, config.tokenSymbol, accountAddress, appContract.address);
+        try {
+            await approveApp(tokenContract, config.tokenSymbol, accountAddress, appContract.address);
+        } catch (error) {
+            console.log('approveAppERR',error);
+            
+        }
     }
     /* changeModestatus */
     changeModalStatus() {
