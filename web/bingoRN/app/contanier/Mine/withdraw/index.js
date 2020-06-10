@@ -20,6 +20,8 @@ import {config} from "../../../common/utils/config";
 
 const {unitConverter} = require('../../../common/utils/unitConverter');
 
+const {tokenDecimal} = config;
+
 /*
  * 提现
  **/
@@ -57,7 +59,7 @@ class MyWithdraw extends React.Component {
                 owner : address ,
             });
             this.props.onFreshBalance({
-                balance: unitConverter.toLower(res.balance, tokenDecimal).toString(),
+                balance: unitConverter.toLower(res.balance, tokenDecimal),
             })
             //console.log(res);
         } catch (error) {

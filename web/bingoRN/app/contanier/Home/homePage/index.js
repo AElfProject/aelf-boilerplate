@@ -13,17 +13,17 @@ import Storage from  "../../../constants/storage"
 import connect from "../../../common/utils/myReduxConnect";
 import {config} from "../../../common/utils/config";
 import {format} from "../../../common/utils/address";
+import {sleep} from "../../../common/utils/utils";
 
 import styles from './style';
 import DevInformation from './develop';
-const { splashScreenShowTime, tokenSymbol, feeTokenSymbol, feeTokenDecimalFormat, tokenDecimalFormat } = config;
+const { splashScreenShowTime, tokenSymbol, tokenDecimalFormat } = config;
 
 const {appInit, aelfInstance} = require('../../../common/utils/aelfProvider');
 
 const defautState = JSON.stringify({
     address: 0,
     balance: '-',
-    feeBalance: '-',
     jackpot: '-',
     symbol: '-',
     bingoGameAllowance: '-',
@@ -55,11 +55,16 @@ class MyHomePage extends React.Component {
         this.state = JSON.parse(defautState);
         // trick: fix bug. Will refator soon.
         this.lastAddress = null;
+        this.interval = null;
     }
     componentWillMount(){
         setTimeout(()=>{
             SplashScreen.hide()
         }, splashScreenShowTime);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
@@ -80,6 +85,10 @@ class MyHomePage extends React.Component {
     async componentDidMount() {
         this.initProvider();
         this.onRefresh();
+        this.interval = setInterval((
+        ) => {
+            this.getUserBalance();
+        }, 10000);
     }
 
     async initProvider(){
@@ -118,16 +127,6 @@ class MyHomePage extends React.Component {
         // tokenContract is config in ./config.js
         const { tokenContract } = contracts;
         if (address && tokenContract && tokenContract.GetBalance) {
-            // Check fee balance, todo: refator
-            if (contractsInput) {
-                const feeBalance = await tokenContract.GetBalance.call({
-                    symbol: feeTokenSymbol,
-                    owner: address
-                });
-                this.setState({
-                    feeBalance: feeBalance.balance / feeTokenDecimalFormat,
-                });
-            }
             return await tokenContract.GetBalance.call({
                 symbol: tokenSymbol,
                 owner: address
@@ -181,7 +180,7 @@ class MyHomePage extends React.Component {
             return;
         }
         this.setState({
-            jackpot: balance.balance / tokenDecimalFormat,
+            jackpot: (balance.balance / tokenDecimalFormat).toFixed(2),
         });
     }
 
@@ -212,6 +211,7 @@ class MyHomePage extends React.Component {
 
     resetState() {
         this.setState(JSON.parse(defautState));
+        this.onRefresh();
     }
 
     async onRefresh() {
@@ -295,7 +295,7 @@ class MyHomePage extends React.Component {
             return;
         }
 
-        const { balance, betCount, bingoGameAllowance, betType, feeBalance } = this.state;
+        const { balance, betCount, bingoGameAllowance, betType } = this.state;
         if (betType === 0) {
             this.tipMsg('Please select bet type');
             return;
@@ -304,12 +304,8 @@ class MyHomePage extends React.Component {
             this.tipMsg('Please input bet amount');
             return;
         }
-        if (betCount >= balance) {
+        if (betCount > balance) {
             this.tipMsg('Insufficient balance');
-            return;
-        }
-        if (feeBalance < 0.5) {
-            this.tipMsg('Insufficient fee balance');
             return;
         }
         if (betCount > bingoGameAllowance) {
@@ -324,21 +320,21 @@ class MyHomePage extends React.Component {
             buyType: betType,
             tokenSymbol: tokenSymbol
         });
+        await this.setLastBuyInStorage(transactionId.TransactionId);
+
         this.setState({
             transactionId: transactionId.TransactionId,
             showBingo: true,
             bingoResult: null,
             bingoOutputUnpacked: JSON.parse(defautState).bingoOutputUnpacked,
             lastBetCount: betCount,
-            lastBetType: betType
+            lastBetType: betType,
+            balance: balance - betCount
         });
 
-        await this.setLastBuyInStorage(transactionId.TransactionId);
-
-        setTimeout(async () => {
-            await this.checkPlayBingoStatus(transactionId.TransactionId);
-            this.playLock = false;
-        }, 1000);
+        await sleep(2000);
+        await this.checkPlayBingoStatus(transactionId.TransactionId);
+        this.playLock = false;
     }
     async checkPlayBingoStatus(transactionId) {
         const playTxResult = await aelfInstance.chain.getTxResult(transactionId);
@@ -352,6 +348,7 @@ class MyHomePage extends React.Component {
             setTimeout(() => {
                 this.checkPlayBingoStatus(transactionId);
             }, 2000);
+            return;
         }
 
         this.checkPlayBingoStatusTimes = 0;
@@ -360,6 +357,7 @@ class MyHomePage extends React.Component {
             setTimeout(() => {
                 this.checkPlayBingoStatus(transactionId);
             }, 1000);
+            return;
         }
         if (playTxResult.Status === 'FAILED') {
             this.tipMsg('Play failed, please try again');
@@ -379,12 +377,15 @@ class MyHomePage extends React.Component {
         if (this.bingoBingoLock) {
             return;
         }
-        this.tipMsg('Loading...');
+        this.tipMsg('Loading...', 4000);
         this.bingoBingoLock = true;
         const { transactionId } = this.state;
 
         const bingoGameContract = this.getBingoContract();
         const bingoTxId = await bingoGameContract.Bingo(transactionId);
+        // before preview3, tx will be NotExisted before pending
+        await sleep(4000);
+
         const txResult = await aelfInstance.chain.getTxResult(bingoTxId.TransactionId);
         console.log('bingoTxId', bingoTxId, txResult);
         if (txResult.Status === 'NotExisted') {
@@ -396,7 +397,6 @@ class MyHomePage extends React.Component {
             return;
         }
         await this.getBingoResult(bingoTxId.TransactionId);
-        await this.setLastBuyInStorage(null, true);
         this.bingoBingoLock = false;
     }
 
@@ -428,13 +428,8 @@ class MyHomePage extends React.Component {
             const bingoGameContract = this.getBingoContract();
             const bingoOutputUnpacked = bingoGameContract.Bingo.unpackOutput(txResult.ReturnValue);
             const awardResult = await bingoGameContract.GetAward.call(transactionIdPlay);
+            console.log('awardResult: ', awardResult);
             const bingoResult = awardResult.value / tokenDecimalFormat;
-            this.setState({
-                showBingo: false,
-                bingoResult,
-                bingoTxId: transactionId,
-                bingoOutputUnpacked
-            });
 
             const tipMsg = (bingoResult > 0 ? 'You win ' : 'You lose ') + Math.abs(bingoResult) + ' ' + tokenSymbol;
             this.tipMsg(tipMsg, 3000);
@@ -442,6 +437,14 @@ class MyHomePage extends React.Component {
             await this.getUserBalance();
             await this.getBingoGameContractBalane();
             await this.getApprovedNumber();
+            await this.setLastBuyInStorage(null, true);
+
+            this.setState({
+                showBingo: false,
+                bingoResult,
+                bingoTxId: transactionId,
+                bingoOutputUnpacked
+            });
         }
     }
 
@@ -456,7 +459,7 @@ class MyHomePage extends React.Component {
           <View style={{
               marginTop: 3
           }}>
-              <TextTitle>Latest draw transaction</TextTitle>
+              <TextTitle>Draw result</TextTitle>
               <Text>Bingo Result:{result}</Text>
               <Text>Lottery Code: {bingoOutputUnpacked.random}</Text>
               <TouchableOpacity>
@@ -505,7 +508,7 @@ class MyHomePage extends React.Component {
             return `Prize Pool: ${jackpot} ${tokenSymbol}`;
         })();
 
-        const boughtInfo = `You bought ${lastBetType === 1 ? 'Small' : 'Big'} `;
+        const boughtInfo = `You bet ${lastBetType === 1 ? 'Small' : 'Big'} `;
         let lotteryInfo = showBingo ? boughtInfo : 'Please bet.'
 
         if (bingoResult) {
@@ -528,7 +531,7 @@ class MyHomePage extends React.Component {
 
     render() {
         const {
-            balance, feeBalance, bingoGameAllowance,
+            balance, bingoGameAllowance,
             symbol, pullRefreshing, jackpot, betCount, transactionId,
             showBingo, bingoResult, devInfoVisible,
             bingoOutputUnpacked,
@@ -577,8 +580,7 @@ class MyHomePage extends React.Component {
                       titleStyle={{textAlign: 'left'}}
                     >
                         <View style={styles.balanceContainer}>
-                            <Text>My balance: {Math.floor(balance)} {tokenSymbol}</Text>
-                            <Text>My fee balance : {feeBalance} {feeTokenSymbol} {feeBalance < 1 ? '(Insufficient)' : ''}</Text>
+                            <Text>My balance: {(+balance).toFixed(2)} {tokenSymbol}</Text>
                         </View>
                         <View style={styles.buttonContainer}>
                             <TextInput
@@ -612,6 +614,17 @@ class MyHomePage extends React.Component {
                         </Text>
 
                         <Divider style={styles.divider} />
+
+                        <Text>Game Operations</Text>
+                        <Text>
+                            1. Select a bet type and bet your AEUSD.
+                        </Text>
+                        <Text>
+                            2. Waiting few seconds, then draw the prize.
+                        </Text>
+
+                        <Divider style={styles.divider} />
+
                         {buyTxHTML}
                         {bingoResultHTML}
                     </View>
@@ -633,13 +646,11 @@ class MyHomePage extends React.Component {
                       nickName={nickName}
                       address={address}
                       symbol={symbol}
-                      feeTokenSymbol={feeTokenSymbol}
                       balance={balance}
-                      feeBalance={feeBalance}
                       bingoGameAllowance={bingoGameAllowance}
                       bingoGameContract={bingoGameContract}
                       jackpot={jackpot}
-                      clear={() => this.resetState}
+                      clear={() => this.resetState()}
                     />
                 </ScrollView>
             </View>

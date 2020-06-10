@@ -166,10 +166,10 @@ class MyMinePage extends React.Component {
                 owner : accountAddress,
             });
             this.setState({
-                accountBalance: res.balance /  unitConverter.toLower(res.balance, tokenDecimal).toString(),
+                accountBalance: unitConverter.toLower(res.balance, tokenDecimal),
             });
             this.props.onFreshBalance({
-                balance: unitConverter.toLower(res.balance, tokenDecimal).toString(),
+                balance: unitConverter.toLower(res.balance, tokenDecimal),
             });
             //console.log(res);
         } catch (error) {
