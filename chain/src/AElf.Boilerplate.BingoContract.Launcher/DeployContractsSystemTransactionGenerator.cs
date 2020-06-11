@@ -49,7 +49,7 @@ namespace AElf.Boilerplate.BingoContract.Launcher
         private byte[] GetContractCodes()
         {
             return ContractsDeployer.GetContractCodes<DeployContractsSystemTransactionGenerator>(_contractOptions
-                .GenesisContractDir)["AElf.Contracts.BingContract"];
+                .GenesisContractDir)["AElf.Contracts.BingoContract"];
         }
     }
 }

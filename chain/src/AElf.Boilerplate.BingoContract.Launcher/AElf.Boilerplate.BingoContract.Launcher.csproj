@@ -10,14 +10,14 @@
     </ItemGroup>
     
     <ItemGroup>
-        <PackageReference Include="AElf.Contracts.Deployer" Version="1.0.0-preview3-18397" />
-        <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="1.1.2" />
+        <PackageReference Include="AElf.Contracts.Deployer" Version="1.0.0-preview3-18424" />
+        <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="2.9.0" />
         <PackageReference Include="Volo.Abp.Autofac" Version="1.1.2" />
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\contract\AElf.Contracts.BingContract\AElf.Contracts.BingContract.csproj">
+        <ProjectReference Include="..\..\contract\AElf.Contracts.BingoContract\AElf.Contracts.BingoContract.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -25,11 +25,11 @@
     </ItemGroup>
     
     <ItemGroup>
-        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.0.0-preview2">
+        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.0.0-preview3-18424">
             <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.chain</PackageName>
         </PackageReference>
-        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.0.0-preview2">
+        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.0.0-preview3-18424">
             <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.net</PackageName>
         </PackageReference>
@@ -48,6 +48,12 @@
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Update="log4net.config">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <Target Name="CopyPackages" AfterTargets="AfterBuild">

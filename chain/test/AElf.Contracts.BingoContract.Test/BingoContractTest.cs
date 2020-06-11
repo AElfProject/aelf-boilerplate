@@ -1,9 +1,8 @@
 using System.Linq;
 using System.Threading.Tasks;
-using AElf.Contracts.MultiToken;
 using AElf.Contracts.TestKit;
-using AElf.Kernel.Token;
 using AElf.Types;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Shouldly;
 using Xunit;
@@ -16,58 +15,17 @@ namespace AElf.Contracts.BingoContract
         public async Task Test()
         {
             // Get a stub for testing.
-            var keyPair = SampleECKeyPairs.KeyPairs[0];
+            var keyPair = SampleAccount.Accounts.First().KeyPair;
             var stub = GetBingoContractStub(keyPair);
-            var tokenStub =
-                GetTester<TokenContractContainer.TokenContractStub>(
-                    GetAddress(TokenSmartContractAddressNameProvider.StringName), keyPair);
 
-            // Prepare awards.
-            await tokenStub.Transfer.SendAsync(new TransferInput
-            {
-                To = DAppContractAddress,
-                Symbol = "ELF",
-                Amount = 100_00000000
-            });
+            // Use CallAsync or SendAsync method of this stub to test.
+            // await stub.Hello.SendAsync(new Empty())
 
-            await stub.Register.SendAsync(new Empty());
+            // Or maybe you want to get its return value.
+            // var output = (await stub.Hello.SendAsync(new Empty())).Output;
 
-            // Now I have player information.
-            var address = Address.FromPublicKey(keyPair.PublicKey);
-
-            {
-                var playerInformation = await stub.GetPlayerInformation.CallAsync(address);
-                playerInformation.Seed.Value.ShouldNotBeEmpty();
-                playerInformation.RegisterTime.ShouldNotBeNull();
-            }
-
-            // Play.
-            await tokenStub.Approve.SendAsync(new ApproveInput
-            {
-                Spender = DAppContractAddress,
-                Symbol = "ELF",
-                Amount = 10000
-            });
-
-            await stub.Play.SendAsync(new Int64Value {Value = 10000});
-
-            Hash playId;
-            {
-                var playerInformation = await stub.GetPlayerInformation.CallAsync(address);
-                playerInformation.Bouts.ShouldNotBeEmpty();
-                playId = playerInformation.Bouts.First().PlayId;
-            }
-
-            // Mine 7 more blocks.
-            for (var i = 0; i < 7; i++)
-            {
-                await stub.Bingo.SendWithExceptionAsync(playId);
-            }
-
-            await stub.Bingo.SendAsync(playId);
-
-            var award = await stub.GetAward.CallAsync(playId);
-            award.Value.ShouldNotBe(0);
+            // Or transaction result.
+            // var transactionResult = (await stub.Hello.SendAsync(new Empty())).TransactionResult;
         }
     }
 }
