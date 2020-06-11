@@ -35,20 +35,15 @@ export default createAppContainer(createMaterialTopTabNavigator({
         inactiveTintColor: tabActiveColor,
         labelStyle: { fontSize: pTd(32) },
         indicatorStyle: {
-            // marginLeft:sreenWidth*0.05/2,
-            // alignSelf: 'center',
             backgroundColor: tabActiveColor,
             height: '100%',
             alignSelf: 'center',
-            // width :sreenWidth*0.4,
-            // right:10,
         },
         style: {
             backgroundColor: 'white',
             borderColor: tabActiveColor,
             elevation: 0,
             borderWidth: 2,
-            // marginHorizontal:sreenWidth*0.1,
         },
     },
 
