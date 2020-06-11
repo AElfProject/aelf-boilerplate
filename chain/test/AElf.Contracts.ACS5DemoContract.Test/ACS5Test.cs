@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Acs5;
 using AElf.Contracts.TestKit;
@@ -13,7 +14,7 @@ namespace AElf.Contracts.ACS5DemoContract
         [Fact]
         public async Task Test()
         {
-            var keyPair = SampleECKeyPairs.KeyPairs[0];
+            var keyPair = SampleAccount.Accounts.First().KeyPair;
             var acs5DemoContractStub =
                 GetTester<ACS5DemoContractContainer.ACS5DemoContractStub>(DAppContractAddress, keyPair);
 
@@ -53,7 +54,7 @@ namespace AElf.Contracts.ACS5DemoContract
             {
                 var poorStub =
                     GetTester<ACS5DemoContractContainer.ACS5DemoContractStub>(DAppContractAddress,
-                        SampleECKeyPairs.KeyPairs[1]);
+                        SampleAccount.Accounts[1].KeyPair);
                 var executionResult = await poorStub.Foo.SendWithExceptionAsync(new Empty());
                 executionResult.TransactionResult.Error.ShouldContain("Cannot meet the calling threshold.");
             }

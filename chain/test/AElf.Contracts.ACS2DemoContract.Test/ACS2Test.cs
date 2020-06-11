@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AElf.Contracts.TestKit;
 using AElf.Kernel;
@@ -16,10 +17,10 @@ namespace AElf.Contracts.ACS2DemoContract
         [Fact]
         public async Task Test()
         {
-            var keyPair1 = SampleECKeyPairs.KeyPairs[0];
+            var keyPair1 = SampleAccount.Accounts.First().KeyPair;
             var acs2DemoContractStub1 = GetACS2DemoContractStub(keyPair1);
 
-            var keyPair2 = SampleECKeyPairs.KeyPairs[1];
+            var keyPair2 = SampleAccount.Accounts[1].KeyPair;
             var acs2DemoContractStub2 = GetACS2DemoContractStub(keyPair2);
 
             var transactionGrouper = Application.ServiceProvider.GetRequiredService<ITransactionGrouper>();
@@ -36,12 +37,12 @@ namespace AElf.Contracts.ACS2DemoContract
                 {
                     acs2DemoContractStub1.TransferCredits.GetTransaction(new TransferCreditsInput
                     {
-                        To = Address.FromPublicKey(SampleECKeyPairs.KeyPairs[2].PublicKey),
+                        To = Address.FromPublicKey(SampleAccount.Accounts[2].KeyPair.PublicKey),
                         Amount = 1
                     }),
                     acs2DemoContractStub2.TransferCredits.GetTransaction(new TransferCreditsInput
                     {
-                        To = Address.FromPublicKey(SampleECKeyPairs.KeyPairs[3].PublicKey),
+                        To = Address.FromPublicKey(SampleAccount.Accounts[3].KeyPair.PublicKey),
                         Amount = 1
                     }),
                 });
@@ -58,12 +59,12 @@ namespace AElf.Contracts.ACS2DemoContract
                 {
                     acs2DemoContractStub1.TransferCredits.GetTransaction(new TransferCreditsInput
                     {
-                        To = Address.FromPublicKey(SampleECKeyPairs.KeyPairs[2].PublicKey),
+                        To = Address.FromPublicKey(SampleAccount.Accounts[2].KeyPair.PublicKey),
                         Amount = 1
                     }),
                     acs2DemoContractStub2.TransferCredits.GetTransaction(new TransferCreditsInput
                     {
-                        To = Address.FromPublicKey(SampleECKeyPairs.KeyPairs[2].PublicKey),
+                        To = Address.FromPublicKey(SampleAccount.Accounts[2].KeyPair.PublicKey),
                         Amount = 1
                     }),
                 });

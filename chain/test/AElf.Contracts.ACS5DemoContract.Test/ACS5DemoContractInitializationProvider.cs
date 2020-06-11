@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using AElf.Boilerplate.TestBase;
 using AElf.Contracts.TestKit;
-using AElf.Kernel.SmartContractInitialization;
+using AElf.Kernel.SmartContract.Application;
 using AElf.Types;
 using Google.Protobuf;
 
@@ -9,16 +10,16 @@ namespace AElf.Contracts.ACS5DemoContract
 {
     public class ACS5DemoContractInitializationProvider : IContractInitializationProvider
     {
-        public List<InitializeMethod> GetInitializeMethodList(byte[] contractCode)
+        public List<ContractInitializationMethodCall> GetInitializeMethodList(byte[] contractCode)
         {
-            return new List<InitializeMethod>
+            return new List<ContractInitializationMethodCall>
             {
-                new InitializeMethod
+                new ContractInitializationMethodCall
                 {
                     MethodName = nameof(ACS5DemoContract.Initialize),
                     Params = new InitializeInput
                     {
-                        Admin = Address.FromPublicKey(SampleECKeyPairs.KeyPairs[0].PublicKey)
+                        Admin = Address.FromPublicKey(SampleAccount.Accounts.First().KeyPair.PublicKey)
                     }.ToByteString()
                 }
             };

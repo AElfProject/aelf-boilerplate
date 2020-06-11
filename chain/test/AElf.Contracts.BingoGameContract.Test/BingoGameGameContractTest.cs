@@ -17,7 +17,7 @@ namespace AElf.Contracts.BingoGameContract
         public async Task Test()
         {
             // Get a stub for testing.
-            var keyPair = SampleECKeyPairs.KeyPairs[0];
+            var keyPair = SampleAccount.Accounts.First().KeyPair;
             var stub = GetBingoGameContractStub(keyPair);
             var tokenStub =
                 GetTester<TokenContractContainer.TokenContractStub>(

@@ -14,7 +14,7 @@ namespace AElf.Contracts.ACS1DemoContract
         [Fact]
         public async Task Test()
         {
-            var keyPair = SampleECKeyPairs.KeyPairs[0];
+            var keyPair = SampleAccount.Accounts.First().KeyPair;
             var address = Address.FromPublicKey(keyPair.PublicKey);
             var acs1DemoContractStub =
                 GetTester<ACS1DemoContractContainer.ACS1DemoContractStub>(DAppContractAddress, keyPair);

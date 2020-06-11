@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using AElf.Boilerplate.TestBase;
-using AElf.Kernel.SmartContractInitialization;
+using AElf.Kernel.SmartContract.Application;
 using AElf.Types;
 
 namespace AElf.Contracts.ACS2DemoContract
 {
     public class ACS2DemoContractInitializationProvider : IContractInitializationProvider
     {
-        public List<InitializeMethod> GetInitializeMethodList(byte[] contractCode)
+        public List<ContractInitializationMethodCall> GetInitializeMethodList(byte[] contractCode)
         {
-            return new List<InitializeMethod>();
+            return new List<ContractInitializationMethodCall>();
         }
 
         public Hash SystemSmartContractName { get; } = DAppSmartContractAddressNameProvider.Name;

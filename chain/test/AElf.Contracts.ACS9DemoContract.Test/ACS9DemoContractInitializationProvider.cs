@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AElf.Boilerplate.TestBase;
 using AElf.Contracts.TestKit;
-using AElf.Kernel.SmartContractInitialization;
+using AElf.Kernel.SmartContract.Application;
 using AElf.Types;
 using Google.Protobuf;
 
@@ -10,16 +10,16 @@ namespace AElf.Contracts.ACS9DemoContract
 {
     public class ACS9DemoContractInitializationProvider : IContractInitializationProvider
     {
-        public List<InitializeMethod> GetInitializeMethodList(byte[] contractCode)
+        public List<ContractInitializationMethodCall> GetInitializeMethodList(byte[] contractCode)
         {
-            return new List<InitializeMethod>
+            return new List<ContractInitializationMethodCall>
             {
-                new InitializeMethod
+                new ContractInitializationMethodCall
                 {
                     MethodName = nameof(ACS9DemoContract.Initialize),
                     Params = new InitializeInput
                     {
-                        ProfitReceiver = Address.FromPublicKey(SampleECKeyPairs.KeyPairs.Skip(3).First().PublicKey),
+                        ProfitReceiver = Address.FromPublicKey(SampleAccount.Accounts.Skip(3).First().KeyPair.PublicKey),
                         DividendPoolContractName = ACS10DemoSmartContractNameProvider.Name
                     }.ToByteString()
                 }

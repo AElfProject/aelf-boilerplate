@@ -3,7 +3,7 @@ using AElf.Boilerplate.SystemTransactionGenerator;
 using AElf.Database;
 using AElf.Kernel.Infrastructure;
 using AElf.Kernel.SmartContract;
-using AElf.Kernel.SmartContractInitialization;
+using AElf.Kernel.SmartContract.Application;
 using AElf.Modularity;
 using AElf.OS.Node.Application;
 using Microsoft.Extensions.DependencyInjection;

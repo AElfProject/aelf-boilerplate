@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using AElf.Contracts.TestKit;
 using AElf.Types;
@@ -14,7 +15,7 @@ namespace AElf.Contracts.HelloWorldContract
         public async Task Test()
         {
             // Get a stub for testing.
-            var keyPair = SampleECKeyPairs.KeyPairs[0];
+            var keyPair = SampleAccount.Accounts.First().KeyPair;
             var stub = GetHelloWorldContractStub(keyPair);
 
             // Use CallAsync or SendAsync method of this stub to test.

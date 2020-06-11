@@ -4,7 +4,7 @@ using AElf.Boilerplate.TestBase;
 using AElf.Contracts.TestKit;
 using AElf.ContractTestBase;
 using AElf.Kernel.Consensus.AEDPoS;
-using AElf.Kernel.SmartContractInitialization;
+using AElf.Kernel.SmartContract.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.Modularity;

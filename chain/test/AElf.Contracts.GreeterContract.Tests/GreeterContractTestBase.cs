@@ -26,7 +26,7 @@ namespace AElf.Contracts.GreeterContract
 
         private void InitializeContracts()
         {
-            ZeroContractStub = GetZeroContractStub(SampleECKeyPairs.KeyPairs.First());
+            ZeroContractStub = GetZeroContractStub(SampleAccount.Accounts.First().KeyPair);
 
             GreeterContractAddress = AsyncHelper.RunSync(() =>
                 ZeroContractStub.DeploySystemSmartContract.SendAsync(
@@ -37,7 +37,7 @@ namespace AElf.Contracts.GreeterContract
                         Name = ProfitSmartContractAddressNameProvider.Name,
                         TransactionMethodCallList = new SystemContractDeploymentInput.Types.SystemTransactionMethodCallList()
                     })).Output;
-            GreeterContractStub = GetGreeterContractStub(SampleECKeyPairs.KeyPairs.First());
+            GreeterContractStub = GetGreeterContractStub(SampleAccount.Accounts.First().KeyPair);
         }
 
         private ACS0Container.ACS0Stub GetZeroContractStub(ECKeyPair keyPair)

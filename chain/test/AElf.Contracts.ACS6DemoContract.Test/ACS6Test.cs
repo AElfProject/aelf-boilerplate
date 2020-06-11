@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using AElf.Contracts.TestKit;
 using AElf.Types;
@@ -11,7 +12,7 @@ namespace AElf.Contracts.ACS6DemoContract
         [Fact]
         public async Task Test()
         {
-            var keyPair = SampleECKeyPairs.KeyPairs[0];
+            var keyPair = SampleAccount.Accounts.First().KeyPair;
             var acs6DemoContractStub = GetACS6DemoContractStub(keyPair);
 
             var secret = HashHelper.ComputeFrom("Test");

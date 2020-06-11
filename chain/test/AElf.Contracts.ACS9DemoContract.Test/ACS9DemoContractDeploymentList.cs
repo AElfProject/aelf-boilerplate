@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using AElf.ContractTestBase;
-using AElf.Kernel.SmartContractInitialization;
+using AElf.Kernel.SmartContract.Application;
 using AElf.Types;
 
 namespace AElf.Contracts.ACS9DemoContract

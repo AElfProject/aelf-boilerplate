@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Acs10;
 using AElf.Contracts.MultiToken;
@@ -19,7 +20,7 @@ namespace AElf.Contracts.ACS10DemoContract
         {
             const long amount = 10_00000000;
 
-            var keyPair = SampleECKeyPairs.KeyPairs[0];
+            var keyPair = SampleAccount.Accounts.First().KeyPair;
             var address = Address.FromPublicKey(keyPair.PublicKey);
             var acs10DemoContractStub =
                 GetTester<ACS10DemoContractContainer.ACS10DemoContractStub>(DAppContractAddress, keyPair);

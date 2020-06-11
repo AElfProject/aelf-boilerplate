@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using AElf.Boilerplate.TestBase;
-using AElf.Kernel.SmartContractInitialization;
+using AElf.Kernel.SmartContract.Application;
 using AElf.Types;
 using Google.Protobuf;
 
@@ -8,11 +8,11 @@ namespace AElf.Contracts.ACS10DemoContract
 {
     public class ACS10DemoContractInitializationProvider : IContractInitializationProvider
     {
-        public List<InitializeMethod> GetInitializeMethodList(byte[] contractCode)
+        public List<ContractInitializationMethodCall> GetInitializeMethodList(byte[] contractCode)
         {
-            return new List<InitializeMethod>
+            return new List<ContractInitializationMethodCall>
             {
-                new InitializeMethod
+                new ContractInitializationMethodCall
                 {
                     MethodName = nameof(ACS10DemoContract.Initialize),
                     Params = new InitializeInput

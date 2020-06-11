@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Acs3;
 using AElf.Contracts.MultiToken;
@@ -17,7 +18,7 @@ namespace AElf.Contracts.ACS3DemoContract
         [Fact]
         public async Task Test()
         {
-            var keyPair = SampleECKeyPairs.KeyPairs[0];
+            var keyPair = SampleAccount.Accounts.First().KeyPair;
             var acs3DemoContractStub =
                 GetTester<ACS3DemoContractContainer.ACS3DemoContractStub>(DAppContractAddress, keyPair);
 

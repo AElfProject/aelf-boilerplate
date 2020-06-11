@@ -14,7 +14,7 @@ namespace AElf.Contracts.ACS8DemoContract
         [Fact]
         public async Task Test()
         {
-            var keyPair = SampleECKeyPairs.KeyPairs[0];
+            var keyPair = SampleAccount.Accounts.First().KeyPair;
             var address = Address.FromPublicKey(keyPair.PublicKey);
             var acs8DemoContractStub = GetACS8DemoContractStub(keyPair);
             

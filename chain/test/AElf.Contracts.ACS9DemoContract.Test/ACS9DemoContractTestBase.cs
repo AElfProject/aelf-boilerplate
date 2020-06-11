@@ -20,7 +20,7 @@ namespace AElf.Contracts.ACS9DemoContract
 {
     public class ACS9DemoContractTestBase : ContractTestBase<ACS9DemoContractTestModule>
     {
-        protected List<ECKeyPair> UserKeyPairs => SampleECKeyPairs.KeyPairs.Skip(2).Take(3).ToList();
+        protected List<ECKeyPair> UserKeyPairs => SampleAccount.Accounts.Skip(2).Take(3).Select(a => a.KeyPair).ToList();
 
         protected List<Address> UserAddresses =>
             UserKeyPairs.Select(k => Address.FromPublicKey(k.PublicKey)).ToList();
@@ -40,7 +40,7 @@ namespace AElf.Contracts.ACS9DemoContract
             {
                 var factory = Application.ServiceProvider.GetRequiredService<IContractTesterFactory>();
                 return factory.Create<TokenContractImplContainer.TokenContractImplStub>(TokenContractAddress,
-                    SampleECKeyPairs.KeyPairs.First());
+                    SampleAccount.Accounts.First().KeyPair);
             }
         }
 
@@ -50,7 +50,7 @@ namespace AElf.Contracts.ACS9DemoContract
             {
                 var factory = Application.ServiceProvider.GetRequiredService<IContractTesterFactory>();
                 return factory.Create<ProfitContractContainer.ProfitContractStub>(ProfitContractAddress,
-                    SampleECKeyPairs.KeyPairs.First());
+                    SampleAccount.Accounts.First().KeyPair);
             }
         }
 
@@ -60,7 +60,7 @@ namespace AElf.Contracts.ACS9DemoContract
             {
                 var factory = Application.ServiceProvider.GetRequiredService<IContractTesterFactory>();
                 return factory.Create<TokenHolderContractContainer.TokenHolderContractStub>(TokenHolderContractAddress,
-                    SampleECKeyPairs.KeyPairs.First());
+                    SampleAccount.Accounts.First().KeyPair);
             }
         }
 
