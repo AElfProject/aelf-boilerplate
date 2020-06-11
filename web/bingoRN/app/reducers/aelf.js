@@ -1,11 +1,12 @@
 
 const initialState = {
-    is_login : false,
-    contracts : 0,
-    address : 0,
-    balance : 0,
+    is_login: false,
+    contracts: 0,
+    address: 0,
+    balance: 0,
     tempContracts: 0,
-    keystore: {}
+    keystore: {},
+    betList: []
 };
 
 const aelf = (state = initialState, action) => {
@@ -31,6 +32,10 @@ const aelf = (state = initialState, action) => {
         case 'SET_TEMPCONTRACTS':
             state.tempContracts = data.contracts;
             return state;
+        case 'SET_BET_LIST':
+            return Object.assign({}, state, {
+                betList: data.betList
+            })
         default:
             return state;
     }

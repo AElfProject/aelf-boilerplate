@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-community/async-storage"
 import SplashScreen from "react-native-splash-screen"
 
 import navigationService from "../../../common/utils/navigationService";
-import CommonHeader from "../../../common/Components/CommonHeader/CommonHeader";
+import { CommonHeader, WordRotation, Touchable } from '../../../common/Components'
 import BackHandlerHoc from "../../../common/Hoc/BackHandlerHoc/backHandlerHoc";
 import { TextM, TextTitle } from "../../../common/UI_Component/CommonText/index"
 import Storage from  "../../../constants/storage"
@@ -14,7 +14,6 @@ import connect from "../../../common/utils/myReduxConnect";
 import {config} from "../../../common/utils/config";
 import {format} from "../../../common/utils/address";
 import {sleep} from "../../../common/utils/utils";
-
 import styles from './style';
 import DevInformation from './develop';
 const { splashScreenShowTime, tokenSymbol, tokenDecimalFormat } = config;
@@ -193,7 +192,7 @@ class MyHomePage extends React.Component {
     /* 头部左边的按钮 */
     leftElement() {
         return (
-            <TouchableOpacity onPress={()=>this.goRouter("HowToPlay")}>
+            <TouchableOpacity onPress={()=>this.goRouter("MyBet")}>
                 <View style={{ flexDirection: "row" }}>
                     <TextM style={{ color: Colors.fontColor, }}>Left</TextM>
                 </View>
@@ -223,6 +222,7 @@ class MyHomePage extends React.Component {
             await this.getUserBalance();
             await this.getBingoGameContractBalane();
             await this.getApprovedNumber();
+            await this.getBetList()
         } catch(e) {
             this.tipMsg('Refresh error');
             console.log('onRefresh: ', e);
@@ -447,7 +447,42 @@ class MyHomePage extends React.Component {
             });
         }
     }
+    getBetList = async () => {
+        const { address, contracts } = this.props.ReduxStore || {};
+        const { bingoGameContract } = contracts || {};
+        if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
+            const playerInformation = await bingoGameContract.GetPlayerInformation.call(address);
+            this.props.onSetBetList({ betList: playerInformation })
+        }
+    }
+    Draw = async () => {
+        const { betList, contracts } = this.props.ReduxStore || {}
+        const { bingoGameContract } = contracts || {};
+        const { bouts } = betList
+        if (!bouts || !bouts.length || !bingoGameContract || !bingoGameContract.Bingo) return
 
+        const bingo = (value) => {
+            const { isComplete, playId } = value
+            if (isComplete) return
+            return new Promise((resolve, reject) => {
+                bingoGameContract.Bingo(playId).then(bingoTxId => {
+                    resolve(bingoTxId)
+                }).catch(err => {
+                    reject(err)
+                })
+            })
+        }
+        let promises = bouts.map((message) => bingo(message))
+        Promise.all(promises).then(v => {
+            if (Array.isArray(v)) {
+                if (v.filter(item => item && item.TransactionId)) {
+                    //通知有新的开奖结果
+                    console.log(v, '=======v');
+
+                }
+            }
+        })
+    }
     renderBingoResult() {
         const {bingoResult, bingoTxId, bingoOutputUnpacked} = this.state;
         if (!bingoResult) {
@@ -555,6 +590,13 @@ class MyHomePage extends React.Component {
                     title="Bingo Game Dev Demo"
                     rightElement={this.rightElement()}
                 />
+                <Touchable onPress={() => this.goRouter("MyBet")}>
+                <WordRotation
+                        bgViewStyle={{ backgroundColor: Colors.primaryColor }}
+                        textStyle={{ color: Colors.fontBlack }}>
+                        You have a new bet result
+                    </WordRotation>
+                </Touchable>
                 <ScrollView
                   refreshControl={
                       <RefreshControl refreshing={pullRefreshing} onRefresh={() => this.onRefresh()} />

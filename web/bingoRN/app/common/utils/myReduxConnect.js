@@ -10,7 +10,8 @@ function mapDispatchToProps(dispatch) {
       onLoginSuccess: (data) => dispatch({data:data , type: 'LOGINSUCCESS' }),
       onLogout: (data) => dispatch({data:data , type: 'LOGOUT' }),
       onFreshBalance: (data) => dispatch({ data:data, type: 'FRESH_BALANCE'}),
-      onSetTempContracts: (data) => dispatch({data:data, type: 'SET_TEMPCONTRACTS'})
+      onSetTempContracts: (data) => dispatch({data:data, type: 'SET_TEMPCONTRACTS'}),
+      onSetBetList: (data) => dispatch({data:data, type: 'SET_BET_LIST'})
     }
 }
 

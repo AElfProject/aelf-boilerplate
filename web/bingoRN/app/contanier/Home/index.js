@@ -5,7 +5,7 @@ import HomePage from "./homePage/index";
 import HowToPlay from "./howToPlay/index";
 
 import LoginStack from "../Login/index";
-
+import MyBet from './MyBet'
 const HomeStack = createStackNavigator({
 
     HomePage: {
@@ -26,7 +26,14 @@ const HomeStack = createStackNavigator({
             header: null
         })
     },
+    MyBet,
 
+},{
+    // This applies to child routes
+    defaultNavigationOptions: {
+        //header null
+        header: null
+    }
 });
 
 HomeStack.navigationOptions = ({ navigation,screenProps }) => {
