@@ -9,6 +9,15 @@ import PropTypes from 'prop-types'
 // Touchable
 
 export default class Touchable extends PureComponent {
+  
+  static propTypes = {
+    onPressWithSecond: PropTypes.number, // Click once every few seconds
+    Highlight: PropTypes.bool, //use or not TouchableHighlight
+  }
+  static defaultProps = {
+    onPressWithSecond: 500,
+  }
+
   time = null
   handlonLongPress = (props) => {
     if (this.props.onLongPress) {
@@ -43,13 +52,4 @@ export default class Touchable extends PureComponent {
       );
     }
   }
-}
-
-Touchable.propTypes = {
-  onPressWithSecond: PropTypes.number, // 几秒钟可以点击一次
-  Highlight: PropTypes.bool, //
-}
-
-Touchable.defaultProps = {
-  onPressWithSecond: 500,
 }
