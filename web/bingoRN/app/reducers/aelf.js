@@ -6,11 +6,13 @@ const initialState = {
     balance: 0,
     tempContracts: 0,
     keystore: {},
-    betList: []
+    betList: [],
+    lotteryList: [],
+    newBet:false
 };
 
 const aelf = (state = initialState, action) => {
-    const {data, type} = action;
+    const { data, type } = action;
     switch (type) {
         case 'LOGINSUCCESS':
             state.contracts = data.contracts;
@@ -36,6 +38,15 @@ const aelf = (state = initialState, action) => {
             return Object.assign({}, state, {
                 betList: data.betList
             })
+        case 'SET_LOTTERY_LIST':
+            return Object.assign({}, state, {
+                lotteryList: data.lotteryList
+            })
+        case 'SET_NEW_BET': {
+            return Object.assign({}, state, {
+                newBet: data.newBet
+            })
+        }
         default:
             return state;
     }

@@ -15,8 +15,7 @@ const BlankPage = (props) => {
     const { message } = props;
     return (
         <View style={styles.blankContanier}>
-            <Image style={{width:pTd(289), height: pTd(339),...Gstyle.marginArg(pTd(20), 0)}} source={require("../../../assets/images/navigateMenuIco/blank.png")}/>
-            <Text style={Gstyle.marginArg(pTd(20), 0)}>{message || "空空如也~"}</Text>
+            <Text style={[{color:Colors.primaryColor, fontSize:30}]}>{message || "Empty~"}</Text>
         </View>
     )
 }

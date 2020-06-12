@@ -15,7 +15,7 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 * WaitingDraw hooks
 **/
 
-function WaitingDraw() {
+function Lottery() {
 
     const ReduxStore = useSelector(state => state, shallowEqual);
     const dispatch = useDispatch()
@@ -23,6 +23,11 @@ function WaitingDraw() {
 
     useEffect(() => {
         onRefresh()
+        return () => {
+            dispatch({
+                type: 'SET_NEW_BET', data: { newBet: false }
+            })
+        }
     }, [])
 
     const onRefresh = async () => {
@@ -37,21 +42,22 @@ function WaitingDraw() {
     const getBetList = async () => {
         const { address, contracts } = ReduxStore || {};
         const { bingoGameContract } = contracts || {};
-        if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
-            const playerInformation = await bingoGameContract.GetPlayerInformation.call(address)    
+        if (bingoGameContract && bingoGameContract.GetPlayerInformationCompleted) {
+            const playerInformation = await bingoGameContract.GetPlayerInformationCompleted.call(address)
             let { bouts } = playerInformation
             Array.isArray(bouts) && dispatch({
-                type: 'SET_BET_LIST', data: { betList: bouts.reverse() }
+                type: 'SET_LOTTERY_LIST', data: { lotteryList: bouts.reverse() }
             })
         }
     }
-    const renderItem = ({ item }) => {
-        const { boutType, amount, tokenSymbol, playId, isComplete, award, betTime } = item
+    const renderItem = ({ item }) => {        
+        const { boutType, amount, tokenSymbol, playId, isComplete, award, betTime, lotteryCode } = item
         const { seconds } = betTime || {}
         const list = [
             { title: 'Bet Type: ', details: boutType == '1' ? 'Small' : 'Big' },
             { title: 'Bet Amount: ', details: `${amount / config.tokenDecimalFormat} ${tokenSymbol}` },
             { title: 'Time: ', details: moment(Number(seconds + '000')).format() },
+            { title: 'Lottery Code: ', details: lotteryCode },
             { title: 'Tx Id: ', details: playId, copy: true },
         ]
         return (
@@ -82,11 +88,11 @@ function WaitingDraw() {
         )
 
     }
-    const { betList } = ReduxStore || {}
+    const { lotteryList } = ReduxStore || {}
     return (
         <View style={styles.container}>
             <ListComponent
-                data={betList || []}
+                data={lotteryList || []}
                 renderItem={renderItem}
                 UpPullRefresh={onRefresh}
                 ref={list}
@@ -95,4 +101,4 @@ function WaitingDraw() {
     )
 
 }
-export default WaitingDraw
+export default Lottery

@@ -1,29 +1,27 @@
 import React from "react";
-import { Dimensions } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createMaterialTopTabNavigator, MaterialTopTabBar } from 'react-navigation-tabs';
 import WaitingDraw from './WaitingDraw'
+import Lottery from './Lottery'
 import { CommonHeader } from '../../../common/Components';
 import pTd from "../../../common/utils/unit";
-const tabActiveColor = '#1a8fff'
-const sreenWidth = Dimensions.get('screen').width
-
+const tabActiveColor = Colors.primaryColor
 /*
 * MyBet
 **/
 
 
 export default createAppContainer(createMaterialTopTabNavigator({
+    Lottery: {
+        screen: Lottery,
+        navigationOptions: {
+            title: 'Lottery'
+        }
+    },
     WaitingDraw: {
         screen: WaitingDraw,
         navigationOptions: {
             title: 'Waiting for draw'
-        }
-    },
-    Interest: {
-        screen: WaitingDraw,
-        navigationOptions: {
-            title: 'Lottery'
         }
     },
 }, {
