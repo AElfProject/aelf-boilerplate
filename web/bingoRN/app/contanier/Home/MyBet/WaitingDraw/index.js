@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text } from "react-native";
+import { View, Text , Linking} from "react-native";
 import moment from 'moment'
 import Clipboard from "@react-native-community/clipboard";
 import Icon from 'react-native-vector-icons/FontAwesome';

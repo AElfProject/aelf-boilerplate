@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../Styles';
 import { config } from "../../../../common/utils/config";
 import { ListComponent } from '../../../../common/Components';
-import { TextM, TextTitle } from "../../../../common/UI_Component/CommonText"
+import { TextM, TextTitle, TextL } from "../../../../common/UI_Component/CommonText"
 
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 
@@ -57,7 +57,11 @@ function Lottery() {
             { title: 'Bet Type: ', details: boutType == '1' ? 'Small' : 'Big' },
             { title: 'Bet Amount: ', details: `${amount / config.tokenDecimalFormat} ${tokenSymbol}` },
             { title: 'Time: ', details: moment(Number(seconds + '000')).format('YYYY-MM-DD HH:MM:SS') },
-            { title: 'Lottery Code: ', details: lotteryCode },
+            {
+                title: 'Lottery Code: ', details: lotteryCode, component:
+                    isComplete ? <TextL style={{ ...styles.awardText, color: award < 0 ? 'red' : '' }}>{award > 0 ? 'Win: ' : 'Lose: '}{award / config.tokenDecimalFormat}</TextL>
+                        : null
+            },
             { title: 'Tx Id: ', details: playId, copy: true },
         ]
         return (
@@ -68,21 +72,23 @@ function Lottery() {
                 </View>
                 {
                     list.map((item, index) => (
-                        <View key={index} style={styles.flexRow}>
-                            <TextM>{item.title}</TextM>
+                        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                            <View key={index} style={[styles.flexRow, { flex: 1 }]}>
+                                <TextM>{item.title}</TextM>
+                                {
+                                    item.copy ?
+                                        <TextM style={styles.copyDetails}
+                                            onPress={() => Linking.openURL(config.explorerURL + '/tx/' + item.details)}>
+                                            {item.details}{` `}<Icon name='share-square-o' />
+                                        </TextM>
+                                        : <TextM style={{ flex: 1 }}>{item.details}</TextM>
+                                }
+                            </View>
                             {
-                                item.copy ?
-                                    <TextM style={styles.copyDetails}
-                                        onPress={() => Linking.openURL(config.explorerURL + '/tx/' + item.details)}>
-                                        {item.details}{` `}<Icon name='share-square-o' />
-                                    </TextM>
-                                    : <TextM style={{ flex: 1 }}>{item.details}</TextM>
+                                item.component ? item.component : <View />
                             }
                         </View>
                     ))
-                }
-                {
-                    isComplete && <TextM style={styles.awardText}>{award > 0 ? 'Win: ' : 'Lose: '}{award / config.tokenDecimalFormat}</TextM>
                 }
             </View>
         )
