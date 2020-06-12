@@ -59,7 +59,7 @@ function Lottery() {
             { title: 'Time: ', details: moment(Number(seconds + '000')).format('YYYY-MM-DD HH:MM:SS') },
             {
                 title: 'Lottery Code: ', details: lotteryCode, component:
-                    isComplete ? <TextL style={{ ...styles.awardText, color: award < 0 ? 'red' : '' }}>{award > 0 ? 'Win: ' : 'Lose: '}{award / config.tokenDecimalFormat}</TextL>
+                    isComplete ? <TextL style={{ ...styles.awardText, color: award < 0 ? 'red' : 'green' }}>{award > 0 ? 'Win: ' : 'Lose: '}{award / config.tokenDecimalFormat}</TextL>
                         : null
             },
             { title: 'Tx Id: ', details: playId, copy: true },
