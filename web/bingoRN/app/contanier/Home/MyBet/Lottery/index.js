@@ -44,7 +44,7 @@ function Lottery() {
         const { bingoGameContract } = contracts || {};
         if (bingoGameContract && bingoGameContract.GetPlayerInformationCompleted) {
             const playerInformation = await bingoGameContract.GetPlayerInformationCompleted.call(address)
-            let { bouts } = playerInformation
+            let { bouts } = playerInformation || {}
             Array.isArray(bouts) && dispatch({
                 type: 'SET_LOTTERY_LIST', data: { lotteryList: bouts.reverse() }
             })

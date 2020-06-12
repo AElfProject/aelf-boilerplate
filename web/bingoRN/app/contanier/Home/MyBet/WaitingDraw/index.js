@@ -39,7 +39,7 @@ function WaitingDraw() {
         const { bingoGameContract } = contracts || {};
         if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
             const playerInformation = await bingoGameContract.GetPlayerInformation.call(address)    
-            let { bouts } = playerInformation
+            let { bouts } = playerInformation || {}
             Array.isArray(bouts) && dispatch({
                 type: 'SET_BET_LIST', data: { betList: bouts.reverse() }
             })

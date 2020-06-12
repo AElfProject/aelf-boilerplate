@@ -471,7 +471,7 @@ class MyHomePage extends React.Component {
         const { bingoGameContract } = contracts || {};
         if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
             const playerInformation = await bingoGameContract.GetPlayerInformation.call(address);
-            let { bouts } = playerInformation
+            let { bouts } = playerInformation || {}
             Array.isArray(bouts) && this.props.onSetBetList({ betList: bouts.reverse() })
         }
     }
@@ -480,7 +480,7 @@ class MyHomePage extends React.Component {
         const { bingoGameContract } = contracts || {};
         if (bingoGameContract && bingoGameContract.GetPlayerInformationCompleted) {
             const playerInformation = await bingoGameContract.GetPlayerInformationCompleted.call(address);
-            let { bouts } = playerInformation
+            let { bouts } = playerInformation || {}
             Array.isArray(bouts) && this.props.onSetLotteryList({ lotteryList: bouts.reverse() });
         }
     }
@@ -516,8 +516,8 @@ class MyHomePage extends React.Component {
         const { bingoGameContract } = contracts || {};
         if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
             const playerInformation = await bingoGameContract.GetPlayerInformation.call(address);
-            let oldBouts = playerInformation.bouts
-            Array.isArray(bouts) && this.props.onSetBetList({ betList: oldBouts.reverse() })                        
+            let oldBouts = playerInformation || {}.bouts
+            Array.isArray(oldBouts) && this.props.onSetBetList({ betList: oldBouts.reverse() })                        
             const { bouts } = playerInformation || {}
             if (!bouts || !bouts.length || !bingoGameContract || !bingoGameContract.Bingo) return
             const bingo = (value) => {
