@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-community/async-storage"
 import SplashScreen from "react-native-splash-screen"
 
 import navigationService from "../../../common/utils/navigationService";
-import CommonHeader from "../../../common/Components/CommonHeader/CommonHeader";
+import { CommonHeader, WordRotation, Touchable } from '../../../common/Components'
 import BackHandlerHoc from "../../../common/Hoc/BackHandlerHoc/backHandlerHoc";
 import { TextM, TextTitle } from "../../../common/UI_Component/CommonText/index"
 import Storage from  "../../../constants/storage"
@@ -14,13 +14,12 @@ import connect from "../../../common/utils/myReduxConnect";
 import {config} from "../../../common/utils/config";
 import {format} from "../../../common/utils/address";
 import {sleep} from "../../../common/utils/utils";
-
 import styles from './style';
 import DevInformation from './develop';
 const { splashScreenShowTime, tokenSymbol, tokenDecimalFormat } = config;
 
 const {appInit, aelfInstance} = require('../../../common/utils/aelfProvider');
-
+const waitTime = 60000
 const defautState = JSON.stringify({
     address: 0,
     balance: '-',
@@ -56,6 +55,8 @@ class MyHomePage extends React.Component {
         // trick: fix bug. Will refator soon.
         this.lastAddress = null;
         this.interval = null;
+        this.drawInterval = null;
+        this.txResultTime = {};
     }
     componentWillMount(){
         setTimeout(()=>{
@@ -64,6 +65,12 @@ class MyHomePage extends React.Component {
     }
 
     componentWillUnmount() {
+        for (let key in this.txResultTime) {
+            const { timer } = this.txResultTime[key]
+            timer && clearTimeout(timer)
+        }
+        this.txResultTime = {}
+        this.drawInterval && clearInterval(this.drawInterval)
         clearInterval(this.interval);
     }
 
@@ -85,6 +92,9 @@ class MyHomePage extends React.Component {
     async componentDidMount() {
         this.initProvider();
         this.onRefresh();
+        this.drawInterval = setInterval(()=>{
+            this.Draw();
+        }, waitTime);
         this.interval = setInterval((
         ) => {
             this.getUserBalance();
@@ -193,9 +203,9 @@ class MyHomePage extends React.Component {
     /* 头部左边的按钮 */
     leftElement() {
         return (
-            <TouchableOpacity onPress={()=>this.goRouter("HowToPlay")}>
+            <TouchableOpacity onPress={()=>this.goRouter("MyBet")}>
                 <View style={{ flexDirection: "row" }}>
-                    <TextM style={{ color: Colors.fontColor, }}>Left</TextM>
+                    <TextM style={{ color: Colors.fontColor, }}>My Bet</TextM>
                 </View>
             </TouchableOpacity>
         )
@@ -223,6 +233,8 @@ class MyHomePage extends React.Component {
             await this.getUserBalance();
             await this.getBingoGameContractBalane();
             await this.getApprovedNumber();
+            await this.getBetList()
+            await this.getLotteryList()
         } catch(e) {
             this.tipMsg('Refresh error');
             console.log('onRefresh: ', e);
@@ -295,7 +307,12 @@ class MyHomePage extends React.Component {
             return;
         }
 
-        const { balance, betCount, bingoGameAllowance, betType } = this.state;
+        const { balance, betCount, bingoGameAllowance, betType, jackpot } = this.state;
+        
+        if (Number(betCount) > Number(jackpot)) {
+            this.tipMsg('The bet amount cannot be greater than the prize pool amount');
+            return;
+        }
         if (betType === 0) {
             this.tipMsg('Please select bet type');
             return;
@@ -329,9 +346,12 @@ class MyHomePage extends React.Component {
             bingoOutputUnpacked: JSON.parse(defautState).bingoOutputUnpacked,
             lastBetCount: betCount,
             lastBetType: betType,
-            balance: balance - betCount
+            balance: balance - betCount,
+            betCount: '',
+            betType: 0,
+        }, () => {
+            this.tipMsg('Bet Success');
         });
-
         await sleep(2000);
         await this.checkPlayBingoStatus(transactionId.TransactionId);
         this.playLock = false;
@@ -387,7 +407,6 @@ class MyHomePage extends React.Component {
         await sleep(4000);
 
         const txResult = await aelfInstance.chain.getTxResult(bingoTxId.TransactionId);
-        console.log('bingoTxId', bingoTxId, txResult);
         if (txResult.Status === 'NotExisted') {
             setTimeout(() => {
                 this.tipMsg('Not ready to award, please wait a second.');
@@ -447,7 +466,87 @@ class MyHomePage extends React.Component {
             });
         }
     }
-
+    getBetList = async () => {
+        const { address, contracts } = this.props.ReduxStore || {};
+        const { bingoGameContract } = contracts || {};
+        if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
+            const playerInformation = await bingoGameContract.GetPlayerInformation.call(address);
+            let { bouts } = playerInformation
+            Array.isArray(bouts) && this.props.onSetBetList({ betList: bouts.reverse() })
+        }
+    }
+    getLotteryList = async () => {        
+        const { address, contracts } = this.props.ReduxStore || {};
+        const { bingoGameContract } = contracts || {};
+        if (bingoGameContract && bingoGameContract.GetPlayerInformationCompleted) {
+            const playerInformation = await bingoGameContract.GetPlayerInformationCompleted.call(address);
+            let { bouts } = playerInformation
+            Array.isArray(bouts) && this.props.onSetLotteryList({ lotteryList: bouts.reverse() });
+        }
+    }
+    getTxResult = async (TransactionId) => {
+        let number = 0
+        const Transaction = this.txResultTime[`${TransactionId}`]
+        if (Transaction) {
+            const { count, timer } = Transaction || {}
+            number = count + 1
+            timer && clearTimeout(timer)
+            delete (this.txResultTime[`${TransactionId}`])
+        }
+        if (number >= 3) return
+        const txResult = await aelfInstance.chain.getTxResult(TransactionId);
+        if (txResult.Status !== 'NotExisted') {
+            this.props.onSetNewBet({ newBet: true })
+            this.getBetList()
+            this.getLotteryList()
+        } else {
+            this.txResultTime = {
+                ...this.txResultTime,
+                [TransactionId]: {
+                    timer:
+                        setTimeout(async () => {
+                            this.getTxResult(TransactionId)
+                        }, 1000), count: number || 1
+                }
+            }
+        }
+    }
+    Draw = async () => {        
+        const { address, contracts } = this.props.ReduxStore || {};
+        const { bingoGameContract } = contracts || {};
+        if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
+            const playerInformation = await bingoGameContract.GetPlayerInformation.call(address);
+            let oldBouts = playerInformation.bouts
+            Array.isArray(bouts) && this.props.onSetBetList({ betList: oldBouts.reverse() })                        
+            const { bouts } = playerInformation || {}
+            if (!bouts || !bouts.length || !bingoGameContract || !bingoGameContract.Bingo) return
+            const bingo = (value) => {
+                const { isComplete, playId, betTime } = value
+                const { seconds } = betTime || {}
+                if ((new Date().getTime() / 1000) < (Number(seconds) + waitTime / 1000)) return
+                if (isComplete) return
+                return new Promise((resolve, reject) => {                    
+                    bingoGameContract.Bingo(playId).then(bingoTxId => {                        
+                        resolve(bingoTxId)
+                    }).catch(err => {
+                        reject(err)
+                    })
+                })
+            }
+            let promises = bouts.map((message) => bingo(message))
+            Promise.all(promises).then(async (v) => {
+                if (Array.isArray(v)) {
+                    const result = v.filter(item => item && item.TransactionId)
+                    if (result && result.length) {
+                        await sleep(4000);                        
+                        this.getTxResult(result[0].TransactionId)
+                    }
+                }
+            }).catch(e => {
+                console.log(e, '=====e');
+            })
+        }
+    }
     renderBingoResult() {
         const {bingoResult, bingoTxId, bingoOutputUnpacked} = this.state;
         if (!bingoResult) {
@@ -498,14 +597,18 @@ class MyHomePage extends React.Component {
 
     renderLotteryCode(optionsInput) {
         const {
-            address, jackpot, tokenSymbol, bingoOutputUnpacked, bingoResult, showBingo, lastBetType
+            address, jackpot, tokenSymbol, bingoOutputUnpacked, bingoResult, showBingo, lastBetType,lastBetCount
         } = optionsInput;
 
         const jackpotButtonText = (() => {
             if (!address) {
                 return 'Please Login';
             }
-            return `Prize Pool: ${jackpot} ${tokenSymbol}`;
+            if(lastBetCount){
+                return `My Last bet: ${lastBetCount} ${tokenSymbol} ${lastBetType === 1 ? 'Small' : 'Big'}`;
+            }else{
+                return 'Please bet'
+            }
         })();
 
         const boughtInfo = `You bet ${lastBetType === 1 ? 'Small' : 'Big'} `;
@@ -517,10 +620,10 @@ class MyHomePage extends React.Component {
 
         return  <PricingCard
           color="#817AFD"
-          title="Lottery code"
-          price={bingoOutputUnpacked.random}
+          title="Prize Pool"
+          price={`${jackpot} ${tokenSymbol}`}
           button={{title: jackpotButtonText}}
-          info={[lotteryInfo]}
+        //   info={[lotteryInfo]}
           onButtonPress={() => {
               if (!address) {
                   this.goRouter("MinePage")
@@ -528,24 +631,27 @@ class MyHomePage extends React.Component {
           }}
         />;
     }
-
+    onWord = _ => {        
+        this.goRouter("MyBet")
+        this.props.onSetNewBet({ newBet: false })
+    }
     render() {
         const {
             balance, bingoGameAllowance,
             symbol, pullRefreshing, jackpot, betCount, transactionId,
             showBingo, bingoResult, devInfoVisible,
             bingoOutputUnpacked,
-            betType, lastBetType
+            betType, lastBetType,lastBetCount
         } = this.state;
         const reduxStoreData = this.props.ReduxStore;
-        const { address, keystore, contracts } = reduxStoreData;
+        const { address, keystore, contracts, newBet } = reduxStoreData;
         const { nickName } = keystore || {};
 
         const {bingoGameContract} = contracts || {};
         const buyTxHTML = this.renderBuyTx();
         const bingoResultHTML = this.renderBingoResult();
         const lotteryCodeHTML = this.renderLotteryCode({
-            address, jackpot, tokenSymbol, bingoOutputUnpacked, bingoResult, showBingo, lastBetType
+            address, jackpot, tokenSymbol, bingoOutputUnpacked, bingoResult, showBingo, lastBetType,lastBetCount
         });
 
         return (
@@ -555,6 +661,16 @@ class MyHomePage extends React.Component {
                     title="Bingo Game Dev Demo"
                     rightElement={this.rightElement()}
                 />
+                {
+                    newBet &&
+                    <TouchableOpacity onPress={this.onWord}>
+                        <WordRotation
+                            bgViewStyle={{ backgroundColor: Colors.primaryColor }}
+                            textStyle={{ color: 'white' }}>
+                            You have a new bet result
+                        </WordRotation>
+                    </TouchableOpacity>
+                }
                 <ScrollView
                   refreshControl={
                       <RefreshControl refreshing={pullRefreshing} onRefresh={() => this.onRefresh()} />
@@ -596,21 +712,20 @@ class MyHomePage extends React.Component {
                     </Card>
 
                     <View style={styles.buttonContainer}>
-                        {!showBingo && <Button buttonStyle={styles.bingoButtonSubmit} title={'Bet'} onPress={() => this.playBingo()}/>}
-                        {showBingo && <Button buttonStyle={styles.drawButton} title={'Click to draw'} onPress={async () => this.bingoBingo()}/>}
+                        {<Button buttonStyle={styles.bingoButtonSubmit} title={'Bet'} onPress={() => this.playBingo()}/>}
+                        {/* {showBingo && <Button buttonStyle={styles.drawButton} title={'Click to draw'} onPress={async () => this.bingoBingo()}/>} */}
                     </View>
 
                     <Divider style={styles.divider} />
                     <View style={styles.rules}>
                         <Text>Game Rules</Text>
                         <Text>
-                            Use the current height and the user's seed to calculate a random number in the range of [0, 255]
+                            The current block height and users's seed will be used to calculate a random number between [0, 255].                        </Text>
+                        <Text>
+                            1. Small bet [0, 126], Big bet [129, 255].
                         </Text>
                         <Text>
-                            1.Small bet [0,126], Big bet [129,255].
-                        </Text>
-                        <Text>
-                            2.When get 127 or 128, the contract wins the token.
+                            2. When get 127 or 128, the contract wins the token.
                         </Text>
 
                         <Divider style={styles.divider} />
@@ -633,7 +748,7 @@ class MyHomePage extends React.Component {
 
                     <Button
                         buttonStyle={styles.devButton}
-                        title={(devInfoVisible ? 'Hide' :'Show') + ' Develop Information'}
+                        title={(devInfoVisible ? 'Hide' :'Show') + ' Developer Information'}
                         onPress={() => {
                             this.setState({
                                 devInfoVisible: !devInfoVisible
