@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using System.Runtime.InteropServices;
 using AElf.Contracts.MultiToken;
 using AElf.CSharp.Core;
 using AElf.Sdk.CSharp;
@@ -15,25 +16,18 @@ namespace AElf.Contracts.BingoContract
     /// </summary>
     public class BingoContract : BingoContractContainer.BingoContractBase
     {
-        public override Empty Register(Empty input)
-        {
-            Assert(State.PlayerInformation[Context.Sender] == null, $"User {Context.Sender} already registered.");
-            var information = new PlayerInformation
-            {
-                // The value of seed will influence user's game result in some aspects.
-                Seed = Context.TransactionId,
-                RegisterTime = Context.CurrentBlockTime
-            };
-            State.PlayerInformation[Context.Sender] = information;
-            return new Empty();
-        }
+        private const int BetHistoryLimit = 100;
+        private const int BetLimit = 50;
+        private const int BetMinimumAmount = 1;
 
-        public override Int64Value Play(Int64Value input)
+        public override Int64Value Play(PlayInput input)
         {
-            Assert(input.Value > 1, "Invalid bet amount.");
-            var playerInformation = GetPlayerInformation();
+            Assert(input.BuyAmount > BetMinimumAmount, "Invalid bet amount.");
+            var playerInformation = RegisterOrGetPlayerInformation();
+            
+            Assert(playerInformation.Bouts.Count < BetLimit, "There are too many lottery tickets, please draw first");
 
-            Context.LogDebug(() => $"Playing with amount {input.Value}");
+            Context.LogDebug(() => $"Playing with amount {input.BuyAmount}");
 
             if (State.TokenContract.Value == null)
             {
@@ -45,24 +39,28 @@ namespace AElf.Contracts.BingoContract
             {
                 From = Context.Sender,
                 To = Context.Self,
-                Amount = input.Value,
-                Symbol = Context.Variables.NativeSymbol,
+                Amount = input.BuyAmount,
+                Symbol = input.TokenSymbol,
                 Memo = "Enjoy!"
             });
 
-            playerInformation.Bouts.Add(new BoutInformation
+            var boutInformation = new BoutInformation
             {
                 PlayBlockHeight = Context.CurrentHeight,
-                Amount = input.Value,
-                PlayId = Context.TransactionId
-            });
+                PlayId = Context.TransactionId,
+                Amount = input.BuyAmount,
+                BoutType = input.BuyType,
+                TokenSymbol = input.TokenSymbol,
+                BetTime = Context.CurrentBlockTime
+            };
 
+            playerInformation.Bouts.Add(boutInformation);
             State.PlayerInformation[Context.Sender] = playerInformation;
-
+            
             return new Int64Value {Value = Context.CurrentHeight.Add(GetLagHeight())};
         }
 
-        public override BoolValue Bingo(Hash input)
+        public override BingoOutput Bingo(Hash input)
         {
             Context.LogDebug(() => $"Getting game result of play id: {input.ToHex()}");
 
@@ -82,8 +80,7 @@ namespace AElf.Contracts.BingoContract
             {
                 throw new AssertionException("Bout not found.");
             }
-
-            Assert(!boutInformation.IsComplete, "Bout already finished.");
+            
             var targetHeight = boutInformation.PlayBlockHeight.Add(GetLagHeight());
             Assert(targetHeight <= Context.CurrentHeight, "Invalid target height.");
 
@@ -105,15 +102,16 @@ namespace AElf.Contracts.BingoContract
 
             var usefulHash = HashHelper.ConcatAndCompute(randomHash, playerInformation.Seed);
             var bitArraySum = SumHash(usefulHash);
-            var isWin = ConvertHashToBool(bitArraySum);
-            var award = CalculateAward(boutInformation.Amount, GetKind(bitArraySum));
-            award = isWin ? award : -award;
+            var randomResult = bitArraySum % 256;
+            var isWin = DrawThePrize(randomResult, boutInformation.BoutType);
+            var award = isWin ? boutInformation.Amount : -boutInformation.Amount;
+
             var transferAmount = boutInformation.Amount.Add(award);
             if (transferAmount > 0)
             {
                 State.TokenContract.Transfer.Send(new TransferInput
                 {
-                    Symbol = Context.Variables.NativeSymbol,
+                    Symbol = boutInformation.TokenSymbol,
                     Amount = transferAmount,
                     To = Context.Sender,
                     Memo = "Thx for playing my game."
@@ -122,8 +120,24 @@ namespace AElf.Contracts.BingoContract
 
             boutInformation.Award = award;
             boutInformation.IsComplete = true;
+            boutInformation.LotteryCode = randomResult;
+
+            playerInformation.Bouts.Remove(boutInformation);
             State.PlayerInformation[Context.Sender] = playerInformation;
-            return new BoolValue {Value = isWin};
+            
+            State.PlayerInformationCompleted[Context.Sender].Bouts.Add(boutInformation);
+            if (State.PlayerInformationCompleted[Context.Sender].Bouts.Count > BetHistoryLimit)
+            {
+                State.PlayerInformationCompleted[Context.Sender].Bouts.RemoveAt(0);
+            }
+            
+            return new BingoOutput
+            {
+                Random = randomResult,
+                IsWin = isWin,
+                BoutType = boutInformation.BoutType,
+                Award = award,
+            };
         }
 
         public override Int64Value GetAward(Hash input)
@@ -143,6 +157,34 @@ namespace AElf.Contracts.BingoContract
         public override PlayerInformation GetPlayerInformation(Address input)
         {
             return State.PlayerInformation[input];
+        }
+        
+        public override PlayerInformation GetPlayerInformationCompleted(Address input)
+        {
+            return State.PlayerInformationCompleted[input];
+        }
+        
+        private PlayerInformation RegisterOrGetPlayerInformation()
+        {
+            var playerInformation = State.PlayerInformation[Context.Sender];
+            if (playerInformation == null)
+            {
+                playerInformation = new PlayerInformation
+                {
+                    // The value of seed will influence user's game result in some aspects.
+                    Seed = Context.TransactionId,
+                    RegisterTime = Context.CurrentBlockTime
+                };
+                State.PlayerInformation[Context.Sender] = playerInformation;
+                State.PlayerInformationCompleted[Context.Sender] = new PlayerInformation
+                {
+                    // The value of seed will influence user's game result in some aspects.
+                    Seed = Context.TransactionId,
+                    RegisterTime = Context.CurrentBlockTime
+                };
+            }
+
+            return playerInformation;
         }
 
         private PlayerInformation GetPlayerInformation()
@@ -175,45 +217,6 @@ namespace AElf.Contracts.BingoContract
             return State.LagHeight.Value;
         }
 
-        /// <summary>
-        /// 100%: 0...15, 240...256
-        /// 70%: 16...47, 208...239
-        /// 40%: 48...95, 160...207
-        /// 10%: 96...159
-        /// </summary>
-        /// <param name="bitArraySum"></param>
-        /// <returns></returns>
-        private int GetKind(int bitArraySum)
-        {
-            if (bitArraySum <= 15 || bitArraySum >= 240)
-                return 4;
-
-            if (bitArraySum <= 47 || bitArraySum >= 208)
-                return 3;
-
-            if (bitArraySum <= 95 || bitArraySum >= 160)
-                return 2;
-
-            return 1;
-        }
-
-        private long CalculateAward(long amount, int kind)
-        {
-            switch (kind)
-            {
-                case 1:
-                    return amount.Div(10);
-                case 2:
-                    return amount.Mul(4).Div(10);
-                case 3:
-                    return amount.Mul(7).Div(10);
-                case 4:
-                    return amount;
-                default:
-                    return 0;
-            }
-        }
-
         private int SumHash(Hash hash)
         {
             var bitArray = new BitArray(hash.Value.ToByteArray());
@@ -227,9 +230,20 @@ namespace AElf.Contracts.BingoContract
             return value;
         }
 
-        private bool ConvertHashToBool(int bitArraySum)
+        private bool DrawThePrize(int randomResult, long boutType)
         {
-            return bitArraySum % 2 == 0;
+            var isWin = false;
+            if (randomResult < 127)
+            {
+                isWin = boutType == 1;
+            }
+
+            if (randomResult > 128)
+            {
+                isWin = boutType == 2;
+            }
+
+            return isWin;
         }
     }
 }
