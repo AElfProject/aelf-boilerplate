@@ -83,7 +83,6 @@ export default class ListComponent extends Component {
         )
     }
     listProps = {
-        ...this.props.listProps,
         //Improve performance
         windowSize: 50,
         maxToRenderPerBatch: 5,
@@ -103,6 +102,7 @@ export default class ListComponent extends Component {
         return (
             data && data.length ?
                 <FlatList
+                    {...this.listProps}
                     {...this.props}
                     extraData={this.state.bottomLoad && LoadCompleted}
                     keyExtractor={(item, index) => index.toString()}       //Unique key
@@ -122,9 +122,6 @@ export default class ListComponent extends Component {
         );
     }
 }
-const styles = StyleSheet.create({
-
-});
 
 
 

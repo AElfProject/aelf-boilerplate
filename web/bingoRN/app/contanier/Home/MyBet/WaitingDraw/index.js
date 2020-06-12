@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
+import React, { useEffect, useRef } from "react";
 import { View, Text } from "react-native";
 import Clipboard from "@react-native-community/clipboard";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -15,28 +14,33 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 * WaitingDraw hooks
 **/
 
-function WaitingDraw(props) {
+function WaitingDraw() {
+
     const ReduxStore = useSelector(state => state, shallowEqual);
     const dispatch = useDispatch()
+    const list = useRef(null);
 
-    useEffect(() => {
+    useEffect(() => {        
         onRefresh()
     }, [])
 
-    let list
-    const onRefresh = () => {
-        getBetList()
-        list && list.endUpPullRefresh()
+    const onRefresh = async () => {
+        try {
+            await getBetList()
+            list.current && list.current.endUpPullRefresh()
+        } catch (error) {
+            console.log('onRefreshError', error);
+
+        }
     }
     const getBetList = async () => {
         const { address, contracts } = ReduxStore || {};
         const { bingoGameContract } = contracts || {};
         if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
-            bingoGameContract.GetPlayerInformation.call(address).then(playerInformation => {
-                dispatch({
-                    type: 'SET_BET_LIST', data: { betList: playerInformation }
-                })
-            });
+            const playerInformation = await bingoGameContract.GetPlayerInformation.call(address)
+            dispatch({
+                type: 'SET_BET_LIST', data: { betList: playerInformation }
+            })
         }
     }
     const renderItem = ({ item }) => {
@@ -68,7 +72,7 @@ function WaitingDraw(props) {
                     ))
                 }
                 {
-                    isComplete && <TextM style={styles.awardText}>{award > 0 ? 'Win: ' : 'Lose: '}{award}</TextM>
+                    isComplete && <TextM style={styles.awardText}>{award > 0 ? 'Win: ' : 'Lose: '}{award / config.tokenDecimalFormat}</TextM>
                 }
             </View>
         )
@@ -82,7 +86,7 @@ function WaitingDraw(props) {
                 data={bouts}
                 renderItem={renderItem}
                 UpPullRefresh={onRefresh}
-                ref={v => list = v}
+                ref={list}
             />
         </View>
     )
