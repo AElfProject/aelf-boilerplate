@@ -54,12 +54,13 @@ function Lottery() {
     const renderItem = ({ item }) => {
         const { boutType, amount, tokenSymbol, playId, isComplete, award, betTime, lotteryCode } = item
         const { seconds } = betTime || {}
+        const drawType = lotteryCode < 127 ? 'Small' : lotteryCode > 128 ? 'Big' : 'Middle';
         const list = [
             { title: 'Bet Type: ', details: boutType == '1' ? 'Small' : 'Big' },
             { title: 'Bet Amount: ', details: `${amount / config.tokenDecimalFormat} ${tokenSymbol}` },
             { title: 'Time: ', details: moment.unix(Number(seconds)).format('YYYY-MM-DD HH:mm:ss') },
             {
-                title: 'Lottery Code: ', details: lotteryCode, component:
+                title: 'Draw Type: ', details: drawType, component:
                     isComplete ? <TextL style={{ ...styles.awardText, color: award < 0 ? 'red' : 'green' }}>{award > 0 ? 'Win: ' : 'Lose: '}{award / config.tokenDecimalFormat}</TextL>
                         : null
             },

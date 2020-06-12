@@ -309,7 +309,7 @@ class MyHomePage extends React.Component {
         }
 
         const { balance, betCount, bingoGameAllowance, betType, jackpot } = this.state;
-        
+
         if (Number(betCount) > Number(jackpot)) {
             this.tipMsg('The bet amount cannot be greater than the prize pool amount');
             return;
@@ -476,7 +476,7 @@ class MyHomePage extends React.Component {
             Array.isArray(bouts) && this.props.onSetBetList({ betList: bouts.reverse() })
         }
     }
-    getLotteryList = async () => {        
+    getLotteryList = async () => {
         const { address, contracts } = this.props.ReduxStore || {};
         const { bingoGameContract } = contracts || {};
         if (bingoGameContract && bingoGameContract.GetPlayerInformationCompleted) {
@@ -512,13 +512,13 @@ class MyHomePage extends React.Component {
             }
         }
     }
-    Draw = async () => {        
+    Draw = async () => {
         const { address, contracts } = this.props.ReduxStore || {};
         const { bingoGameContract } = contracts || {};
         if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
             const playerInformation = await bingoGameContract.GetPlayerInformation.call(address);
             let oldBouts = playerInformation || {}.bouts
-            Array.isArray(oldBouts) && this.props.onSetBetList({ betList: oldBouts.reverse() })                        
+            Array.isArray(oldBouts) && this.props.onSetBetList({ betList: oldBouts.reverse() })
             const { bouts } = playerInformation || {}
             if (!bouts || !bouts.length || !bingoGameContract || !bingoGameContract.Bingo) return
             const bingo = (value) => {
@@ -526,8 +526,8 @@ class MyHomePage extends React.Component {
                 const { seconds } = betTime || {}
                 if ((new Date().getTime() / 1000) < (Number(seconds) + waitTime / 1000)) return
                 if (isComplete) return
-                return new Promise((resolve, reject) => {                    
-                    bingoGameContract.Bingo(playId).then(bingoTxId => {                        
+                return new Promise((resolve, reject) => {
+                    bingoGameContract.Bingo(playId).then(bingoTxId => {
                         resolve(bingoTxId)
                     }).catch(err => {
                         reject(err)
@@ -539,7 +539,7 @@ class MyHomePage extends React.Component {
                 if (Array.isArray(v)) {
                     const result = v.filter(item => item && item.TransactionId)
                     if (result && result.length) {
-                        await sleep(4000);                        
+                        await sleep(4000);
                         this.getTxResult(result[0].TransactionId)
                     }
                 }
@@ -633,7 +633,7 @@ class MyHomePage extends React.Component {
           }}
         />;
     }
-    onWord = _ => {        
+    onWord = _ => {
         this.goRouter("MyBet")
         this.props.onSetNewBet({ newBet: false })
     }
@@ -722,12 +722,17 @@ class MyHomePage extends React.Component {
                     <View style={styles.rules}>
                         <Text>Game Rules</Text>
                         <Text>
-                            The current block height and users's seed will be used to calculate a random number between [0, 255].                        </Text>
-                        <Text>
-                            1. Small bet [0, 126], Big bet [129, 255].
+                            The current block height and users's seed will be used to calculate a random number between [0, 255].
+                            And we will get small, middle, big.
                         </Text>
                         <Text>
-                            2. When get 127 or 128, the contract wins the token.
+                            1.You can bet small and big.
+                        </Text>
+                        <Text>
+                            2.Contracts always win when get middle.
+                        </Text>
+                        <Text>
+                            3.No more than 50 bets in a time.
                         </Text>
 
                         <Divider style={styles.divider} />
@@ -737,13 +742,16 @@ class MyHomePage extends React.Component {
                             1. Select a bet type and bet your AEUSD.
                         </Text>
                         <Text>
-                            2. Waiting few seconds, then draw the prize.
+                            2. Waiting a minute, then draw the prize aotumaticly.
+                        </Text>
+                        <Text>
+                            3. You can get the last 100 history from My Bet in the upper left corner.
                         </Text>
 
                         <Divider style={styles.divider} />
 
-                        {buyTxHTML}
-                        {bingoResultHTML}
+                        {/*{buyTxHTML}*/}
+                        {/*{bingoResultHTML}*/}
                     </View>
 
                     <Divider style={styles.divider} />
