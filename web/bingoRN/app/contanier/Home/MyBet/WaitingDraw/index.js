@@ -51,7 +51,7 @@ function WaitingDraw() {
         const list = [
             { title: 'Bet Type: ', details: boutType == '1' ? 'Small' : 'Big' },
             { title: 'Bet Amount: ', details: `${amount / config.tokenDecimalFormat} ${tokenSymbol}` },
-            { title: 'Time: ', details: moment(Number(seconds + '000')).format() },
+            { title: 'Time: ', details: moment(Number(seconds + '000')).format('YYYY-MM-DD HH:MM:SS') },
             { title: 'Tx Id: ', details: playId, copy: true },
         ]
         return (

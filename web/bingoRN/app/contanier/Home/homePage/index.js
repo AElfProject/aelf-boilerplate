@@ -16,6 +16,7 @@ import {format} from "../../../common/utils/address";
 import {sleep} from "../../../common/utils/utils";
 import styles from './style';
 import DevInformation from './develop';
+import pTd from "../../../common/utils/unit";
 const { splashScreenShowTime, tokenSymbol, tokenDecimalFormat } = config;
 
 const {appInit, aelfInstance} = require('../../../common/utils/aelfProvider');
@@ -621,6 +622,7 @@ class MyHomePage extends React.Component {
         return  <PricingCard
           color="#817AFD"
           title="Prize Pool"
+          pricingStyle = {{ fontSize:pTd(60) }}
           price={`${jackpot} ${tokenSymbol}`}
           button={{title: jackpotButtonText}}
         //   info={[lotteryInfo]}
