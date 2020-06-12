@@ -27,7 +27,7 @@ export default function DevInformation(props) {
       <Divider style={styles.divider} />
 
       <Text style={styles.title}>2.About your account.「Pull down to refresh」</Text>
-      <Text style={styles.basicText}>NickName: {nickName || 'Please login'}</Text>
+      <Text style={styles.basicText}>UserName: {nickName || 'Please login'}</Text>
       <Text style={styles.basicText}>Address: {address && format(address) || 'Please login'}</Text>
       <Text style={styles.basicText}>Symbol: {symbol}</Text>
       <Text style={styles.basicText}>{symbol} Balance: {balance}</Text>
@@ -42,7 +42,7 @@ export default function DevInformation(props) {
       <TouchableOpacity>
         <Text style={{ color: Colors.fontColor }} onPress={() =>
           Linking.openURL(config.contractExplorerURL + '' +  (bingoGameContract && bingoGameContract.address))
-        }>Click and ture to aelf block chain explore to get more information of the contract.</Text>
+        }>Click and turn to aelf block chain explore to get more information of the contract.</Text>
       </TouchableOpacity>
 
       <Text>4.Clear</Text>

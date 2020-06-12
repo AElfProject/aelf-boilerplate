@@ -340,15 +340,15 @@ class MyHomePage extends React.Component {
         await this.setLastBuyInStorage(transactionId.TransactionId);
 
         this.setState({
-            betCount: '',
-            betType: 0,
             transactionId: transactionId.TransactionId,
             showBingo: true,
             bingoResult: null,
             bingoOutputUnpacked: JSON.parse(defautState).bingoOutputUnpacked,
             lastBetCount: betCount,
             lastBetType: betType,
-            balance: balance - betCount
+            balance: balance - betCount,
+            betCount: '',
+            betType: 0,
         }, () => {
             this.tipMsg('Bet Success');
         });
@@ -597,14 +597,18 @@ class MyHomePage extends React.Component {
 
     renderLotteryCode(optionsInput) {
         const {
-            address, jackpot, tokenSymbol, bingoOutputUnpacked, bingoResult, showBingo, lastBetType
+            address, jackpot, tokenSymbol, bingoOutputUnpacked, bingoResult, showBingo, lastBetType,lastBetCount
         } = optionsInput;
 
         const jackpotButtonText = (() => {
             if (!address) {
                 return 'Please Login';
             }
-            return `Prize Pool: ${jackpot} ${tokenSymbol}`;
+            if(lastBetCount){
+                return `My Last bet: ${lastBetCount} ${tokenSymbol} ${lastBetType === 1 ? 'Small' : 'Big'}`;
+            }else{
+                return 'Please bet'
+            }
         })();
 
         const boughtInfo = `You bet ${lastBetType === 1 ? 'Small' : 'Big'} `;
@@ -616,10 +620,10 @@ class MyHomePage extends React.Component {
 
         return  <PricingCard
           color="#817AFD"
-          title="Lottery code"
-          price={bingoOutputUnpacked.random}
+          title="Prize Pool"
+          price={`${jackpot} ${tokenSymbol}`}
           button={{title: jackpotButtonText}}
-          info={[lotteryInfo]}
+        //   info={[lotteryInfo]}
           onButtonPress={() => {
               if (!address) {
                   this.goRouter("MinePage")
@@ -637,7 +641,7 @@ class MyHomePage extends React.Component {
             symbol, pullRefreshing, jackpot, betCount, transactionId,
             showBingo, bingoResult, devInfoVisible,
             bingoOutputUnpacked,
-            betType, lastBetType
+            betType, lastBetType,lastBetCount
         } = this.state;
         const reduxStoreData = this.props.ReduxStore;
         const { address, keystore, contracts, newBet } = reduxStoreData;
@@ -647,7 +651,7 @@ class MyHomePage extends React.Component {
         const buyTxHTML = this.renderBuyTx();
         const bingoResultHTML = this.renderBingoResult();
         const lotteryCodeHTML = this.renderLotteryCode({
-            address, jackpot, tokenSymbol, bingoOutputUnpacked, bingoResult, showBingo, lastBetType
+            address, jackpot, tokenSymbol, bingoOutputUnpacked, bingoResult, showBingo, lastBetType,lastBetCount
         });
 
         return (
@@ -716,13 +720,12 @@ class MyHomePage extends React.Component {
                     <View style={styles.rules}>
                         <Text>Game Rules</Text>
                         <Text>
-                            Use the current height and the user's seed to calculate a random number in the range of [0, 255]
+                            The current block height and users's seed will be used to calculate a random number between [0, 255].                        </Text>
+                        <Text>
+                            1. Small bet [0, 126], Big bet [129, 255].
                         </Text>
                         <Text>
-                            1.Small bet [0,126], Big bet [129,255].
-                        </Text>
-                        <Text>
-                            2.When get 127 or 128, the contract wins the token.
+                            2. When get 127 or 128, the contract wins the token.
                         </Text>
 
                         <Divider style={styles.divider} />
@@ -745,7 +748,7 @@ class MyHomePage extends React.Component {
 
                     <Button
                         buttonStyle={styles.devButton}
-                        title={(devInfoVisible ? 'Hide' :'Show') + ' Develop Information'}
+                        title={(devInfoVisible ? 'Hide' :'Show') + ' Developer Information'}
                         onPress={() => {
                             this.setState({
                                 devInfoVisible: !devInfoVisible

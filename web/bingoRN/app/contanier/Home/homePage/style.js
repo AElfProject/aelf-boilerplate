@@ -56,7 +56,7 @@ export default StyleSheet.create({
     backgroundColor: "#817AFD",
   },
   devButton: {
-    width: 240,
+    alignSelf:'flex-start',
     margin: 6,
     backgroundColor: "#817AFD",
   },

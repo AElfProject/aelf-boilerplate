@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Linking } from "react-native";
 import moment from 'moment'
 import Clipboard from "@react-native-community/clipboard";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -50,7 +50,7 @@ function Lottery() {
             })
         }
     }
-    const renderItem = ({ item }) => {        
+    const renderItem = ({ item }) => {
         const { boutType, amount, tokenSymbol, playId, isComplete, award, betTime, lotteryCode } = item
         const { seconds } = betTime || {}
         const list = [
@@ -73,7 +73,7 @@ function Lottery() {
                             {
                                 item.copy ?
                                     <TextM style={styles.copyDetails}
-                                        onPress={() => Clipboard.setString(item.details)} >
+                                        onPress={() => Linking.openURL(config.explorerURL + '/tx/' + item.details)}>
                                         {item.details}{` `}<Icon name='share-square-o' />
                                     </TextM>
                                     : <TextM style={{ flex: 1 }}>{item.details}</TextM>

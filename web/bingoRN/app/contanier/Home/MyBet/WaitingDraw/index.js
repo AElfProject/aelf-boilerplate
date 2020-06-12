@@ -67,7 +67,7 @@ function WaitingDraw() {
                             {
                                 item.copy ?
                                     <TextM style={styles.copyDetails}
-                                        onPress={() => Clipboard.setString(item.details)} >
+                                        onPress={() => Linking.openURL(config.explorerURL + '/tx/' + item.details)}>
                                         {item.details}{` `}<Icon name='share-square-o' />
                                     </TextM>
                                     : <TextM style={{ flex: 1 }}>{item.details}</TextM>
