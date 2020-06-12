@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { View, Text } from "react-native";
 import Clipboard from "@react-native-community/clipboard";
@@ -9,26 +9,37 @@ import { config } from "../../../../common/utils/config";
 import { ListComponent } from '../../../../common/Components';
 import { TextM, TextTitle } from "../../../../common/UI_Component/CommonText"
 
+import { useSelector, useDispatch, shallowEqual } from 'react-redux'
+
 /*
-* WaitingDraw
+* WaitingDraw hooks
 **/
 
-class WaitingDraw extends React.Component {
-    onRefresh = () => {
-        this.getBetList()
-        this.list && this.list.endUpPullRefresh()
+function WaitingDraw(props) {
+    const ReduxStore = useSelector(state => state, shallowEqual);
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        onRefresh()
+    }, [])
+
+    let list
+    const onRefresh = () => {
+        getBetList()
+        list && list.endUpPullRefresh()
     }
-    getBetList = async () => {
-        const { ReduxStore, onSetBetList } = this.props
+    const getBetList = async () => {
         const { address, contracts } = ReduxStore || {};
         const { bingoGameContract } = contracts || {};
         if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
             bingoGameContract.GetPlayerInformation.call(address).then(playerInformation => {
-                onSetBetList({ betList: playerInformation })
+                dispatch({
+                    type: 'SET_BET_LIST', data: { betList: playerInformation }
+                })
             });
         }
     }
-    renderItem = ({ item }) => {
+    const renderItem = ({ item }) => {
         const { boutType, amount, tokenSymbol, playId, isComplete, award } = item
         const list = [
             { title: 'Bet Type: ', details: boutType == '1' ? 'Small' : 'Big' },
@@ -63,30 +74,18 @@ class WaitingDraw extends React.Component {
         )
 
     }
-    render() {
-        const { betList } = this.props.ReduxStore || {}
-        const { bouts } = betList
-        return (
-            <View style={styles.container}>
-                <ListComponent
-                    data={bouts}
-                    renderItem={this.renderItem}
-                    UpPullRefresh={this.onRefresh}
-                    ref={v => this.list = v}
-                />
-            </View>
-        )
-    }
-}
-const mapStateToProps = (state) => {
-    return {
-        ReduxStore: state
-    };
-};
-function mapDispatchToProps(dispatch) {
-    return {
-        onSetBetList: (data) => dispatch({ data: data, type: 'SET_BET_LIST' })
-    }
-}
+    const { betList } = ReduxStore || {}
+    const { bouts } = betList
+    return (
+        <View style={styles.container}>
+            <ListComponent
+                data={bouts}
+                renderItem={renderItem}
+                UpPullRefresh={onRefresh}
+                ref={v => list = v}
+            />
+        </View>
+    )
 
-export default connect(mapStateToProps, mapDispatchToProps)(WaitingDraw);
+}
+export default WaitingDraw
