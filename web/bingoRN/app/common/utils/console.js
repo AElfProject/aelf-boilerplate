@@ -6,11 +6,12 @@ console.log = (function (logFunc) {
         try {
             let arr = []
             arr.push(...arguments)
-            arr.forEach((item, index) => {
-                if (Object.prototype.toString.call(item) === '[object Object]' ||
+            arr.map(item => {
+                if (!item.children && Object.prototype.toString.call(item) === '[object Object]' ||
                     Object.prototype.toString.call(item) === '[object Array]') {
-                    arr[index] = JSON.parse(JSON.stringify(item))
+                    item.parent = JSON.parse(JSON.stringify(item))
                 }
+                return item
             })
             logFunc.call(console, ...arr)
         } catch (e) {
