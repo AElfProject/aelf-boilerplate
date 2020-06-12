@@ -38,7 +38,7 @@ function WaitingDraw() {
         const { address, contracts } = ReduxStore || {};
         const { bingoGameContract } = contracts || {};
         if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
-            const playerInformation = await bingoGameContract.GetPlayerInformation.call(address)    
+            const playerInformation = await bingoGameContract.GetPlayerInformation.call(address)
             let { bouts } = playerInformation || {}
             Array.isArray(bouts) && dispatch({
                 type: 'SET_BET_LIST', data: { betList: bouts.reverse() }
@@ -51,7 +51,7 @@ function WaitingDraw() {
         const list = [
             { title: 'Bet Type: ', details: boutType == '1' ? 'Small' : 'Big' },
             { title: 'Bet Amount: ', details: `${amount / config.tokenDecimalFormat} ${tokenSymbol}` },
-            { title: 'Time: ', details: moment(Number(seconds + '000')).format('YYYY-MM-DD HH:MM:SS') },
+            { title: 'Time: ', details: moment(Number(seconds + '000')).format('YYYY-MM-DD HH:mm:ss') },
             { title: 'Tx Id: ', details: playId, copy: true },
         ]
         return (

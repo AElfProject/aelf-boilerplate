@@ -44,6 +44,7 @@ function Lottery() {
         const { bingoGameContract } = contracts || {};
         if (bingoGameContract && bingoGameContract.GetPlayerInformationCompleted) {
             const playerInformation = await bingoGameContract.GetPlayerInformationCompleted.call(address)
+            console.log('playerInformation', playerInformation);
             let { bouts } = playerInformation || {}
             Array.isArray(bouts) && dispatch({
                 type: 'SET_LOTTERY_LIST', data: { lotteryList: bouts.reverse() }
@@ -56,7 +57,7 @@ function Lottery() {
         const list = [
             { title: 'Bet Type: ', details: boutType == '1' ? 'Small' : 'Big' },
             { title: 'Bet Amount: ', details: `${amount / config.tokenDecimalFormat} ${tokenSymbol}` },
-            { title: 'Time: ', details: moment(Number(seconds + '000')).format('YYYY-MM-DD HH:MM:SS') },
+            { title: 'Time: ', details: moment.unix(Number(seconds)).format('YYYY-MM-DD HH:mm:ss') },
             {
                 title: 'Lottery Code: ', details: lotteryCode, component:
                     isComplete ? <TextL style={{ ...styles.awardText, color: award < 0 ? 'red' : 'green' }}>{award > 0 ? 'Win: ' : 'Lose: '}{award / config.tokenDecimalFormat}</TextL>
