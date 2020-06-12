@@ -16,12 +16,12 @@ import BlankPage from "../../CommonPages/BlankPage/BlankPage";
 export default class ListComponent extends Component {
     //renderItem
     static propTypes = {
-        WhetherAutomatic: PropTypes.bool,         //是否自动加载更多，如果有吸顶则不能设置此属性为true
-        UpPullRefresh: PropTypes.func,            //下拉刷新的回调
-        data: PropTypes.array.isRequired,         //数据源数组
-        onEndReachedThreshold: PropTypes.number,  //决定当距离内容最底部还有多远时触发onEndReached回调。默認0.3
-        onEndReached: PropTypes.func,             //上拉刷新的回调,
-        LoadCompleted: PropTypes.bool,            //是否已加载全部数据,隐藏尾部组件
+        WhetherAutomatic: PropTypes.bool,         //Whether to automatically load more, if there is a ceiling, you can not set this property to true
+        UpPullRefresh: PropTypes.func,            //Pull-down refresh callback
+        data: PropTypes.array.isRequired,         //Data source array
+        onEndReachedThreshold: PropTypes.number,  //Determines how far away the onEndReached callback is when it is far from the bottom of the content. default0.3
+        onEndReached: PropTypes.func,             //Pull-refresh callback,
+        LoadCompleted: PropTypes.bool,            //Whether all data has been loaded and the tail component is hidden
         NoPositionTips: PropTypes.string,
         showFooter: PropTypes.bool,
         allLoadedTips: PropTypes.string,
@@ -54,7 +54,7 @@ export default class ListComponent extends Component {
             this.props.UpPullRefresh && this.props.UpPullRefresh()
         })
     }
-    //结束下拉刷新
+    //End pull-down refresh
     endUpPullRefresh = _ => {
         this.endRefresh && clearTimeout(this.endRefresh)
         this.endRefresh = setTimeout(() => {
@@ -67,7 +67,7 @@ export default class ListComponent extends Component {
         if (LoadCompleted) {
             return (
                 <View style={styles.FooterStyles}>
-                    <Text>{allLoadedTips || '已加载全部'}</Text>
+                    <Text>{allLoadedTips || 'All loaded'}</Text>
                 </View>
             )
         }
@@ -77,20 +77,20 @@ export default class ListComponent extends Component {
                 {
                     bottomLoad ?
                         <ActivityIndicator size="large" color={'green'} />
-                        : <Text>点击加载更多</Text>
+                        : <Text>Click to load more</Text>
                 }
             </TouchableOpacity>
         )
     }
     listProps = {
         ...this.props.listProps,
-        //提高性能
+        //Improve performance
         windowSize: 50,
         maxToRenderPerBatch: 5,
         // removeClippedSubviews: false,
         // legacyImplementation: true
     }
-    //结束底部刷新状态
+    //End the bottom refresh state
     endBottomRefresh = _ => {
         this.setState({ bottomLoad: false })
     }
@@ -105,7 +105,7 @@ export default class ListComponent extends Component {
                 <FlatList
                     {...this.props}
                     extraData={this.state.bottomLoad && LoadCompleted}
-                    keyExtractor={(item, index) => index.toString()}       //不重复的key
+                    keyExtractor={(item, index) => index.toString()}       //Unique key
                     ref={flatList => this._flatList = flatList}
                     onMomentumScrollBegin={this._onMomentumScrollBegin}
                     ListFooterComponent={!showFooter ? null : this._ListFooterComponent}
