@@ -25,8 +25,8 @@ function Touchable(props) {
         }
         time = newTime
     }
-    const { onPressIn, onPress, Highlight, children, style } = props
-    if (Highlight) {
+    const { onPressIn, onPress, highlight, children, style } = props
+    if (highlight) {
         return (
             <TouchableHighlight {...props} onPressIn={onPressIn ? handleClickThrottled : null} onPress={onPress ? handleClickThrottled : null} >
                 <View style={style}>
@@ -43,7 +43,7 @@ function Touchable(props) {
 }
 Touchable.propTypes = {
     onPressWithSecond: PropTypes.number, // Click once every few seconds
-    Highlight: PropTypes.bool, //use or not TouchableHighlight
+    highlight: PropTypes.bool, //use or not TouchableHighlight
 }
 
 Touchable.defaultProps = {

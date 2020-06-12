@@ -16,20 +16,20 @@ import BlankPage from "../../CommonPages/BlankPage/BlankPage";
 export default class ListComponent extends Component {
     //renderItem
     static propTypes = {
-        WhetherAutomatic: PropTypes.bool,         //Whether to automatically load more, if there is a ceiling, you can not set this property to true
-        UpPullRefresh: PropTypes.func,            //Pull-down refresh callback
+        whetherAutomatic: PropTypes.bool,         //Whether to automatically load more, if there is a ceiling, you can not set this property to true
+        upPullRefresh: PropTypes.func,            //Pull-down refresh callback
         data: PropTypes.array.isRequired,         //Data source array
         onEndReachedThreshold: PropTypes.number,  //Determines how far away the onEndReached callback is when it is far from the bottom of the content. default0.3
         onEndReached: PropTypes.func,             //Pull-refresh callback,
-        LoadCompleted: PropTypes.bool,            //Whether all data has been loaded and the tail component is hidden
-        NoPositionTips: PropTypes.string,
+        loadCompleted: PropTypes.bool,            //Whether all data has been loaded and the tail component is hidden
+        noPositionTips: PropTypes.string,
         showFooter: PropTypes.bool,
         allLoadedTips: PropTypes.string,
     }
     static defaultProps = {
         data: [],
         onEndReachedThreshold: 0.3,
-        WhetherAutomatic: false
+        whetherAutomatic: false
     }
     constructor(props) {
         super(props);
@@ -41,17 +41,17 @@ export default class ListComponent extends Component {
     componentWillUnmount() {
         this.timer && clearTimeout(this.timer)
     }
-    _onEndReached = (touch) => {
-        if (touch === true || (this.canLoadMore && !this.props.LoadCompleted)) {
+    onEndReached = (touch) => {
+        if (touch === true || (this.canLoadMore && !this.props.loadCompleted)) {
             this.setState({ bottomLoad: true }, () => {
                 this.props.onEndReached && this.props.onEndReached()
                 this.canLoadMore = false
             })
         }
     }
-    _onRefresh = _ => {
+    onRefresh = _ => {
         this.setState({ refreshing: true }, () => {
-            this.props.UpPullRefresh && this.props.UpPullRefresh()
+            this.props.upPullRefresh && this.props.upPullRefresh()
         })
     }
     //End pull-down refresh
@@ -61,10 +61,10 @@ export default class ListComponent extends Component {
             this.setState({ refreshing: false })
         }, 1000);
     }
-    _ListFooterComponent = _ => {
+    ListFooterComponent = _ => {
         const { bottomLoad } = this.state
-        const { LoadCompleted, allLoadedTips } = this.props
-        if (LoadCompleted) {
+        const { loadCompleted, allLoadedTips } = this.props
+        if (loadCompleted) {
             return (
                 <View style={styles.FooterStyles}>
                     <Text>{allLoadedTips || 'All loaded'}</Text>
@@ -72,7 +72,7 @@ export default class ListComponent extends Component {
             )
         }
         return (
-            <TouchableOpacity onPress={() => this._onEndReached(true)}
+            <TouchableOpacity onPress={() => this.onEndReached(true)}
                 style={styles.FooterStyles}>
                 {
                     bottomLoad ?
@@ -93,30 +93,30 @@ export default class ListComponent extends Component {
     endBottomRefresh = _ => {
         this.setState({ bottomLoad: false })
     }
-    _onMomentumScrollBegin = _ => {
+    onMomentumScrollBegin = _ => {
         this.canLoadMore = true;
     }
     render() {
-        const { data, UpPullRefresh, WhetherAutomatic, LoadCompleted, showFooter } = this.props
+        const { data, upPullRefresh, whetherAutomatic, loadCompleted, showFooter } = this.props
         const { refreshing } = this.state
         return (
             data && data.length ?
                 <FlatList
                     {...this.listProps}
                     {...this.props}
-                    extraData={this.state.bottomLoad && LoadCompleted}
+                    extraData={this.state.bottomLoad && loadCompleted}
                     keyExtractor={(item, index) => index.toString()}       //Unique key
                     ref={flatList => this._flatList = flatList}
-                    onMomentumScrollBegin={this._onMomentumScrollBegin}
-                    ListFooterComponent={!showFooter ? null : this._ListFooterComponent}
-                    onEndReached={WhetherAutomatic ? this._onEndReached : null}
+                    onMomentumScrollBegin={this.onMomentumScrollBegin}
+                    ListFooterComponent={!showFooter ? null : this.ListFooterComponent}
+                    onEndReached={whetherAutomatic ? this.onEndReached : null}
                     refreshControl={
-                        UpPullRefresh != undefined
+                        upPullRefresh != undefined
                             ? <RefreshControl
                                 refreshing={refreshing}
                                 colors={[Colors.primaryColor]}
                                 tintColor={Colors.primaryColor}
-                                onRefresh={this._onRefresh} />
+                                onRefresh={this.onRefresh} />
                             : refreshing} />
                 : <BlankPage />
         );

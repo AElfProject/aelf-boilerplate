@@ -88,7 +88,7 @@ function WaitingDraw() {
             <ListComponent
                 data={betList || []}
                 renderItem={renderItem}
-                UpPullRefresh={onRefresh}
+                upPullRefresh={onRefresh}
                 ref={list}
             />
         </View>

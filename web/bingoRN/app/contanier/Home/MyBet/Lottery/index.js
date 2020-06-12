@@ -94,7 +94,7 @@ function Lottery() {
             <ListComponent
                 data={lotteryList || []}
                 renderItem={renderItem}
-                UpPullRefresh={onRefresh}
+                upPullRefresh={onRefresh}
                 ref={list}
             />
         </View>
