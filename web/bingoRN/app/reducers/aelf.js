@@ -8,7 +8,7 @@ const initialState = {
     keystore: {},
     betList: [],
     lotteryList: [],
-    newBet:false
+    newBet: false
 };
 
 const aelf = (state = initialState, action) => {
@@ -25,6 +25,9 @@ const aelf = (state = initialState, action) => {
             state.is_login = false;
             state.address = 0;
             state.keystore = {};
+            state.betList = [];
+            state.lotteryList = [];
+            state.newBet = false;
             return state;
 
         case 'FRESH_BALANCE':
