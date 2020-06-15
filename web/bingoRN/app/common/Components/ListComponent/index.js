@@ -3,15 +3,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-    StyleSheet,
+    ScrollView,
     FlatList,
     RefreshControl,
+    Dimensions,
     View,
     Text,
     ActivityIndicator,
     TouchableOpacity
 } from 'react-native';
 import BlankPage from "../../CommonPages/BlankPage/BlankPage";
+const height = Dimensions.get('screen').height
 
 export default class ListComponent extends Component {
     //renderItem
@@ -118,7 +120,21 @@ export default class ListComponent extends Component {
                                 tintColor={Colors.primaryColor}
                                 onRefresh={this.onRefresh} />
                             : refreshing} />
-                : <BlankPage />
+                :
+                <ScrollView
+                    refreshControl={
+                        upPullRefresh != undefined
+                            ? <RefreshControl
+                                refreshing={refreshing}
+                                colors={[Colors.primaryColor]}
+                                tintColor={Colors.primaryColor}
+                                onRefresh={this.onRefresh} />
+                            : refreshing}>
+                    <View style={{ marginTop: 200, alignItems: 'center' }}>
+                        <BlankPage />
+                    </View>
+
+                </ScrollView>
         );
     }
 }
