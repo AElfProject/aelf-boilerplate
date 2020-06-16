@@ -17,7 +17,7 @@ import {sleep} from "../../../common/utils/utils";
 import styles from './style';
 import DevInformation from './develop';
 import pTd from "../../../common/utils/unit";
-const { splashScreenShowTime, tokenSymbol, tokenDecimalFormat } = config;
+const { splashScreenShowTime, tokenSymbol, tokenDecimal, tokenDecimalFormat } = config;
 
 const {appInit, aelfInstance} = require('../../../common/utils/aelfProvider');
 const waitTime = 60000
@@ -229,23 +229,30 @@ class MyHomePage extends React.Component {
         this.setState({
             pullRefreshing: true
         });
-        try {
-            await this.getLastBuyInfo();
-            await this.getUserBalance();
-            await this.getBingoGameContractBalane();
-            await this.getApprovedNumber();
-            await this.getBetList()
-            await this.getLotteryList()
-        } catch(e) {
+        Promise.all([
+            this.getLastBuyInfo(),
+            this.getUserBalance(),
+            this.getBingoGameContractBalane(),
+            this.getApprovedNumber(),
+            this.getBetList(),
+            this.getLotteryList(),
+        ]).then(result => {
+            console.log('Promise.all: ', result);
+        }).catch(error => {
             this.tipMsg('Refresh error');
             console.log('onRefresh: ', e);
-        }
-        this.setState({
-            pullRefreshing: false
+        }).then(() => {
+            this.setState({
+                pullRefreshing: false
+            });
         });
     }
 
     onBetChange(betCount) {
+        const floatPart = betCount.split('.')[1];
+        if (betCount && floatPart && floatPart.length > 3) {
+            betCount = parseFloat(betCount).toFixed(tokenDecimal)
+        }
         this.setState({
             betCount
         });

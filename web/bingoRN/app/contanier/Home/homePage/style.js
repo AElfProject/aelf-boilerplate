@@ -39,7 +39,7 @@ export default StyleSheet.create({
   },
   bingoButton: {
     flex: 1,
-    width: 50,
+    width: 66,
     margin: 2,
     backgroundColor: "#817AFD",
   },
