@@ -145,7 +145,7 @@ class MyFundingDetail extends React.Component {
         const reduxStoreData = this.props.ReduxStore;
         const { address } = reduxStoreData;
         const params = JSON.parse(item.params);
-        const amount = params.amount / tokenDecimalFormat;
+        const amount = (params.amount || params.transferTx.amount) / tokenDecimalFormat;
         const timeFormatted = moment(item.time).format('YYYY-MM-DD HH:mm');
         const isWithdraw = item.address_from === address;
         const textShow = isWithdraw ? 'WithDraw' : 'Recharge';

@@ -67,7 +67,7 @@ class RechargeDetail extends React.Component {
 
         return (
             <View style={Gstyle.container}>
-                <CommonHeader canBack title="充值详情" />
+                <CommonHeader canBack title="Recharge Detail" />
                 <ScrollView>
                     <View style={{ alignItems: "center", ...Gstyle.marginArg(pTd(50), 0) }}>
                         <Icon name="checkcircle" size={36} color={"green"} />

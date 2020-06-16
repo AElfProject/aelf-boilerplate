@@ -181,6 +181,14 @@ https://developer.android.com/studio/intro/studio-config#setup-proxy
 import { ProgressBarAndroid } from '@react-native-community/progress-bar-android';
 ```
 
+### 4.Android: Package android.support.v4.content does not exist
+
+When we add new node_modules
+
+Just run react-native run-android
+
+Then, build the apk without this problem.
+
 ### iOS keyboard
 
 https://github.com/rccoder/blog/issues/25
