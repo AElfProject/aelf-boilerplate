@@ -181,7 +181,7 @@ class MyMinePage extends React.Component {
             await approveApp(tokenContract, config.tokenSymbol, accountAddress, appContract.address);
         } catch (error) {
             console.log('approveAppERR',error);
-            
+
         }
     }
     /* changeModestatus */
@@ -192,7 +192,7 @@ class MyMinePage extends React.Component {
     }
     /* 复制账户地址 */
     copyAddress() {
-        Clipboard.setString(this.state.accountAddress);
+        Clipboard.setString(addressUtils.format(this.state.accountAddress));
     }
     /* 弹框内容 */
     modalContent() {
