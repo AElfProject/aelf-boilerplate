@@ -3,8 +3,8 @@ import { createAppContainer } from 'react-navigation';
 import { createMaterialTopTabNavigator, MaterialTopTabBar } from 'react-navigation-tabs';
 import WaitingDraw from './WaitingDraw'
 import Lottery from './Lottery'
-import { CommonHeader } from '../../../common/Components';
-import pTd from "../../../common/utils/unit";
+import { CommonHeader } from '../../common/Components';
+import pTd from "../../common/utils/unit";
 const tabActiveColor = Colors.primaryColor
 /*
 * MyBet
@@ -47,7 +47,7 @@ export default createAppContainer(createMaterialTopTabNavigator({
 
     tabBarComponent: (props) => (
         <>
-            <CommonHeader canBack title="My Bet" />
+            <CommonHeader title="My Bet" />
             <MaterialTopTabBar {...props} />
         </>
     )

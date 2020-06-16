@@ -1,9 +1,10 @@
 import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl, Linking, TextInput } from "react-native"
+import { View, Text, TouchableOpacity, RefreshControl, Linking, TextInput } from "react-native"
 import { Button, Divider, Input, PricingCard, Card } from "react-native-elements"
 import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from "@react-native-community/async-storage"
 import SplashScreen from "react-native-splash-screen"
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import navigationService from "../../../common/utils/navigationService";
 import { CommonHeader, WordRotation, Touchable } from '../../../common/Components'
@@ -13,7 +14,7 @@ import Storage from  "../../../constants/storage"
 import connect from "../../../common/utils/myReduxConnect";
 import {config} from "../../../common/utils/config";
 import {format} from "../../../common/utils/address";
-import {sleep} from "../../../common/utils/utils";
+import {sleep, isNumber } from "../../../common/utils/utils";
 import styles from './style';
 import DevInformation from './develop';
 import pTd from "../../../common/utils/unit";
@@ -23,7 +24,7 @@ const {appInit, aelfInstance} = require('../../../common/utils/aelfProvider');
 const waitTime = 60000
 const defautState = JSON.stringify({
     address: 0,
-    balance: '-',
+    balance: 0,
     jackpot: '-',
     symbol: '-',
     bingoGameAllowance: '-',
@@ -150,8 +151,9 @@ class MyHomePage extends React.Component {
         if (!balance) {
             return;
         }
+        let confirmBlance = balance.balance / tokenDecimalFormat         
         this.setState({
-            balance: balance.balance / tokenDecimalFormat,
+            balance: isNumber(confirmBlance) ? confirmBlance : 0,
             symbol: balance.symbol
         });
     }
@@ -204,9 +206,9 @@ class MyHomePage extends React.Component {
     /* 头部左边的按钮 */
     leftElement() {
         return (
-            <TouchableOpacity onPress={()=>this.goRouter("MyBet")}>
+            <TouchableOpacity onPress={()=>this.goRouter("HowToPlay")}>
                 <View style={{ flexDirection: "row" }}>
-                    <TextM style={{ color: Colors.fontColor, }}>My Bet</TextM>
+                    <TextM style={{ color: Colors.fontColor, }}>Left</TextM>
                 </View>
             </TouchableOpacity>
         )
@@ -288,12 +290,12 @@ class MyHomePage extends React.Component {
         if (!txId) {
             lastBuyId = (await this.getLastBuyInfo()).transactionId;
         }
-        const { betCount, lastBetType } = this.state;
+        const { betCount, betType } = this.state;
         await AsyncStorage.setItem('lastBuy', JSON.stringify({
             buyTxId: txId || lastBuyId,
             hadDrawed: hadDrawed,
             lastBetCount: betCount,
-            lastBetType
+            lastBetType: betType
         }));
     }
 
@@ -673,111 +675,114 @@ class MyHomePage extends React.Component {
                         </WordRotation>
                     </TouchableOpacity>
                 }
-                <ScrollView
-                  refreshControl={
-                      <RefreshControl refreshing={pullRefreshing} onRefresh={() => this.onRefresh()} />
-                  }
+                <KeyboardAwareScrollView
+                    keyboardOpeningTime={0}
+                    extraHeight={150}
+                    refreshControl={
+                        <RefreshControl refreshing={pullRefreshing} onRefresh={() => this.onRefresh()} />
+                    }
                 >
-                    <View>
-                        {lotteryCodeHTML}
-                    </View>
+                    <View style = {{flex:1}}>
+                        <View>
+                            {lotteryCodeHTML}
+                        </View>
 
-                    <Card title='Bet Type (Click to select)' titleStyle={{textAlign: 'left'}}>
+                        <Card title='Bet Type (Click to select)' titleStyle={{textAlign: 'left'}}>
+                            <View style={styles.buttonContainer}>
+                                <Button
+                                buttonStyle={betType === 1 ? styles.lotteryBuyTypeButton : styles.lotteryBuyTypeButtonHide}
+                                title={'Small'} onPress={() => this.onBetTypeButtonClick(1)}/>
+                                <Button
+                                buttonStyle={betType === 2 ? styles.lotteryBuyTypeButton : styles.lotteryBuyTypeButtonHide}
+                                title={'Big'} onPress={() => this.onBetTypeButtonClick(2)}/>
+                            </View>
+                        </Card>
+
+                        <Card
+                        title={`Bet Amount` }
+                        titleStyle={{textAlign: 'left'}}
+                        >
+                            <View style={styles.balanceContainer}>
+                                <Text>My balance: {(balance).toFixed(2)} {tokenSymbol}</Text>
+                            </View>
+                            <View style={styles.buttonContainer}>
+                                <TextInput
+                                style={styles.inputStyle}
+                                placeholder="Please input bet amount"
+                                placeholderTextColor="#999"
+                                onChangeText={betCount => this.onBetChange(betCount)}
+                                value={betCount + ''}
+                                />
+                                <Button buttonStyle={styles.bingoButton} title={'half'} onPress={() => this.onBetButtonClick(Math.floor(balance) / 2)}/>
+                                <Button buttonStyle={styles.bingoButton} title={'all in'} onPress={() => this.onBetButtonClick(Math.floor(balance))}/>
+                            </View>
+                        </Card>
+
                         <View style={styles.buttonContainer}>
-                            <Button
-                              buttonStyle={betType === 1 ? styles.lotteryBuyTypeButton : styles.lotteryBuyTypeButtonHide}
-                              title={'Small'} onPress={() => this.onBetTypeButtonClick(1)}/>
-                            <Button
-                              buttonStyle={betType === 2 ? styles.lotteryBuyTypeButton : styles.lotteryBuyTypeButtonHide}
-                              title={'Big'} onPress={() => this.onBetTypeButtonClick(2)}/>
+                            {<Button buttonStyle={styles.bingoButtonSubmit} title={'Bet'} onPress={() => this.playBingo()}/>}
+                            {/* {showBingo && <Button buttonStyle={styles.drawButton} title={'Click to draw'} onPress={async () => this.bingoBingo()}/>} */}
                         </View>
-                    </Card>
 
-                    <Card
-                      title={`Bet Amount` }
-                      titleStyle={{textAlign: 'left'}}
-                    >
-                        <View style={styles.balanceContainer}>
-                            <Text>My balance: {(+balance).toFixed(2)} {tokenSymbol}</Text>
+                        <Divider style={styles.divider} />
+                        <View style={styles.rules}>
+                            <Text>Game Rules</Text>
+                            <Text>
+                                The current block height and users's seed will be used to calculate a random number between [0, 255].
+                                And we will get small, middle, big.
+                            </Text>
+                            <Text>
+                                1.You can bet small and big.
+                            </Text>
+                            <Text>
+                                2.Contracts always win when get middle.
+                            </Text>
+                            <Text>
+                                3.No more than 50 bets in a time.
+                            </Text>
+
+                            <Divider style={styles.divider} />
+
+                            <Text>Game Operations</Text>
+                            <Text>
+                                1. Select a bet type and bet your AEUSD.
+                            </Text>
+                            <Text>
+                                2. Waiting a minute, then draw the prize aotumaticly.
+                            </Text>
+                            <Text>
+                                3. You can get the last 100 history from My Bet in the upper left corner.
+                            </Text>
+
+                            <Divider style={styles.divider} />
+
+                            {/*{buyTxHTML}*/}
+                            {/*{bingoResultHTML}*/}
                         </View>
-                        <View style={styles.buttonContainer}>
-                            <TextInput
-                              style={styles.inputStyle}
-                              placeholder="Please input bet amount"
-                              placeholderTextColor="#999"
-                              onChangeText={betCount => this.onBetChange(betCount)}
-                              value={betCount + ''}
-                            />
-                            <Button buttonStyle={styles.bingoButton} title={'half'} onPress={() => this.onBetButtonClick(Math.floor(balance) / 2)}/>
-                            <Button buttonStyle={styles.bingoButton} title={'all in'} onPress={() => this.onBetButtonClick(Math.floor(balance))}/>
-                        </View>
-                    </Card>
-
-                    <View style={styles.buttonContainer}>
-                        {<Button buttonStyle={styles.bingoButtonSubmit} title={'Bet'} onPress={() => this.playBingo()}/>}
-                        {/* {showBingo && <Button buttonStyle={styles.drawButton} title={'Click to draw'} onPress={async () => this.bingoBingo()}/>} */}
-                    </View>
-
-                    <Divider style={styles.divider} />
-                    <View style={styles.rules}>
-                        <Text>Game Rules</Text>
-                        <Text>
-                            The current block height and users's seed will be used to calculate a random number between [0, 255].
-                            And we will get small, middle, big.
-                        </Text>
-                        <Text>
-                            1.You can bet small and big.
-                        </Text>
-                        <Text>
-                            2.Contracts always win when get middle.
-                        </Text>
-                        <Text>
-                            3.No more than 50 bets in a time.
-                        </Text>
 
                         <Divider style={styles.divider} />
 
-                        <Text>Game Operations</Text>
-                        <Text>
-                            1. Select a bet type and bet your AEUSD.
-                        </Text>
-                        <Text>
-                            2. Waiting a minute, then draw the prize aotumaticly.
-                        </Text>
-                        <Text>
-                            3. You can get the last 100 history from My Bet in the upper left corner.
-                        </Text>
-
-                        <Divider style={styles.divider} />
-
-                        {/*{buyTxHTML}*/}
-                        {/*{bingoResultHTML}*/}
+                        <Button
+                            buttonStyle={styles.devButton}
+                            title={(devInfoVisible ? 'Hide' :'Show') + ' Developer Information'}
+                            onPress={() => {
+                                this.setState({
+                                    devInfoVisible: !devInfoVisible
+                                });
+                            }}
+                        />
+                        <DevInformation
+                            devInfoVisible={devInfoVisible}
+                            nickName={nickName}
+                            address={address}
+                            symbol={symbol}
+                            balance={balance}
+                            bingoGameAllowance={bingoGameAllowance}
+                            bingoGameContract={bingoGameContract}
+                            jackpot={jackpot}
+                            clear={() => this.resetState()}
+                        />
                     </View>
-
-                    <Divider style={styles.divider} />
-
-                    <Button
-                        buttonStyle={styles.devButton}
-                        title={(devInfoVisible ? 'Hide' :'Show') + ' Developer Information'}
-                        onPress={() => {
-                            this.setState({
-                                devInfoVisible: !devInfoVisible
-                            });
-                        }}
-                    />
-
-                    <DevInformation
-                      devInfoVisible={devInfoVisible}
-                      nickName={nickName}
-                      address={address}
-                      symbol={symbol}
-                      balance={balance}
-                      bingoGameAllowance={bingoGameAllowance}
-                      bingoGameContract={bingoGameContract}
-                      jackpot={jackpot}
-                      clear={() => this.resetState()}
-                    />
-                </ScrollView>
+                </KeyboardAwareScrollView>
             </View>
         )
     }

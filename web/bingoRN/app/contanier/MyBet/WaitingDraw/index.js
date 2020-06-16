@@ -5,9 +5,9 @@ import Clipboard from "@react-native-community/clipboard";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import styles from '../Styles';
-import { config } from "../../../../common/utils/config";
-import { ListComponent } from '../../../../common/Components';
-import { TextM, TextTitle } from "../../../../common/UI_Component/CommonText"
+import { config } from "../../../common/utils/config";
+import { ListComponent } from '../../../common/Components';
+import { TextM, TextTitle } from "../../../common/UI_Component/CommonText"
 
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 
@@ -45,7 +45,7 @@ function WaitingDraw() {
             })
         }
     }
-    const renderItem = ({ item }) => {
+    const renderItem = ({ item }) => {        
         const { boutType, amount, tokenSymbol, playId, isComplete, award, betTime } = item
         const { seconds } = betTime || {}
         const list = [

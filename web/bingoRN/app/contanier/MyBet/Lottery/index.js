@@ -1,16 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import { View, Text, Linking } from "react-native";
 import moment from 'moment'
-import Clipboard from "@react-native-community/clipboard";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import styles from '../Styles';
-import { config } from "../../../../common/utils/config";
-import { ListComponent } from '../../../../common/Components';
-import { TextM, TextTitle, TextL } from "../../../../common/UI_Component/CommonText"
+import { config } from "../../../common/utils/config";
+import { ListComponent } from '../../../common/Components';
+import { TextM, TextTitle, TextL } from "../../../common/UI_Component/CommonText"
 
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
-
 /*
 * WaitingDraw hooks
 **/
@@ -59,18 +57,20 @@ function Lottery() {
             { title: 'Bet Type: ', details: boutType == '1' ? 'Small' : 'Big' },
             { title: 'Bet Amount: ', details: `${amount / config.tokenDecimalFormat} ${tokenSymbol}` },
             { title: 'Time: ', details: moment.unix(Number(seconds)).format('YYYY-MM-DD HH:mm:ss') },
-            {
-                title: 'Draw Type: ', details: drawType, component:
-                    isComplete ? <TextL style={{ ...styles.awardText, color: award < 0 ? 'red' : 'green' }}>{award > 0 ? 'Win: ' : 'Lose: '}{award / config.tokenDecimalFormat}</TextL>
-                        : null
-            },
+            { title: 'Draw Type: ', details: drawType },
             { title: 'Tx Id: ', details: playId, copy: true },
         ]
         return (
             <View style={styles.containerItem}>
-                <View style={styles.flexRow}>
+                <View style={[styles.flexRow, { alignItems: 'center' }]}>
                     <TextTitle style={{ flex: 1 }}>Bet Transactions</TextTitle>
-                    <Text>{!isComplete ? 'No draw' : 'Opened'}</Text>
+                    {
+                        isComplete ?
+                            <TextL style={{ ...styles.awardText, color: award < 0 ? 'red' : 'green' }}>
+                                {award > 0 ? 'Win: ' : 'Lose: '}{award / config.tokenDecimalFormat} {tokenSymbol}
+                            </TextL>
+                            : null
+                    }
                 </View>
                 {
                     list.map((item, index) => (
@@ -86,9 +86,6 @@ function Lottery() {
                                         : <TextM style={{ flex: 1 }}>{item.details}</TextM>
                                 }
                             </View>
-                            {
-                                item.component ? item.component : <View />
-                            }
                         </View>
                     ))
                 }

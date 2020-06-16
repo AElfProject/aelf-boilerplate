@@ -3,13 +3,14 @@ import { View, Image, StatusBar } from "react-native"
 
 import { createAppContainer, createBottomTabNavigator, createSwitchNavigator } from "react-navigation"
 import Icon from 'react-native-vector-icons/AntDesign';
-
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import NavigationService from "../common/utils/navigationService";
 import pTd from "../common/utils/unit"
 
 import HomeScreen from "./Home/index"
 import MineScreen from "./Mine/index"
 import LoginStack from "./Login/index"
+import MyBet from '../contanier/MyBet'
 //redux
 import { Provider, connect } from "react-redux";
 
@@ -43,21 +44,28 @@ const TabNavigatorStack = createBottomTabNavigator(
             navigationOptions: {
                 tabBarLabel: "INDEX",
                 tabBarIcon: ({ tintColor, focused }) => (
-                  <Icon name="home" size={20} color={ focused ? Colors.fontColor : Colors.fontBlack }/>
+                    <Icon name="home" size={20} color={focused ? Colors.fontColor : Colors.fontBlack} />
                 )
             }
         },
-
+        MyBet:{
+            screen: MyBet,
+            navigationOptions: {
+                tabBarLabel: "MY BET",
+                tabBarIcon: ({ tintColor, focused }) => (
+                    <MaterialCommunityIcons name="format-list-bulleted" size={20} color={focused ? Colors.fontColor : Colors.fontBlack} />
+                )
+            }
+        },
         MineScreen: {
             screen: MineScreen,
             navigationOptions: {
                 tabBarLabel: "MY",
                 tabBarIcon: ({ tintColor, focused }) => (
-                  <Icon name="user" size={20} color={ focused ? Colors.fontColor : Colors.fontBlack }/>
+                    <Icon name="user" size={20} color={focused ? Colors.fontColor : Colors.fontBlack} />
                 )
             }
         },
-
     },
     {
         initialRouteName: "HomeScreen",
@@ -67,7 +75,8 @@ const TabNavigatorStack = createBottomTabNavigator(
             style: {
                 borderTopColor: "#ececec",
                 borderWidth: pTd(1)
-            }
+            },
+            keyboardHidesTabBar: true    //hide tab
         }
     }
 );

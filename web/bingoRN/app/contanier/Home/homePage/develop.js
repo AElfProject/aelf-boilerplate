@@ -3,10 +3,11 @@ import { View, Text, TouchableOpacity, Linking } from "react-native"
 import { Button, Divider } from "react-native-elements"
 import AsyncStorage from "@react-native-community/async-storage"
 
-import {config} from "../../../common/utils/config";
-import {format} from "../../../common/utils/address";
+import { config } from "../../../common/utils/config";
+import { format } from "../../../common/utils/address";
 import pTd from "../../../common/utils/unit";
 import styles from './style';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function DevInformation(props) {
   const {
@@ -20,7 +21,7 @@ export default function DevInformation(props) {
     }}>
       <Text style={styles.title}>1.Bingo Game Dev Demo</Text>
       <Text>In this demo, you can learn</Text>
-      <Text>1.How to use random numbers in elf.</Text>
+      <Text>1.How to use random numbers in aelf.</Text>
       <Text>2.How to register account in an aelf contract.</Text>
       <Text>3.How to call inline contract.</Text>
 
@@ -35,17 +36,18 @@ export default function DevInformation(props) {
       <Divider style={styles.divider} />
 
       <Text style={styles.title}>3.About the Game</Text>
-      <Text>Contract Address: </Text>
-      <Text>{bingoGameContract && bingoGameContract.address && format(bingoGameContract.address)}</Text>
-      <Text>Prize poll: {jackpot}</Text>
-      <Text>Contract on Explorer</Text>
-      <TouchableOpacity>
-        <Text style={{ color: Colors.fontColor }} onPress={() =>
-          Linking.openURL(config.contractExplorerURL + '' +  (bingoGameContract && bingoGameContract.address))
-        }>Click and turn to aelf block chain explore to get more information of the contract.</Text>
-      </TouchableOpacity>
-
-      <Text>4.Clear</Text>
+      <Text>Contract Address:{'\n'}
+        {
+          bingoGameContract && bingoGameContract.address ?
+            <Text
+              onPress={() => Linking.openURL(config.contractExplorerURL + '' + bingoGameContract.address)}
+              style={styles.linkDetails}>{format(bingoGameContract.address)}{` `}
+              <Icon name='share-square-o' />
+            </Text>
+            : ''
+        }
+      </Text>
+      <Text>Prize pool: {jackpot}</Text>
       <Button
         buttonStyle={styles.devButton}
         title={'Clear'}

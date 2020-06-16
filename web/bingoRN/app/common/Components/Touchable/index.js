@@ -15,13 +15,13 @@ function Touchable(props) {
         const { onLongPress } = props
         onLongPress && onLongPress(props)
     }
-    const handleClickThrottled = (props) => {
+    const handleClickThrottled = (pressProps) => {
         const { onPressIn, onPress, onPressWithSecond } = props
         let newTime = new Date().getTime()
         if (!time) {
-            onPressIn ? onPressIn(props) : onPress && onPress(props)
+            onPressIn ? onPressIn(pressProps) : onPress && onPress(pressProps)
         } else if (newTime - time > onPressWithSecond) {
-            onPressIn ? onPressIn(props) : onPress && onPress(props)
+            onPressIn ? onPressIn(pressProps) : onPress && onPress(pressProps)
         }
         time = newTime
     }

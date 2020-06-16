@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import pTd from "../../../common/utils/unit";
+import pTd from "../../common/utils/unit";
 
 const styles = StyleSheet.create({
     container: {
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
         color: 'blue'
     },
     awardText:{
-        marginTop:pTd(15),
+        // marginTop:pTd(15),
         alignSelf:'center',
         color:'green',
     }

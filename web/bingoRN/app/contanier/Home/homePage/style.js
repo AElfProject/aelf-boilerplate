@@ -39,7 +39,6 @@ export default StyleSheet.create({
   },
   bingoButton: {
     flex: 1,
-    width: 50,
     margin: 2,
     backgroundColor: "#817AFD",
   },
@@ -76,5 +75,9 @@ export default StyleSheet.create({
   balanceContainer: {
     paddingLeft: 6,
     paddingBottom: 2
-  }
+  },
+  linkDetails: {
+    fontSize:14,
+    color: Colors.fontColor
+},
 });
