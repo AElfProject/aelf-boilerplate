@@ -152,7 +152,7 @@ class MyHomePage extends React.Component {
         if (!balance) {
             return;
         }
-        let confirmBlance = balance.balance / tokenDecimalFormat         
+        let confirmBlance = balance.balance / tokenDecimalFormat
         this.setState({
             balance: isNumber(confirmBlance) ? confirmBlance : 0,
             symbol: balance.symbol
@@ -313,7 +313,7 @@ class MyHomePage extends React.Component {
         }
         const reduxStoreData = this.props.ReduxStore;
         const { contracts, address, betList } = reduxStoreData;
-        
+
         if (Array.isArray(betList) && betList.length >= waitDrawLimit) {
             this.tipMsg('You bet too fast, bet later');
             return;
@@ -753,7 +753,7 @@ class MyHomePage extends React.Component {
                                 2.Contracts always win when get middle.
                             </Text>
                             <Text>
-                                3.No more than 50 bets in a time.
+                                3.No more than 30 bets in a time.
                             </Text>
 
                             <Divider style={styles.divider} />
@@ -766,7 +766,7 @@ class MyHomePage extends React.Component {
                                 2. Waiting a minute, then draw the prize aotumaticly.
                             </Text>
                             <Text>
-                                3. You can get the last 100 history from My Bet in the upper left corner.
+                                3. You can get the last 50 history from My Bet in the upper left corner.
                             </Text>
 
                             <Divider style={styles.divider} />

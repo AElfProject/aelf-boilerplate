@@ -90,6 +90,7 @@ GEM
       xcpretty-travis-formatter (>= 0.0.3)
     fastlane-plugin-fir_cli (2.0.9)
       fir-cli (~> 2.0.9)
+    fastlane-plugin-telegram (0.1.3)
     fir-cli (2.0.9)
       CFPropertyList
       admqr_knife (~> 0.1.5)
@@ -207,6 +208,7 @@ PLATFORMS
 DEPENDENCIES
   fastlane
   fastlane-plugin-fir_cli
+  fastlane-plugin-telegram
 
 BUNDLED WITH
    1.17.2
