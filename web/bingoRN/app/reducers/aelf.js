@@ -21,15 +21,15 @@ const aelf = (state = initialState, action) => {
             state.keystore = data.keystore;
             return state;
         case 'LOGOUT':
-            state.contracts = 0;
-            state.is_login = false;
-            state.address = 0;
-            state.keystore = {};
-            state.betList = [];
-            state.lotteryList = [];
-            state.newBet = false;
-            return state;
-
+            return Object.assign({}, state, {
+                contracts: 0,
+                is_login: false,
+                address: 0,
+                keystore: {},
+                betList: [],
+                lotteryList: [],
+                newBet: false,
+            });
         case 'FRESH_BALANCE':
             state.balance = state.is_login ? data.balance : 0;
             return state;
