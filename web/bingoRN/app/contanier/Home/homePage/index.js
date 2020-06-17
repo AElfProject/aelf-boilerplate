@@ -766,7 +766,7 @@ class MyHomePage extends React.Component {
                                 2. Waiting a minute, then draw the prize aotumaticly.
                             </Text>
                             <Text>
-                                3. You can get the last 50 history from My Bet in the upper left corner.
+                                3. You can get the last 50 history from My Bet in the MY BET.
                             </Text>
 
                             <Divider style={styles.divider} />
