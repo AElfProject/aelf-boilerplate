@@ -21,7 +21,8 @@ import pTd from "../../../common/utils/unit";
 const { splashScreenShowTime, tokenSymbol, tokenDecimal, tokenDecimalFormat } = config;
 
 const {appInit, aelfInstance} = require('../../../common/utils/aelfProvider');
-const waitTime = 60000
+const waitTime = 10000    //Draw frequency
+const waitDrawLimit = 20  //To be drawn limit
 const defautState = JSON.stringify({
     address: 0,
     balance: 0,
@@ -313,8 +314,8 @@ class MyHomePage extends React.Component {
         const reduxStoreData = this.props.ReduxStore;
         const { contracts, address, betList } = reduxStoreData;
         
-        if (Array.isArray(betList) && betList.length >= 50) {
-            this.tipMsg('No more than 50 bets in a time.');
+        if (Array.isArray(betList) && betList.length >= waitDrawLimit) {
+            this.tipMsg('You bet too fast, bet later');
             return;
         }
 
