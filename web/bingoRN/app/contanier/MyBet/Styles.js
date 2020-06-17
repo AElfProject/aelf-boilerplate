@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
     },
     copyDetails: {
         flex: 1,
-        color: 'blue'
+        color: 'blue',
+        letterSpacing:pTd(1)
     },
     awardText:{
         // marginTop:pTd(15),

@@ -311,7 +311,13 @@ class MyHomePage extends React.Component {
             return;
         }
         const reduxStoreData = this.props.ReduxStore;
-        const { contracts, address } = reduxStoreData;
+        const { contracts, address, betList } = reduxStoreData;
+        
+        if (Array.isArray(betList) && betList.length >= 50) {
+            this.tipMsg('No more than 50 bets in a time.');
+            return;
+        }
+
         if (!address) {
             this.tipMsg('Please login');
             return;
@@ -495,6 +501,7 @@ class MyHomePage extends React.Component {
         }
     }
     getTxResult = async (TransactionId) => {
+        if (!TransactionId) return
         let number = 0
         const Transaction = this.txResultTime[`${TransactionId}`]
         if (Transaction) {

@@ -77,6 +77,7 @@ export default StyleSheet.create({
     paddingBottom: 2
   },
   linkDetails: {
+    letterSpacing:pTd(1),
     fontSize:14,
     color: Colors.fontColor
 },

@@ -41,7 +41,7 @@ export default function DevInformation(props) {
           bingoGameContract && bingoGameContract.address ?
             <Text
               onPress={() => Linking.openURL(config.contractExplorerURL + '' + bingoGameContract.address)}
-              style={styles.linkDetails}>{format(bingoGameContract.address)}{` `}
+              style={styles.linkDetails}>{format(bingoGameContract.address)}
               <Icon name='share-square-o' />
             </Text>
             : ''
