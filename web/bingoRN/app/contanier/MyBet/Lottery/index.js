@@ -74,8 +74,8 @@ function Lottery() {
                 </View>
                 {
                     list.map((item, index) => (
-                        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                            <View key={index} style={[styles.flexRow, { flex: 1 }]}>
+                        <View key={index} style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                            <View  style={[styles.flexRow, { flex: 1 }]}>
                                 <TextM>{item.title}</TextM>
                                 {
                                     item.copy ?
