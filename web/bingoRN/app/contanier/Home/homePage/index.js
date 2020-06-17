@@ -22,7 +22,7 @@ const { splashScreenShowTime, tokenSymbol, tokenDecimal, tokenDecimalFormat } = 
 
 const {appInit, aelfInstance} = require('../../../common/utils/aelfProvider');
 const waitTime = 10000    //Draw frequency
-const waitDrawLimit = 20  //To be drawn limit
+const waitDrawLimit = 30  //To be drawn limit
 const defautState = JSON.stringify({
     address: 0,
     balance: 0,
