@@ -16,8 +16,7 @@ namespace AElf.Contracts.BingoContract
     /// </summary>
     public class BingoContract : BingoContractContainer.BingoContractBase
     {
-        private const int BetHistoryLimit = 100;
-        private const int BetLimit = 50;
+        private const int BetHistoryLimit = 20;
         private const int BetMinimumAmount = 1;
 
         public override Int64Value Play(PlayInput input)
@@ -25,7 +24,7 @@ namespace AElf.Contracts.BingoContract
             Assert(input.BuyAmount > BetMinimumAmount, "Invalid bet amount.");
             var playerInformation = RegisterOrGetPlayerInformation();
             
-            Assert(playerInformation.Bouts.Count < BetLimit, "There are too many lottery tickets, please draw first");
+            Assert(playerInformation.Bouts.Count < BetHistoryLimit, "There are too many lottery tickets, please draw first");
 
             Context.LogDebug(() => $"Playing with amount {input.BuyAmount}");
 
