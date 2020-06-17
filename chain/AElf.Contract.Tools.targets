@@ -3,7 +3,7 @@
     <PropertyGroup>
         <ProtoBaseDir>..\..\protobuf</ProtoBaseDir>
         <PatcherDir>..\..\scripts\patcher</PatcherDir>
-        <PatcherProjectName>AElf.Contracts.Deployer</PatcherProjectName>
+        <PatcherProjectName>AElf.Boilerplate.ContractPatcher</PatcherProjectName>
     </PropertyGroup>
 
     <ItemGroup>
@@ -73,6 +73,8 @@
             <IsContract Condition="'@(ContractCode)' != ''">true</IsContract>
             <IsSystemContract Condition="'@(ContractCode)' != '' And %(ContractCode.SystemContract) != '' And %(ContractCode.SystemContract)">true</IsSystemContract>
         </PropertyGroup>
+        <MSBuild Condition="'$(IsContract)' != '' AND '$(IsContract)'"
+                 Projects="$(ProjectDir)/../../src/$(PatcherProjectName)/$(PatcherProjectName).csproj"/>
     </Target>
     <!-- Patch the contract dll after building the contract -->
     <Target Name="PatchContractCode" Condition="'$(IsContract)' != '' AND '$(IsContract)'" AfterTargets="AfterBuild">
@@ -102,6 +104,13 @@
         <Copy Condition="Exists('$(TargetDir)$(TargetName).dll.patched')"
               SourceFiles="$(TargetDir)$(TargetName).dll.patched"
               DestinationFolder="../../test/patched"
+              SkipUnchangedFiles="true"/>
+    </Target>
+    <!-- Copy patched contract dll after publish to include in publish directory -->
+    <Target Name="CopyPatchedContractCodeToPublish" AfterTargets="Publish">
+        <Copy Condition="'$(IsContract)' != '' AND '$(IsContract)' AND Exists('$(TargetDir)$(TargetName).dll.patched')"
+              SourceFiles="$(TargetDir)$(TargetName).dll.patched"
+              DestinationFiles="$(PublishDir)/$(TargetName).dll"
               SkipUnchangedFiles="true"/>
     </Target>
 </Project>
