@@ -286,6 +286,12 @@ https://blog.csdn.net/MinggeQingchun/article/details/70049401
 
 https://www.jianshu.com/p/a50e4e098a08
 
+#### 3.How to get version from android & iOS
+
+Android: https://github.com/otkmnb2783/fastlane-plugin-android_versioning
+
+iOS: http://docs.fastlane.tools/actions/get_version_number/#get_version_number
+
 ## Advanced
 
 You can use one Fastlane file for you ReactNative project.

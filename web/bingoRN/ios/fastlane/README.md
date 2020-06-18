@@ -26,6 +26,11 @@ Push a new release build to the App Store
 fastlane ios fir_im
 ```
 Push a new release build to the firm
+### ios push_telegram
+```
+fastlane ios push_telegram
+```
+Push to telegram
 
 ----
 

@@ -13,10 +13,11 @@ import pTd from "../../../common/utils/unit";
 import { config } from "../../../common/utils/config";
 import { aelfInstance } from "../../../common/utils/aelfProvider";
 import addressUtils from "../../../common/utils/address";
+import deserializeCrossChainTransferInput from "../../../common/utils/deserializeContractIO/deserializeCrossChainTransferInput";
 
 const { explorerURL, tokenDecimalFormat } = config;
 
-export default class transactionDetail extends React.Component {
+export default class TransactionDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -61,7 +62,12 @@ export default class transactionDetail extends React.Component {
         const { txResult } = this.state;
         const { Transaction } = txResult;
         const params = JSON.parse(Transaction.Params);
-        const amount = params.amount / tokenDecimalFormat || '-';
+        let amount = params.amount;
+        if (params.transferTransactionBytes) {
+            const crossInput = deserializeCrossChainTransferInput(params.transferTransactionBytes);
+            amount = crossInput.amount;
+        }
+        amount = amount / tokenDecimalFormat || '-';
 
         const routerParams = this.props.navigation.getParam("params");
         const txType = routerParams.title === 'withdraw' ? 'WithDraw' : 'Recharge';
