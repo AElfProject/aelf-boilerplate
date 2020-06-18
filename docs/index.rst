@@ -12,15 +12,19 @@ Welcome to Boilerplate doc's documentation!
    Introduction <introduction>
 
 .. toctree::
-   :caption: Contract
+   :caption: System Contract
 
-   boilerplate
-   system-contract
+   contract/system-contract-main
+
+.. toctree::
+   :caption: Boilerplate
+
+   DApp/boilerplate-main
 
 
 .. toctree::
    :caption: Acs
 
-   acs
+   acs/acs-main
 
 

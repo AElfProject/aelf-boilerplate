@@ -1,5 +1,9 @@
 # Association Contract
 
+## Contract Introduction
+
+AELF provides permission management using organizations. This contract combines various organizations together to create a new organization. The organization can be structured in any way through a user's custom composition.
+
 ### **CreateOrganization**
 
 ```Protobuf

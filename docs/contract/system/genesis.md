@@ -1,6 +1,6 @@
 # Genesis Contract
 
-This page describes available methods on the Genesis Contract.
+This page describes available methods on the Genesis Contract. Users can get some information about contracts.
 
 ## Method documentation
 

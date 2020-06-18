@@ -1,6 +1,6 @@
 # multi-token
 
-The multi-token contract is most essentially used for managing balances.
+The multi-token contract is most essentially used for managing balances. Besides, the fee setting is controlled by it.
 
 ## Token life-cycle: creation, issuance and transfer.
 

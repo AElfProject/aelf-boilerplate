@@ -1,5 +1,7 @@
 # Token Holder Contract
 
+The Treasury contract is essentially used for building a bouns model for distributing bonus' to whom hold the token.
+
 ## **CreateScheme**
 
 ```Protobuf
