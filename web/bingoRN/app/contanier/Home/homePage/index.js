@@ -741,23 +741,31 @@ class MyHomePage extends React.Component {
 
                         <Divider style={styles.divider} />
                         <View style={styles.rules}>
-                            <Text>Game Rules</Text>
+                            <TextM>Game Rules</TextM>
                             <Text>
-                                The current block height and users's seed will be used to calculate a random number between [0, 255].
-                                And we will get small, middle, big.
+                                The Bingogame uses blockchain smart contracts to take data fragments as a seed number, calculated together with the blockheight  - it then generates a random number between 0 and 255.And we will get small (0-126), medium (127, 128), big (129-255).
+                            </Text>
+                            <TextM>Rules:</TextM>
+                            <Text>
+                                1. Players can select the big or small group.
                             </Text>
                             <Text>
-                                1.You can bet small and big.
+                                2. If the drawn number falls within your selected group, you can will double your bet. If the drawn number falls outside of your selected group, you will lose your bet. When the drawn number falls within the 'medium' group, the contract wins and all users lose their bet.
                             </Text>
                             <Text>
-                                2.Contracts always win when get middle.
+                                3. No more than 30 bets may be placed at one time.
+                            </Text>
+                            <TextM>Steps:</TextM>
+                            <Text>
+                                1. Player chooses select the big or small group, and places their bet amount AEUSD (bet amount minimum value is 0.001).
                             </Text>
                             <Text>
-                                3.No more than 30 bets in a time.
+                                2. After around 1 minute and the winning number will be drawn automatically
                             </Text>
-
-                            <Divider style={styles.divider} />
-
+                            <Text>
+                                3. Players can view the most recent 50 bets from the "My BET" section.
+                            </Text>
+                            {/* <Divider style={styles.divider} />
                             <Text>Game Operations</Text>
                             <Text>
                                 1. Select a bet type and bet your AEUSD.
@@ -767,7 +775,7 @@ class MyHomePage extends React.Component {
                             </Text>
                             <Text>
                                 3. You can get the last 50 history from My Bet in the MY BET.
-                            </Text>
+                            </Text> */}
 
                             <Divider style={styles.divider} />
 
