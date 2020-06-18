@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "724632134912",
+    "firebase_url": "https://aelfbingodevdemo.firebaseio.com",
+    "project_id": "aelfbingodevdemo",
+    "storage_bucket": "aelfbingodevdemo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:724632134912:android:116e80012a6726dbee7fe5",
+        "android_client_info": {
+          "package_name": "com.aelfbingodevdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "724632134912-4ooe8hgjitmgiqac7m1ksirlbete30sa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbEb2sRwilIDwt5NgE0qjdojvftTSK0R0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "724632134912-4ooe8hgjitmgiqac7m1ksirlbete30sa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
