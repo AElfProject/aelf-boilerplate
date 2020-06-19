@@ -182,14 +182,17 @@ class MyHomePage extends React.Component {
 
     async getBingoGameContractBalane() {
         const reduxStoreData = this.props.ReduxStore;
-        const { contracts } = reduxStoreData;
-        const { bingoGameContract } = contracts;
-        if (!(bingoGameContract && bingoGameContract.address)) {
-            return;
+        const { tempContracts } = reduxStoreData;
+
+        const { tokenContract, appContract } = tempContracts || {};
+        if (!appContract || !appContract.address || !tokenContract || !tokenContract.GetBalance) {
+            return
         }
 
-        const balance = await this.getTokenBalance(null, bingoGameContract.address);
-
+        const balance = await tokenContract.GetBalance.call({
+            symbol: tokenSymbol,
+            owner: appContract.address
+        });
         if (!balance) {
             return;
         }
@@ -243,7 +246,7 @@ class MyHomePage extends React.Component {
             console.log('Promise.all: ', result);
         }).catch(error => {
             this.tipMsg('Refresh error');
-            console.log('onRefresh: ', e);
+            console.log('onRefresh: ', error);
         }).then(() => {
             this.setState({
                 pullRefreshing: false
