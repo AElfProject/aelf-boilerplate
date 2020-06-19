@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AElf 0.6.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-28 13:50+0800\n"
+"POT-Creation-Date: 2020-06-19 09:05+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,18 +22,35 @@ msgid "Introduction"
 msgstr ""
 
 #: ../index.rst:14
-msgid "System Contract"
+msgid "System Contract API"
 msgstr ""
 
-#: ../index.rst:19
-msgid "Boilerplate"
+#: ../index.rst:14
+msgid "ACS Introduction"
 msgstr ""
 
-#: ../index.rst:25
-msgid "Acs"
+#: ../index.rst:14
+msgid "Demo"
+msgstr ""
+
+#: ../index.rst:14
+msgid "DAPP"
+msgstr ""
+
+#: ../index.rst:14
+msgid "Contract"
 msgstr ""
 
 #: ../index.rst:7
 msgid "Welcome to Boilerplate doc's documentation!"
 msgstr ""
+
+#~ msgid "System Contract"
+#~ msgstr ""
+
+#~ msgid "Boilerplate"
+#~ msgstr ""
+
+#~ msgid "Acs"
+#~ msgstr ""
 

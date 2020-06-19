@@ -1,0 +1,6430 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) todo
+# This file is distributed under the same license as the AElf package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: AElf 0.6.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-19 09:05+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.0\n"
+
+#: ../system-contract/association.md:1 ../system-contract/index.rst:10
+msgid "Association Contract"
+msgstr ""
+
+#: ../system-contract/association.md:3 ../system-contract/parliament.md:19
+#: ../system-contract/referendum.md:3
+msgid "CreateOrganization"
+msgstr ""
+
+#: ../system-contract/association.md:23 ../system-contract/referendum.md:19
+msgid "Creates an organization and returns its address."
+msgstr ""
+
+#: ../system-contract/association.md:25 ../system-contract/association.md:75
+#: ../system-contract/association.md:444 ../system-contract/parliament.md:37
+#: ../system-contract/parliament.md:76 ../system-contract/parliament.md:488
+#: ../system-contract/referendum.md:21 ../system-contract/referendum.md:426
+msgid "CreateOrganizationInput"
+msgstr ""
+
+#: ../system-contract/association.md:26
+msgid "organizer member list:"
+msgstr ""
+
+#: ../system-contract/association.md:27 ../system-contract/association.md:77
+#: ../system-contract/association.md:446
+msgid "organization_members: initial organization members."
+msgstr ""
+
+#: ../system-contract/association.md:28 ../system-contract/association.md:447
+#: ../system-contract/parliament.md:260 ../system-contract/parliament.md:389
+#: ../system-contract/referendum.md:23 ../system-contract/referendum.md:67
+msgid "ProposalReleaseThreshold:"
+msgstr ""
+
+#: ../system-contract/association.md:29 ../system-contract/association.md:79
+#: ../system-contract/association.md:420 ../system-contract/association.md:448
+msgid "minimal approval threshold: the value for the minimum approval threshold."
+msgstr ""
+
+#: ../system-contract/association.md:30 ../system-contract/association.md:80
+#: ../system-contract/association.md:421 ../system-contract/association.md:449
+msgid ""
+"maximal rejection threshold: the value for the maximal rejection "
+"threshold."
+msgstr ""
+
+#: ../system-contract/association.md:31 ../system-contract/association.md:81
+#: ../system-contract/association.md:422 ../system-contract/association.md:450
+msgid ""
+"maximal abstention threshold: the value for the maximal abstention "
+"threshold."
+msgstr ""
+
+#: ../system-contract/association.md:32 ../system-contract/association.md:82
+#: ../system-contract/association.md:423 ../system-contract/association.md:451
+msgid "minimal vote threshold: the value for the minimal vote threshold."
+msgstr ""
+
+#: ../system-contract/association.md:33 ../system-contract/association.md:83
+#: ../system-contract/association.md:322 ../system-contract/association.md:452
+#: ../system-contract/parliament.md:292 ../system-contract/referendum.md:28
+#: ../system-contract/referendum.md:72 ../system-contract/referendum.md:305
+#: ../system-contract/referendum.md:408 ../system-contract/referendum.md:433
+msgid "ProposerWhiteList:"
+msgstr ""
+
+#: ../system-contract/association.md:34 ../system-contract/association.md:84
+#: ../system-contract/association.md:453
+msgid "proposers: proposer whitelist."
+msgstr ""
+
+#: ../system-contract/association.md:36 ../system-contract/association.md:87
+#: ../system-contract/association.md:156 ../system-contract/association.md:361
+#: ../system-contract/association.md:392 ../system-contract/association.md:416
+#: ../system-contract/association.md:455 ../system-contract/association.md:483
+#: ../system-contract/association.md:515 ../system-contract/parliament.md:46
+#: ../system-contract/parliament.md:86 ../system-contract/parliament.md:129
+#: ../system-contract/parliament.md:331 ../system-contract/parliament.md:360
+#: ../system-contract/parliament.md:384 ../system-contract/parliament.md:402
+#: ../system-contract/parliament.md:415 ../system-contract/parliament.md:431
+#: ../system-contract/parliament.md:450 ../system-contract/parliament.md:469
+#: ../system-contract/parliament.md:497 ../system-contract/parliament.md:524
+#: ../system-contract/parliament.md:556 ../system-contract/referendum.md:31
+#: ../system-contract/referendum.md:76 ../system-contract/referendum.md:344
+#: ../system-contract/referendum.md:374 ../system-contract/referendum.md:398
+#: ../system-contract/referendum.md:436 ../system-contract/referendum.md:449
+#: ../system-contract/referendum.md:477 ../system-contract/referendum.md:509
+msgid "Returns"
+msgstr ""
+
+#: ../system-contract/association.md:37 ../system-contract/association.md:88
+#: ../system-contract/parliament.md:47 ../system-contract/parliament.md:87
+msgid "Address: the address of newly created organization."
+msgstr ""
+
+#: ../system-contract/association.md:39 ../system-contract/association.md:90
+#: ../system-contract/parliament.md:50 ../system-contract/parliament.md:89
+#: ../system-contract/referendum.md:34 ../system-contract/referendum.md:79
+msgid ""
+"After a successful execution, an OrganizationCreated event log can be "
+"found in the transaction result."
+msgstr ""
+
+#: ../system-contract/association.md:41 ../system-contract/association.md:92
+#: ../system-contract/association.md:161 ../system-contract/association.md:185
+#: ../system-contract/association.md:213 ../system-contract/association.md:241
+#: ../system-contract/association.md:261 ../system-contract/association.md:298
+#: ../system-contract/association.md:327 ../system-contract/association.md:366
+#: ../system-contract/parliament.md:52 ../system-contract/parliament.md:91
+#: ../system-contract/parliament.md:134 ../system-contract/parliament.md:158
+#: ../system-contract/parliament.md:186 ../system-contract/parliament.md:214
+#: ../system-contract/parliament.md:234 ../system-contract/parliament.md:268
+#: ../system-contract/parliament.md:297 ../system-contract/parliament.md:336
+#: ../system-contract/referendum.md:36 ../system-contract/referendum.md:81
+#: ../system-contract/referendum.md:135 ../system-contract/referendum.md:161
+#: ../system-contract/referendum.md:193 ../system-contract/referendum.md:225
+#: ../system-contract/referendum.md:247 ../system-contract/referendum.md:281
+#: ../system-contract/referendum.md:310 ../system-contract/referendum.md:349
+msgid "Events"
+msgstr ""
+
+#: ../system-contract/association.md:42 ../system-contract/association.md:93
+#: ../system-contract/parliament.md:53 ../system-contract/parliament.md:92
+#: ../system-contract/referendum.md:37 ../system-contract/referendum.md:82
+msgid "OrganizationCreated"
+msgstr ""
+
+#: ../system-contract/association.md:43 ../system-contract/referendum.md:38
+#: ../system-contract/referendum.md:83
+msgid "organization address: the address of newly created organization"
+msgstr ""
+
+#: ../system-contract/association.md:46 ../system-contract/parliament.md:57
+#: ../system-contract/referendum.md:41
+msgid "CreateOrganizationBySystemContract"
+msgstr ""
+
+#: ../system-contract/association.md:72
+msgid "Creates an organization by system contract and returns its address."
+msgstr ""
+
+#: ../system-contract/association.md:74 ../system-contract/parliament.md:75
+msgid "CreateOrganizationBySystemContractInput"
+msgstr ""
+
+#: ../system-contract/association.md:76
+msgid "OrganizationMemberList"
+msgstr ""
+
+#: ../system-contract/association.md:78 ../system-contract/association.md:290
+#: ../system-contract/association.md:419 ../system-contract/parliament.md:38
+#: ../system-contract/parliament.md:77 ../system-contract/parliament.md:489
+#: ../system-contract/referendum.md:273 ../system-contract/referendum.md:400
+#: ../system-contract/referendum.md:428
+msgid "ProposalReleaseThreshold"
+msgstr ""
+
+#: ../system-contract/association.md:85 ../system-contract/parliament.md:84
+#: ../system-contract/referendum.md:74
+msgid ""
+"organization address feedback method: organization address callback "
+"method which replies the organization address to caller contract."
+msgstr ""
+
+#: ../system-contract/association.md:94 ../system-contract/parliament.md:54
+#: ../system-contract/parliament.md:93
+msgid "organization address: the address of newly created organization."
+msgstr ""
+
+#: ../system-contract/association.md:96
+msgid "ChangeOrganizationMember"
+msgstr ""
+
+#: ../system-contract/association.md:112
+msgid ""
+"Changes the members of the organization. Note that this will override the"
+" current list."
+msgstr ""
+
+#: ../system-contract/association.md:114
+msgid "OrganizationMemberList:"
+msgstr ""
+
+#: ../system-contract/association.md:115
+msgid "organization_members: the new members."
+msgstr ""
+
+#: ../system-contract/association.md:117
+msgid ""
+"After a successful execution, an OrganizationMemberChanged event log can "
+"be found in the transaction result."
+msgstr ""
+
+#: ../system-contract/association.md:119
+msgid "OrganizationMemberChanged:"
+msgstr ""
+
+#: ../system-contract/association.md:120 ../system-contract/association.md:300
+#: ../system-contract/association.md:329 ../system-contract/parliament.md:270
+#: ../system-contract/parliament.md:299 ../system-contract/referendum.md:283
+#: ../system-contract/referendum.md:312
+msgid "organization_address: the organization address."
+msgstr ""
+
+#: ../system-contract/association.md:121
+msgid "organization_member_list: the new member list."
+msgstr ""
+
+#: ../system-contract/association.md:123 ../system-contract/parliament.md:96
+#: ../system-contract/referendum.md:97
+msgid "ACS3 specific methods"
+msgstr ""
+
+#: ../system-contract/association.md:125 ../system-contract/parliament.md:98
+#: ../system-contract/referendum.md:99
+msgid "CreateProposal"
+msgstr ""
+
+#: ../system-contract/association.md:146 ../system-contract/parliament.md:119
+#: ../system-contract/referendum.md:120
+msgid ""
+"This method creates a proposal for which organization members can vote. "
+"When the proposal is released, a transaction will be sent to the "
+"specified contract."
+msgstr ""
+
+#: ../system-contract/association.md:148 ../system-contract/association.md:352
+#: ../system-contract/parliament.md:121
+msgid "CreateProposalInput"
+msgstr ""
+
+#: ../system-contract/association.md:149 ../system-contract/association.md:353
+#: ../system-contract/parliament.md:122 ../system-contract/parliament.md:323
+#: ../system-contract/referendum.md:123 ../system-contract/referendum.md:336
+msgid "contract method name: the name of the method to call after release."
+msgstr ""
+
+#: ../system-contract/association.md:150 ../system-contract/association.md:354
+#: ../system-contract/parliament.md:123 ../system-contract/parliament.md:324
+#: ../system-contract/referendum.md:124 ../system-contract/referendum.md:337
+msgid "to address: the address of the contract to call after release."
+msgstr ""
+
+#: ../system-contract/association.md:151 ../system-contract/parliament.md:124
+#: ../system-contract/referendum.md:125
+msgid "expiration: the timestamp at which this proposal will expire."
+msgstr ""
+
+#: ../system-contract/association.md:152 ../system-contract/association.md:356
+#: ../system-contract/parliament.md:125 ../system-contract/parliament.md:326
+#: ../system-contract/referendum.md:126 ../system-contract/referendum.md:339
+msgid "organization address: the address of the organization."
+msgstr ""
+
+#: ../system-contract/association.md:153 ../system-contract/association.md:357
+#: ../system-contract/parliament.md:126 ../system-contract/parliament.md:327
+#: ../system-contract/referendum.md:127 ../system-contract/referendum.md:340
+msgid "proposal_description_url: the url is used for proposal describing."
+msgstr ""
+
+#: ../system-contract/association.md:154 ../system-contract/parliament.md:127
+#: ../system-contract/referendum.md:128
+msgid ""
+"token: the token is for proposal id generation and with this token, "
+"proposal id can be calculated before proposing."
+msgstr ""
+
+#: ../system-contract/association.md:157 ../system-contract/parliament.md:130
+#: ../system-contract/referendum.md:131
+msgid "Hash: id of the newly created proposal."
+msgstr ""
+
+#: ../system-contract/association.md:159 ../system-contract/association.md:364
+#: ../system-contract/cross-chain.md:71 ../system-contract/cross-chain.md:208
+#: ../system-contract/parliament.md:132 ../system-contract/referendum.md:133
+#: ../system-contract/referendum.md:347
+msgid ""
+"After a successful execution, a ProposalCreated event log can be found in"
+" the transaction result."
+msgstr ""
+
+#: ../system-contract/association.md:162 ../system-contract/parliament.md:135
+#: ../system-contract/referendum.md:136
+msgid "ProposalCreated"
+msgstr ""
+
+#: ../system-contract/association.md:163 ../system-contract/association.md:368
+#: ../system-contract/parliament.md:136 ../system-contract/parliament.md:338
+#: ../system-contract/referendum.md:137 ../system-contract/referendum.md:351
+msgid "proposal_id: id of the created proposal."
+msgstr ""
+
+#: ../system-contract/association.md:166 ../system-contract/multi-token.md:103
+#: ../system-contract/parliament.md:139 ../system-contract/referendum.md:140
+msgid "Approve"
+msgstr ""
+
+#: ../system-contract/association.md:179 ../system-contract/parliament.md:152
+msgid "This method is called to approve the specified proposal."
+msgstr ""
+
+#: ../system-contract/association.md:181 ../system-contract/association.md:209
+#: ../system-contract/association.md:237 ../system-contract/association.md:257
+#: ../system-contract/parliament.md:154 ../system-contract/parliament.md:182
+#: ../system-contract/parliament.md:210 ../system-contract/referendum.md:157
+#: ../system-contract/referendum.md:189 ../system-contract/referendum.md:221
+#: ../system-contract/referendum.md:447
+msgid "Hash: id of the proposal."
+msgstr ""
+
+#: ../system-contract/association.md:183 ../system-contract/association.md:211
+#: ../system-contract/association.md:239 ../system-contract/association.md:259
+#: ../system-contract/parliament.md:156 ../system-contract/parliament.md:184
+#: ../system-contract/parliament.md:212
+msgid ""
+"After a successful execution, a ReceiptCreated event log can be found in "
+"the transaction result."
+msgstr ""
+
+#: ../system-contract/association.md:186 ../system-contract/association.md:214
+#: ../system-contract/association.md:242 ../system-contract/association.md:262
+#: ../system-contract/parliament.md:159 ../system-contract/parliament.md:187
+#: ../system-contract/parliament.md:215
+msgid "ReceiptCreated"
+msgstr ""
+
+#: ../system-contract/association.md:187 ../system-contract/association.md:215
+#: ../system-contract/association.md:243 ../system-contract/association.md:263
+#: ../system-contract/association.md:485 ../system-contract/parliament.md:160
+#: ../system-contract/parliament.md:188 ../system-contract/parliament.md:216
+#: ../system-contract/parliament.md:236 ../system-contract/parliament.md:526
+#: ../system-contract/referendum.md:163 ../system-contract/referendum.md:195
+#: ../system-contract/referendum.md:227 ../system-contract/referendum.md:249
+#: ../system-contract/referendum.md:479
+msgid "proposal id: id of the proposal."
+msgstr ""
+
+#: ../system-contract/association.md:188 ../system-contract/association.md:216
+#: ../system-contract/association.md:244
+msgid "address: send address."
+msgstr ""
+
+#: ../system-contract/association.md:189 ../system-contract/parliament.md:162
+#: ../system-contract/referendum.md:167
+msgid "receipt type: Approve."
+msgstr ""
+
+#: ../system-contract/association.md:190 ../system-contract/association.md:218
+#: ../system-contract/association.md:246 ../system-contract/association.md:266
+#: ../system-contract/parliament.md:163 ../system-contract/parliament.md:191
+#: ../system-contract/parliament.md:219 ../system-contract/referendum.md:168
+#: ../system-contract/referendum.md:200 ../system-contract/referendum.md:232
+msgid "time: timestamp of this method call."
+msgstr ""
+
+#: ../system-contract/association.md:193 ../system-contract/parliament.md:166
+#: ../system-contract/referendum.md:171
+msgid "Reject"
+msgstr ""
+
+#: ../system-contract/association.md:207 ../system-contract/parliament.md:180
+msgid "This method is called to reject the specified proposal."
+msgstr ""
+
+#: ../system-contract/association.md:217 ../system-contract/parliament.md:190
+#: ../system-contract/referendum.md:199
+msgid "receipt type: Reject."
+msgstr ""
+
+#: ../system-contract/association.md:221 ../system-contract/parliament.md:194
+#: ../system-contract/referendum.md:203
+msgid "Abstain"
+msgstr ""
+
+#: ../system-contract/association.md:235 ../system-contract/parliament.md:208
+msgid "This method is called to abstain from the specified proposal."
+msgstr ""
+
+#: ../system-contract/association.md:245 ../system-contract/association.md:265
+#: ../system-contract/parliament.md:218 ../system-contract/referendum.md:231
+msgid "receipt type: Abstain."
+msgstr ""
+
+#: ../system-contract/association.md:249 ../system-contract/parliament.md:222
+#: ../system-contract/referendum.md:235
+msgid "Release"
+msgstr ""
+
+#: ../system-contract/association.md:255 ../system-contract/parliament.md:228
+#: ../system-contract/referendum.md:241
+msgid "This method is called to release the specified proposal."
+msgstr ""
+
+#: ../system-contract/association.md:264 ../system-contract/parliament.md:217
+msgid "address: send address who votes for abstention."
+msgstr ""
+
+#: ../system-contract/association.md:269 ../system-contract/parliament.md:239
+#: ../system-contract/referendum.md:252
+msgid "ChangeOrganizationThreshold"
+msgstr ""
+
+#: ../system-contract/association.md:288 ../system-contract/parliament.md:258
+#: ../system-contract/referendum.md:271
+msgid ""
+"This method changes the thresholds associated with proposals. All fields "
+"will be overwritten by the input value and this will affect all current "
+"proposals of the organization. Note: only the organization can execute "
+"this through a proposal."
+msgstr ""
+
+#: ../system-contract/association.md:291 ../system-contract/parliament.md:261
+msgid ""
+"minimal approval threshold: the new value for the minimum approval "
+"threshold."
+msgstr ""
+
+#: ../system-contract/association.md:292 ../system-contract/parliament.md:262
+msgid ""
+"maximal rejection threshold: the new value for the maximal rejection "
+"threshold."
+msgstr ""
+
+#: ../system-contract/association.md:293 ../system-contract/parliament.md:263
+msgid ""
+"maximal abstention threshold: the new value for the maximal abstention "
+"threshold."
+msgstr ""
+
+#: ../system-contract/association.md:294 ../system-contract/parliament.md:264
+msgid "minimal vote threshold: the new value for the minimal vote threshold."
+msgstr ""
+
+#: ../system-contract/association.md:296 ../system-contract/parliament.md:266
+#: ../system-contract/referendum.md:279
+msgid ""
+"After a successful execution, an OrganizationThresholdChanged event log "
+"can be found in the transaction result."
+msgstr ""
+
+#: ../system-contract/association.md:299 ../system-contract/parliament.md:269
+#: ../system-contract/referendum.md:282
+msgid "OrganizationThresholdChanged"
+msgstr ""
+
+#: ../system-contract/association.md:301 ../system-contract/parliament.md:271
+#: ../system-contract/referendum.md:284
+msgid "proposer_release_threshold: the new release threshold."
+msgstr ""
+
+#: ../system-contract/association.md:304 ../system-contract/parliament.md:274
+#: ../system-contract/referendum.md:287
+msgid "ChangeOrganizationProposerWhiteList"
+msgstr ""
+
+#: ../system-contract/association.md:320 ../system-contract/parliament.md:290
+#: ../system-contract/referendum.md:303
+msgid "This method overrides the list of whitelisted proposers."
+msgstr ""
+
+#: ../system-contract/association.md:323 ../system-contract/referendum.md:306
+msgid "proposers: the new value for the proposer whitelist."
+msgstr ""
+
+#: ../system-contract/association.md:325 ../system-contract/referendum.md:308
+msgid ""
+"After a successful execution, a OrganizationWhiteListChanged event log "
+"can be found in the transaction result."
+msgstr ""
+
+#: ../system-contract/association.md:328 ../system-contract/parliament.md:298
+#: ../system-contract/referendum.md:311
+msgid "OrganizationWhiteListChanged"
+msgstr ""
+
+#: ../system-contract/association.md:330 ../system-contract/parliament.md:300
+#: ../system-contract/referendum.md:313
+msgid "proposer_white_list: the new proposer whitelist."
+msgstr ""
+
+#: ../system-contract/association.md:333 ../system-contract/parliament.md:303
+#: ../system-contract/referendum.md:316
+msgid "CreateProposalBySystemContract"
+msgstr ""
+
+#: ../system-contract/association.md:349 ../system-contract/parliament.md:319
+#: ../system-contract/referendum.md:332
+msgid "Used by system contracts to create proposals."
+msgstr ""
+
+#: ../system-contract/association.md:351
+msgid "CreateProposalBySystemContractInput"
+msgstr ""
+
+#: ../system-contract/association.md:355 ../system-contract/association.md:489
+#: ../system-contract/parliament.md:325 ../system-contract/parliament.md:530
+#: ../system-contract/referendum.md:338 ../system-contract/referendum.md:483
+msgid "expiration: the date at which this proposal will expire."
+msgstr ""
+
+#: ../system-contract/association.md:358 ../system-contract/parliament.md:328
+#: ../system-contract/referendum.md:341
+msgid ""
+"token: the token is for proposal id generation and proposal id can be "
+"calculated before proposing."
+msgstr ""
+
+#: ../system-contract/association.md:359 ../system-contract/parliament.md:329
+#: ../system-contract/referendum.md:342
+msgid "origin proposer: the actor that trigger the call."
+msgstr ""
+
+#: ../system-contract/association.md:362 ../system-contract/referendum.md:32
+#: ../system-contract/referendum.md:77 ../system-contract/referendum.md:345
+msgid "Address: newly created organization address."
+msgstr ""
+
+#: ../system-contract/association.md:367 ../system-contract/parliament.md:337
+#: ../system-contract/referendum.md:350
+msgid "ProposalCreated:"
+msgstr ""
+
+#: ../system-contract/association.md:371 ../system-contract/parliament.md:340
+#: ../system-contract/referendum.md:354
+msgid "ClearProposal"
+msgstr ""
+
+#: ../system-contract/association.md:377 ../system-contract/parliament.md:345
+#: ../system-contract/referendum.md:360
+msgid "Removes the specified proposal."
+msgstr ""
+
+#: ../system-contract/association.md:379 ../system-contract/parliament.md:347
+#: ../system-contract/referendum.md:362
+msgid "Hash: id of the proposal to be cleared."
+msgstr ""
+
+#: ../system-contract/association.md:382 ../system-contract/parliament.md:350
+#: ../system-contract/referendum.md:365
+msgid "ValidateOrganizationExist"
+msgstr ""
+
+#: ../system-contract/association.md:388 ../system-contract/parliament.md:356
+#: ../system-contract/referendum.md:370
+msgid "Checks the existence of an organization."
+msgstr ""
+
+#: ../system-contract/association.md:390 ../system-contract/parliament.md:358
+#: ../system-contract/referendum.md:372
+msgid "Address: organization address to be checked."
+msgstr ""
+
+#: ../system-contract/association.md:393 ../system-contract/parliament.md:361
+#: ../system-contract/referendum.md:375
+msgid "BoolValue: indicates whether the organization exists."
+msgstr ""
+
+#: ../system-contract/association.md:396 ../system-contract/multi-token.md:477
+#: ../system-contract/parliament.md:364 ../system-contract/referendum.md:378
+#: ../system-contract/token-holder.md:133
+msgid "View methods"
+msgstr ""
+
+#: ../system-contract/association.md:398 ../system-contract/parliament.md:366
+#: ../system-contract/referendum.md:380
+msgid "GetOrganization"
+msgstr ""
+
+#: ../system-contract/association.md:412
+msgid "Returns the organization with the specified address."
+msgstr ""
+
+#: ../system-contract/association.md:414 ../system-contract/association.md:456
+#: ../system-contract/parliament.md:382 ../system-contract/parliament.md:498
+#: ../system-contract/referendum.md:396 ../system-contract/referendum.md:437
+msgid "Address: organization address."
+msgstr ""
+
+#: ../system-contract/association.md:417 ../system-contract/parliament.md:385
+#: ../system-contract/referendum.md:399
+msgid "Organization"
+msgstr ""
+
+#: ../system-contract/association.md:418
+msgid "member list: original members of this organization."
+msgstr ""
+
+#: ../system-contract/association.md:424 ../system-contract/parliament.md:432
+msgid "ProposerWhiteList"
+msgstr ""
+
+#: ../system-contract/association.md:425
+msgid "proposers: proposer list."
+msgstr ""
+
+#: ../system-contract/association.md:426
+msgid "address: the organizations address."
+msgstr ""
+
+#: ../system-contract/association.md:427
+msgid "hash: the organizations id."
+msgstr ""
+
+#: ../system-contract/association.md:430 ../system-contract/parliament.md:474
+#: ../system-contract/referendum.md:412
+msgid "CalculateOrganizationAddress"
+msgstr ""
+
+#: ../system-contract/association.md:442 ../system-contract/parliament.md:486
+#: ../system-contract/referendum.md:424
+msgid "Calculates with input and returns the organization address."
+msgstr ""
+
+#: ../system-contract/association.md:445
+msgid "organizer member list"
+msgstr ""
+
+#: ../system-contract/association.md:459 ../system-contract/parliament.md:500
+#: ../system-contract/referendum.md:453
+msgid "GetProposal"
+msgstr ""
+
+#: ../system-contract/association.md:479 ../system-contract/parliament.md:520
+msgid "Get the proposal with the given id."
+msgstr ""
+
+#: ../system-contract/association.md:481 ../system-contract/parliament.md:522
+#: ../system-contract/referendum.md:94 ../system-contract/referendum.md:475
+msgid "Hash: proposal id."
+msgstr ""
+
+#: ../system-contract/association.md:484 ../system-contract/parliament.md:525
+#: ../system-contract/referendum.md:478
+msgid "ProposalOutput"
+msgstr ""
+
+#: ../system-contract/association.md:486 ../system-contract/parliament.md:527
+#: ../system-contract/referendum.md:480
+msgid "method name: the method that this proposal will call when being released."
+msgstr ""
+
+#: ../system-contract/association.md:487 ../system-contract/parliament.md:528
+#: ../system-contract/referendum.md:481
+msgid "to address: the address of the target contract."
+msgstr ""
+
+#: ../system-contract/association.md:488 ../system-contract/parliament.md:529
+#: ../system-contract/referendum.md:482
+msgid "params: the parameters of the release transaction."
+msgstr ""
+
+#: ../system-contract/association.md:490 ../system-contract/parliament.md:531
+#: ../system-contract/referendum.md:484
+msgid "organization address: address of this proposals organization."
+msgstr ""
+
+#: ../system-contract/association.md:491 ../system-contract/parliament.md:532
+#: ../system-contract/referendum.md:485
+msgid "proposer: address of the proposer of this proposal."
+msgstr ""
+
+#: ../system-contract/association.md:492 ../system-contract/parliament.md:533
+#: ../system-contract/referendum.md:486
+msgid "to be release: indicates if this proposal is releasable."
+msgstr ""
+
+#: ../system-contract/association.md:493
+msgid "approval count: approval count for this proposal"
+msgstr ""
+
+#: ../system-contract/association.md:494
+msgid "rejection count: rejection count for this proposal"
+msgstr ""
+
+#: ../system-contract/association.md:495
+msgid "abstention count: abstention count for this proposal"
+msgstr ""
+
+#: ../system-contract/association.md:498 ../system-contract/parliament.md:539
+#: ../system-contract/referendum.md:492
+msgid "ValidateProposerInWhiteList"
+msgstr ""
+
+#: ../system-contract/association.md:509 ../system-contract/parliament.md:550
+#: ../system-contract/referendum.md:503
+msgid "Checks if the proposer is whitelisted."
+msgstr ""
+
+#: ../system-contract/association.md:511 ../system-contract/parliament.md:552
+#: ../system-contract/referendum.md:505
+msgid "ValidateProposerInWhiteListInput"
+msgstr ""
+
+#: ../system-contract/association.md:512 ../system-contract/parliament.md:553
+#: ../system-contract/referendum.md:506
+msgid "proposer: the address to search/check."
+msgstr ""
+
+#: ../system-contract/association.md:513 ../system-contract/parliament.md:554
+#: ../system-contract/referendum.md:507
+msgid "organization address: address of the organization."
+msgstr ""
+
+#: ../system-contract/association.md:516 ../system-contract/parliament.md:557
+#: ../system-contract/referendum.md:510
+msgid "BoolValue: indicates whether the proposer is whitelisted."
+msgstr ""
+
+#: ../system-contract/configuration.md:1 ../system-contract/index.rst:10
+msgid "Configuration Contract"
+msgstr ""
+
+#: ../system-contract/configuration.md:3
+msgid ""
+"This contract's controller(the default is parliament) is able to save "
+"data(configuration) on the block chain."
+msgstr ""
+
+#: ../system-contract/configuration.md:5
+msgid "SetConfiguration"
+msgstr ""
+
+#: ../system-contract/configuration.md:7
+msgid "This method is used to add or reset configurations."
+msgstr ""
+
+#: ../system-contract/configuration.md:19
+msgid "SetConfigurationInput:"
+msgstr ""
+
+#: ../system-contract/configuration.md:21
+msgid "key: the configuration's key."
+msgstr ""
+
+#: ../system-contract/configuration.md:22
+msgid "value: the configuration's value(bianry data)."
+msgstr ""
+
+#: ../system-contract/configuration.md:24
+msgid "ChangeConfigurationController"
+msgstr ""
+
+#: ../system-contract/configuration.md:26
+#: ../system-contract/token-convert.md:145
+msgid "The controller can be transfer to others."
+msgstr ""
+
+#: ../system-contract/configuration.md:38
+#: ../system-contract/configuration.md:90 ../system-contract/economic.md:102
+#: ../system-contract/multi-token.md:452 ../system-contract/multi-token.md:470
+#: ../system-contract/multi-token.md:813
+#: ../system-contract/token-convert.md:157
+#: ../system-contract/token-convert.md:209 ../system-contract/treasury.md:126
+msgid "AuthorityInfo:"
+msgstr ""
+
+#: ../system-contract/configuration.md:40
+#: ../system-contract/configuration.md:92
+#: ../system-contract/configuration.md:172 ../system-contract/economic.md:104
+#: ../system-contract/token-convert.md:159
+#: ../system-contract/token-convert.md:211
+msgid "contract address: new controller's contract address."
+msgstr ""
+
+#: ../system-contract/configuration.md:41
+#: ../system-contract/configuration.md:93
+#: ../system-contract/configuration.md:173 ../system-contract/economic.md:105
+#: ../system-contract/token-convert.md:160
+#: ../system-contract/token-convert.md:212
+msgid "owner address: new controller's address."
+msgstr ""
+
+#: ../system-contract/configuration.md:43 ../system-contract/economic.md:55
+#: ../system-contract/token-convert.md:162
+msgid "ACS1 Implementation"
+msgstr ""
+
+#: ../system-contract/configuration.md:45 ../system-contract/economic.md:57
+#: ../system-contract/token-convert.md:164
+msgid "For reference, you can find here the methods implementing acs1."
+msgstr ""
+
+#: ../system-contract/configuration.md:47 ../system-contract/economic.md:59
+#: ../system-contract/token-convert.md:166
+msgid "SetMethodFee"
+msgstr ""
+
+#: ../system-contract/configuration.md:49 ../system-contract/economic.md:61
+#: ../system-contract/token-convert.md:168
+msgid "It sets method fee."
+msgstr ""
+
+#: ../system-contract/configuration.md:66 ../system-contract/economic.md:78
+#: ../system-contract/token-convert.md:185
+msgid "MethodFees:"
+msgstr ""
+
+#: ../system-contract/configuration.md:68 ../system-contract/economic.md:80
+#: ../system-contract/token-convert.md:187
+msgid "method name the method name in this contract."
+msgstr ""
+
+#: ../system-contract/configuration.md:69 ../system-contract/economic.md:81
+#: ../system-contract/token-convert.md:188
+msgid "fees fee list."
+msgstr ""
+
+#: ../system-contract/configuration.md:71 ../system-contract/economic.md:83
+#: ../system-contract/token-convert.md:190
+msgid "MethodFee:"
+msgstr ""
+
+#: ../system-contract/configuration.md:73 ../system-contract/economic.md:85
+#: ../system-contract/token-convert.md:192
+msgid "symbol token symbol."
+msgstr ""
+
+#: ../system-contract/configuration.md:74 ../system-contract/economic.md:86
+#: ../system-contract/token-convert.md:193
+msgid "basic fee fee."
+msgstr ""
+
+#: ../system-contract/configuration.md:76 ../system-contract/economic.md:88
+#: ../system-contract/token-convert.md:195
+msgid "ChangeMethodFeeController"
+msgstr ""
+
+#: ../system-contract/configuration.md:78 ../system-contract/economic.md:90
+#: ../system-contract/token-convert.md:197
+msgid "Change the method fee controller, the default is Parliament."
+msgstr ""
+
+#: ../system-contract/configuration.md:95 ../system-contract/economic.md:107
+#: ../system-contract/token-convert.md:214
+msgid "GetMethodFee"
+msgstr ""
+
+#: ../system-contract/configuration.md:97
+#: ../system-contract/configuration.md:113 ../system-contract/economic.md:109
+#: ../system-contract/economic.md:125 ../system-contract/token-convert.md:216
+#: ../system-contract/token-convert.md:232
+msgid "This mehtod is used to query the method fee information."
+msgstr ""
+
+#: ../system-contract/configuration.md:109 ../system-contract/economic.md:121
+#: ../system-contract/token-convert.md:228
+msgid "note: for MethodFees see SetMethodFee"
+msgstr ""
+
+#: ../system-contract/configuration.md:111 ../system-contract/economic.md:123
+#: ../system-contract/token-convert.md:230
+msgid "GetMethodFeeController"
+msgstr ""
+
+#: ../system-contract/configuration.md:125 ../system-contract/economic.md:137
+#: ../system-contract/token-convert.md:244
+msgid "note: for AuthorityInfo see ChangeMethodFeeController"
+msgstr ""
+
+#: ../system-contract/configuration.md:127 ../system-contract/consensus.md:5
+#: ../system-contract/election.md:109 ../system-contract/profit.md:268
+#: ../system-contract/resource.md:90 ../system-contract/token-convert.md:246
+#: ../system-contract/treasury.md:131 ../system-contract/vote.md:204
+msgid "view methods"
+msgstr ""
+
+#: ../system-contract/configuration.md:129 ../system-contract/consensus.md:7
+#: ../system-contract/election.md:111 ../system-contract/profit.md:270
+#: ../system-contract/resource.md:92 ../system-contract/token-convert.md:248
+#: ../system-contract/treasury.md:133 ../system-contract/vote.md:206
+msgid "For reference, you can find here the available view methods."
+msgstr ""
+
+#: ../system-contract/configuration.md:131
+msgid "GetConfiguration"
+msgstr ""
+
+#: ../system-contract/configuration.md:133
+msgid "This method is used to query a configurations."
+msgstr ""
+
+#: ../system-contract/configuration.md:148 ../system-contract/election.md:171
+#: ../system-contract/election.md:301 ../system-contract/election.md:353
+#: ../system-contract/election.md:421 ../system-contract/election.md:473
+#: ../system-contract/election.md:523 ../system-contract/election.md:589
+#: ../system-contract/token-convert.md:392
+msgid "StringValue:"
+msgstr ""
+
+#: ../system-contract/configuration.md:150
+msgid "value: the configuration's key."
+msgstr ""
+
+#: ../system-contract/configuration.md:152
+#: ../system-contract/configuration.md:170 ../system-contract/consensus.md:22
+#: ../system-contract/consensus.md:39 ../system-contract/consensus.md:61
+#: ../system-contract/consensus.md:121 ../system-contract/consensus.md:167
+#: ../system-contract/consensus.md:180 ../system-contract/consensus.md:222
+#: ../system-contract/consensus.md:269 ../system-contract/consensus.md:287
+#: ../system-contract/consensus.md:323 ../system-contract/consensus.md:340
+#: ../system-contract/consensus.md:357 ../system-contract/consensus.md:379
+#: ../system-contract/consensus.md:397 ../system-contract/election.md:49
+#: ../system-contract/election.md:126 ../system-contract/election.md:143
+#: ../system-contract/election.md:175 ../system-contract/election.md:198
+#: ../system-contract/election.md:225 ../system-contract/election.md:245
+#: ../system-contract/election.md:272 ../system-contract/election.md:305
+#: ../system-contract/election.md:357 ../system-contract/election.md:425
+#: ../system-contract/election.md:477 ../system-contract/election.md:527
+#: ../system-contract/election.md:593 ../system-contract/election.md:631
+#: ../system-contract/election.md:649 ../system-contract/election.md:667
+#: ../system-contract/election.md:709 ../system-contract/election.md:742
+#: ../system-contract/election.md:760 ../system-contract/election.md:800
+#: ../system-contract/multi-token.md:877 ../system-contract/profit.md:39
+#: ../system-contract/profit.md:292 ../system-contract/profit.md:331
+#: ../system-contract/profit.md:359 ../system-contract/profit.md:395
+#: ../system-contract/profit.md:430 ../system-contract/token-convert.md:263
+#: ../system-contract/token-convert.md:305
+#: ../system-contract/token-convert.md:325
+#: ../system-contract/token-convert.md:342
+#: ../system-contract/token-convert.md:370
+#: ../system-contract/token-convert.md:396 ../system-contract/treasury.md:148
+#: ../system-contract/treasury.md:172 ../system-contract/treasury.md:189
+#: ../system-contract/treasury.md:226 ../system-contract/vote.md:239
+#: ../system-contract/vote.md:280 ../system-contract/vote.md:317
+#: ../system-contract/vote.md:356 ../system-contract/vote.md:410
+#: ../system-contract/vote.md:451 ../system-contract/vote.md:484
+msgid "returns:"
+msgstr ""
+
+#: ../system-contract/configuration.md:154
+msgid "value the configuration's data(bianry)."
+msgstr ""
+
+#: ../system-contract/configuration.md:156
+msgid "GetConfigurationController"
+msgstr ""
+
+#: ../system-contract/configuration.md:158
+msgid "This method is used to query the controller information."
+msgstr ""
+
+#: ../system-contract/consensus.md:1 ../system-contract/index.rst:10
+msgid "Consensus Contract"
+msgstr ""
+
+#: ../system-contract/consensus.md:3
+msgid ""
+"The Consensus contract is essentially used for managing block producers "
+"and synchronizing data."
+msgstr ""
+
+#: ../system-contract/consensus.md:9
+msgid "GetCurrentMinerList"
+msgstr ""
+
+#: ../system-contract/consensus.md:11
+msgid "Gets the list of current miners."
+msgstr ""
+
+#: ../system-contract/consensus.md:24 ../system-contract/consensus.md:68
+msgid "pubkeys: miners' public keys."
+msgstr ""
+
+#: ../system-contract/consensus.md:26
+msgid "GetCurrentMinerPubkeyList"
+msgstr ""
+
+#: ../system-contract/consensus.md:28
+msgid ""
+"Gets the list of current miners, each item a block producer's public key "
+"in hexadecimal format."
+msgstr ""
+
+#: ../system-contract/consensus.md:41
+msgid "pubkeys: miner's public key (hexadecimal string)."
+msgstr ""
+
+#: ../system-contract/consensus.md:43
+msgid "GetCurrentMinerListWithRoundNumber"
+msgstr ""
+
+#: ../system-contract/consensus.md:45
+msgid "Gets the list of current miners along with the round number."
+msgstr ""
+
+#: ../system-contract/consensus.md:63
+msgid "miner list: miners list."
+msgstr ""
+
+#: ../system-contract/consensus.md:64
+msgid "round number: current round number."
+msgstr ""
+
+#: ../system-contract/consensus.md:66 ../system-contract/consensus.md:304
+msgid "MinerList:"
+msgstr ""
+
+#: ../system-contract/consensus.md:70
+msgid "GetRoundInformation"
+msgstr ""
+
+#: ../system-contract/consensus.md:72
+msgid "Gets information of the round specified as input."
+msgstr ""
+
+#: ../system-contract/consensus.md:117
+msgid "SInt64Value:"
+msgstr ""
+
+#: ../system-contract/consensus.md:119
+msgid "value: round number."
+msgstr ""
+
+#: ../system-contract/consensus.md:123 ../system-contract/consensus.md:182
+#: ../system-contract/consensus.md:224
+msgid "round number: round number."
+msgstr ""
+
+#: ../system-contract/consensus.md:124 ../system-contract/consensus.md:183
+#: ../system-contract/consensus.md:225
+msgid "real time miners information: public key => miner information."
+msgstr ""
+
+#: ../system-contract/consensus.md:125
+msgid ""
+"blockchain age: current time minus block chain start time (if the round "
+"number is 1, the block chain age is 1), represented in seconds."
+msgstr ""
+
+#: ../system-contract/consensus.md:126 ../system-contract/consensus.md:186
+msgid ""
+"extra block producer of previous round: the public key (hexadecimal "
+"string) of the first miner, who comes from the last term, in the current "
+"term."
+msgstr ""
+
+#: ../system-contract/consensus.md:127 ../system-contract/consensus.md:187
+#: ../system-contract/consensus.md:229
+msgid "term number: the current term number."
+msgstr ""
+
+#: ../system-contract/consensus.md:128 ../system-contract/consensus.md:188
+#: ../system-contract/consensus.md:230
+msgid "confirmed irreversible block height: irreversible block height."
+msgstr ""
+
+#: ../system-contract/consensus.md:129 ../system-contract/consensus.md:189
+#: ../system-contract/consensus.md:231
+msgid ""
+"confirmed irreversible block round number: irreversible block round "
+"number."
+msgstr ""
+
+#: ../system-contract/consensus.md:130 ../system-contract/consensus.md:190
+#: ../system-contract/consensus.md:232
+msgid ""
+"is miner list just changed: is miner list different from the the miner "
+"list in the previous round."
+msgstr ""
+
+#: ../system-contract/consensus.md:131
+msgid ""
+"round id for validation: round id, calculated by summing block producers'"
+" expecting time (second)."
+msgstr ""
+
+#: ../system-contract/consensus.md:133 ../system-contract/consensus.md:193
+#: ../system-contract/consensus.md:235
+msgid "MinerInRound:"
+msgstr ""
+
+#: ../system-contract/consensus.md:135 ../system-contract/consensus.md:195
+#: ../system-contract/consensus.md:237
+msgid "order: the order of miners producing block."
+msgstr ""
+
+#: ../system-contract/consensus.md:136 ../system-contract/consensus.md:196
+#: ../system-contract/consensus.md:238
+msgid ""
+"is extra block producer: The miner who is the first miner in the first "
+"round of each term."
+msgstr ""
+
+#: ../system-contract/consensus.md:137 ../system-contract/consensus.md:197
+#: ../system-contract/consensus.md:239
+msgid "in value: the previous miner's public key."
+msgstr ""
+
+#: ../system-contract/consensus.md:138 ../system-contract/consensus.md:198
+#: ../system-contract/consensus.md:240
+msgid "out value: the post miner's public key."
+msgstr ""
+
+#: ../system-contract/consensus.md:139 ../system-contract/consensus.md:199
+#: ../system-contract/consensus.md:241
+msgid "signature: self signature."
+msgstr ""
+
+#: ../system-contract/consensus.md:140 ../system-contract/consensus.md:200
+#: ../system-contract/consensus.md:242
+msgid "expected mining time: expected mining time."
+msgstr ""
+
+#: ../system-contract/consensus.md:141 ../system-contract/consensus.md:201
+#: ../system-contract/consensus.md:243
+msgid "produced blocks: produced blocks."
+msgstr ""
+
+#: ../system-contract/consensus.md:142 ../system-contract/consensus.md:202
+#: ../system-contract/consensus.md:244
+msgid "missed time slots: missed time slots."
+msgstr ""
+
+#: ../system-contract/consensus.md:143 ../system-contract/consensus.md:203
+#: ../system-contract/consensus.md:245
+msgid "pubkey: public key string."
+msgstr ""
+
+#: ../system-contract/consensus.md:144
+msgid "previous in value: previous miner's public key."
+msgstr ""
+
+#: ../system-contract/consensus.md:145 ../system-contract/consensus.md:205
+#: ../system-contract/consensus.md:247
+msgid "supposed order of next round: evaluated order in next round."
+msgstr ""
+
+#: ../system-contract/consensus.md:146 ../system-contract/consensus.md:206
+#: ../system-contract/consensus.md:248
+msgid "final order of next round: the real order in the next round."
+msgstr ""
+
+#: ../system-contract/consensus.md:147 ../system-contract/consensus.md:207
+#: ../system-contract/consensus.md:249
+msgid "actual mining times: the real mining time."
+msgstr ""
+
+#: ../system-contract/consensus.md:148
+msgid ""
+"encrypted pieces: public key (miners in the current round) =>  message "
+"encrypted by shares information and public key (represented by "
+"hexadecimal string)."
+msgstr ""
+
+#: ../system-contract/consensus.md:149 ../system-contract/consensus.md:209
+#: ../system-contract/consensus.md:251
+msgid "decrypted pieces: the message of miners in the previous round."
+msgstr ""
+
+#: ../system-contract/consensus.md:150 ../system-contract/consensus.md:210
+#: ../system-contract/consensus.md:252
+msgid "produced tiny blocks: produced tiny blocks."
+msgstr ""
+
+#: ../system-contract/consensus.md:151 ../system-contract/consensus.md:211
+#: ../system-contract/consensus.md:253
+msgid ""
+"implied irreversible block height: miner records a irreversible block "
+"height."
+msgstr ""
+
+#: ../system-contract/consensus.md:153
+msgid "GetCurrentRoundNumber"
+msgstr ""
+
+#: ../system-contract/consensus.md:155
+msgid "Gets the current round number."
+msgstr ""
+
+#: ../system-contract/consensus.md:169
+msgid "value: number of current round."
+msgstr ""
+
+#: ../system-contract/consensus.md:171
+msgid "GetCurrentRoundInformation"
+msgstr ""
+
+#: ../system-contract/consensus.md:173
+msgid "Gets the current round's information."
+msgstr ""
+
+#: ../system-contract/consensus.md:184 ../system-contract/consensus.md:226
+msgid "main chain miners round number: is not used."
+msgstr ""
+
+#: ../system-contract/consensus.md:185 ../system-contract/consensus.md:227
+msgid ""
+"blockchain age: current time minus block chain start time stamp (if the "
+"round number is 1, the block chain age is 1), represented by second."
+msgstr ""
+
+#: ../system-contract/consensus.md:191 ../system-contract/consensus.md:233
+msgid ""
+"round id for validation: round id, calculated by summing block producers'"
+" expecting time(second)."
+msgstr ""
+
+#: ../system-contract/consensus.md:204 ../system-contract/consensus.md:246
+msgid "previous in value: previous miner's previous miner's public key."
+msgstr ""
+
+#: ../system-contract/consensus.md:208 ../system-contract/consensus.md:250
+msgid ""
+"encrypted pieces: public key (miners in the current round) =>  message "
+"encrypted by shares information and public key(represented by hexadecimal"
+" string)."
+msgstr ""
+
+#: ../system-contract/consensus.md:213
+msgid "GetPreviousRoundInformation"
+msgstr ""
+
+#: ../system-contract/consensus.md:215
+msgid "Gets the previous round information."
+msgstr ""
+
+#: ../system-contract/consensus.md:228
+msgid ""
+"extra block producer of previous round: the public key(hexadecimal "
+"string) of the first miner, who comes from the last term, in the current "
+"term."
+msgstr ""
+
+#: ../system-contract/consensus.md:255
+msgid "GetCurrentTermNumber"
+msgstr ""
+
+#: ../system-contract/consensus.md:257
+msgid "Gets the current term number."
+msgstr ""
+
+#: ../system-contract/consensus.md:271
+msgid "value: the current term number."
+msgstr ""
+
+#: ../system-contract/consensus.md:273
+msgid "GetCurrentWelfareReward"
+msgstr ""
+
+#: ../system-contract/consensus.md:275
+msgid "Gets the current welfare reward."
+msgstr ""
+
+#: ../system-contract/consensus.md:289
+msgid "value: the current welfare reward."
+msgstr ""
+
+#: ../system-contract/consensus.md:291
+msgid "GetPreviousMinerList"
+msgstr ""
+
+#: ../system-contract/consensus.md:293
+msgid "Gets the miners in the previous term."
+msgstr ""
+
+#: ../system-contract/consensus.md:306
+msgid ""
+"pubkeys: public keys (represented by hexadecimal strings) of miners in "
+"the previous term."
+msgstr ""
+
+#: ../system-contract/consensus.md:308
+msgid "GetMinedBlocksOfPreviousTerm"
+msgstr ""
+
+#: ../system-contract/consensus.md:310
+msgid "Gets the number of mined blocks during the previous term."
+msgstr ""
+
+#: ../system-contract/consensus.md:325
+msgid "value: the number of mined blocks."
+msgstr ""
+
+#: ../system-contract/consensus.md:327
+msgid "GetNextMinerPubkey"
+msgstr ""
+
+#: ../system-contract/consensus.md:329
+msgid ""
+"Gets the miner who will produce the block next, which means the miner is "
+"the first one whose expected mining time is greater than the current "
+"time. If this miner can not be found, the first miner who is extra block "
+"producer will be selected."
+msgstr ""
+
+#: ../system-contract/consensus.md:342
+msgid "value: the miner's public key."
+msgstr ""
+
+#: ../system-contract/consensus.md:344
+msgid "GetCurrentMinerPubkey"
+msgstr ""
+
+#: ../system-contract/consensus.md:346
+msgid "Gets the current miner."
+msgstr ""
+
+#: ../system-contract/consensus.md:359
+msgid "value: miner's public key."
+msgstr ""
+
+#: ../system-contract/consensus.md:361
+msgid "IsCurrentMiner"
+msgstr ""
+
+#: ../system-contract/consensus.md:363
+msgid "Query whether the miner is the current miner."
+msgstr ""
+
+#: ../system-contract/consensus.md:375 ../system-contract/vote.md:447
+msgid "Address:"
+msgstr ""
+
+#: ../system-contract/consensus.md:377
+msgid "value: miner's address."
+msgstr ""
+
+#: ../system-contract/consensus.md:381
+msgid "value: indicates if the input miner is the current miner."
+msgstr ""
+
+#: ../system-contract/consensus.md:383
+msgid "GetNextElectCountDown"
+msgstr ""
+
+#: ../system-contract/consensus.md:385
+msgid "Count down to the next election."
+msgstr ""
+
+#: ../system-contract/consensus.md:399
+msgid "value: total seconds to next election."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:1
+msgid "Cross Chain Contract"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:3
+msgid "Functions"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:5
+msgid "Detailed Description"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:7
+msgid "Defines C# API functions for cross chain contract."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:9
+msgid "Functions Documentation"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:11
+msgid "function ProposeCrossChainIndexing"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:48
+msgid "Propose once cross chain indexing."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:50 ../system-contract/cross-chain.md:135
+#: ../system-contract/cross-chain.md:153 ../system-contract/cross-chain.md:193
+#: ../system-contract/cross-chain.md:223 ../system-contract/cross-chain.md:261
+#: ../system-contract/cross-chain.md:291 ../system-contract/cross-chain.md:303
+#: ../system-contract/cross-chain.md:319 ../system-contract/cross-chain.md:359
+#: ../system-contract/cross-chain.md:399 ../system-contract/cross-chain.md:425
+#: ../system-contract/cross-chain.md:443 ../system-contract/cross-chain.md:462
+#: ../system-contract/cross-chain.md:508 ../system-contract/cross-chain.md:541
+#: ../system-contract/cross-chain.md:556 ../system-contract/cross-chain.md:581
+#: ../system-contract/cross-chain.md:605 ../system-contract/cross-chain.md:635
+#: ../system-contract/cross-chain.md:657 ../system-contract/cross-chain.md:675
+#: ../system-contract/cross-chain.md:693 ../system-contract/cross-chain.md:711
+#: ../system-contract/cross-chain.md:730 ../system-contract/cross-chain.md:754
+#: ../system-contract/cross-chain.md:782 ../system-contract/cross-chain.md:806
+#: ../system-contract/cross-chain.md:853 ../system-contract/cross-chain.md:885
+#: ../system-contract/cross-chain.md:919 ../system-contract/cross-chain.md:973
+#: ../system-contract/genesis.md:20 ../system-contract/genesis.md:48
+#: ../system-contract/genesis.md:67 ../system-contract/genesis.md:86
+#: ../system-contract/genesis.md:105 ../system-contract/genesis.md:132
+#: ../system-contract/genesis.md:158 ../system-contract/genesis.md:182
+#: ../system-contract/genesis.md:220 ../system-contract/genesis.md:246
+#: ../system-contract/genesis.md:270 ../system-contract/genesis.md:297
+#: ../system-contract/genesis.md:324 ../system-contract/genesis.md:344
+#: ../system-contract/genesis.md:364 ../system-contract/genesis.md:388
+#: ../system-contract/genesis.md:411 ../system-contract/genesis.md:425
+#: ../system-contract/genesis.md:437 ../system-contract/genesis.md:454
+#: ../system-contract/genesis.md:471 ../system-contract/genesis.md:483
+msgid "Parameters:"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:52 ../system-contract/cross-chain.md:511
+#: ../system-contract/cross-chain.md:859
+msgid "CrossChainBlockData"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:54 ../system-contract/cross-chain.md:513
+msgid "SideChainBlockData"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:55 ../system-contract/cross-chain.md:514
+msgid "height : height of side chain block"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:56 ../system-contract/cross-chain.md:515
+msgid "block_header_hash : hash of side chain block"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:57 ../system-contract/cross-chain.md:516
+msgid ""
+"transaction_merkle_tree_root : merkle tree root computing from "
+"transactions status in side chain block"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:58 ../system-contract/cross-chain.md:517
+msgid "chain_id : id of side chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:60 ../system-contract/cross-chain.md:519
+msgid "ParentChainBlockData"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:61 ../system-contract/cross-chain.md:520
+msgid "height : height of parent chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:62 ../system-contract/cross-chain.md:521
+msgid "cross_chain_extra_data"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:63 ../system-contract/cross-chain.md:522
+msgid ""
+"transaction_status_merkle_tree_root : the merkle tree root computing from"
+" side chain roots."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:64 ../system-contract/cross-chain.md:523
+msgid "chain_id : parent chain id"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:65 ../system-contract/cross-chain.md:524
+msgid ""
+"transaction_status_merkle_root : merkle tree root computing from "
+"transactions status in parent chain block"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:66 ../system-contract/cross-chain.md:525
+msgid "indexed_merkle_path : <block height, merkle path> key-value map"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:67 ../system-contract/cross-chain.md:526
+msgid "extra_data : extra data map"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:69
+msgid "previous_block_height previous block height"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:73
+msgid "function GetPendingCrossChainIndexingProposal"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:115
+msgid "Get pending cross chain indexing proposal info."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:117 ../system-contract/cross-chain.md:278
+#: ../system-contract/cross-chain.md:339 ../system-contract/cross-chain.md:379
+#: ../system-contract/cross-chain.md:402 ../system-contract/cross-chain.md:446
+#: ../system-contract/cross-chain.md:560 ../system-contract/cross-chain.md:590
+#: ../system-contract/cross-chain.md:609 ../system-contract/cross-chain.md:639
+#: ../system-contract/cross-chain.md:661 ../system-contract/cross-chain.md:679
+#: ../system-contract/cross-chain.md:697 ../system-contract/cross-chain.md:715
+#: ../system-contract/cross-chain.md:734 ../system-contract/cross-chain.md:758
+#: ../system-contract/cross-chain.md:786 ../system-contract/cross-chain.md:810
+#: ../system-contract/cross-chain.md:857 ../system-contract/cross-chain.md:889
+#: ../system-contract/cross-chain.md:923 ../system-contract/cross-chain.md:977
+#: ../system-contract/genesis.md:24 ../system-contract/genesis.md:52
+#: ../system-contract/genesis.md:71 ../system-contract/genesis.md:90
+#: ../system-contract/genesis.md:109 ../system-contract/genesis.md:136
+#: ../system-contract/genesis.md:162 ../system-contract/genesis.md:189
+#: ../system-contract/genesis.md:229 ../system-contract/genesis.md:253
+#: ../system-contract/genesis.md:277 ../system-contract/genesis.md:307
+#: ../system-contract/genesis.md:371 ../system-contract/genesis.md:395
+#: ../system-contract/genesis.md:501 ../system-contract/genesis.md:520
+msgid "Returns:"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:119
+msgid "GetPendingCrossChainIndexingProposalOutput"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:120
+msgid "proposal_id - cross chain indexing proposal id"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:121
+msgid "proposer - proposer of cross chain indexing proposal"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:122
+msgid "to_be_released - true if the proposal can be released, otherwise false"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:123
+msgid "proposed_cross_chain_block_data - cross chain data proposed"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:124
+msgid "expired_time - proposal expiration time"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:127
+msgid "function ReleaseCrossChainIndexing"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:133
+msgid "Release cross chain indexing proposal and side chain will be created."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:137
+msgid "Hash Cross chain indexing proposal id."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:139 ../system-contract/genesis.md:399
+msgid "function Initialize"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:151
+msgid "Initialize cross-chain-contract."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:155 ../system-contract/genesis.md:413
+#: ../system-contract/token-convert.md:5
+msgid "InitializeInput"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:157
+msgid "parent_chain_id - id of parent chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:158 ../system-contract/cross-chain.md:984
+msgid ""
+"creation_height_on_parent_chain - height of side chain creation on parent"
+" chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:159
+msgid "is_privilege_preserved - true if chain privilege needed, otherwise false"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:161
+msgid "function RequestSideChainCreation"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:191
+msgid "Request side chain creation."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:195 ../system-contract/cross-chain.md:265
+msgid "SideChainCreationRequest"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:196 ../system-contract/cross-chain.md:266
+msgid "indexing_price - indexing fee."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:197 ../system-contract/cross-chain.md:267
+msgid "locked_token_amount - initial locked balance for a new side chain."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:198 ../system-contract/cross-chain.md:268
+msgid ""
+"is_privilege_preserved - creator privilege boolean flag: True if chain "
+"creator privilege preserved, otherwise false."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:199 ../system-contract/cross-chain.md:269
+msgid "side_chain_token_symbol - side chain token symbol."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:200 ../system-contract/cross-chain.md:270
+msgid "side_chain_token_name - side chain token name."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:201 ../system-contract/cross-chain.md:271
+msgid "side_chain_token_total_supply -  total supply of side chain token."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:202 ../system-contract/cross-chain.md:272
+msgid "side_chain_token_decimals - sÏide chain token decimal."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:203 ../system-contract/cross-chain.md:273
+msgid "is_side_chain_token_burnable - side chain token burnable flag."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:204 ../system-contract/cross-chain.md:274
+msgid ""
+"is_side_chain_token_profitable - a flag to indicate wether the chain is "
+"profitable or not."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:205 ../system-contract/cross-chain.md:275
+msgid ""
+"side_chain_token_initial_issue_list - a list of accounts and amounts that"
+" will be issued when the chain starts."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:206 ../system-contract/cross-chain.md:276
+msgid "initial_resource_amount - the initial rent resources."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:211
+msgid "function ReleaseSideChainCreation"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:221
+msgid ""
+"Release side chain creation ant side chain creation proposal will be "
+"created."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:225
+msgid "ReleaseSideChainCreationInput"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:226
+msgid "proposal_id - side chain creation proposal id"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:229
+msgid "function CreateSideChain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:259
+msgid "Create a new side chain, this is be triggered by an organization address."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:263
+msgid "CreateSideChainInput"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:264
+msgid "proposer the proposer of the proposal that triggered this method."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:280
+msgid "Id of a new side chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:282
+msgid "function SetInitialSideChainLifetimeControllerAddress"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:289
+msgid ""
+"Sets the initial SideChainLifetimeController address which should be "
+"parliament organization by default."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:292 ../system-contract/cross-chain.md:304
+msgid "address : the owner's address."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:294
+msgid "function SetInitialIndexingControllerAddress"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:301
+msgid ""
+"Sets the initial CrossChainIndexingController address which should be "
+"parliament organization by default."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:306
+msgid "function ChangeCrossChainIndexingController"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:317
+msgid "Changes the cross chain indexing controller."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:320 ../system-contract/cross-chain.md:340
+#: ../system-contract/cross-chain.md:360 ../system-contract/cross-chain.md:380
+#: ../system-contract/cross-chain.md:403
+msgid "acs1.AuthorityInfo :"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:321 ../system-contract/cross-chain.md:341
+#: ../system-contract/cross-chain.md:361 ../system-contract/cross-chain.md:381
+#: ../system-contract/cross-chain.md:404 ../system-contract/cross-chain.md:429
+msgid ""
+"contract_address - the address of the contract that generated the "
+"controller."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:322 ../system-contract/cross-chain.md:342
+#: ../system-contract/cross-chain.md:362 ../system-contract/cross-chain.md:382
+#: ../system-contract/cross-chain.md:405 ../system-contract/cross-chain.md:430
+msgid "owner_address - the address of the controller."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:324
+msgid "function GetCrossChainIndexingController"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:337
+msgid "Get indexing fee adjustment controller for specific side chain."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:346
+msgid "function ChangeSideChainLifetimeController"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:357
+msgid "Changes the side chain's lifetime controller."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:364
+msgid "function GetSideChainLifetimeController"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:377
+msgid "Get the side chain's lifetime controller."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:384
+msgid "function GetSideChainIndexingFeeController"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:397 ../system-contract/cross-chain.md:441
+msgid "Get side chain indexing fee."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:400 ../system-contract/cross-chain.md:444
+msgid "Int32Value : side chain id"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:407
+msgid "function ChangeSideChainIndexingFeeController"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:423
+msgid "Changes indexing fee adjustment controller for specific side chain."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:426
+msgid "ChangeSideChainIndexingFeeControllerInput :"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:427
+msgid "chain_id - side chain id."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:428
+msgid "authority_info :"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:432
+msgid "function GetSideChainIndexingFeePrice"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:447
+msgid "Int64Value : indexing fee price"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:450
+msgid "function Recharge"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:460
+msgid "Recharge for specified side chain."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:464
+msgid "RechargeInput"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:466
+msgid "chain_id - id of the side chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:467
+msgid "amount - the token amount to recharge"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:469
+msgid "function RecordCrossChainData"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:506
+msgid ""
+"Index block data of parent chain and side chain. Only "
+"CrossChainIndexingController is permitted to invoke this method."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:510
+msgid "RecordCrossChainDataInput"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:528
+msgid "function AdjustIndexingFeePrice"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:539
+msgid ""
+"Adjust side chain indexing fee. Only IndexingFeeController is permitted "
+"to invoke this method."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:543
+msgid "AdjustIndexingFeeInput"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:544
+msgid "side_chain_id : side chain id"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:545
+msgid "indexing_fee : indexing fee to be set"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:547
+msgid "function DisposeSideChain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:554
+msgid ""
+"Dispose the specified side chain. Only SideChainLifetimeController is "
+"permitted to invoke this method."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:558
+msgid "Int32Value - the id of side chain to be disposed"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:562
+msgid "the id of disposed chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:564
+msgid "function VerifyTransaction"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:579
+msgid "Transaction cross chain verification."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:583
+msgid "VerifyTransactionInput"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:585
+msgid "transaction_id - transaction id"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:586
+msgid "path - merkle path for the transaction"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:587
+msgid "parent_chain_height - height of parent chain indexing this transaction"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:588
+msgid "verified_chain_id - id of the chain to be verified"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:592
+msgid "True if verification succeeded, otherwise false."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:595
+msgid "function LockedAddress"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:603
+msgid "Get side chain creator address."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:607 ../system-contract/cross-chain.md:659
+#: ../system-contract/cross-chain.md:713 ../system-contract/cross-chain.md:732
+#: ../system-contract/cross-chain.md:975
+msgid "Int32Value - id of side chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:611
+msgid "Address of side chain creator."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:613
+msgid "function GetChainStatus"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:633
+msgid "Gets the current status of the specified side chain."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:637
+msgid "Int32Value - id of side chain."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:641
+msgid "Current status of side chain."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:642
+msgid "fatal: currently no meaning."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:643
+msgid "active: the side-chain is being indexed."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:644
+msgid "insufficient fee debt: debt for indexing fee to be payed off."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:645
+msgid "terminated: the side chain cannot be indexed anymore."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:647
+msgid "function GetSideChainHeight"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:655
+msgid "Get current height of the specified side chain."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:663
+msgid "Current height of the side chain."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:665
+msgid "function GetParentChainHeight"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:673
+msgid "Get recorded height of parent chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:677 ../system-contract/cross-chain.md:695
+#: ../system-contract/cross-chain.md:756 ../system-contract/cross-chain.md:784
+#: ../system-contract/cross-chain.md:808 ../system-contract/genesis.md:22
+#: ../system-contract/genesis.md:191
+msgid "google.protobuf.Empty"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:681
+msgid "Height of parent chain."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:683
+msgid "function GetParentChainId"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:691
+msgid "Get id of the parent chain. This interface is only for side chain."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:699
+msgid "Parent chain id."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:702
+msgid "function GetSideChainBalance"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:709
+msgid "Get the balance for side chain indexing."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:717
+msgid "Balance for side chain indexing."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:720
+msgid "function GetSideChainIndexingFeeDebt"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:728
+msgid "Get indexing debt for side chain."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:736
+msgid "Side chain indexing debt. Returns zero if no debt."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:739
+msgid "function GetSideChainIdAndHeight"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:752
+msgid "Get id and recorded height of side chains."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:760
+msgid "SideChainIdAndHeightDict : A map contains id and height of side chains"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:762
+msgid "function GetSideChainIndexingInformationList"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:780
+msgid "Get indexing information of side chains."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:788
+msgid ""
+"SideChainIndexingInformationList : A list contains indexing information "
+"of side chains"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:791
+msgid "function GetAllChainsIdAndHeight"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:804
+msgid "Get id and recorded height of all chains."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:812
+msgid "SideChainIdAndHeightDict : A map contains id and height of all chains"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:816
+msgid "function GetIndexedCrossChainBlockDataByHeight"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:851
+msgid "Get indexed cross chain data by height."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:855
+msgid "Int64Value - block height"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:861
+msgid "side_chain_block_data - cross chain block data of side chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:862
+msgid "parent_chain_block_data - cross chain block data of parent chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:864
+msgid "function GetIndexedSideChainBlockDataByHeight"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:883
+msgid "Get block data of indexed side chain by height"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:887 ../system-contract/cross-chain.md:921
+msgid "Int64Value - height of side chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:891
+msgid "IndexedSideChainBlockData"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:893
+msgid "side_chain_block_data - block data of side chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:895
+msgid "function GetBoundParentChainHeightAndMerklePathByHeight"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:917
+msgid "Get merkle path bound up with side chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:925
+msgid "CrossChainMerkleProofContext"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:927
+msgid ""
+"bound_parent_chain_height - height of parent chain bound up with side "
+"chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:928
+msgid "merkle_path_from_parent_chain - merkle path generated from parent chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:930
+msgid "function GetChainInitializationData"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:971
+msgid "Get initialization data for specified side chain."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:979
+msgid "ChainInitializationData"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:981
+msgid "chain_id - id of side chain"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:982
+msgid "creator - side chain creator"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:983
+msgid "creation_timestamp - timestamp for side chain creation"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:985
+msgid ""
+"chain_creator_privilege_preserved - creator privilege boolean flag: True "
+"if chain creator privilege preserved, otherwise false."
+msgstr ""
+
+#: ../system-contract/cross-chain.md:986
+msgid "parent_chain_token_contract_address - parent chain token contract address"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:987
+msgid "chain_initialization_consensus_info"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:988
+msgid "initial_miner_list_data consensus miner list data"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:989
+msgid "native_token_info_data - native token info"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:990
+msgid "resource_token_info"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:991
+msgid "resource_token_list_data resource token list data"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:992
+msgid "initial_resource_amount initial resource token amount"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:993
+msgid "chain_primary_token_info"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:994
+msgid "chain_primary_token_data side chain primary token data"
+msgstr ""
+
+#: ../system-contract/cross-chain.md:995
+msgid ""
+"side_chain_token_initial_issue_list side chain primary token initial "
+"issue list"
+msgstr ""
+
+#: ../system-contract/economic.md:1 ../system-contract/index.rst:10
+msgid "Economic Contract"
+msgstr ""
+
+#: ../system-contract/economic.md:3
+msgid ""
+"The Economic contract establishes the economic system of the AElf. When "
+"the block chain starts to work, this contract will initialize other "
+"contracts related to economic activities."
+msgstr ""
+
+#: ../system-contract/economic.md:5
+msgid "InitialEconomicSystem"
+msgstr ""
+
+#: ../system-contract/economic.md:7
+msgid ""
+"It will initialize other contracts related to economic activities (For "
+"instance, create the native token). This transaction only can be send "
+"once because after the first sending, its state will be set to "
+"initialized."
+msgstr ""
+
+#: ../system-contract/economic.md:24 ../system-contract/economic.md:49
+msgid "IssueNativeTokenInput:"
+msgstr ""
+
+#: ../system-contract/economic.md:26
+msgid "native token symbol: the native token symbol."
+msgstr ""
+
+#: ../system-contract/economic.md:27
+msgid "native token name: the native token name."
+msgstr ""
+
+#: ../system-contract/economic.md:28
+msgid "native token total supply: the native token total supply."
+msgstr ""
+
+#: ../system-contract/economic.md:29
+msgid ""
+"native token decimals: the token calculation is accurated to which "
+"decimal."
+msgstr ""
+
+#: ../system-contract/economic.md:30
+msgid "is native token burnable: it indicaites if the token is burnable."
+msgstr ""
+
+#: ../system-contract/economic.md:31
+msgid ""
+"mining reward total amount: It determines how much native token is used "
+"to reward the miners."
+msgstr ""
+
+#: ../system-contract/economic.md:32
+msgid ""
+"transaction size fee unit price: the transaction fee = transaction size *"
+" unit fee."
+msgstr ""
+
+#: ../system-contract/economic.md:34
+msgid "IssueNativeToken"
+msgstr ""
+
+#: ../system-contract/economic.md:36
+msgid "Only ZeroContract is able to issue the native token."
+msgstr ""
+
+#: ../system-contract/economic.md:51 ../system-contract/treasury.md:38
+msgid "amount: amount of token."
+msgstr ""
+
+#: ../system-contract/economic.md:52 ../system-contract/treasury.md:39
+msgid "memo: memo."
+msgstr ""
+
+#: ../system-contract/economic.md:53
+msgid "to: the recipient of the token."
+msgstr ""
+
+#: ../system-contract/election.md:1 ../system-contract/index.rst:10
+msgid "Election Contract"
+msgstr ""
+
+#: ../system-contract/election.md:3
+msgid "The Election contract is essentially used for voting for Block Producers."
+msgstr ""
+
+#: ../system-contract/election.md:5
+msgid "AnnounceElection"
+msgstr ""
+
+#: ../system-contract/election.md:7
+msgid ""
+"To be a block producer, a user should first register to be a candidate "
+"and lock some token as a deposit. If the data center is not full, the "
+"user will be added in automatically and get one weight (10 weight "
+"limited) for sharing bonus in the future."
+msgstr ""
+
+#: ../system-contract/election.md:14
+msgid "QuitElection"
+msgstr ""
+
+#: ../system-contract/election.md:16
+msgid ""
+"A candidate is able to quit the election provided he is not currently "
+"elected. If you quit successfully, the candidate will get his locked "
+"tokens back and will not receive anymore bonus."
+msgstr ""
+
+#: ../system-contract/election.md:23 ../system-contract/vote.md:32
+msgid "Vote"
+msgstr ""
+
+#: ../system-contract/election.md:25
+msgid ""
+"Used for voting for a candidate to be elected. The tokens you vote with "
+"will be locked until the end time. According to the number of token you "
+"voted and its lock time, you can get corresponding weight for sharing the"
+" bonus in the future."
+msgstr ""
+
+#: ../system-contract/election.md:43
+msgid "VoteMinerInput:"
+msgstr ""
+
+#: ../system-contract/election.md:45
+msgid "candidate pubkey: candidate public key."
+msgstr ""
+
+#: ../system-contract/election.md:46
+msgid "amount: amount token to vote."
+msgstr ""
+
+#: ../system-contract/election.md:47
+msgid "end timestamp: before which, your vote works."
+msgstr ""
+
+#: ../system-contract/election.md:51
+msgid "value: vote id."
+msgstr ""
+
+#: ../system-contract/election.md:53
+msgid "ChangeVotingOption"
+msgstr ""
+
+#: ../system-contract/election.md:55
+msgid ""
+"Before the end time, you are able to change your vote target to other "
+"candidates."
+msgstr ""
+
+#: ../system-contract/election.md:67
+msgid "ChangeVotingOptionInput:"
+msgstr ""
+
+#: ../system-contract/election.md:69
+msgid "voting vote id: transaction id."
+msgstr ""
+
+#: ../system-contract/election.md:70
+msgid "candidate pubkey: new candidate public key."
+msgstr ""
+
+#: ../system-contract/election.md:72 ../system-contract/token-holder.md:107
+#: ../system-contract/vote.md:83
+msgid "Withdraw"
+msgstr ""
+
+#: ../system-contract/election.md:74
+msgid ""
+"After the lock time, your locked tokens will be unlocked and you can "
+"withdraw them."
+msgstr ""
+
+#: ../system-contract/election.md:86 ../system-contract/profit.md:304
+#: ../system-contract/vote.md:313 ../system-contract/vote.md:352
+#: ../system-contract/vote.md:406
+msgid "Hash:"
+msgstr ""
+
+#: ../system-contract/election.md:88 ../system-contract/vote.md:354
+#: ../system-contract/vote.md:408
+msgid "value: transaction id."
+msgstr ""
+
+#: ../system-contract/election.md:90
+msgid "SetVoteWeightProportion"
+msgstr ""
+
+#: ../system-contract/election.md:92
+msgid ""
+"Vote weight calcualtion takes in consideration the amount you vote and "
+"the lock time your vote."
+msgstr ""
+
+#: ../system-contract/election.md:104
+msgid "VoteWeightProportion:"
+msgstr ""
+
+#: ../system-contract/election.md:106
+msgid "time proportion: time's weight."
+msgstr ""
+
+#: ../system-contract/election.md:107
+msgid "amount proportion: amount's weight."
+msgstr ""
+
+#: ../system-contract/election.md:113
+msgid "GetCandidates"
+msgstr ""
+
+#: ../system-contract/election.md:115
+msgid "Gets all candidates' public keys."
+msgstr ""
+
+#: ../system-contract/election.md:128
+msgid "value public key array of candidates"
+msgstr ""
+
+#: ../system-contract/election.md:130
+msgid "GetVotedCandidates"
+msgstr ""
+
+#: ../system-contract/election.md:132
+msgid "Gets all candidates whose number of votes is greater than 0."
+msgstr ""
+
+#: ../system-contract/election.md:145
+msgid "value public key array of candidates."
+msgstr ""
+
+#: ../system-contract/election.md:147
+msgid "GetCandidateInformation"
+msgstr ""
+
+#: ../system-contract/election.md:149
+msgid ""
+"Gets a candidate's information. If the candidate does not exist, it will "
+"return a candidate without any information."
+msgstr ""
+
+#: ../system-contract/election.md:173
+msgid "value: public key (hexadecimal string) of the candidate."
+msgstr ""
+
+#: ../system-contract/election.md:177
+msgid "pubkey: public key (represented by an hexadecimal string)."
+msgstr ""
+
+#: ../system-contract/election.md:178
+msgid "terms: indicates in which terms the candidate participated."
+msgstr ""
+
+#: ../system-contract/election.md:179 ../system-contract/election.md:722
+msgid "produced blocks: the number of blocks the candidate has produced."
+msgstr ""
+
+#: ../system-contract/election.md:180
+msgid ""
+"missed time slots: the time slot for which the candidate failed to "
+"produce blocks."
+msgstr ""
+
+#: ../system-contract/election.md:181 ../system-contract/election.md:724
+msgid ""
+"continual appointment count: the time the candidate continue to "
+"participate in the election."
+msgstr ""
+
+#: ../system-contract/election.md:182 ../system-contract/election.md:725
+msgid ""
+"announcement transaction id: the transaction id that the candidate "
+"announce."
+msgstr ""
+
+#: ../system-contract/election.md:183 ../system-contract/election.md:726
+msgid ""
+"is current candidate: indicate whether the candidate can be elected in "
+"the current term."
+msgstr ""
+
+#: ../system-contract/election.md:185
+msgid "GetVictories"
+msgstr ""
+
+#: ../system-contract/election.md:187
+msgid "Gets the victories of the latest term."
+msgstr ""
+
+#: ../system-contract/election.md:200
+msgid "value the array of public key who has been elected as block producers."
+msgstr ""
+
+#: ../system-contract/election.md:202
+msgid "GetTermSnapshot"
+msgstr ""
+
+#: ../system-contract/election.md:204
+msgid "Gets the snapshot of the term provided as input."
+msgstr ""
+
+#: ../system-contract/election.md:221
+msgid "GetTermSnapshotInput:"
+msgstr ""
+
+#: ../system-contract/election.md:223
+msgid "term number: term number."
+msgstr ""
+
+#: ../system-contract/election.md:227
+msgid "end round number: the last term id be saved."
+msgstr ""
+
+#: ../system-contract/election.md:228
+msgid "mined blocks: number of blocks produced in previous term."
+msgstr ""
+
+#: ../system-contract/election.md:229
+msgid "election result: candidate => votes."
+msgstr ""
+
+#: ../system-contract/election.md:231
+msgid "GetMinersCount"
+msgstr ""
+
+#: ../system-contract/election.md:233
+msgid "Count miners."
+msgstr ""
+
+#: ../system-contract/election.md:247
+msgid "value: the total number of block producers."
+msgstr ""
+
+#: ../system-contract/election.md:249
+msgid "GetElectionResult"
+msgstr ""
+
+#: ../system-contract/election.md:251
+msgid "Gets an election result by term id."
+msgstr ""
+
+#: ../system-contract/election.md:268
+msgid "GetElectionResultInput:"
+msgstr ""
+
+#: ../system-contract/election.md:270 ../system-contract/election.md:274
+msgid "term number: term id."
+msgstr ""
+
+#: ../system-contract/election.md:275
+msgid "results: candidate => votes."
+msgstr ""
+
+#: ../system-contract/election.md:276
+msgid ""
+"is active: indicates that if the term number you input is the current "
+"term."
+msgstr ""
+
+#: ../system-contract/election.md:278
+msgid "GetElectorVote"
+msgstr ""
+
+#: ../system-contract/election.md:280
+msgid "Gets the voter's information."
+msgstr ""
+
+#: ../system-contract/election.md:303 ../system-contract/election.md:423
+msgid "value: the public key (hexadecimal string) of voter."
+msgstr ""
+
+#: ../system-contract/election.md:307
+msgid ""
+"active voting record ids: transaction ids, in which transactions you "
+"voted."
+msgstr ""
+
+#: ../system-contract/election.md:308 ../system-contract/election.md:360
+#: ../system-contract/election.md:428
+msgid "withdrawn voting record ids: transaction ids."
+msgstr ""
+
+#: ../system-contract/election.md:309 ../system-contract/election.md:361
+#: ../system-contract/election.md:429
+msgid ""
+"active voted votes amount: the number(excluding the withdrawn) of token "
+"you vote."
+msgstr ""
+
+#: ../system-contract/election.md:310 ../system-contract/election.md:362
+#: ../system-contract/election.md:430
+msgid "all voted votes amount: the number of token you have voted."
+msgstr ""
+
+#: ../system-contract/election.md:311
+msgid "active voting records: no records in this api."
+msgstr ""
+
+#: ../system-contract/election.md:312 ../system-contract/election.md:364
+msgid "withdrawn votes records: no records in this api."
+msgstr ""
+
+#: ../system-contract/election.md:313 ../system-contract/election.md:365
+#: ../system-contract/election.md:433
+msgid "pubkey: voter public key (byte string)."
+msgstr ""
+
+#: ../system-contract/election.md:315
+msgid "GetElectorVoteWithRecords"
+msgstr ""
+
+#: ../system-contract/election.md:317
+msgid ""
+"Gets the information about a voter including the votes (excluding "
+"withdrawal information)."
+msgstr ""
+
+#: ../system-contract/election.md:355
+msgid "value: the public key (hexadecimal string) of the voter."
+msgstr ""
+
+#: ../system-contract/election.md:359 ../system-contract/election.md:427
+msgid "active voting record ids: transaction ids, in which transactions you vote."
+msgstr ""
+
+#: ../system-contract/election.md:363
+msgid ""
+"active voting records: records of the vote transaction with detail "
+"information."
+msgstr ""
+
+#: ../system-contract/election.md:367 ../system-contract/election.md:435
+#: ../system-contract/election.md:536 ../system-contract/election.md:602
+msgid "ElectionVotingRecord:"
+msgstr ""
+
+#: ../system-contract/election.md:369 ../system-contract/election.md:437
+#: ../system-contract/election.md:604
+msgid "voter: voter address."
+msgstr ""
+
+#: ../system-contract/election.md:370 ../system-contract/election.md:438
+#: ../system-contract/election.md:605
+msgid "candidate: public key."
+msgstr ""
+
+#: ../system-contract/election.md:371 ../system-contract/election.md:439
+#: ../system-contract/election.md:606 ../system-contract/vote.md:65
+#: ../system-contract/vote.md:77
+msgid "amount: vote amount."
+msgstr ""
+
+#: ../system-contract/election.md:372 ../system-contract/election.md:440
+#: ../system-contract/election.md:607
+msgid "term number: snapshot number."
+msgstr ""
+
+#: ../system-contract/election.md:373 ../system-contract/election.md:441
+#: ../system-contract/election.md:608 ../system-contract/vote.md:67
+#: ../system-contract/vote.md:80 ../system-contract/vote.md:102
+#: ../system-contract/vote.md:108
+msgid "vote id: transaction id."
+msgstr ""
+
+#: ../system-contract/election.md:374 ../system-contract/election.md:442
+#: ../system-contract/election.md:609
+msgid "lock time: time left to unlock token."
+msgstr ""
+
+#: ../system-contract/election.md:375 ../system-contract/election.md:443
+#: ../system-contract/election.md:610
+msgid "unlock timestamp: unlock date."
+msgstr ""
+
+#: ../system-contract/election.md:376 ../system-contract/election.md:444
+#: ../system-contract/election.md:611
+msgid "withdraw timestamp: withdraw date."
+msgstr ""
+
+#: ../system-contract/election.md:377 ../system-contract/election.md:445
+#: ../system-contract/election.md:612
+msgid "vote timestamp: vote date."
+msgstr ""
+
+#: ../system-contract/election.md:378 ../system-contract/election.md:446
+msgid "is withdrawn: indicates if the vote has been withdrawn."
+msgstr ""
+
+#: ../system-contract/election.md:379 ../system-contract/election.md:447
+#: ../system-contract/election.md:614
+msgid "weight: vote weight for sharing bonus."
+msgstr ""
+
+#: ../system-contract/election.md:380 ../system-contract/election.md:448
+#: ../system-contract/election.md:615
+msgid "is change target: whether vote others."
+msgstr ""
+
+#: ../system-contract/election.md:382
+msgid "GetElectorVoteWithAllRecords"
+msgstr ""
+
+#: ../system-contract/election.md:384
+msgid ""
+"Gets the information about a voter including the votes and withdrawal "
+"information."
+msgstr ""
+
+#: ../system-contract/election.md:431
+msgid "active voting records: records of transactions that are active."
+msgstr ""
+
+#: ../system-contract/election.md:432
+msgid ""
+"withdrawn votes records: records of transactions in which withdraw is "
+"true."
+msgstr ""
+
+#: ../system-contract/election.md:450
+msgid "GetCandidateVote"
+msgstr ""
+
+#: ../system-contract/election.md:452
+msgid "Gets statistical information about vote transactions of a candidate."
+msgstr ""
+
+#: ../system-contract/election.md:475 ../system-contract/election.md:525
+#: ../system-contract/election.md:591
+msgid "value: public key of the candidate."
+msgstr ""
+
+#: ../system-contract/election.md:479 ../system-contract/election.md:529
+#: ../system-contract/election.md:595
+msgid "obtained active voting record ids: vote transaction ids."
+msgstr ""
+
+#: ../system-contract/election.md:480 ../system-contract/election.md:596
+msgid "obtained withdrawn voting record ids: withdrawn transaction ids."
+msgstr ""
+
+#: ../system-contract/election.md:481 ../system-contract/election.md:531
+#: ../system-contract/election.md:597
+msgid ""
+"obtained active voted votes amount: the valid number of vote token in "
+"current."
+msgstr ""
+
+#: ../system-contract/election.md:482 ../system-contract/election.md:532
+#: ../system-contract/election.md:598
+msgid ""
+"all obtained voted votes amount: total number of vote token the candidate"
+" has got."
+msgstr ""
+
+#: ../system-contract/election.md:483
+msgid "obtained active voting records: no records in this api."
+msgstr ""
+
+#: ../system-contract/election.md:484 ../system-contract/election.md:534
+msgid "obtained withdrawn votes records: no records in this api."
+msgstr ""
+
+#: ../system-contract/election.md:486
+msgid "GetCandidateVoteWithRecords"
+msgstr ""
+
+#: ../system-contract/election.md:488
+msgid ""
+"Gets statistical information about vote transactions of a candidate with "
+"the detailed information of the transactions that are not withdrawn."
+msgstr ""
+
+#: ../system-contract/election.md:530
+msgid "obtained withdrawn voting record ids: withdraw transaction ids."
+msgstr ""
+
+#: ../system-contract/election.md:533 ../system-contract/election.md:599
+msgid ""
+"obtained active voting records: the records of the transaction without "
+"withdrawing."
+msgstr ""
+
+#: ../system-contract/election.md:538
+msgid "voter voter address."
+msgstr ""
+
+#: ../system-contract/election.md:539
+msgid "candidate public key."
+msgstr ""
+
+#: ../system-contract/election.md:540
+msgid "amount vote amount."
+msgstr ""
+
+#: ../system-contract/election.md:541
+msgid "term number  snapshot number."
+msgstr ""
+
+#: ../system-contract/election.md:542
+msgid "vote id transaction id."
+msgstr ""
+
+#: ../system-contract/election.md:543
+msgid "lock time time left to unlock token."
+msgstr ""
+
+#: ../system-contract/election.md:544
+msgid "unlock timestamp  unlock date."
+msgstr ""
+
+#: ../system-contract/election.md:545
+msgid "withdraw timestamp withdraw date."
+msgstr ""
+
+#: ../system-contract/election.md:546
+msgid "vote timestamp vote date."
+msgstr ""
+
+#: ../system-contract/election.md:547
+msgid "is withdrawn indicates whether the vote has been withdrawn."
+msgstr ""
+
+#: ../system-contract/election.md:548
+msgid "weight  vote weight for sharing bonus."
+msgstr ""
+
+#: ../system-contract/election.md:549
+msgid "is change target whether vote others."
+msgstr ""
+
+#: ../system-contract/election.md:551
+msgid "GetCandidateVoteWithAllRecords"
+msgstr ""
+
+#: ../system-contract/election.md:553
+msgid ""
+"Gets statistical information about vote transactions of a candidate with "
+"the detailed information of all the transactions."
+msgstr ""
+
+#: ../system-contract/election.md:600
+msgid ""
+"obtained withdrawn votes records: the records of the transaction "
+"withdrawing the vote token."
+msgstr ""
+
+#: ../system-contract/election.md:613 ../system-contract/vote.md:421
+msgid "is withdrawn: indicates whether the vote has been withdrawn."
+msgstr ""
+
+#: ../system-contract/election.md:617
+msgid "GetVotersCount"
+msgstr ""
+
+#: ../system-contract/election.md:619
+msgid "Gets the total number of voters."
+msgstr ""
+
+#: ../system-contract/election.md:633
+msgid "value: number of voters."
+msgstr ""
+
+#: ../system-contract/election.md:635
+msgid "GetVotesAmount"
+msgstr ""
+
+#: ../system-contract/election.md:637
+msgid ""
+"Gets the total number of vote token (not counting those that have been "
+"withdrawn)."
+msgstr ""
+
+#: ../system-contract/election.md:651
+msgid "value: number of vote token."
+msgstr ""
+
+#: ../system-contract/election.md:653
+msgid "GetCurrentMiningReward"
+msgstr ""
+
+#: ../system-contract/election.md:655
+msgid "Gets the current block reward (produced block Number times reward unit)."
+msgstr ""
+
+#: ../system-contract/election.md:669
+msgid "value: number of ELF that rewards miner for producing blocks."
+msgstr ""
+
+#: ../system-contract/election.md:671
+msgid "GetPageableCandidateInformation"
+msgstr ""
+
+#: ../system-contract/election.md:673
+msgid ""
+"Gets candidates' information according to the page's index and records "
+"length."
+msgstr ""
+
+#: ../system-contract/election.md:704
+msgid "PageInformation:"
+msgstr ""
+
+#: ../system-contract/election.md:706
+msgid "start: start index."
+msgstr ""
+
+#: ../system-contract/election.md:707
+msgid "length: number of records."
+msgstr ""
+
+#: ../system-contract/election.md:711
+msgid "CandidateDetail: candidates' detailed information."
+msgstr ""
+
+#: ../system-contract/election.md:713
+msgid "CandidateDetail:"
+msgstr ""
+
+#: ../system-contract/election.md:715
+msgid "candidate information: candidate information."
+msgstr ""
+
+#: ../system-contract/election.md:716
+msgid "obtained votes amount: obtained votes amount."
+msgstr ""
+
+#: ../system-contract/election.md:718
+msgid "CandidateInformation:"
+msgstr ""
+
+#: ../system-contract/election.md:720
+msgid "pubkey: public key (hexadecimal string)."
+msgstr ""
+
+#: ../system-contract/election.md:721
+msgid "terms: indicate which terms have the candidate participated."
+msgstr ""
+
+#: ../system-contract/election.md:723
+msgid "missed time slots: the time the candidate failed to produce blocks."
+msgstr ""
+
+#: ../system-contract/election.md:728
+msgid "GetMinerElectionVotingItemId"
+msgstr ""
+
+#: ../system-contract/election.md:730
+msgid "Gets the voting activity id."
+msgstr ""
+
+#: ../system-contract/election.md:744
+msgid "value: voting item id."
+msgstr ""
+
+#: ../system-contract/election.md:746
+msgid "GetDataCenterRankingList"
+msgstr ""
+
+#: ../system-contract/election.md:748
+msgid "Gets the data center ranking list."
+msgstr ""
+
+#: ../system-contract/election.md:762
+msgid "data centers: the top n * 5 candidates with vote amount."
+msgstr ""
+
+#: ../system-contract/election.md:763
+msgid "minimum votes: not be used."
+msgstr ""
+
+#: ../system-contract/election.md:765
+msgid "GetVoteWeightProportion"
+msgstr ""
+
+#: ../system-contract/election.md:767
+msgid "Gets VoteWeight Proportion."
+msgstr ""
+
+#: ../system-contract/election.md:779
+msgid "note: for VoteWeightProportion see SetVoteWeightProportion"
+msgstr ""
+
+#: ../system-contract/election.md:781
+msgid "GetCalculateVoteWeight"
+msgstr ""
+
+#: ../system-contract/election.md:783
+msgid "Calculate the concrete vote weight according to your input."
+msgstr ""
+
+#: ../system-contract/election.md:795
+msgid "VoteInformation:"
+msgstr ""
+
+#: ../system-contract/election.md:797
+msgid "amount: the vote amount."
+msgstr ""
+
+#: ../system-contract/election.md:798
+msgid "lock time: the lock time your vote."
+msgstr ""
+
+#: ../system-contract/election.md:802
+msgid "value: vote weight calculated with your input and our function."
+msgstr ""
+
+#: ../system-contract/genesis.md:1 ../system-contract/index.rst:10
+msgid "Genesis Contract"
+msgstr ""
+
+#: ../system-contract/genesis.md:3
+msgid "This page describes available methods on the Genesis Contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:5
+msgid "Method documentation"
+msgstr ""
+
+#: ../system-contract/genesis.md:7
+msgid "Views"
+msgstr ""
+
+#: ../system-contract/genesis.md:9
+msgid "function CurrentContractSerialNumber"
+msgstr ""
+
+#: ../system-contract/genesis.md:18
+msgid ""
+"Gets the current serial number of genesis contract (corresponds to the "
+"serial number that will be given to the next deployed contract)."
+msgstr ""
+
+#: ../system-contract/genesis.md:26
+msgid "Serial number of the genesis contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:28
+msgid "function GetContractInfo"
+msgstr ""
+
+#: ../system-contract/genesis.md:46
+msgid "Gets detailed information about the specified contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:50
+msgid "Address - address the contract"
+msgstr ""
+
+#: ../system-contract/genesis.md:54
+msgid ""
+"A ContractInfo object that represents detailed information about the "
+"specified contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:56
+msgid "function GetContractAuthor"
+msgstr ""
+
+#: ../system-contract/genesis.md:65
+msgid "Get author of the specified contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:69
+msgid "Address - address of specified contract"
+msgstr ""
+
+#: ../system-contract/genesis.md:73
+msgid "Author of the specified contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:75
+msgid "function GetContractHash"
+msgstr ""
+
+#: ../system-contract/genesis.md:84
+msgid "Gets the code hash of the contract at the specified address."
+msgstr ""
+
+#: ../system-contract/genesis.md:88
+msgid "Address - address of a contract"
+msgstr ""
+
+#: ../system-contract/genesis.md:92
+msgid "The code hash of the contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:94
+msgid "function GetContractAddressByName"
+msgstr ""
+
+#: ../system-contract/genesis.md:103
+msgid "Gets the address of a system contract by its name."
+msgstr ""
+
+#: ../system-contract/genesis.md:107 ../system-contract/genesis.md:186
+msgid "Hash - name hash of the contract"
+msgstr ""
+
+#: ../system-contract/genesis.md:111
+msgid "Address of the specified contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:113 ../system-contract/genesis.md:140
+msgid "function GetSmartContractRegistrationByAddress"
+msgstr ""
+
+#: ../system-contract/genesis.md:130
+msgid "Gets the registration of a smart contract by its address."
+msgstr ""
+
+#: ../system-contract/genesis.md:134
+msgid "Address - address of a smart contract"
+msgstr ""
+
+#: ../system-contract/genesis.md:138 ../system-contract/genesis.md:164
+msgid "Registration object of the smart contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:156
+msgid "Gets the registration of a smart contract by code hash."
+msgstr ""
+
+#: ../system-contract/genesis.md:160
+msgid "Hash - contract code hash"
+msgstr ""
+
+#: ../system-contract/genesis.md:166
+msgid "function ValidateSystemContractAddress"
+msgstr ""
+
+#: ../system-contract/genesis.md:180
+msgid "Validates whether the input system contract exists."
+msgstr ""
+
+#: ../system-contract/genesis.md:184
+msgid "ValidateSystemContractAddressInput"
+msgstr ""
+
+#: ../system-contract/genesis.md:187
+msgid "Address - address of the contract"
+msgstr ""
+
+#: ../system-contract/genesis.md:193
+msgid "Actions"
+msgstr ""
+
+#: ../system-contract/genesis.md:195
+msgid "function DeploySystemSmartContract"
+msgstr ""
+
+#: ../system-contract/genesis.md:218
+msgid "Deploys a system smart contract on chain."
+msgstr ""
+
+#: ../system-contract/genesis.md:222
+msgid "SystemContractDeploymentInput"
+msgstr ""
+
+#: ../system-contract/genesis.md:224
+msgid "category - contract type"
+msgstr ""
+
+#: ../system-contract/genesis.md:225
+msgid "code - byte array of system contract code"
+msgstr ""
+
+#: ../system-contract/genesis.md:226
+msgid "name - name hash of system contract"
+msgstr ""
+
+#: ../system-contract/genesis.md:227
+msgid ""
+"transaction_method_call_list - list of methods called by system "
+"transaction"
+msgstr ""
+
+#: ../system-contract/genesis.md:231
+msgid "Address of the deployed contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:233
+msgid "function ProposeNewContract"
+msgstr ""
+
+#: ../system-contract/genesis.md:244
+msgid "Propose new contract deployment."
+msgstr ""
+
+#: ../system-contract/genesis.md:248 ../system-contract/genesis.md:366
+msgid "ContractDeploymentInput"
+msgstr ""
+
+#: ../system-contract/genesis.md:250
+msgid "category - contract type (usually 0 for now)"
+msgstr ""
+
+#: ../system-contract/genesis.md:251
+msgid "code - byte array that represents the contract code"
+msgstr ""
+
+#: ../system-contract/genesis.md:255
+msgid "Hash of the ContractDeploymentInput object."
+msgstr ""
+
+#: ../system-contract/genesis.md:257
+msgid "function ProposeUpdateContract"
+msgstr ""
+
+#: ../system-contract/genesis.md:268
+msgid "Creates a proposal to update the specified contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:272 ../system-contract/genesis.md:390
+msgid "ContractUpdateInput"
+msgstr ""
+
+#: ../system-contract/genesis.md:274
+msgid "address - address of the contract to be updated"
+msgstr ""
+
+#: ../system-contract/genesis.md:275
+msgid "code - byte array of the contract's new code"
+msgstr ""
+
+#: ../system-contract/genesis.md:279
+msgid "Hash of the ContractUpdateInput object."
+msgstr ""
+
+#: ../system-contract/genesis.md:281
+msgid "function ProposeContractCodeCheck"
+msgstr ""
+
+#: ../system-contract/genesis.md:295
+msgid "Propose to check the code of a contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:299
+msgid "ContractCodeCheckInput"
+msgstr ""
+
+#: ../system-contract/genesis.md:301
+msgid "contract_input - byte array of the contract code to be checked"
+msgstr ""
+
+#: ../system-contract/genesis.md:302
+msgid ""
+"is_contract_deployment - whether the input contract is to be deployed or "
+"updated"
+msgstr ""
+
+#: ../system-contract/genesis.md:303
+msgid ""
+"code_check_release_method - method to call after code check complete "
+"(DeploySmartContract or UpdateSmartContract)"
+msgstr ""
+
+#: ../system-contract/genesis.md:304 ../system-contract/genesis.md:329
+#: ../system-contract/genesis.md:349
+msgid "proposed_contract_input_hash - id of the proposed contract"
+msgstr ""
+
+#: ../system-contract/genesis.md:305
+msgid "category - contract category (always 0 for now)"
+msgstr ""
+
+#: ../system-contract/genesis.md:309
+msgid "Hash of the proposed contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:311
+msgid "function ReleaseApprovedContract"
+msgstr ""
+
+#: ../system-contract/genesis.md:322
+msgid "Releases a contract proposal which has been approved."
+msgstr ""
+
+#: ../system-contract/genesis.md:326 ../system-contract/genesis.md:346
+msgid "ReleaseContractInput"
+msgstr ""
+
+#: ../system-contract/genesis.md:328 ../system-contract/genesis.md:348
+msgid "proposal_id - hash of the proposal"
+msgstr ""
+
+#: ../system-contract/genesis.md:331
+msgid "function ReleaseCodeCheckedContract"
+msgstr ""
+
+#: ../system-contract/genesis.md:342
+msgid "Release the proposal which has passed the code check."
+msgstr ""
+
+#: ../system-contract/genesis.md:351
+msgid "function DeploySmartContract"
+msgstr ""
+
+#: ../system-contract/genesis.md:362
+msgid "Deploys a smart contract on chain."
+msgstr ""
+
+#: ../system-contract/genesis.md:368
+msgid "category - contract type (usually 0)"
+msgstr ""
+
+#: ../system-contract/genesis.md:369
+msgid "code - byte array of the contract code"
+msgstr ""
+
+#: ../system-contract/genesis.md:373
+msgid "Address of the deployed smart contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:375
+msgid "function UpdateSmartContract"
+msgstr ""
+
+#: ../system-contract/genesis.md:386
+msgid "Updates a smart contract on chain."
+msgstr ""
+
+#: ../system-contract/genesis.md:392
+msgid "address - address of the smart contract to be updated"
+msgstr ""
+
+#: ../system-contract/genesis.md:393
+msgid "code - byte array of the updated contract code"
+msgstr ""
+
+#: ../system-contract/genesis.md:397
+msgid "Address of the updated smart contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:409
+msgid "Initializes the genesis contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:415
+msgid ""
+"contract_deployment_authority_required - whether contract "
+"deployment/update requires authority"
+msgstr ""
+
+#: ../system-contract/genesis.md:417
+msgid "function ChangeGenesisOwner"
+msgstr ""
+
+#: ../system-contract/genesis.md:423
+msgid "Change the owner of the genesis contract."
+msgstr ""
+
+#: ../system-contract/genesis.md:427
+msgid "Address - address of new genesis owner"
+msgstr ""
+
+#: ../system-contract/genesis.md:429
+msgid "function SetContractProposerRequiredState"
+msgstr ""
+
+#: ../system-contract/genesis.md:435
+msgid "Set authority of contract deployment."
+msgstr ""
+
+#: ../system-contract/genesis.md:439
+msgid ""
+"google.protobuf.BoolValue - whether contract deployment/update requires "
+"contract proposer authority"
+msgstr ""
+
+#: ../system-contract/genesis.md:441
+msgid "function ChangeContractDeploymentController"
+msgstr ""
+
+#: ../system-contract/genesis.md:452
+msgid ""
+"Modify the contract deployment controller authority. Note: Only old "
+"controller has permission to do this."
+msgstr ""
+
+#: ../system-contract/genesis.md:456 ../system-contract/genesis.md:473
+msgid ""
+"AuthorityInfo - new controller authority info containing organization "
+"address and contract address that the organization belongings to"
+msgstr ""
+
+#: ../system-contract/genesis.md:458
+msgid "function ChangeCodeCheckController"
+msgstr ""
+
+#: ../system-contract/genesis.md:469
+msgid ""
+"Modifies the contract code check controller authority. Note: Only old "
+"controller has permission to do this."
+msgstr ""
+
+#: ../system-contract/genesis.md:475
+msgid "function SetInitialControllerAddress"
+msgstr ""
+
+#: ../system-contract/genesis.md:481
+msgid ""
+"Sets initial controller address for CodeCheckController and "
+"ContractDeploymentController"
+msgstr ""
+
+#: ../system-contract/genesis.md:485
+msgid ""
+"Address - initial controller (which should be parliament organization as "
+"default)"
+msgstr ""
+
+#: ../system-contract/genesis.md:487 ../system-contract/genesis.md:506
+msgid "function GetContractDeploymentController"
+msgstr ""
+
+#: ../system-contract/genesis.md:499
+msgid "Returns ContractDeploymentController authority info."
+msgstr ""
+
+#: ../system-contract/genesis.md:503
+msgid "AuthorityInfo - ContractDeploymentController authority info."
+msgstr ""
+
+#: ../system-contract/genesis.md:518
+msgid "Returns CodeCheckController authority info."
+msgstr ""
+
+#: ../system-contract/genesis.md:522
+msgid "AuthorityInfo - CodeCheckController authority info."
+msgstr ""
+
+#: ../system-contract/index.rst:10 ../system-contract/referendum.md:1
+msgid "Referendum Contract"
+msgstr ""
+
+#: ../system-contract/index.rst:10 ../system-contract/parliament.md:1
+msgid "Parliament Contract"
+msgstr ""
+
+#: ../system-contract/index.rst:10
+msgid "Multi Token Contract"
+msgstr ""
+
+#: ../system-contract/index.rst:10 ../system-contract/profit.md:1
+msgid "Profit Contract"
+msgstr ""
+
+#: ../system-contract/index.rst:10
+msgid "Resource Contract"
+msgstr ""
+
+#: ../system-contract/index.rst:10
+msgid "Cross chain Contract"
+msgstr ""
+
+#: ../system-contract/index.rst:10 ../system-contract/treasury.md:1
+msgid "Treasury Contract"
+msgstr ""
+
+#: ../system-contract/index.rst:10 ../system-contract/vote.md:1
+msgid "Vote Contract"
+msgstr ""
+
+#: ../system-contract/index.rst:10 ../system-contract/token-holder.md:1
+msgid "Token Holder Contract"
+msgstr ""
+
+#: ../system-contract/index.rst:10
+msgid "Token Convert Contract"
+msgstr ""
+
+#: ../system-contract/index.rst:2 ../system-contract/index.rst:10
+msgid "Smart Contract APIs"
+msgstr ""
+
+#: ../system-contract/index.rst:4
+msgid ""
+"This section gives an overview of some important contracts and contract "
+"methods. It’s not meant to be exhaustive. With every method description "
+"we give the parameter message in JSON format, this can be useful when "
+"using client (like **aelf-command**)."
+msgstr ""
+
+#: ../system-contract/multi-token.md:1
+msgid "multi-token"
+msgstr ""
+
+#: ../system-contract/multi-token.md:3
+msgid "The multi-token contract is most essentially used for managing balances."
+msgstr ""
+
+#: ../system-contract/multi-token.md:5
+msgid "Token life-cycle: creation, issuance and transfer."
+msgstr ""
+
+#: ../system-contract/multi-token.md:7
+msgid ""
+"These methods constitute the basic functionality needed to maintain "
+"balances for tokens. For a full listing of the contracts methods you can "
+"check the Token Contract definition on GitHub."
+msgstr ""
+
+#: ../system-contract/multi-token.md:9
+msgid "Create"
+msgstr ""
+
+#: ../system-contract/multi-token.md:27
+msgid ""
+"The token contract permits the creation of an entirely new token and the "
+"first action needed before using a token is its creation. The Create "
+"method takes exactly on parameter, a CreateInput message."
+msgstr ""
+
+#: ../system-contract/multi-token.md:29
+msgid "issuer is the creator of this token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:30
+msgid ""
+"symbol is a short string between 1 and 8 characters composed only of "
+"upper-case letters like for example \"ELF\" or \"AETC\" (no numbers "
+"allowed). Of course, since tokens are uniquely identified by the symbol, "
+"it must not already exist."
+msgstr ""
+
+#: ../system-contract/multi-token.md:31
+msgid ""
+"token_name is a more descriptive name for your token or the long name. "
+"For example, \"RMB\" could be the token symbol and \"RenMinBi\" the "
+"token's name. This is a non-optional field up to 80 characters in length."
+msgstr ""
+
+#: ../system-contract/multi-token.md:32
+msgid ""
+"total_supply for the token is the amount of tokens that will exist. This "
+"must be larger than 0."
+msgstr ""
+
+#: ../system-contract/multi-token.md:33
+msgid "decimals is a positive integer between 0-18."
+msgstr ""
+
+#: ../system-contract/multi-token.md:34
+msgid ""
+"issue_chain_id is the id of the chain, this defaults to the chain id of "
+"the node."
+msgstr ""
+
+#: ../system-contract/multi-token.md:36
+msgid "Issue"
+msgstr ""
+
+#: ../system-contract/multi-token.md:49
+msgid ""
+"Issuing some amount of tokens to an address is the action of increasing "
+"that addresses balance for the given token. The total amount of issued "
+"tokens must not exceed the total supply of the token and only the issuer "
+"(creator) of the token can issue tokens. Issuing tokens effectively "
+"increases the circulating supply. The Issue method takes exactly one "
+"parameter, a IssueInput message."
+msgstr ""
+
+#: ../system-contract/multi-token.md:51 ../system-contract/multi-token.md:73
+msgid "symbol is the symbol that identifies the token, it must exist."
+msgstr ""
+
+#: ../system-contract/multi-token.md:52
+msgid "amount is the amount to issue."
+msgstr ""
+
+#: ../system-contract/multi-token.md:53
+msgid "to field the receiver address of the newly issued tokens."
+msgstr ""
+
+#: ../system-contract/multi-token.md:54 ../system-contract/multi-token.md:75
+msgid ""
+"memo optionally you can specify a later accessible when parsing the "
+"transaction."
+msgstr ""
+
+#: ../system-contract/multi-token.md:56
+msgid "Transfer"
+msgstr ""
+
+#: ../system-contract/multi-token.md:69
+msgid ""
+"Transferring tokens simply is the action of transferring a given amount "
+"of tokens from one address to another. The origin or source address is "
+"the signer of the transaction. The balance of the sender must be higher "
+"than the amount that is transferred. The Transfer method takes exactly "
+"one parameter, a TransferInput message."
+msgstr ""
+
+#: ../system-contract/multi-token.md:72
+msgid "to field is the receiver of the tokens."
+msgstr ""
+
+#: ../system-contract/multi-token.md:74
+msgid "amount is the amount to to transfer."
+msgstr ""
+
+#: ../system-contract/multi-token.md:77
+msgid "TransferFrom"
+msgstr ""
+
+#: ../system-contract/multi-token.md:91
+msgid ""
+"The TransferFrom action will transfer a specified amount of tokens from "
+"one address to another. For this operation to succeed the from address "
+"needs to have approved (see allowances) enough tokens to Sender of this "
+"transaction. If successful the amount will be removed from the allowance."
+msgstr ""
+
+#: ../system-contract/multi-token.md:93
+msgid "from the source address of the tokens."
+msgstr ""
+
+#: ../system-contract/multi-token.md:94
+msgid "to the destination address of the tokens."
+msgstr ""
+
+#: ../system-contract/multi-token.md:95
+msgid "symbol the symbol of the token to transfer."
+msgstr ""
+
+#: ../system-contract/multi-token.md:96
+msgid "amount the amount to transfer."
+msgstr ""
+
+#: ../system-contract/multi-token.md:97 ../system-contract/multi-token.md:245
+msgid "memo an optional memo."
+msgstr ""
+
+#: ../system-contract/multi-token.md:99
+msgid "Allowances"
+msgstr ""
+
+#: ../system-contract/multi-token.md:101
+msgid ""
+"Allowances allow some entity (in fact an address) to authorize another "
+"address to transfer tokens on his behalf (see TransferFrom). There are "
+"two methods available for controlling this, namely Approve and UnApprove."
+msgstr ""
+
+#: ../system-contract/multi-token.md:115
+msgid ""
+"The approve action increases the allowance from the Sender to the Spender"
+" address, enabling the Spender to call TransferFrom."
+msgstr ""
+
+#: ../system-contract/multi-token.md:117
+msgid "spender the address that will have it's allowance increased."
+msgstr ""
+
+#: ../system-contract/multi-token.md:118
+msgid "symbol the symbol of the token to approve."
+msgstr ""
+
+#: ../system-contract/multi-token.md:119
+msgid "amount the amount of tokens to approve."
+msgstr ""
+
+#: ../system-contract/multi-token.md:121
+msgid "UnApprove"
+msgstr ""
+
+#: ../system-contract/multi-token.md:133
+msgid "This is the reverse operation for Approve, it will decrease the allowance."
+msgstr ""
+
+#: ../system-contract/multi-token.md:135
+msgid "spender the address that will have it's allowance decreased."
+msgstr ""
+
+#: ../system-contract/multi-token.md:136
+msgid "symbol the symbol of the token to un-approve."
+msgstr ""
+
+#: ../system-contract/multi-token.md:137
+msgid "amount the amount of tokens to un-approve."
+msgstr ""
+
+#: ../system-contract/multi-token.md:139
+msgid "Locking"
+msgstr ""
+
+#: ../system-contract/multi-token.md:141
+msgid "Lock"
+msgstr ""
+
+#: ../system-contract/multi-token.md:155
+msgid "This method can be used to lock tokens."
+msgstr ""
+
+#: ../system-contract/multi-token.md:157
+msgid "address the entity that wants to lock its tokens."
+msgstr ""
+
+#: ../system-contract/multi-token.md:158 ../system-contract/multi-token.md:180
+msgid "lock_id id of the lock."
+msgstr ""
+
+#: ../system-contract/multi-token.md:159
+msgid "symbol the symbol of the token to lock."
+msgstr ""
+
+#: ../system-contract/multi-token.md:160 ../system-contract/multi-token.md:182
+msgid "usage a memo."
+msgstr ""
+
+#: ../system-contract/multi-token.md:161
+msgid "amount the amount of tokens to lock."
+msgstr ""
+
+#: ../system-contract/multi-token.md:163
+msgid "Unlock"
+msgstr ""
+
+#: ../system-contract/multi-token.md:177
+msgid ""
+"This is the reverse operation of locking, it un-locks some previously "
+"locked tokens."
+msgstr ""
+
+#: ../system-contract/multi-token.md:179
+msgid "address the entity that wants to un-lock its tokens."
+msgstr ""
+
+#: ../system-contract/multi-token.md:181
+msgid "symbol the symbol of the token to un-lock."
+msgstr ""
+
+#: ../system-contract/multi-token.md:183
+msgid "amount the amount of tokens to un-lock."
+msgstr ""
+
+#: ../system-contract/multi-token.md:185
+msgid "Burning tokens"
+msgstr ""
+
+#: ../system-contract/multi-token.md:187
+msgid "Burn"
+msgstr ""
+
+#: ../system-contract/multi-token.md:198
+msgid ""
+"This action will burn the specified amount of tokens, removing them from "
+"the token's Supply"
+msgstr ""
+
+#: ../system-contract/multi-token.md:200
+msgid "symbol the symbol of the token to burn."
+msgstr ""
+
+#: ../system-contract/multi-token.md:201
+msgid "amount the amount of tokens to burn."
+msgstr ""
+
+#: ../system-contract/multi-token.md:203
+msgid "Cross-chain"
+msgstr ""
+
+#: ../system-contract/multi-token.md:205
+msgid "CrossChainCreateToken"
+msgstr ""
+
+#: ../system-contract/multi-token.md:218
+msgid ""
+"This action is used for creating a \"cross-chain\" token. This action "
+"should be called on the side-chain's with the information about the "
+"transaction that created the token on the parent chain."
+msgstr ""
+
+#: ../system-contract/multi-token.md:220
+msgid "from_chain_id the chain id of the chain on which the token was created."
+msgstr ""
+
+#: ../system-contract/multi-token.md:221
+msgid "parent_chain_height the height of the transaction that created the token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:222
+msgid "transaction_bytes the transaction that created the token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:223
+msgid ""
+"merkle_path the merkle path created from the transaction that created the"
+" transaction."
+msgstr ""
+
+#: ../system-contract/multi-token.md:225
+msgid "CrossChainTransfer"
+msgstr ""
+
+#: ../system-contract/multi-token.md:240
+msgid ""
+"This action is used for transferring tokens across chains, this "
+"effectively burn the tokens on the chain."
+msgstr ""
+
+#: ../system-contract/multi-token.md:242
+msgid "to the receiving account."
+msgstr ""
+
+#: ../system-contract/multi-token.md:243 ../system-contract/multi-token.md:624
+#: ../system-contract/multi-token.md:651 ../system-contract/multi-token.md:657
+msgid "symbol the token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:244
+msgid "amount the amount of tokens that will be transferred."
+msgstr ""
+
+#: ../system-contract/multi-token.md:246
+msgid "to_chain_id the destination chain id."
+msgstr ""
+
+#: ../system-contract/multi-token.md:247
+msgid "issue_chain_id the source chain id."
+msgstr ""
+
+#: ../system-contract/multi-token.md:249
+msgid "CrossChainReceiveToken"
+msgstr ""
+
+#: ../system-contract/multi-token.md:262
+msgid ""
+"This method is used on the destination chain for receiving tokens after a"
+" Transfer operation."
+msgstr ""
+
+#: ../system-contract/multi-token.md:264
+msgid "from_chain_id the source chain."
+msgstr ""
+
+#: ../system-contract/multi-token.md:265
+msgid "parent_chain_height the height of the transfer transaction."
+msgstr ""
+
+#: ../system-contract/multi-token.md:266
+msgid "transfer_transaction_bytes the raw bytes of the transfer transaction."
+msgstr ""
+
+#: ../system-contract/multi-token.md:267
+msgid "merkle_path the merkle path created from the transfer transaction."
+msgstr ""
+
+#: ../system-contract/multi-token.md:269
+msgid "SetSymbolsToPayTxSizeFee"
+msgstr ""
+
+#: ../system-contract/multi-token.md:287
+msgid ""
+"This action sets available tokens that can be used to pay for transaction"
+" fee."
+msgstr ""
+
+#: ../system-contract/multi-token.md:289
+msgid "symbols_to_pay_tx_size_fee available token list."
+msgstr ""
+
+#: ../system-contract/multi-token.md:290
+msgid "token_symbol token symbol."
+msgstr ""
+
+#: ../system-contract/multi-token.md:291
+msgid "base_token_weight it is fixed to primary token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:292
+msgid ""
+"added_token_weight if base_token_weight set to 1 and added_token_weight "
+"set to 10, it will cost 10 this token instead of primary token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:294
+msgid "UpdateCoefficientsForContract"
+msgstr ""
+
+#: ../system-contract/multi-token.md:320
+msgid "This action sets methods used to calculate resource token fees."
+msgstr ""
+
+#: ../system-contract/multi-token.md:322
+msgid "fee_token_type resource fee type (exclude TX)."
+msgstr ""
+
+#: ../system-contract/multi-token.md:323
+msgid "piece_coefficients_list it is a coefficients array."
+msgstr ""
+
+#: ../system-contract/multi-token.md:324
+msgid ""
+"value it is a int array. its first element indicates its piece key. other"
+" every three consecutive elements indicates a function, like (2, 1, 1) "
+"means (1/1) * x^2."
+msgstr ""
+
+#: ../system-contract/multi-token.md:326
+msgid "UpdateCoefficientsForSender"
+msgstr ""
+
+#: ../system-contract/multi-token.md:342
+msgid "This action sets methods used to calculate transaction fee."
+msgstr ""
+
+#: ../system-contract/multi-token.md:344
+msgid "note: for CalculateFeeCoefficients see UpdateCoefficientsForContract"
+msgstr ""
+
+#: ../system-contract/multi-token.md:346
+msgid "AdvanceResourceToken"
+msgstr ""
+
+#: ../system-contract/multi-token.md:359
+msgid "This action transfers resource tokens to designated contract address."
+msgstr ""
+
+#: ../system-contract/multi-token.md:361 ../system-contract/multi-token.md:380
+msgid "contract_address the contract address."
+msgstr ""
+
+#: ../system-contract/multi-token.md:362 ../system-contract/multi-token.md:381
+msgid "resource_token_symbol resource token symbol."
+msgstr ""
+
+#: ../system-contract/multi-token.md:363 ../system-contract/multi-token.md:382
+msgid "amount the amount of tokens."
+msgstr ""
+
+#: ../system-contract/multi-token.md:365
+msgid "TakeResourceTokenBack"
+msgstr ""
+
+#: ../system-contract/multi-token.md:378
+msgid "This method takes token from contract address"
+msgstr ""
+
+#: ../system-contract/multi-token.md:384
+msgid "ValidateTokenInfoExists"
+msgstr ""
+
+#: ../system-contract/multi-token.md:402
+msgid "This method validates if the token exist."
+msgstr ""
+
+#: ../system-contract/multi-token.md:404 ../system-contract/multi-token.md:428
+msgid "symbol the token symbol."
+msgstr ""
+
+#: ../system-contract/multi-token.md:405
+msgid "token_name the token name."
+msgstr ""
+
+#: ../system-contract/multi-token.md:406
+msgid "total_supply  total supply of the token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:407
+msgid "decimals decimals."
+msgstr ""
+
+#: ../system-contract/multi-token.md:408
+msgid "issuer the token issuer."
+msgstr ""
+
+#: ../system-contract/multi-token.md:409
+msgid "is_burnable indicates if the token is burnable."
+msgstr ""
+
+#: ../system-contract/multi-token.md:410
+msgid "issue_chain_id issue chain id."
+msgstr ""
+
+#: ../system-contract/multi-token.md:411
+msgid "is_profitable indicates if the token is profitable."
+msgstr ""
+
+#: ../system-contract/multi-token.md:413
+msgid "TransferToContract"
+msgstr ""
+
+#: ../system-contract/multi-token.md:426
+msgid "This method transfer token to token address."
+msgstr ""
+
+#: ../system-contract/multi-token.md:429
+msgid "amount amount."
+msgstr ""
+
+#: ../system-contract/multi-token.md:430
+msgid "memo transfer memo."
+msgstr ""
+
+#: ../system-contract/multi-token.md:432
+msgid "InitializeAuthorizedController"
+msgstr ""
+
+#: ../system-contract/multi-token.md:439
+msgid ""
+"This method initializes the controller for calling "
+"UpdateCoefficientsForContract and UpdateCoefficientsForSender. Note that,"
+" if the current chain is side chain, it will create a controller for "
+"managing chain rental."
+msgstr ""
+
+#: ../system-contract/multi-token.md:441
+msgid "ChangeUserFeeController"
+msgstr ""
+
+#: ../system-contract/multi-token.md:454 ../system-contract/multi-token.md:472
+#: ../system-contract/multi-token.md:815 ../system-contract/treasury.md:128
+msgid "contract address: controller type."
+msgstr ""
+
+#: ../system-contract/multi-token.md:455 ../system-contract/multi-token.md:473
+#: ../system-contract/multi-token.md:816 ../system-contract/treasury.md:129
+msgid "owner address: controller's address."
+msgstr ""
+
+#: ../system-contract/multi-token.md:457
+msgid ""
+"This method change the controller who sets the coefficient for "
+"calculating transaction size fee."
+msgstr ""
+
+#: ../system-contract/multi-token.md:459
+msgid "ChangeDeveloperController"
+msgstr ""
+
+#: ../system-contract/multi-token.md:475
+msgid ""
+"This method change the controller who sets the coefficient for "
+"calculating resource token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:479
+msgid "GetTokenInfo"
+msgstr ""
+
+#: ../system-contract/multi-token.md:502
+msgid ""
+"This view method returns a TokenInfo object that describes information "
+"about a token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:504 ../system-contract/multi-token.md:566
+#: ../system-contract/multi-token.md:598 ../system-contract/multi-token.md:648
+msgid "Input:"
+msgstr ""
+
+#: ../system-contract/multi-token.md:506
+msgid "symbol the token for which you want the information."
+msgstr ""
+
+#: ../system-contract/multi-token.md:508 ../system-contract/multi-token.md:571
+#: ../system-contract/multi-token.md:604 ../system-contract/multi-token.md:654
+msgid "Output:"
+msgstr ""
+
+#: ../system-contract/multi-token.md:510
+msgid "symbol the symbol of the token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:511
+msgid "token_name the full name of the token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:512
+msgid "supply the current supply of the token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:513
+msgid "total_supply the total supply of the token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:514
+msgid "decimals the amount of decimal places this token has."
+msgstr ""
+
+#: ../system-contract/multi-token.md:515
+msgid "issuer the address that created the token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:516
+msgid "is_burnable a flag indicating if this token is burnable."
+msgstr ""
+
+#: ../system-contract/multi-token.md:517
+msgid "is_profitable a flag indicating if this token is profitable."
+msgstr ""
+
+#: ../system-contract/multi-token.md:518
+msgid "issue_chain_id the chain of this token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:519
+msgid "burned the amount of burned tokens."
+msgstr ""
+
+#: ../system-contract/multi-token.md:521
+msgid "GetNativeTokenInfo"
+msgstr ""
+
+#: ../system-contract/multi-token.md:527 ../system-contract/multi-token.md:542
+msgid "note: for TokenInfo see GetTokenInfo"
+msgstr ""
+
+#: ../system-contract/multi-token.md:529
+msgid ""
+"This view method returns the TokenInfo object associated with the native "
+"token."
+msgstr ""
+
+#: ../system-contract/multi-token.md:532
+msgid "GetResourceTokenInfo"
+msgstr ""
+
+#: ../system-contract/multi-token.md:544
+msgid ""
+"This view method returns the list of TokenInfo objects associated with "
+"the chain's resource tokens."
+msgstr ""
+
+#: ../system-contract/multi-token.md:547
+msgid "GetBalance"
+msgstr ""
+
+#: ../system-contract/multi-token.md:564
+msgid "This view method returns the balance of an address."
+msgstr ""
+
+#: ../system-contract/multi-token.md:568 ../system-contract/multi-token.md:573
+msgid "symbol the token for which to get the balance."
+msgstr ""
+
+#: ../system-contract/multi-token.md:569 ../system-contract/multi-token.md:574
+msgid "owner the address for which to get the balance."
+msgstr ""
+
+#: ../system-contract/multi-token.md:575
+msgid "balance the current balance."
+msgstr ""
+
+#: ../system-contract/multi-token.md:577
+msgid "GetAllowance"
+msgstr ""
+
+#: ../system-contract/multi-token.md:596
+msgid "This view method returns the allowance of one address to another."
+msgstr ""
+
+#: ../system-contract/multi-token.md:600 ../system-contract/multi-token.md:606
+msgid "symbol the token for which to get the allowance."
+msgstr ""
+
+#: ../system-contract/multi-token.md:601 ../system-contract/multi-token.md:607
+msgid "owner the address for which to get the allowance (that approved tokens)."
+msgstr ""
+
+#: ../system-contract/multi-token.md:602 ../system-contract/multi-token.md:608
+msgid "spender the address of the spender."
+msgstr ""
+
+#: ../system-contract/multi-token.md:609
+msgid "allowance the current allowance."
+msgstr ""
+
+#: ../system-contract/multi-token.md:611
+msgid "IsInWhiteList"
+msgstr ""
+
+#: ../system-contract/multi-token.md:622
+msgid ""
+"This method returns wether or not the given address is in the lock "
+"whitelist."
+msgstr ""
+
+#: ../system-contract/multi-token.md:625
+msgid "address the address that is checked."
+msgstr ""
+
+#: ../system-contract/multi-token.md:627
+msgid "GetLockedAmount"
+msgstr ""
+
+#: ../system-contract/multi-token.md:646
+msgid ""
+"This view method returns the amount of tokens currently locked by an "
+"address."
+msgstr ""
+
+#: ../system-contract/multi-token.md:650 ../system-contract/multi-token.md:656
+msgid "address the address."
+msgstr ""
+
+#: ../system-contract/multi-token.md:652 ../system-contract/multi-token.md:658
+msgid "lock_id the lock id."
+msgstr ""
+
+#: ../system-contract/multi-token.md:659
+msgid "amount the amount currently locked by the specified address."
+msgstr ""
+
+#: ../system-contract/multi-token.md:661
+msgid "GetCrossChainTransferTokenContractAddress"
+msgstr ""
+
+#: ../system-contract/multi-token.md:671
+msgid ""
+"This view method returns the cross-chain transfer address for the given "
+"chain."
+msgstr ""
+
+#: ../system-contract/multi-token.md:673
+msgid "chainId the id of the chain."
+msgstr ""
+
+#: ../system-contract/multi-token.md:675
+msgid "GetPrimaryTokenSymbol"
+msgstr ""
+
+#: ../system-contract/multi-token.md:681
+msgid ""
+"This view method return the primary token symbol if it's set. If not, "
+"returns the Native symbol."
+msgstr ""
+
+#: ../system-contract/multi-token.md:683
+msgid "GetCalculateFeeCoefficientOfContract"
+msgstr ""
+
+#: ../system-contract/multi-token.md:706
+msgid "This view method returns the resource tokens fee calculation method."
+msgstr ""
+
+#: ../system-contract/multi-token.md:708
+msgid "Input resource fee type."
+msgstr ""
+
+#: ../system-contract/multi-token.md:711
+msgid ""
+"Output note: for CalculateFeeCoefficients see "
+"UpdateCoefficientsForContract"
+msgstr ""
+
+#: ../system-contract/multi-token.md:715
+msgid "GetCalculateFeeCoefficientOfSender"
+msgstr ""
+
+#: ../system-contract/multi-token.md:722
+msgid "This view method returns transaction fee's calculation method."
+msgstr ""
+
+#: ../system-contract/multi-token.md:724
+msgid ""
+"note: for CalculateFeeCoefficients see "
+"GetCalculateFeeCoefficientForContract"
+msgstr ""
+
+#: ../system-contract/multi-token.md:726
+msgid "GetSymbolsToPayTxSizeFee"
+msgstr ""
+
+#: ../system-contract/multi-token.md:745
+msgid ""
+"This method returns available tokens that can be used to pay for "
+"transaction fee."
+msgstr ""
+
+#: ../system-contract/multi-token.md:747
+msgid "note: for SymbolListToPayTxSizeFee see SetSymbolsToPayTxSizeFee"
+msgstr ""
+
+#: ../system-contract/multi-token.md:749
+msgid "GetDeveloperFeeController"
+msgstr ""
+
+#: ../system-contract/multi-token.md:767
+msgid ""
+"This method returns the controller for UpdateCoefficientsForContract. The"
+" root address consists originally of default parliament organization, "
+"developer organization. The type of root controller and developer "
+"controller is Assocation."
+msgstr ""
+
+#: ../system-contract/multi-token.md:769 ../system-contract/multi-token.md:795
+msgid "root_controller root controller information."
+msgstr ""
+
+#: ../system-contract/multi-token.md:770 ../system-contract/multi-token.md:796
+msgid "parliament_controller parliament controller information."
+msgstr ""
+
+#: ../system-contract/multi-token.md:771
+msgid "developer_controller developer controller information."
+msgstr ""
+
+#: ../system-contract/multi-token.md:772 ../system-contract/multi-token.md:798
+msgid "contract_address in which contract the organization is created."
+msgstr ""
+
+#: ../system-contract/multi-token.md:773 ../system-contract/multi-token.md:799
+msgid "owner_address organization address"
+msgstr ""
+
+#: ../system-contract/multi-token.md:775
+msgid "GetUserFeeController"
+msgstr ""
+
+#: ../system-contract/multi-token.md:793
+msgid ""
+"This method returns the controller for UpdateCoefficientsForSender. The "
+"root address consists originally of default parliament organization, "
+"referendum organization. The type of root controller and developer "
+"controller is Assocation."
+msgstr ""
+
+#: ../system-contract/multi-token.md:797
+msgid "referendum_controller referndum controller information."
+msgstr ""
+
+#: ../system-contract/multi-token.md:801
+msgid "GetSideChainRentalControllerCreateInfo"
+msgstr ""
+
+#: ../system-contract/multi-token.md:818
+msgid "GetResourceUsage"
+msgstr ""
+
+#: ../system-contract/multi-token.md:829
+msgid ""
+"This method is used on a side chain. It returns how much resource tokens "
+"should be paid at the moment."
+msgstr ""
+
+#: ../system-contract/multi-token.md:831
+msgid "value resource token symbol => amount."
+msgstr ""
+
+#: ../system-contract/multi-token.md:833
+msgid "GetOwningRental"
+msgstr ""
+
+#: ../system-contract/multi-token.md:844
+msgid ""
+"This method is used on a side chain. It returns how much resource tokens "
+"(count * value) should be paid at the moment."
+msgstr ""
+
+#: ../system-contract/multi-token.md:846
+msgid "resource_amount resource token symbol => amount."
+msgstr ""
+
+#: ../system-contract/multi-token.md:848
+msgid "GetOwningRentalUnitValue"
+msgstr ""
+
+#: ../system-contract/multi-token.md:859
+msgid ""
+"This method is used in side chain. It returns resouces token' unit value."
+" (pay = unit value * amount)"
+msgstr ""
+
+#: ../system-contract/multi-token.md:861
+msgid "resource_unit_value resource token symbol => unit value."
+msgstr ""
+
+#: ../system-contract/multi-token.md:863
+msgid "OwningRentalUnitValue"
+msgstr ""
+
+#: ../system-contract/multi-token.md:875
+msgid ""
+"Get the controllers(By defalult, the contoller consist of parliament and "
+"referendum). If you change the controller, just the root controller has "
+"value."
+msgstr ""
+
+#: ../system-contract/multi-token.md:879
+msgid "root controller: the root controller, it is a association by default."
+msgstr ""
+
+#: ../system-contract/multi-token.md:880
+msgid ""
+"parliament controller: parliament controller, member of the root "
+"controller."
+msgstr ""
+
+#: ../system-contract/multi-token.md:881
+msgid ""
+"referendum controller: referendum controller, member of the root "
+"controller."
+msgstr ""
+
+#: ../system-contract/parliament.md:3
+msgid "Initialize"
+msgstr ""
+
+#: ../system-contract/parliament.md:12
+msgid ""
+"Initialize will set parliament proposer whitelist and create the first "
+"parliament organization with specific proposer_authority_required."
+msgstr ""
+
+#: ../system-contract/parliament.md:14 ../system-contract/token-convert.md:30
+msgid "InitializeInput:"
+msgstr ""
+
+#: ../system-contract/parliament.md:15
+msgid ""
+"privileged proposer: privileged proposer would be the first address in "
+"parliament proposer whitelist."
+msgstr ""
+
+#: ../system-contract/parliament.md:16
+msgid ""
+"proposer authority required: the setting indicates if proposals need "
+"authority to be created for first/default parliament organization."
+msgstr ""
+
+#: ../system-contract/parliament.md:35
+msgid "Creates parliament organization with input data."
+msgstr ""
+
+#: ../system-contract/parliament.md:39 ../system-contract/parliament.md:78
+#: ../system-contract/parliament.md:390 ../system-contract/parliament.md:490
+msgid ""
+"minimal approval threshold: the value to be divided by 10000 for the "
+"minimum approval threshold in fraction."
+msgstr ""
+
+#: ../system-contract/parliament.md:40 ../system-contract/parliament.md:79
+#: ../system-contract/parliament.md:391 ../system-contract/parliament.md:491
+msgid ""
+"maximal rejection threshold: the value to be divided by 10000 for the "
+"maximal rejection threshold in fraction."
+msgstr ""
+
+#: ../system-contract/parliament.md:41 ../system-contract/parliament.md:80
+#: ../system-contract/parliament.md:392 ../system-contract/parliament.md:492
+msgid ""
+"maximal abstention threshold: the value to be divided by 10000 for the "
+"maximal abstention threshold in fraction."
+msgstr ""
+
+#: ../system-contract/parliament.md:42 ../system-contract/parliament.md:81
+#: ../system-contract/parliament.md:393 ../system-contract/parliament.md:493
+msgid ""
+"minimal vote threshold: the value to be divided by 10000 for the minimal "
+"vote threshold in fraction."
+msgstr ""
+
+#: ../system-contract/parliament.md:43 ../system-contract/parliament.md:82
+#: ../system-contract/parliament.md:494
+msgid ""
+"proposer authority required: setting this to true can allow anyone to "
+"create proposals."
+msgstr ""
+
+#: ../system-contract/parliament.md:44 ../system-contract/parliament.md:83
+#: ../system-contract/parliament.md:495
+msgid ""
+"parliament member proposing allowed: setting this to true can allow "
+"parliament member to create proposals."
+msgstr ""
+
+#: ../system-contract/parliament.md:73
+msgid "Creates parliament organization when called by system contract."
+msgstr ""
+
+#: ../system-contract/parliament.md:161
+msgid "address: send address who votes for approval."
+msgstr ""
+
+#: ../system-contract/parliament.md:189
+msgid "address: send address who votes for reject."
+msgstr ""
+
+#: ../system-contract/parliament.md:230 ../system-contract/referendum.md:243
+msgid "-Hash: id of the proposal."
+msgstr ""
+
+#: ../system-contract/parliament.md:232 ../system-contract/referendum.md:245
+msgid ""
+"After a successful execution, a ProposalReleased event log can be found "
+"in the transaction result."
+msgstr ""
+
+#: ../system-contract/parliament.md:235 ../system-contract/referendum.md:248
+msgid "ProposalReleased"
+msgstr ""
+
+#: ../system-contract/parliament.md:293
+msgid "proposers: the new value for the list."
+msgstr ""
+
+#: ../system-contract/parliament.md:295 ../system-contract/parliament.md:334
+msgid ""
+"After a successful execution, an OrganizationWhiteListChanged event log "
+"can be found in the transaction result."
+msgstr ""
+
+#: ../system-contract/parliament.md:321 ../system-contract/referendum.md:334
+msgid "CreateProposalBySystemContractInput:"
+msgstr ""
+
+#: ../system-contract/parliament.md:322 ../system-contract/referendum.md:122
+#: ../system-contract/referendum.md:335
+msgid "CreateProposalInput:"
+msgstr ""
+
+#: ../system-contract/parliament.md:332
+msgid "Address: id of the newly created proposal."
+msgstr ""
+
+#: ../system-contract/parliament.md:380 ../system-contract/referendum.md:394
+msgid "Returns the organization with the provided organization address."
+msgstr ""
+
+#: ../system-contract/parliament.md:386
+msgid ""
+"proposer authority required: indicates if proposals need authority to be "
+"created."
+msgstr ""
+
+#: ../system-contract/parliament.md:387
+msgid "organization_address: organization address."
+msgstr ""
+
+#: ../system-contract/parliament.md:388 ../system-contract/referendum.md:407
+msgid "organization hash: organization id."
+msgstr ""
+
+#: ../system-contract/parliament.md:394
+msgid ""
+"parliament member proposing allowed indicates if parliament member can "
+"propose to this organization."
+msgstr ""
+
+#: ../system-contract/parliament.md:396
+msgid "GetDefaultOrganizationAddress"
+msgstr ""
+
+#: ../system-contract/parliament.md:403
+msgid "Address: the address of the default organization."
+msgstr ""
+
+#: ../system-contract/parliament.md:405
+msgid "ValidateAddressIsParliamentMember"
+msgstr ""
+
+#: ../system-contract/parliament.md:411
+msgid "Validates if the provided address is a parliament member."
+msgstr ""
+
+#: ../system-contract/parliament.md:413
+msgid "Address: parliament member address to be checked."
+msgstr ""
+
+#: ../system-contract/parliament.md:416
+msgid ""
+"BoolValue: indicates whether provided address is one of parliament "
+"members."
+msgstr ""
+
+#: ../system-contract/parliament.md:419
+msgid "GetProposerWhiteList"
+msgstr ""
+
+#: ../system-contract/parliament.md:429
+msgid "Returns a list of whitelisted proposers."
+msgstr ""
+
+#: ../system-contract/parliament.md:433
+msgid "proposers: the whitelisted proposers."
+msgstr ""
+
+#: ../system-contract/parliament.md:436
+msgid "GetNotVotedPendingProposals"
+msgstr ""
+
+#: ../system-contract/parliament.md:445
+msgid ""
+"Filter still pending ones not yet voted by the sender from provided "
+"proposals."
+msgstr ""
+
+#: ../system-contract/parliament.md:447 ../system-contract/parliament.md:451
+#: ../system-contract/parliament.md:466 ../system-contract/parliament.md:470
+msgid "ProposalIdList"
+msgstr ""
+
+#: ../system-contract/parliament.md:448 ../system-contract/parliament.md:467
+msgid "proposal ids: list of proposal id."
+msgstr ""
+
+#: ../system-contract/parliament.md:452 ../system-contract/parliament.md:471
+msgid "proposal ids: filtered proposal id list from input ones."
+msgstr ""
+
+#: ../system-contract/parliament.md:455
+msgid "GetNotVotedProposals"
+msgstr ""
+
+#: ../system-contract/parliament.md:464
+msgid "Filter not yet voted ones by the sender from provided proposals."
+msgstr ""
+
+#: ../system-contract/parliament.md:534
+msgid "approval count: approval count for this proposal."
+msgstr ""
+
+#: ../system-contract/parliament.md:535
+msgid "rejection count: rejection count for this proposal."
+msgstr ""
+
+#: ../system-contract/parliament.md:536
+msgid "abstention count: abstention count for this proposal."
+msgstr ""
+
+#: ../system-contract/profit.md:3
+msgid ""
+"The Profit contract is an abstract layer for creating scheme to share "
+"bonus. Developers can build a system to distribute bonus by call this "
+"contract."
+msgstr ""
+
+#: ../system-contract/profit.md:5
+msgid "Scheme Creation"
+msgstr ""
+
+#: ../system-contract/profit.md:7
+msgid "This method creates a new scheme based on the CreateSchemeInput message."
+msgstr ""
+
+#: ../system-contract/profit.md:30
+msgid "CreateSchemeInput:"
+msgstr ""
+
+#: ../system-contract/profit.md:32
+msgid "manager: the scheme manager's Address, defaults to the transaction sender."
+msgstr ""
+
+#: ../system-contract/profit.md:33
+msgid "profit receiving due period_count optional, defaults to 10."
+msgstr ""
+
+#: ../system-contract/profit.md:34
+msgid ""
+"is release all balance every time by default if true, all the schemes "
+"balance will be distributed during distribution if the input amount is 0."
+msgstr ""
+
+#: ../system-contract/profit.md:35
+msgid "delay distribute period count distribute bonus after terms."
+msgstr ""
+
+#: ../system-contract/profit.md:36
+msgid ""
+"can remove beneficiary directly indicates whether the beneficiary can be "
+"removed without considering its EndPeriod and IsWeightRemoved."
+msgstr ""
+
+#: ../system-contract/profit.md:37
+msgid "token used to indicates scheme id."
+msgstr ""
+
+#: ../system-contract/profit.md:41
+msgid "value: the newly created scheme id."
+msgstr ""
+
+#: ../system-contract/profit.md:43
+msgid ""
+"After a successful creation, a SchemeCreated event log can be found in "
+"the transaction result."
+msgstr ""
+
+#: ../system-contract/profit.md:45
+msgid "SchemeCreated:"
+msgstr ""
+
+#: ../system-contract/profit.md:47
+msgid "virtual address: transfer from scheme id."
+msgstr ""
+
+#: ../system-contract/profit.md:48
+msgid "manager: manager address."
+msgstr ""
+
+#: ../system-contract/profit.md:49 ../system-contract/profit.md:108
+#: ../system-contract/profit.md:157 ../system-contract/profit.md:201
+#: ../system-contract/profit.md:222 ../system-contract/profit.md:245
+#: ../system-contract/profit.md:265 ../system-contract/profit.md:328
+msgid "scheme id: scheme id."
+msgstr ""
+
+#: ../system-contract/profit.md:51
+msgid "Add sub-scheme"
+msgstr ""
+
+#: ../system-contract/profit.md:53
+msgid ""
+"Two previously created schemes can be put in a scheme/sub-scheme "
+"relation. This will effectively add the specified sub-scheme as a "
+"beneficiary of the parent scheme."
+msgstr ""
+
+#: ../system-contract/profit.md:65
+msgid "scheme id: the parent scheme ID."
+msgstr ""
+
+#: ../system-contract/profit.md:66
+msgid "sub scheme id: the child scheme ID."
+msgstr ""
+
+#: ../system-contract/profit.md:67
+msgid "sub scheme shares: number of shares of the sub-scheme."
+msgstr ""
+
+#: ../system-contract/profit.md:69
+msgid "Remove sub-scheme"
+msgstr ""
+
+#: ../system-contract/profit.md:71
+msgid ""
+"Removes a sub-scheme from a scheme. Note that only the manager of the "
+"parent scheme can remove a sub-scheme from it."
+msgstr ""
+
+#: ../system-contract/profit.md:82
+msgid "RemoveSubSchemeInput:"
+msgstr ""
+
+#: ../system-contract/profit.md:84 ../system-contract/treasury.md:234
+msgid "scheme id: scheme id"
+msgstr ""
+
+#: ../system-contract/profit.md:85
+msgid "sub scheme id: sub-scheme id"
+msgstr ""
+
+#: ../system-contract/profit.md:87
+msgid "Add beneficiary"
+msgstr ""
+
+#: ../system-contract/profit.md:89
+msgid ""
+"Adds a beneficiary to a scheme. This beneficiary is either a scheme or "
+"another entity that can be represented by an AElf address."
+msgstr ""
+
+#: ../system-contract/profit.md:106
+msgid "AddBeneficiaryInput:"
+msgstr ""
+
+#: ../system-contract/profit.md:109
+msgid "beneficiary share: share information to beneficiary."
+msgstr ""
+
+#: ../system-contract/profit.md:110 ../system-contract/profit.md:159
+msgid "end period: end time."
+msgstr ""
+
+#: ../system-contract/profit.md:112 ../system-contract/profit.md:161
+msgid "BeneficiaryShare:"
+msgstr ""
+
+#: ../system-contract/profit.md:114
+msgid "beneficiary: beneficiary address"
+msgstr ""
+
+#: ../system-contract/profit.md:115
+msgid "shares: shares attributed to this beneficiary."
+msgstr ""
+
+#: ../system-contract/profit.md:117
+msgid "Remove beneficiary"
+msgstr ""
+
+#: ../system-contract/profit.md:119
+msgid "Removes a beneficiary from a scheme."
+msgstr ""
+
+#: ../system-contract/profit.md:130
+msgid "RemoveBeneficiaryInput:"
+msgstr ""
+
+#: ../system-contract/profit.md:132
+msgid "beneficiary beneficiary address to be removed"
+msgstr ""
+
+#: ../system-contract/profit.md:133
+msgid "scheme id scheme id"
+msgstr ""
+
+#: ../system-contract/profit.md:136
+msgid "Add beneficiaries"
+msgstr ""
+
+#: ../system-contract/profit.md:138
+msgid "Adds multiple beneficiaries to a scheme until the given end period."
+msgstr ""
+
+#: ../system-contract/profit.md:155
+msgid "AddBeneficiariesInput:"
+msgstr ""
+
+#: ../system-contract/profit.md:158
+msgid "beneficiary shares: share information to beneficiaries."
+msgstr ""
+
+#: ../system-contract/profit.md:163
+msgid "beneficiary: beneficiary address."
+msgstr ""
+
+#: ../system-contract/profit.md:164
+msgid "shares: shares to beneficiary."
+msgstr ""
+
+#: ../system-contract/profit.md:166
+msgid "Remove beneficiaries"
+msgstr ""
+
+#: ../system-contract/profit.md:168
+msgid "Remove beneficiaries from a scheme."
+msgstr ""
+
+#: ../system-contract/profit.md:179
+msgid "RemoveBeneficiariesInput:"
+msgstr ""
+
+#: ../system-contract/profit.md:181
+msgid "beneficiaries beneficiaries' addresses to be removed."
+msgstr ""
+
+#: ../system-contract/profit.md:182 ../system-contract/profit.md:392
+msgid "scheme id scheme id."
+msgstr ""
+
+#: ../system-contract/profit.md:184
+msgid "Profit contribution"
+msgstr ""
+
+#: ../system-contract/profit.md:186
+msgid "Contribute profit to a scheme."
+msgstr ""
+
+#: ../system-contract/profit.md:199 ../system-contract/profit.md:220
+#: ../system-contract/token-holder.md:69
+msgid "ContributeProfitsInput:"
+msgstr ""
+
+#: ../system-contract/profit.md:202
+msgid "amount: amount token contributed to the scheme."
+msgstr ""
+
+#: ../system-contract/profit.md:203
+msgid "period: in which term the amount is added."
+msgstr ""
+
+#: ../system-contract/profit.md:204 ../system-contract/profit.md:223
+#: ../system-contract/profit.md:248 ../system-contract/profit.md:428
+#: ../system-contract/treasury.md:28 ../system-contract/treasury.md:37
+#: ../system-contract/treasury.md:55
+msgid "symbol: token symbol."
+msgstr ""
+
+#: ../system-contract/profit.md:206
+msgid "Claim profits"
+msgstr ""
+
+#: ../system-contract/profit.md:208
+msgid ""
+"Used to claim the profits of a given symbol. The beneficiary is "
+"identified as the sender of the transaction."
+msgstr ""
+
+#: ../system-contract/profit.md:224
+msgid ""
+"beneficiary: optional, claiming profits for another address, transaction "
+"fees apply to the caller."
+msgstr ""
+
+#: ../system-contract/profit.md:226
+msgid "Distribute profits"
+msgstr ""
+
+#: ../system-contract/profit.md:228
+msgid ""
+"Distribute profits to scheme (address) including its sub scheme according"
+" to term and symbol, should be called by the manager."
+msgstr ""
+
+#: ../system-contract/profit.md:243 ../system-contract/token-holder.md:86
+msgid "DistributeProfitsInput:"
+msgstr ""
+
+#: ../system-contract/profit.md:246
+msgid "period: term， here should be the current term."
+msgstr ""
+
+#: ../system-contract/profit.md:247
+msgid "amount: number."
+msgstr ""
+
+#: ../system-contract/profit.md:250
+msgid "Reset manager"
+msgstr ""
+
+#: ../system-contract/profit.md:252
+msgid "Reset the manager of a scheme."
+msgstr ""
+
+#: ../system-contract/profit.md:263
+msgid "ResetManagerInput:"
+msgstr ""
+
+#: ../system-contract/profit.md:266
+msgid "new manager: new manager's address."
+msgstr ""
+
+#: ../system-contract/profit.md:272
+msgid "GetManagingSchemeIds"
+msgstr ""
+
+#: ../system-contract/profit.md:274
+msgid "Get all schemes created by the specified manager."
+msgstr ""
+
+#: ../system-contract/profit.md:288
+msgid "GetManagingSchemeIdsInput:"
+msgstr ""
+
+#: ../system-contract/profit.md:290
+msgid "manager: manager's address."
+msgstr ""
+
+#: ../system-contract/profit.md:294
+msgid "scheme ids: list of scheme ids."
+msgstr ""
+
+#: ../system-contract/profit.md:296 ../system-contract/token-holder.md:135
+msgid "GetScheme"
+msgstr ""
+
+#: ../system-contract/profit.md:298
+msgid "Returns the scheme with the given hash (scheme ID)."
+msgstr ""
+
+#: ../system-contract/profit.md:306 ../system-contract/treasury.md:191
+msgid "value: scheme id."
+msgstr ""
+
+#: ../system-contract/profit.md:308
+msgid "SchemeBeneficiaryShare:"
+msgstr ""
+
+#: ../system-contract/profit.md:310
+msgid "scheme id: sub scheme's id."
+msgstr ""
+
+#: ../system-contract/profit.md:311
+msgid "shares: sub scheme shares."
+msgstr ""
+
+#: ../system-contract/profit.md:313
+msgid "GetSchemeAddress"
+msgstr ""
+
+#: ../system-contract/profit.md:315
+msgid ""
+"Returns the schemes virtual address if the input period is 0 or will give"
+" the distributed profit address for the given period."
+msgstr ""
+
+#: ../system-contract/profit.md:326 ../system-contract/profit.md:354
+msgid "SchemePeriod:"
+msgstr ""
+
+#: ../system-contract/profit.md:329
+msgid "period: period number."
+msgstr ""
+
+#: ../system-contract/profit.md:333
+msgid "value: scheme's virtual address."
+msgstr ""
+
+#: ../system-contract/profit.md:335
+msgid "GetDistributedProfitsInfo"
+msgstr ""
+
+#: ../system-contract/profit.md:337
+msgid "Get distributed profits Info for a given period."
+msgstr ""
+
+#: ../system-contract/profit.md:356 ../system-contract/profit.md:427
+msgid "scheme_id: scheme id."
+msgstr ""
+
+#: ../system-contract/profit.md:357
+msgid "period:  term number."
+msgstr ""
+
+#: ../system-contract/profit.md:361
+msgid "total shares: total shares, -1 indicates failed to get the information."
+msgstr ""
+
+#: ../system-contract/profit.md:362
+msgid "profits amount: token symbol => reside amount."
+msgstr ""
+
+#: ../system-contract/profit.md:363
+msgid "is released: is released."
+msgstr ""
+
+#: ../system-contract/profit.md:365
+msgid "GetProfitDetails"
+msgstr ""
+
+#: ../system-contract/profit.md:367
+msgid "Gets a beneficiaries profit details for a given scheme."
+msgstr ""
+
+#: ../system-contract/profit.md:390
+msgid "GetProfitDetailsInput:"
+msgstr ""
+
+#: ../system-contract/profit.md:393
+msgid "beneficiary  beneficiary."
+msgstr ""
+
+#: ../system-contract/profit.md:397
+msgid "details profit details."
+msgstr ""
+
+#: ../system-contract/profit.md:399
+msgid "ProfitDetail:"
+msgstr ""
+
+#: ../system-contract/profit.md:401
+msgid "start period: start period."
+msgstr ""
+
+#: ../system-contract/profit.md:402
+msgid "end period: end period."
+msgstr ""
+
+#: ../system-contract/profit.md:403
+msgid ""
+"shares: shares indicating the weight used to calculate the profit in the "
+"future."
+msgstr ""
+
+#: ../system-contract/profit.md:404
+msgid "last profit period: last period the scheme distribute."
+msgstr ""
+
+#: ../system-contract/profit.md:405
+msgid "is weight removed: is it expired."
+msgstr ""
+
+#: ../system-contract/profit.md:407
+msgid "GetProfitAmount"
+msgstr ""
+
+#: ../system-contract/profit.md:409
+msgid ""
+"Calculate profits (have not yet received) before current term(at most 10 "
+"term)."
+msgstr ""
+
+#: ../system-contract/profit.md:425 ../system-contract/token-holder.md:127
+msgid "ClaimProfitsInput:"
+msgstr ""
+
+#: ../system-contract/profit.md:432
+msgid "value: amount of tokens."
+msgstr ""
+
+#: ../system-contract/referendum.md:22 ../system-contract/referendum.md:66
+#: ../system-contract/referendum.md:427
+msgid "token symbol: the token used during proposal operations."
+msgstr ""
+
+#: ../system-contract/referendum.md:24 ../system-contract/referendum.md:68
+#: ../system-contract/referendum.md:274 ../system-contract/referendum.md:401
+#: ../system-contract/referendum.md:429
+msgid ""
+"minimal approval threshold: the minimum locked token amount threshold for"
+" approval."
+msgstr ""
+
+#: ../system-contract/referendum.md:25 ../system-contract/referendum.md:69
+#: ../system-contract/referendum.md:275 ../system-contract/referendum.md:402
+#: ../system-contract/referendum.md:430
+msgid ""
+"maximal rejection threshold: the maximal locked token amount threshold "
+"for rejection."
+msgstr ""
+
+#: ../system-contract/referendum.md:26 ../system-contract/referendum.md:70
+#: ../system-contract/referendum.md:276 ../system-contract/referendum.md:403
+#: ../system-contract/referendum.md:431
+msgid ""
+"maximal abstention threshold: the maximal locked token amount threshold "
+"for approval."
+msgstr ""
+
+#: ../system-contract/referendum.md:27 ../system-contract/referendum.md:71
+#: ../system-contract/referendum.md:277 ../system-contract/referendum.md:404
+#: ../system-contract/referendum.md:432
+msgid ""
+"minimal vote threshold: the minimum locked token amount threshold for all"
+" votes."
+msgstr ""
+
+#: ../system-contract/referendum.md:29 ../system-contract/referendum.md:73
+#: ../system-contract/referendum.md:409 ../system-contract/referendum.md:434
+msgid "proposers: proposer white list."
+msgstr ""
+
+#: ../system-contract/referendum.md:62
+msgid ""
+"Creates an organization by system contract and returns its address. Event"
+" OrganizationCreated will be fired."
+msgstr ""
+
+#: ../system-contract/referendum.md:64
+msgid "CreateOrganizationBySystemContractInput:"
+msgstr ""
+
+#: ../system-contract/referendum.md:65
+msgid "CreateOrganizationInput:"
+msgstr ""
+
+#: ../system-contract/referendum.md:86
+msgid "ReclaimVoteToken"
+msgstr ""
+
+#: ../system-contract/referendum.md:92
+msgid "Used to unlock the tokens that where used for voting."
+msgstr ""
+
+#: ../system-contract/referendum.md:130
+msgid "Returs"
+msgstr ""
+
+#: ../system-contract/referendum.md:155
+msgid ""
+"This method is called to approve the specified proposal.  The amount of "
+"token allowance to the proposal virtual address would be locked for "
+"voting."
+msgstr ""
+
+#: ../system-contract/referendum.md:159 ../system-contract/referendum.md:191
+#: ../system-contract/referendum.md:223
+msgid ""
+"After a successful execution, a ReferendumReceiptCreated event log can be"
+" found in the transaction result."
+msgstr ""
+
+#: ../system-contract/referendum.md:162 ../system-contract/referendum.md:194
+#: ../system-contract/referendum.md:226
+msgid "ReferendumReceiptCreated"
+msgstr ""
+
+#: ../system-contract/referendum.md:164 ../system-contract/referendum.md:196
+#: ../system-contract/referendum.md:228
+msgid "address: voter address."
+msgstr ""
+
+#: ../system-contract/referendum.md:165 ../system-contract/referendum.md:197
+#: ../system-contract/referendum.md:229
+msgid "token symbol symbol of token locked."
+msgstr ""
+
+#: ../system-contract/referendum.md:166 ../system-contract/referendum.md:198
+#: ../system-contract/referendum.md:230
+msgid "token amount amount of token locked."
+msgstr ""
+
+#: ../system-contract/referendum.md:187
+msgid ""
+"This method is called to reject the specified proposal. The amount of "
+"token allowance to the proposal virtual address would be locked for "
+"voting."
+msgstr ""
+
+#: ../system-contract/referendum.md:219
+msgid ""
+"This method is called to abstain from the specified proposal. The amount "
+"of token allowance to the proposal virtual address would be locked for "
+"voting."
+msgstr ""
+
+#: ../system-contract/referendum.md:405
+msgid "token: token used for proposal operations."
+msgstr ""
+
+#: ../system-contract/referendum.md:406
+msgid "organization address: organization address."
+msgstr ""
+
+#: ../system-contract/referendum.md:440
+msgid "GetProposalVirtualAddress"
+msgstr ""
+
+#: ../system-contract/referendum.md:445
+msgid "Get virtual address for the proposal."
+msgstr ""
+
+#: ../system-contract/referendum.md:450
+msgid "Address: the virtual address for proposal."
+msgstr ""
+
+#: ../system-contract/referendum.md:473
+msgid "Gets the proposal with the given id."
+msgstr ""
+
+#: ../system-contract/referendum.md:487
+msgid "approval count: locked token amount for approval."
+msgstr ""
+
+#: ../system-contract/referendum.md:488
+msgid "rejection count: locked token amount for rejection."
+msgstr ""
+
+#: ../system-contract/referendum.md:489
+msgid "abstention count: locked token amount for abstention."
+msgstr ""
+
+#: ../system-contract/resource.md:1
+msgid "resource"
+msgstr ""
+
+#: ../system-contract/resource.md:3
+msgid ""
+"The TokenConverter contract is most essentially used for managing "
+"resources."
+msgstr ""
+
+#: ../system-contract/resource.md:5
+msgid "Buying and selling resources:"
+msgstr ""
+
+#: ../system-contract/resource.md:7
+msgid ""
+"The token converter's contract permits buying and selling resource based "
+"on the Bancor algorithm."
+msgstr ""
+
+#: ../system-contract/resource.md:43
+msgid "Buying resource requires a BuyInput message as parameter:"
+msgstr ""
+
+#: ../system-contract/resource.md:44
+msgid ""
+"symbol is token symbol to buy, it effectively describes which connector "
+"will be used."
+msgstr ""
+
+#: ../system-contract/resource.md:45
+msgid "amount the amount of tokens to buy."
+msgstr ""
+
+#: ../system-contract/resource.md:46
+msgid ""
+"pay limit is used to cap the amount of that you are willing to pay for "
+"this exchange (0 for no limit)."
+msgstr ""
+
+#: ../system-contract/resource.md:48
+msgid ""
+"After a successful buy, a TokenBought event log can be found in the "
+"transaction result."
+msgstr ""
+
+#: ../system-contract/resource.md:50
+msgid ""
+"On the contrary when selling resources you need to send a SellInput "
+"message as parameter:"
+msgstr ""
+
+#: ../system-contract/resource.md:51
+msgid "symbol is token symbol to sell."
+msgstr ""
+
+#: ../system-contract/resource.md:52
+msgid "amount the amount of tokens to sell."
+msgstr ""
+
+#: ../system-contract/resource.md:53
+msgid ""
+"receive limit is the minimum amount of tokens that you are willing to "
+"receive for this exchange (0 for no limit)."
+msgstr ""
+
+#: ../system-contract/resource.md:55
+msgid ""
+"After a successful sell, a TokenSold event log can be found in the "
+"transaction result."
+msgstr ""
+
+#: ../system-contract/resource.md:57
+msgid "Contract management:"
+msgstr ""
+
+#: ../system-contract/resource.md:59
+msgid ""
+"These next methods for managing the token converter contract are only "
+"accessible by the manager (the initial parliament organization)."
+msgstr ""
+
+#: ../system-contract/resource.md:73
+msgid "This method will add a connector for the given symbol."
+msgstr ""
+
+#: ../system-contract/resource.md:74
+msgid "symbol the target symbol of the connector."
+msgstr ""
+
+#: ../system-contract/resource.md:75
+msgid "weight is a decimal that has to be a decimal between 0 and 1."
+msgstr ""
+
+#: ../system-contract/resource.md:76
+msgid ""
+"virtual_balance and is_virtual_balance_enabled control what balance is "
+"used for the buy and sell operations."
+msgstr ""
+
+#: ../system-contract/resource.md:82
+msgid "Sets the fee rate, a string formatted decimal between 0 and 1."
+msgstr ""
+
+#: ../system-contract/resource.md:88
+msgid "Change the manager of the token converter contract."
+msgstr ""
+
+#: ../system-contract/token-convert.md:1
+msgid "TokenConvert Contract"
+msgstr ""
+
+#: ../system-contract/token-convert.md:3
+msgid ""
+"Using this contract can build a connection between the base token(the "
+"default is native token) and other tokens created on the chain. After "
+"building the connection, users can trade tokens with the Bancor model. "
+"You can find the detail information about Bancor in AElf Economic System "
+"White Paper."
+msgstr ""
+
+#: ../system-contract/token-convert.md:7
+msgid ""
+"This method is used to initialize this contract (add base token, "
+"connections, etc.)."
+msgstr ""
+
+#: ../system-contract/token-convert.md:32
+msgid "base token symbol: base token, default is the native token."
+msgstr ""
+
+#: ../system-contract/token-convert.md:33
+msgid "fee rate: buy/sell token need pay the fee( = cost * feeRate)."
+msgstr ""
+
+#: ../system-contract/token-convert.md:34
+msgid "connectors: the default added connectors."
+msgstr ""
+
+#: ../system-contract/token-convert.md:36
+msgid "Connector:"
+msgstr ""
+
+#: ../system-contract/token-convert.md:38
+msgid ""
+"We use Bancor model to build the connection between base token and other "
+"tokens. Each pair connectors include the coefficients used by calculating"
+" the token price based on the base token, and it consists of the base "
+"token connector and the new token connector."
+msgstr ""
+
+#: ../system-contract/token-convert.md:40
+msgid "symbol: the connector symbol."
+msgstr ""
+
+#: ../system-contract/token-convert.md:41
+msgid ""
+"related symbol: indicates its related connector, the pair connector "
+"includes a new created token connector and the base token connector."
+msgstr ""
+
+#: ../system-contract/token-convert.md:42
+msgid "virtual balance: used in bancor model."
+msgstr ""
+
+#: ../system-contract/token-convert.md:43
+msgid "weight: the weight is linked to the related connector's weight."
+msgstr ""
+
+#: ../system-contract/token-convert.md:44
+msgid ""
+"is virtual balance enabled: true indicates that the virtual balance is "
+"used in price calculation."
+msgstr ""
+
+#: ../system-contract/token-convert.md:45
+msgid ""
+"is purchase enabled: after build a pair connector, you can not buy/sell "
+"the token immediately, the default is false."
+msgstr ""
+
+#: ../system-contract/token-convert.md:46
+msgid "is deposit account: indicates if the connector is base token connector."
+msgstr ""
+
+#: ../system-contract/token-convert.md:48
+msgid "AddPairConnector"
+msgstr ""
+
+#: ../system-contract/token-convert.md:50
+msgid ""
+"With Bancor model, each new token need a pair connectors to calculate its"
+" price. Only the connector contoller(the default is parliament) is "
+"allowed to call this API."
+msgstr ""
+
+#: ../system-contract/token-convert.md:64
+msgid "PairConnectorParam:"
+msgstr ""
+
+#: ../system-contract/token-convert.md:66
+msgid "resource connector symbol: the new token connector's symbol."
+msgstr ""
+
+#: ../system-contract/token-convert.md:67
+msgid "resource weight: the new token connector's weight."
+msgstr ""
+
+#: ../system-contract/token-convert.md:68
+msgid ""
+"native virtual balance: the related base token connector's virtual "
+"balance."
+msgstr ""
+
+#: ../system-contract/token-convert.md:69
+msgid "native weight: base token's weight."
+msgstr ""
+
+#: ../system-contract/token-convert.md:71
+msgid "EnableConnector"
+msgstr ""
+
+#: ../system-contract/token-convert.md:73
+msgid ""
+"To make the connection work, the connector contoller need send this "
+"transaction."
+msgstr ""
+
+#: ../system-contract/token-convert.md:85
+#: ../system-contract/token-convert.md:365
+msgid "ToBeConnectedTokenInfo:"
+msgstr ""
+
+#: ../system-contract/token-convert.md:87
+#: ../system-contract/token-convert.md:367
+msgid "token symbol: the token symbol."
+msgstr ""
+
+#: ../system-contract/token-convert.md:88
+msgid ""
+"amount to token convert: to make the token trade, maybe you need deposit "
+"some base token."
+msgstr ""
+
+#: ../system-contract/token-convert.md:90
+msgid "UpdateConnector"
+msgstr ""
+
+#: ../system-contract/token-convert.md:92
+msgid ""
+"Before calling the EnableConnector, the connector contoller update the "
+"pair connctors' information."
+msgstr ""
+
+#: ../system-contract/token-convert.md:99
+#: ../system-contract/token-convert.md:310
+msgid "note: for Connector see Initialize"
+msgstr ""
+
+#: ../system-contract/token-convert.md:101
+msgid "Buy"
+msgstr ""
+
+#: ../system-contract/token-convert.md:103
+msgid ""
+"After building the connection and enabling it, you can buy the new token "
+"with the base token."
+msgstr ""
+
+#: ../system-contract/token-convert.md:116
+msgid "BuyInput:"
+msgstr ""
+
+#: ../system-contract/token-convert.md:118
+#: ../system-contract/token-convert.md:139
+#: ../system-contract/token-convert.md:303
+#: ../system-contract/token-convert.md:344
+msgid "symbol: the token symbol."
+msgstr ""
+
+#: ../system-contract/token-convert.md:119
+msgid "amount: the amount you want to buy."
+msgstr ""
+
+#: ../system-contract/token-convert.md:120
+msgid "pay limit: no buy if paying more than this, 0 if no limit."
+msgstr ""
+
+#: ../system-contract/token-convert.md:122
+msgid "Sell"
+msgstr ""
+
+#: ../system-contract/token-convert.md:124
+msgid "After building the connection and enabling it, you can sell the new token."
+msgstr ""
+
+#: ../system-contract/token-convert.md:137
+msgid "SellInput:"
+msgstr ""
+
+#: ../system-contract/token-convert.md:140
+msgid "amount: the amount you want to sell."
+msgstr ""
+
+#: ../system-contract/token-convert.md:141
+msgid "receive limit: no sell if receiving less than this, 0 if no limit."
+msgstr ""
+
+#: ../system-contract/token-convert.md:143
+msgid "ChangeConnectorController"
+msgstr ""
+
+#: ../system-contract/token-convert.md:250
+msgid "GetFeeReceiverAddress"
+msgstr ""
+
+#: ../system-contract/token-convert.md:252
+msgid "This method is used to query a the fee receiver."
+msgstr ""
+
+#: ../system-contract/token-convert.md:265
+msgid ""
+"value the receiver's address, the half fee is burned and the other half "
+"is transferred to receiver."
+msgstr ""
+
+#: ../system-contract/token-convert.md:267
+msgid "GetControllerForManageConnector"
+msgstr ""
+
+#: ../system-contract/token-convert.md:269
+msgid "This method is used to query the controller."
+msgstr ""
+
+#: ../system-contract/token-convert.md:281
+msgid "note: for AuthorityInfo see ChangeConnectorController"
+msgstr ""
+
+#: ../system-contract/token-convert.md:283
+msgid "GetPairConnector"
+msgstr ""
+
+#: ../system-contract/token-convert.md:285
+msgid ""
+"This method is used to get the connection information between the base "
+"token and other token, which inlcudes a pair connctors."
+msgstr ""
+
+#: ../system-contract/token-convert.md:301
+msgid "TokenSymbol:"
+msgstr ""
+
+#: ../system-contract/token-convert.md:307
+msgid "resource connector: the new add token connector."
+msgstr ""
+
+#: ../system-contract/token-convert.md:308
+msgid "deposit connector: the corresponding base token connector."
+msgstr ""
+
+#: ../system-contract/token-convert.md:312
+msgid "GetFeeRate"
+msgstr ""
+
+#: ../system-contract/token-convert.md:314
+msgid "This method is used to query the fee rate."
+msgstr ""
+
+#: ../system-contract/token-convert.md:327
+msgid "value: the fee rate."
+msgstr ""
+
+#: ../system-contract/token-convert.md:329
+msgid "GetBaseTokenSymbol"
+msgstr ""
+
+#: ../system-contract/token-convert.md:331
+msgid "This method is used to query the base token symbol."
+msgstr ""
+
+#: ../system-contract/token-convert.md:346
+msgid "GetBaseGetNeededDeposit"
+msgstr ""
+
+#: ../system-contract/token-convert.md:348
+msgid ""
+"This method is used to query how much the base token need be deposited "
+"before enabling the connectors."
+msgstr ""
+
+#: ../system-contract/token-convert.md:368
+msgid ""
+"amount to token convert: the added token amount you decide to transfer to"
+" TokenConvert."
+msgstr ""
+
+#: ../system-contract/token-convert.md:372
+msgid ""
+"need amount: besides the amount you transfer to TokenConvert, how much "
+"base token you need deposit."
+msgstr ""
+
+#: ../system-contract/token-convert.md:373
+msgid ""
+"amount out of token convert: how much the added token have not "
+"transferred to TokenConvert."
+msgstr ""
+
+#: ../system-contract/token-convert.md:375
+msgid "GetDepositConnectorBalance"
+msgstr ""
+
+#: ../system-contract/token-convert.md:377
+msgid "This method is used to query how much the base token have been deposited."
+msgstr ""
+
+#: ../system-contract/token-convert.md:394
+msgid "value: the token symbol."
+msgstr ""
+
+#: ../system-contract/token-convert.md:398
+msgid ""
+"value: indicates for this token how much the base token have been "
+"deposited."
+msgstr ""
+
+#: ../system-contract/token-holder.md:3
+msgid ""
+"The TokenHolder contract is essentially used for building a bouns model "
+"for distributing bonus' to whom hold the token."
+msgstr ""
+
+#: ../system-contract/token-holder.md:5
+msgid "CreateScheme"
+msgstr ""
+
+#: ../system-contract/token-holder.md:17
+msgid "CreateTokenHolderProfitSchemeInput:"
+msgstr ""
+
+#: ../system-contract/token-holder.md:19
+msgid "symbol: the token that will be used for locking and distributing profits."
+msgstr ""
+
+#: ../system-contract/token-holder.md:20
+msgid "minimum lock time: minimum lock time before withdrawing."
+msgstr ""
+
+#: ../system-contract/token-holder.md:21
+msgid ""
+"automatic distribution threshold: used when registering for profits "
+"(RegisterForProfits)."
+msgstr ""
+
+#: ../system-contract/token-holder.md:23
+msgid "AddBeneficiary"
+msgstr ""
+
+#: ../system-contract/token-holder.md:34
+msgid "AddTokenHolderBeneficiaryInput:"
+msgstr ""
+
+#: ../system-contract/token-holder.md:36
+msgid "beneficiary: the new beneficiary."
+msgstr ""
+
+#: ../system-contract/token-holder.md:37
+msgid "shares: the shares to attribute to this beneficiary."
+msgstr ""
+
+#: ../system-contract/token-holder.md:39
+msgid "RemoveBeneficiary"
+msgstr ""
+
+#: ../system-contract/token-holder.md:50
+msgid ""
+"Note: this method can be used to remove a beneficiary or update its "
+"shares."
+msgstr ""
+
+#: ../system-contract/token-holder.md:52
+msgid "RemoveTokenHolderBeneficiaryInput:"
+msgstr ""
+
+#: ../system-contract/token-holder.md:54
+msgid "beneficiary: the beneficiary to remove or update."
+msgstr ""
+
+#: ../system-contract/token-holder.md:55
+msgid ""
+"amount: 0 to remove the beneficiary. A positive integer, smaller than the"
+" current shares."
+msgstr ""
+
+#: ../system-contract/token-holder.md:57
+msgid "ContributeProfits"
+msgstr ""
+
+#: ../system-contract/token-holder.md:71 ../system-contract/token-holder.md:88
+#: ../system-contract/token-holder.md:104
+#: ../system-contract/token-holder.md:129
+msgid ""
+"scheme manager: manager of the scheme; when creating the scheme the "
+"Sender is set to manager."
+msgstr ""
+
+#: ../system-contract/token-holder.md:72
+msgid "amount: the amount of tokens to contribute."
+msgstr ""
+
+#: ../system-contract/token-holder.md:73 ../system-contract/token-holder.md:89
+msgid "symbol: the token to contribute."
+msgstr ""
+
+#: ../system-contract/token-holder.md:75
+msgid "DistributeProfits"
+msgstr ""
+
+#: ../system-contract/token-holder.md:91
+msgid "RegisterForProfits"
+msgstr ""
+
+#: ../system-contract/token-holder.md:102
+msgid "RegisterForProfitsInput:"
+msgstr ""
+
+#: ../system-contract/token-holder.md:105
+msgid ""
+"amount: the amount of tokens to lock (and will correspond to the amount "
+"of shares)."
+msgstr ""
+
+#: ../system-contract/token-holder.md:113
+msgid ""
+"This method will withdraw the given address for the Token Holder "
+"contract, this will also unlock the previously locked tokens."
+msgstr ""
+
+#: ../system-contract/token-holder.md:115
+msgid "ClaimProfits"
+msgstr ""
+
+#: ../system-contract/token-holder.md:130
+msgid "beneficiary: the beneficiary, defaults to the Sender."
+msgstr ""
+
+#: ../system-contract/token-holder.md:131
+msgid "symbol: the symbol to claim."
+msgstr ""
+
+#: ../system-contract/token-holder.md:149
+msgid ""
+"Returns a description of the scheme, wrapped in a TokenHolderProfitScheme"
+" object:"
+msgstr ""
+
+#: ../system-contract/token-holder.md:151
+msgid "symbol: the scheme's token."
+msgstr ""
+
+#: ../system-contract/token-holder.md:152
+msgid "scheme id: the id of the scheme."
+msgstr ""
+
+#: ../system-contract/token-holder.md:153
+msgid "period: the current period of the scheme."
+msgstr ""
+
+#: ../system-contract/token-holder.md:154
+msgid "minimum lock minutes: minimum lock time."
+msgstr ""
+
+#: ../system-contract/token-holder.md:155
+msgid "automatic distribution threshold: distribution info."
+msgstr ""
+
+#: ../system-contract/treasury.md:3
+msgid ""
+"The Treasury contract is essentially used for distributing bonus' to "
+"voters and candidates during the election process."
+msgstr ""
+
+#: ../system-contract/treasury.md:5
+msgid "Donate"
+msgstr ""
+
+#: ../system-contract/treasury.md:7
+msgid ""
+"Donates tokens from the caller to the treasury. If the tokens are not "
+"native tokens in the current chain, they will be first converted to the "
+"native token."
+msgstr ""
+
+#: ../system-contract/treasury.md:26
+msgid "DonateInput:"
+msgstr ""
+
+#: ../system-contract/treasury.md:29
+msgid "amount: token amount."
+msgstr ""
+
+#: ../system-contract/treasury.md:31
+msgid ""
+"After a successful donation a DonationReceived event log can be found in "
+"the transaction result."
+msgstr ""
+
+#: ../system-contract/treasury.md:33
+msgid "DonationReceived:"
+msgstr ""
+
+#: ../system-contract/treasury.md:35
+msgid "from: from address."
+msgstr ""
+
+#: ../system-contract/treasury.md:36
+msgid "to: to address."
+msgstr ""
+
+#: ../system-contract/treasury.md:41
+msgid "Donate all tokens"
+msgstr ""
+
+#: ../system-contract/treasury.md:43
+msgid ""
+"Donate all token (transfer to native token) from caller to the treasury "
+"(by calling Donate described above)."
+msgstr ""
+
+#: ../system-contract/treasury.md:53
+msgid "DonateAllInput:"
+msgstr ""
+
+#: ../system-contract/treasury.md:57
+msgid "SetDistributingSymbolList"
+msgstr ""
+
+#: ../system-contract/treasury.md:59
+msgid "Set a token list that can be used to distribute."
+msgstr ""
+
+#: ../system-contract/treasury.md:69
+msgid "SymbolList:"
+msgstr ""
+
+#: ../system-contract/treasury.md:71
+msgid "value: token symbol list."
+msgstr ""
+
+#: ../system-contract/treasury.md:73
+msgid "SetDividendPoolWeightSetting"
+msgstr ""
+
+#: ../system-contract/treasury.md:75
+msgid "Set weight for the three activities."
+msgstr ""
+
+#: ../system-contract/treasury.md:87
+msgid "DividendPoolWeightSetting:"
+msgstr ""
+
+#: ../system-contract/treasury.md:89
+msgid "citizen welfare weight: citizen welfare weight."
+msgstr ""
+
+#: ../system-contract/treasury.md:90
+msgid "backup subsidy weight: backup subsidy weight."
+msgstr ""
+
+#: ../system-contract/treasury.md:91
+msgid "miner reward weight: miner reward weight."
+msgstr ""
+
+#: ../system-contract/treasury.md:93
+msgid "SetMinerRewardWeightSetting"
+msgstr ""
+
+#: ../system-contract/treasury.md:95
+msgid "Set weight for the three activities composing of miner reward activity."
+msgstr ""
+
+#: ../system-contract/treasury.md:107
+msgid "MinerRewardWeightSetting:"
+msgstr ""
+
+#: ../system-contract/treasury.md:109
+msgid "basic miner reward weight: basic miner reward weight."
+msgstr ""
+
+#: ../system-contract/treasury.md:110
+msgid "votes weight reward weight: votes weight reward weight."
+msgstr ""
+
+#: ../system-contract/treasury.md:111
+msgid "re-election reward weight: re-election reward weight."
+msgstr ""
+
+#: ../system-contract/treasury.md:113
+msgid "ChangeTreasuryController"
+msgstr ""
+
+#: ../system-contract/treasury.md:115
+msgid ""
+"Change the controller who is able to update symbol list and activities' "
+"weight above."
+msgstr ""
+
+#: ../system-contract/treasury.md:135
+msgid "GetCurrentTreasuryBalance"
+msgstr ""
+
+#: ../system-contract/treasury.md:137
+msgid "Get the Treasury's total balance of the native token from the Treasury."
+msgstr ""
+
+#: ../system-contract/treasury.md:150
+msgid "value: amount of native token."
+msgstr ""
+
+#: ../system-contract/treasury.md:152
+msgid "GetWelfareRewardAmountSample"
+msgstr ""
+
+#: ../system-contract/treasury.md:154
+msgid ""
+"Test the welfare bonus gotten base on 10000 Vote Token. The input is a "
+"array of locking time, and the output is the corresponding welfare."
+msgstr ""
+
+#: ../system-contract/treasury.md:168
+msgid "GetWelfareRewardAmountSampleInput:"
+msgstr ""
+
+#: ../system-contract/treasury.md:170
+msgid "value: a array of locking time."
+msgstr ""
+
+#: ../system-contract/treasury.md:174
+msgid "value: a array of welfare."
+msgstr ""
+
+#: ../system-contract/treasury.md:176
+msgid "GetTreasurySchemeId"
+msgstr ""
+
+#: ../system-contract/treasury.md:178
+msgid "Get treasury scheme id. If it does not exist, it will return hash.empty."
+msgstr ""
+
+#: ../system-contract/treasury.md:193
+msgid "GetDistributingSymbolList"
+msgstr ""
+
+#: ../system-contract/treasury.md:195
+msgid "Get the symbol list that can be used to distribute."
+msgstr ""
+
+#: ../system-contract/treasury.md:205
+msgid "note: for SymbolList see SetDistributingSymbolList"
+msgstr ""
+
+#: ../system-contract/treasury.md:207
+msgid "GetDividendPoolWeightProportion"
+msgstr ""
+
+#: ../system-contract/treasury.md:209
+msgid "Get activities's weight expressed as a percentage"
+msgstr ""
+
+#: ../system-contract/treasury.md:228
+msgid "citizen welfare proportion info: citizen welfare proportion info."
+msgstr ""
+
+#: ../system-contract/treasury.md:229
+msgid "backup subsidy proportion info: backup subsidy proportion info."
+msgstr ""
+
+#: ../system-contract/treasury.md:230
+msgid "miner reward proportion info: miner reward proportion info."
+msgstr ""
+
+#: ../system-contract/treasury.md:232
+msgid "SchemeProportionInfo:"
+msgstr ""
+
+#: ../system-contract/treasury.md:235
+msgid "proportion: the weight expressed as a percentage."
+msgstr ""
+
+#: ../system-contract/treasury.md:237
+msgid "GetMinerRewardWeightProportion"
+msgstr ""
+
+#: ../system-contract/treasury.md:239
+msgid ""
+"Get the weight expressed as a percentage of the activities composing of "
+"miner reward."
+msgstr ""
+
+#: ../system-contract/treasury.md:251
+msgid "note: for MinerRewardWeightProportion see GetDividendPoolWeightProportion"
+msgstr ""
+
+#: ../system-contract/treasury.md:253
+msgid "GetTreasuryController"
+msgstr ""
+
+#: ../system-contract/treasury.md:255
+msgid "Get this contract's controller."
+msgstr ""
+
+#: ../system-contract/treasury.md:266
+msgid "note: for AuthorityInfo see ChangeTreasuryController"
+msgstr ""
+
+#: ../system-contract/vote.md:3
+msgid ""
+"The Vote contract is an abstract layer for voting. Developers implement "
+"concrete voting activities by calling this contract."
+msgstr ""
+
+#: ../system-contract/vote.md:5
+msgid "Voting for Block Producers"
+msgstr ""
+
+#: ../system-contract/vote.md:7
+msgid "To build a voting activity, the developer should register first."
+msgstr ""
+
+#: ../system-contract/vote.md:23
+msgid "VotingRegisterInput:"
+msgstr ""
+
+#: ../system-contract/vote.md:25
+msgid "start timestamp: activity start time."
+msgstr ""
+
+#: ../system-contract/vote.md:26
+msgid "end timestamp: activity end time."
+msgstr ""
+
+#: ../system-contract/vote.md:27
+msgid "accepted currency: the token symbol which will be accepted."
+msgstr ""
+
+#: ../system-contract/vote.md:28
+msgid "is lock token: indicates whether the token will be locked after voting."
+msgstr ""
+
+#: ../system-contract/vote.md:29
+msgid "total snapshot number: number of terms."
+msgstr ""
+
+#: ../system-contract/vote.md:30
+msgid "options: default candidate."
+msgstr ""
+
+#: ../system-contract/vote.md:34
+msgid "After building successfully a voting activity, others are able to vote."
+msgstr ""
+
+#: ../system-contract/vote.md:61
+msgid "VoteInput:"
+msgstr ""
+
+#: ../system-contract/vote.md:63
+msgid "voting item id: indicates which voting activity the user participate in."
+msgstr ""
+
+#: ../system-contract/vote.md:64 ../system-contract/vote.md:75
+#: ../system-contract/vote.md:359 ../system-contract/vote.md:417
+#: ../system-contract/vote.md:481
+msgid "voter: voter's address."
+msgstr ""
+
+#: ../system-contract/vote.md:66
+msgid "option: candidate's public key."
+msgstr ""
+
+#: ../system-contract/vote.md:68
+msgid "is change target: indicates whether the option is changed."
+msgstr ""
+
+#: ../system-contract/vote.md:70
+msgid ""
+"After a successfully vote, a Voted event log can be found in the "
+"transaction result."
+msgstr ""
+
+#: ../system-contract/vote.md:72
+msgid "Voted:"
+msgstr ""
+
+#: ../system-contract/vote.md:74 ../system-contract/vote.md:125
+#: ../system-contract/vote.md:163 ../system-contract/vote.md:182
+#: ../system-contract/vote.md:201 ../system-contract/vote.md:237
+#: ../system-contract/vote.md:241 ../system-contract/vote.md:277
+#: ../system-contract/vote.md:282 ../system-contract/vote.md:319
+#: ../system-contract/vote.md:358 ../system-contract/vote.md:416
+#: ../system-contract/vote.md:482
+msgid "voting item id: voting activity id."
+msgstr ""
+
+#: ../system-contract/vote.md:76
+msgid "snapshot number: the current round."
+msgstr ""
+
+#: ../system-contract/vote.md:78 ../system-contract/vote.md:362
+#: ../system-contract/vote.md:420
+msgid "vote timestamp: vote time."
+msgstr ""
+
+#: ../system-contract/vote.md:79
+msgid "option: the candidate's public key."
+msgstr ""
+
+#: ../system-contract/vote.md:85
+msgid "A voter can withdraw the token after the lock time."
+msgstr ""
+
+#: ../system-contract/vote.md:100
+msgid "WithdrawInput:"
+msgstr ""
+
+#: ../system-contract/vote.md:104
+msgid ""
+"After a successful vote, a Withdrawn event log can be found in the "
+"transaction result."
+msgstr ""
+
+#: ../system-contract/vote.md:106
+msgid "Withdrawn:"
+msgstr ""
+
+#: ../system-contract/vote.md:110
+msgid "TakeSnapshot"
+msgstr ""
+
+#: ../system-contract/vote.md:112
+msgid "Distributes profits and saves the state every round."
+msgstr ""
+
+#: ../system-contract/vote.md:123
+msgid "TakeSnapshotInput:"
+msgstr ""
+
+#: ../system-contract/vote.md:126
+msgid "snapshot number: the round number."
+msgstr ""
+
+#: ../system-contract/vote.md:128
+msgid "AddOption"
+msgstr ""
+
+#: ../system-contract/vote.md:130
+msgid "Adds an option (a choice) to a voting activity."
+msgstr ""
+
+#: ../system-contract/vote.md:142
+msgid "AddOptionInput:"
+msgstr ""
+
+#: ../system-contract/vote.md:144
+msgid "voting item id: vote activity id."
+msgstr ""
+
+#: ../system-contract/vote.md:145
+msgid "option: the new option."
+msgstr ""
+
+#: ../system-contract/vote.md:147
+msgid "AddOptions"
+msgstr ""
+
+#: ../system-contract/vote.md:149
+msgid "Adds multiple options (choices) to a voting activity."
+msgstr ""
+
+#: ../system-contract/vote.md:161
+msgid "AddOptionsInput:"
+msgstr ""
+
+#: ../system-contract/vote.md:164
+msgid "option: the list of new options."
+msgstr ""
+
+#: ../system-contract/vote.md:166
+msgid "RemoveOption"
+msgstr ""
+
+#: ../system-contract/vote.md:168
+msgid "Removes an option from a voting activity."
+msgstr ""
+
+#: ../system-contract/vote.md:180
+msgid "RemoveOptionInput:"
+msgstr ""
+
+#: ../system-contract/vote.md:183
+msgid "option: the option to remove."
+msgstr ""
+
+#: ../system-contract/vote.md:185
+msgid "RemoveOptions"
+msgstr ""
+
+#: ../system-contract/vote.md:187
+msgid "Removes multiple options from a voting activity."
+msgstr ""
+
+#: ../system-contract/vote.md:199
+msgid "RemoveOptionsInput:"
+msgstr ""
+
+#: ../system-contract/vote.md:202
+msgid "option: the options to remove."
+msgstr ""
+
+#: ../system-contract/vote.md:208
+msgid "GetVotingItem"
+msgstr ""
+
+#: ../system-contract/vote.md:210
+msgid "Gets the information related to a voting activity."
+msgstr ""
+
+#: ../system-contract/vote.md:235
+msgid "GetVotingItemInput:"
+msgstr ""
+
+#: ../system-contract/vote.md:242
+msgid "accepted currency: vote token."
+msgstr ""
+
+#: ../system-contract/vote.md:243
+msgid "is lock token: indicates if the token will be locked after voting."
+msgstr ""
+
+#: ../system-contract/vote.md:244
+msgid "current snapshot number: current round."
+msgstr ""
+
+#: ../system-contract/vote.md:245
+msgid "total snapshot number: total number of round."
+msgstr ""
+
+#: ../system-contract/vote.md:246
+msgid "register timestamp: register time."
+msgstr ""
+
+#: ../system-contract/vote.md:247
+msgid "start timestamp: start time."
+msgstr ""
+
+#: ../system-contract/vote.md:248
+msgid "end timestamp: end time."
+msgstr ""
+
+#: ../system-contract/vote.md:249
+msgid "current snapshot start timestamp: current round start time."
+msgstr ""
+
+#: ../system-contract/vote.md:250
+msgid "sponsor: activity creator."
+msgstr ""
+
+#: ../system-contract/vote.md:252
+msgid "GetVotingResult"
+msgstr ""
+
+#: ../system-contract/vote.md:254
+msgid ""
+"Gets a voting result according to the provided voting activity id and "
+"round number."
+msgstr ""
+
+#: ../system-contract/vote.md:275
+msgid "GetVotingResultInput:"
+msgstr ""
+
+#: ../system-contract/vote.md:278 ../system-contract/vote.md:284
+#: ../system-contract/vote.md:321 ../system-contract/vote.md:360
+#: ../system-contract/vote.md:418
+msgid "snapshot number: round number."
+msgstr ""
+
+#: ../system-contract/vote.md:283 ../system-contract/vote.md:320
+msgid "results: candidate => vote amount."
+msgstr ""
+
+#: ../system-contract/vote.md:285 ../system-contract/vote.md:322
+msgid "voters count: how many voters."
+msgstr ""
+
+#: ../system-contract/vote.md:286 ../system-contract/vote.md:323
+msgid "snapshot start timestamp: start time."
+msgstr ""
+
+#: ../system-contract/vote.md:287 ../system-contract/vote.md:324
+msgid "snapshot end timestamp: end time."
+msgstr ""
+
+#: ../system-contract/vote.md:288
+msgid "votes amount total votes(excluding withdraws)."
+msgstr ""
+
+#: ../system-contract/vote.md:290
+msgid "GetLatestVotingResult"
+msgstr ""
+
+#: ../system-contract/vote.md:292
+msgid "Gets the latest result of the provided voting activity."
+msgstr ""
+
+#: ../system-contract/vote.md:315
+msgid "value: voting activity id."
+msgstr ""
+
+#: ../system-contract/vote.md:325
+msgid "votes amount: total votes(excluding withdraws)."
+msgstr ""
+
+#: ../system-contract/vote.md:327
+msgid "GetVotingRecord"
+msgstr ""
+
+#: ../system-contract/vote.md:329
+msgid "Get the voting record for the given record ID."
+msgstr ""
+
+#: ../system-contract/vote.md:361 ../system-contract/vote.md:419
+msgid "withdraw timestamp: withdraw time."
+msgstr ""
+
+#: ../system-contract/vote.md:363
+msgid "is withdrawn: indicate whether the vote has been withdrawn."
+msgstr ""
+
+#: ../system-contract/vote.md:364 ../system-contract/vote.md:422
+msgid "option: candidate id."
+msgstr ""
+
+#: ../system-contract/vote.md:365 ../system-contract/vote.md:423
+msgid "is change target: has withdrawn and vote to others."
+msgstr ""
+
+#: ../system-contract/vote.md:367
+msgid "GetVotingRecords"
+msgstr ""
+
+#: ../system-contract/vote.md:369
+msgid "Get the voting records for the given record IDs."
+msgstr ""
+
+#: ../system-contract/vote.md:402
+msgid "GetVotingRecordsInput:"
+msgstr ""
+
+#: ../system-contract/vote.md:404
+msgid "ids: transaction ids."
+msgstr ""
+
+#: ../system-contract/vote.md:412
+msgid "records: records."
+msgstr ""
+
+#: ../system-contract/vote.md:414
+msgid "VotingRecord:"
+msgstr ""
+
+#: ../system-contract/vote.md:425
+msgid "GetVotedItems"
+msgstr ""
+
+#: ../system-contract/vote.md:427
+msgid "Get the voter's withdrawn and valid transaction ids respectively."
+msgstr ""
+
+#: ../system-contract/vote.md:449
+msgid "value: voter's address."
+msgstr ""
+
+#: ../system-contract/vote.md:453
+msgid "voted item vote ids: voting activity id => vote information."
+msgstr ""
+
+#: ../system-contract/vote.md:455
+msgid "VotedIds:"
+msgstr ""
+
+#: ../system-contract/vote.md:457 ../system-contract/vote.md:486
+msgid "active votes: valid transaction id."
+msgstr ""
+
+#: ../system-contract/vote.md:458 ../system-contract/vote.md:487
+msgid "withdrawn votes: withdrawn transaction id."
+msgstr ""
+
+#: ../system-contract/vote.md:460
+msgid "GetVotingIds"
+msgstr ""
+
+#: ../system-contract/vote.md:462
+msgid ""
+"Get the voter's withdrawn and valid transaction ids respectively "
+"according to voting activity id."
+msgstr ""
+
+#: ../system-contract/vote.md:479
+msgid "GetVotingIdsInput:"
+msgstr ""
+
