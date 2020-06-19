@@ -16,8 +16,8 @@ namespace AElf.Contracts.BingoContract
     /// </summary>
     public class BingoContract : BingoContractContainer.BingoContractBase
     {
-        private const int BetHistoryLimit = 100;
-        private const int BetLimit = 50;
+        private const int BetHistoryLimit = 50;
+        private const int BetLimit = 30;
         private const int BetMinimumAmount = 1;
 
         public override Int64Value Play(PlayInput input)

@@ -2,8 +2,6 @@ using System;
 using System.Linq;
 using AElf.Boilerplate.MainChain;
 using AElf.Kernel.Miner.Application;
-using AElf.Kernel.SmartContract;
-using AElf.Kernel.SmartContract.Application;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
