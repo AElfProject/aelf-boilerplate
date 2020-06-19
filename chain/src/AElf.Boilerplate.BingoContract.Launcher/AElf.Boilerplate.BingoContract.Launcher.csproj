@@ -6,7 +6,7 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\AElf.Boilerplate.Mainchain\AElf.Boilerplate.Mainchain.csproj" />
+        <ProjectReference Include="..\AElf.Boilerplate.MainChain\AElf.Boilerplate.MainChain.csproj" />
     </ItemGroup>
     
     <ItemGroup>
