@@ -183,9 +183,9 @@ class MyHomePage extends React.Component {
     async getBingoGameContractBalane() {
         const reduxStoreData = this.props.ReduxStore;
         const { tempContracts } = reduxStoreData;
-        
+
         const { tokenContract, appContract } = tempContracts || {};
-        if (appContract && !appContract.address) {
+        if (!appContract || !appContract.address || !tokenContract || !tokenContract.GetBalance) {
             return
         }
 
@@ -246,7 +246,7 @@ class MyHomePage extends React.Component {
             console.log('Promise.all: ', result);
         }).catch(error => {
             this.tipMsg('Refresh error');
-            console.log('onRefresh: ', e);
+            console.log('onRefresh: ', error);
         }).then(() => {
             this.setState({
                 pullRefreshing: false
