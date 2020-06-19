@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AElf 1.0.0-Preview3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-28 13:50+0800\n"
+"POT-Creation-Date: 2020-06-19 09:05+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,49 +17,47 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
 
-#: ../DApp/auction.rst:2 ../DApp/centre-asset.rst:2 ../DApp/dao.rst:2
-#: ../DApp/demo/bingo-game.rst:2 ../DApp/demo/greeter.rst:2
-#: ../DApp/demo/lottery.rst:2 ../DApp/demo/random.rst:2
+#: ../dapp/auction.md:1 ../dapp/centre-asset.md:1 ../dapp/dao.md:1
 msgid "todo"
 msgstr ""
 
-#: ../DApp/boilerplate-main.rst:4
-msgid "Bingo Game Contract"
-msgstr ""
-
-#: ../DApp/boilerplate-main.rst:4
-msgid "Greeter Contract"
-msgstr ""
-
-#: ../DApp/boilerplate-main.rst:4
-msgid "Lottery  - test"
-msgstr ""
-
-#: ../DApp/boilerplate-main.rst:4
-msgid "Random  - deploy"
-msgstr ""
-
-#: ../DApp/boilerplate-main.rst:4
-msgid "Demo Project"
-msgstr ""
-
-#: ../DApp/boilerplate-main.rst:12
+#: ../dapp/index.rst:4
 msgid "Auction"
 msgstr ""
 
-#: ../DApp/boilerplate-main.rst:12
-msgid "Centre-Asset Management"
+#: ../dapp/index.rst:4
+msgid "Centre-Asset-Management"
 msgstr ""
 
-#: ../DApp/boilerplate-main.rst:12
+#: ../dapp/index.rst:4
 msgid "DAO"
 msgstr ""
 
-#: ../DApp/boilerplate-main.rst:12
-msgid "DApp"
+#: ../dapp/index.rst:2 ../dapp/index.rst:4
+msgid "DAPP"
 msgstr ""
 
-#: ../DApp/boilerplate-main.rst:2
-msgid "Boilerplate Project"
-msgstr ""
+#~ msgid "Bingo Game Contract"
+#~ msgstr ""
+
+#~ msgid "Greeter Contract"
+#~ msgstr ""
+
+#~ msgid "Lottery  - test"
+#~ msgstr ""
+
+#~ msgid "Random  - deploy"
+#~ msgstr ""
+
+#~ msgid "Demo Project"
+#~ msgstr ""
+
+#~ msgid "Centre-Asset Management"
+#~ msgstr ""
+
+#~ msgid "DApp"
+#~ msgstr ""
+
+#~ msgid "Boilerplate Project"
+#~ msgstr ""
 

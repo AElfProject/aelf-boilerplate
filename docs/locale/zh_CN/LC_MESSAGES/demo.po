@@ -1,0 +1,436 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) todo
+# This file is distributed under the same license as the AElf package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: AElf 0.6.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-19 09:05+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.0\n"
+
+#: ../demo/bingo-game.rst:2 ../demo/index.rst:4
+msgid "Bingo Game"
+msgstr ""
+
+#: ../demo/bingo-game.rst:5
+msgid "Requirement Analysis"
+msgstr ""
+
+#: ../demo/bingo-game.rst:8
+msgid "Basic Requirement"
+msgstr ""
+
+#: ../demo/bingo-game.rst:10
+msgid ""
+"Only one rule：Users can bet a certain amount of ELF on Bingo contract, "
+"and then users will gain more ELF or to lose all ELF bet before in the "
+"expected time."
+msgstr ""
+
+#: ../demo/bingo-game.rst:14
+msgid "For users, operation steps are as follows:"
+msgstr ""
+
+#: ../demo/bingo-game.rst:16
+msgid ""
+"Send an Approve transaction by Token Contract to grant Bingo Contract "
+"amount of ELF."
+msgstr ""
+
+#: ../demo/bingo-game.rst:18
+msgid ""
+"Bet by Bingo Contract, and the outcome will be unveiled in the expected "
+"time."
+msgstr ""
+
+#: ../demo/bingo-game.rst:20
+msgid ""
+"After a certain time, or after the block height is reached, the user can "
+"use the Bingo contract to query the results, and at the same time, the "
+"Bingo contract will transfer a certain amount of ELF to the user (If the "
+"amount at this time is greater than the bet amount, it means that the "
+"user won; vice versa)."
+msgstr ""
+
+#: ../demo/bingo-game.rst:27
+msgid "API List"
+msgstr ""
+
+#: ../demo/bingo-game.rst:29
+msgid "In summary, two basic APIs are needed:"
+msgstr ""
+
+#: ../demo/bingo-game.rst:31
+msgid "Play, corresponding to step 2;"
+msgstr ""
+
+#: ../demo/bingo-game.rst:32
+msgid "Bingo, corresponding to step 3."
+msgstr ""
+
+#: ../demo/bingo-game.rst:34
+msgid ""
+"In order to make the Bingo contract a more complete DApp contract, two "
+"additional Action methods are added:"
+msgstr ""
+
+#: ../demo/bingo-game.rst:37
+msgid ""
+"Register, which creates a file for users, can save the registration time "
+"and user’s eigenvalues (these eigenvalues participate in the calculation "
+"of the random number used in the Bingo game);"
+msgstr ""
+
+#: ../demo/bingo-game.rst:40
+msgid "Quit, which deletes users’ file."
+msgstr ""
+
+#: ../demo/bingo-game.rst:42
+msgid "In addition, there are some View methods for querying information only:"
+msgstr ""
+
+#: ../demo/bingo-game.rst:44
+msgid "GetAward, which allows users to query the award information of a bet;"
+msgstr ""
+
+#: ../demo/bingo-game.rst:45
+msgid "GetPlayerInformation, used to query player’s information."
+msgstr ""
+
+#: ../demo/bingo-game.rst:48
+msgid "Method"
+msgstr ""
+
+#: ../demo/bingo-game.rst:48
+msgid "Parameters"
+msgstr ""
+
+#: ../demo/bingo-game.rst:48
+msgid "Return"
+msgstr ""
+
+#: ../demo/bingo-game.rst:48
+msgid "function"
+msgstr ""
+
+#: ../demo/bingo-game.rst:50
+msgid "``Register``"
+msgstr ""
+
+#: ../demo/bingo-game.rst:50 ../demo/bingo-game.rst:52
+#: ../demo/bingo-game.rst:60
+msgid "Empty"
+msgstr ""
+
+#: ../demo/bingo-game.rst:50
+msgid "register player information"
+msgstr ""
+
+#: ../demo/bingo-game.rst:52
+msgid "``Quit``"
+msgstr ""
+
+#: ../demo/bingo-game.rst:52
+msgid "delete player information"
+msgstr ""
+
+#: ../demo/bingo-game.rst:54
+msgid "``Play``"
+msgstr ""
+
+#: ../demo/bingo-game.rst:54 ../demo/bingo-game.rst:66
+msgid "Int64Value"
+msgstr ""
+
+#: ../demo/bingo-game.rst:56
+msgid "anount you debt"
+msgstr ""
+
+#: ../demo/bingo-game.rst:56
+msgid "the resulting"
+msgstr ""
+
+#: ../demo/bingo-game.rst:58
+msgid "block height"
+msgstr ""
+
+#: ../demo/bingo-game.rst:54
+msgid "debt"
+msgstr ""
+
+#: ../demo/bingo-game.rst:60
+msgid "``Bingo``"
+msgstr ""
+
+#: ../demo/bingo-game.rst:60 ../demo/bingo-game.rst:66
+msgid "Hash"
+msgstr ""
+
+#: ../demo/bingo-game.rst:62 ../demo/bingo-game.rst:68
+msgid "the transaction"
+msgstr ""
+
+#: ../demo/bingo-game.rst:64 ../demo/bingo-game.rst:70
+msgid "id of Play"
+msgstr ""
+
+#: ../demo/bingo-game.rst:62
+msgid "True indicates"
+msgstr ""
+
+#: ../demo/bingo-game.rst:64
+msgid "win"
+msgstr ""
+
+#: ../demo/bingo-game.rst:60
+msgid "query the game's result"
+msgstr ""
+
+#: ../demo/bingo-game.rst:66
+msgid "``GetAward``"
+msgstr ""
+
+#: ../demo/bingo-game.rst:68
+msgid "award"
+msgstr ""
+
+#: ../demo/bingo-game.rst:66
+msgid "query the amount of award"
+msgstr ""
+
+#: ../demo/bingo-game.rst:72
+msgid "``GetPlayerInformation``"
+msgstr ""
+
+#: ../demo/bingo-game.rst:72
+msgid "Address"
+msgstr ""
+
+#: ../demo/bingo-game.rst:74
+msgid "player's address"
+msgstr ""
+
+#: ../demo/bingo-game.rst:72
+msgid "Player-"
+msgstr ""
+
+#: ../demo/bingo-game.rst:74
+msgid "Information"
+msgstr ""
+
+#: ../demo/bingo-game.rst:72
+msgid "query player's information"
+msgstr ""
+
+#: ../demo/bingo-game.rst:78
+msgid "Write Contract"
+msgstr ""
+
+#: ../demo/bingo-game.rst:81
+msgid "Use the code generator to generate contracts and test projects"
+msgstr ""
+
+#: ../demo/bingo-game.rst:83
+msgid ""
+"Open the AElf.Boilerplate.CodeGenerator project in the AElf.Boilerplate "
+"solution, and modify the Contents node in appsetting.json under this "
+"project:"
+msgstr ""
+
+#: ../demo/bingo-game.rst:106
+msgid ""
+"Then run the AElf.Boilerplate.CodeGenerator project. After running "
+"successfully, you will see a AElf.Contracts.BingoContract.sln in the same"
+" directory as the AElf.Boilerplate.sln is in. After opening the sln, you "
+"will see that the contract project and test case project of the Bingo "
+"contract have been generated and are included in the new solution."
+msgstr ""
+
+#: ../demo/bingo-game.rst:113
+msgid "Define Proto"
+msgstr ""
+
+#: ../demo/bingo-game.rst:115
+msgid ""
+"Based on the API list in the requirements analysis, the "
+"bingo_contract.proto file is as follows:"
+msgstr ""
+
+#: ../demo/bingo-game.rst:163
+msgid "Contract Implementation"
+msgstr ""
+
+#: ../demo/bingo-game.rst:165
+msgid ""
+"Here only talk about the general idea of the Action method, specifically "
+"need to turn the code:"
+msgstr ""
+
+#: ../demo/bingo-game.rst:168
+msgid ""
+"https://github.com/AElfProject/aelf-"
+"boilerplate/blob/preview-3/chain/contract/AElf.Contracts.BingoGameContract/BingoGameContract.cs"
+msgstr ""
+
+#: ../demo/bingo-game.rst:171
+msgid "Register & Quit"
+msgstr ""
+
+#: ../demo/bingo-game.rst:173
+msgid "Register："
+msgstr ""
+
+#: ../demo/bingo-game.rst:175
+msgid ""
+"Determine the Seed of the user, Seed is a hash value, participating in "
+"the calculation of the random number, each user is different, so as to "
+"ensure that different users get different results on the same height;"
+msgstr ""
+
+#: ../demo/bingo-game.rst:179
+msgid "Record the user’s registration time."
+msgstr ""
+
+#: ../demo/bingo-game.rst:181
+msgid "Quit：Just delete the user’s information."
+msgstr ""
+
+#: ../demo/bingo-game.rst:184
+msgid "Play & Bingo"
+msgstr ""
+
+#: ../demo/bingo-game.rst:186
+msgid "Play："
+msgstr ""
+
+#: ../demo/bingo-game.rst:188
+msgid "Use TransferFrom to deduct the user’s bet amount;"
+msgstr ""
+
+#: ../demo/bingo-game.rst:189
+msgid ""
+"At the same time add a round (Bount) for the user, when the Bount is "
+"initialized, record three messages： 1.PlayId, the transaction Id of this "
+"transaction, is used to uniquely identify the Bout (see BoutInformation "
+"for its data structure in the Proto definition); 2.Amount，Record the "
+"amount of the bet； 3.Record the height of the block in which the Play "
+"transaction is packaged."
+msgstr ""
+
+#: ../demo/bingo-game.rst:196
+msgid "Bingo："
+msgstr ""
+
+#: ../demo/bingo-game.rst:198
+msgid ""
+"Find the corresponding Bout according to PlayId, if the current block "
+"height is greater than PlayBlockHeight + number of nodes \\* 8, you can "
+"get the result that you win or lose;"
+msgstr ""
+
+#: ../demo/bingo-game.rst:201
+msgid ""
+"Use the current height and the user’s Seed to calculate a random number, "
+"and then treat the hash value as a bit Array, each of which is added to "
+"get a number ranging from 0 to 256."
+msgstr ""
+
+#: ../demo/bingo-game.rst:204
+msgid "Whether the number is divisible by 2 determines the user wins or loses;"
+msgstr ""
+
+#: ../demo/bingo-game.rst:206
+msgid ""
+"The range of this number determines the amount of win/loss for the user, "
+"see the note of GetKind method for details."
+msgstr ""
+
+#: ../demo/bingo-game.rst:210
+msgid "Write Test"
+msgstr ""
+
+#: ../demo/bingo-game.rst:212
+msgid ""
+"Because the token transfer is involved in this test, in addition to "
+"constructing the stub of the bingo contract, the stub of the token "
+"contract is also required, so the code referenced in csproj for the proto"
+" file is:"
+msgstr ""
+
+#: ../demo/bingo-game.rst:228
+msgid ""
+"Then you can write test code directly in the Test method of "
+"BingoContractTest. Prepare the two stubs mentioned above:"
+msgstr ""
+
+#: ../demo/bingo-game.rst:240
+msgid ""
+"The stub is the stub of the bingo contract, and the tokenStub is the stub"
+" of the token contract."
+msgstr ""
+
+#: ../demo/bingo-game.rst:243
+msgid ""
+"In the unit test, the keyPair account is given a large amount of ELF by "
+"default, and the bingo contract needs a certain bonus pool to run, so "
+"first let the account transfer ELF to the bingo contract:"
+msgstr ""
+
+#: ../demo/bingo-game.rst:257
+msgid "Then you can start using the Bingo contract. Register："
+msgstr ""
+
+#: ../demo/bingo-game.rst:263
+msgid "After registration, take a look at PlayInformation:"
+msgstr ""
+
+#: ../demo/bingo-game.rst:275
+msgid "Bet, but before you can bet, you need to Approve the bingo contract:"
+msgstr ""
+
+#: ../demo/bingo-game.rst:288
+msgid "See if Bout is generated after betting."
+msgstr ""
+
+#: ../demo/bingo-game.rst:299
+msgid ""
+"Since the outcome requires eight blocks, you need send seven invalid "
+"transactions (these transactions will fail, but the block height will "
+"increase) :"
+msgstr ""
+
+#: ../demo/bingo-game.rst:311
+msgid ""
+"Last check the award, and that the award amount is greater than 0 "
+"indicates you win."
+msgstr ""
+
+#: ../demo/greeter.md:1 ../demo/lottery.md:1 ../demo/random.md:1
+msgid "todo"
+msgstr ""
+
+#: ../demo/index.rst:4
+msgid "Greeter"
+msgstr ""
+
+#: ../demo/index.rst:4
+msgid "Lottery"
+msgstr ""
+
+#: ../demo/index.rst:4
+msgid "Random"
+msgstr ""
+
+#: ../demo/index.rst:2 ../demo/index.rst:4
+msgid "Demo"
+msgstr ""
+
