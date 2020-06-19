@@ -5,43 +5,101 @@
     <title>BingoGame</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <!-- JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Ultra&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./index.css" >
 </head>
 <body>
-    <div class="bingo-body">
-        <div class="site-header">
-            <div class="site-title" >Bingo Game11111</div>
-            <button id="register" class="register" type="button">Register</button>
-        </div>
-        <div class="site-body" id="site-body">
-            <div class="balance">Your CARD: <span id="balance">loading...</span> CARD （Refresh page to restart）</div>
-            <div class="input-box">
-                <input type="text" id="balance-input" placeholder="Please input amount">
-                <span class="input-border bottom"></span>
-                <span class="input-border right"></span>
-                <span class="input-border top"></span>
-                <span class="input-border left"></span>
-                <button type="button" class="button" id="refresh-button">Get balance manually</button>
-            </div>
-            <div class="button-box">
-                <button type="button" class="button" >3000</button>
-                <button type="button" class="button" >5000</button>
-                <button type="button" class="button" >Half</button>
-                <button type="button" class="button" >All-In</button>
-            </div>
-            <div>
-                <button class="play" id="play" type="button">Play</button>
-            </div>
-            <div>
-                <button class="play" id="bingo" type="button">Bingo</button>
-            </div>
+    <div id="dark-cover"></div>
 
+    <div id="container">
+        <div class="site-header">
+                <div class="site-title" >Bingo Game</div>
+                <!-- <button id="register" class="register" type="button">Register</button> -->
         </div>
-        <div class="loader" id="loader">
-            <div class="outer"></div>
-            <div class="middle"></div>
-            <div class="inner"></div>
+
+        <div id="bingo-body">
+            <div id="prize-pool">
+                <p>Prize Pool</p>
+                <p>255 <span>AEUSD</span></p>
+                <div>My Last Bet: Big 100.56 AEUSD</div>
+            </div>
+            <div class="play-body" id="play-body">
+                <p class="bet">Bet Type <span>(Click to select)</span></p>
+                <div id="small-big">
+                    <div name="small" class="active">Small</div>
+                    <div name="big">Big</div>
+                  </div>
+                  <p class="bet">Bet Amount</p>
+                <p class="balance">My Balance: <span id="balance">loading...</span> ELF</p>
+                <p class="balance">My Fee Balance: <span id="balance">loading...</span> ELF</p>
+                <div id="input-wrapper">
+                    <div id="input-box">
+                    <input type="text" id="balance-input" placeholder="Please input amount">
+                    <!-- <span class="input-border bottom">2</span>
+                    <span class="input-border right">2</span>
+                    <span class="input-border top">2</span>
+                    <span class="input-border left">2</span> -->
+                    </div>
+                    <div id="button-box">
+                        <div type="button" class="button" >Half</div>
+                        <div type="button" class="button" >All-In</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <button class="play" id="play" type="button">Play</button>
+                </div>
+                <div>
+                    <button class="play" id="bingo" type="button">Bingo</button>
+                </div>
+
+                <div id="description">
+                    <div>
+                        <p class="title">Game Rules</p>
+                        <p class="content">The current block height and users's seed will be used to calculate a random number between [0, 255]. And we will get small, middle, big.
+    
+                            <br>1. You can bet small and big.
+                            
+                            <br>2. Contract always win when get middle.
+                            
+                            <br>3. No more than 50 bets in a time.
+                        </p>
+
+                    </div>
+
+                    <div>
+
+                        <p class="title">Game Operations</p>
+                        <p class="content">
+                            1. Select a bet type and bet your AEUSD.
+    
+                            <br>2. Waiting a minute, then draw the prize aotumaticy.
+    
+                            <br>3. You can get the last 100 history from My Bet in the upper left corner.
+                        </p>
+                    </div>
+                </div>
+    
+            </div>
+    
         </div>
+
     </div>
+    <nav>
+            <button id="home"></button>
+            <button id="bet"></button>
+            <button id="me"></button>
+
+    </nav>
 </body>
 </html>

@@ -5,11 +5,33 @@
     margin: 0;
     padding: 0;
     color: #fff;
-    text-align: center;
+    box-sizing: border-box;
+    /* text-align: center; */
 }
 
 body {
-    background: #090821;
+    background: url('assets/180413131514-09-las-vegas-casinos-full-169.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
+}
+
+#dark-cover {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(26, 0, 59);
+    top: 0;
+    opacity: 80%;
+}
+
+#container{
+    width: 85%;
+    margin: auto;
+    /* background-color: #333333; */
+    position: relative;
 }
 
 .site-header {
@@ -19,18 +41,249 @@ body {
 
 .site-title {
     font-size: 88px;
+    font-family: 'Ultra', sans-serif;
     text-align: center;
     margin-top: 100px;
     color: #f35626;
     background-image: linear-gradient(92deg, #f35626, #feab3a);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: hue 5s infinite linear;
+    /* animation: hue 5s infinite linear; */
 }
 
-.site-body {
-    display: none;
+#bingo-body{
+    display: flex;
+    margin-top: 2vh;
+    width: 100%;
 }
+
+#prize-pool{
+    text-align: center;
+    /* flex-grow: 1; */
+    width: 35%;
+    background-image: linear-gradient(92deg, #f35626, #feab3a);
+    border-radius: 1vw;
+    height: 60vh;
+    /* width: 100%; */
+}
+#prize-pool>p:first-child{
+    font-size: 64px;
+    font-family: 'Ultra', sans-serif;
+    color: #fff;
+    margin-top: 10%;
+}
+#prize-pool>p:nth-child(2){
+    font-size: 108px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 100;
+    color: #fff;
+    margin-top: 15%;
+    margin-bottom: 15%;
+}
+#prize-pool>p:nth-child(2)>span{
+    font-size: 48px;
+    
+}
+#prize-pool>div{
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #680091;
+    width: 75%;
+    margin: auto;
+
+}
+
+#play-body{
+    /* flex-grow: 3; */
+    width: 65%;
+    text-align: center;
+    background-color: rgba(9, 0, 22, 0.7);
+    border-radius: 1vw;
+    height: 60vh;
+    position: relative;
+}
+#play-body p.bet{
+
+    font-size: 36px;
+    font-family: 'Ultra', sans-serif;
+    color: #fff;
+    margin-top: 2%;
+}
+#play-body p.bet>span{
+
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif;
+
+}
+
+#small-big{
+    width: 40%;
+    display: flex;
+    margin: auto;
+}
+#small-big div{
+    width: 50%;
+    padding: 10px;
+    background-color: rgba(66, 0, 104, 0.678);
+    border-radius: 0.2vw;
+    cursor: pointer;
+    font-size: 25px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    color: rgb(111, 16, 179);
+}
+#small-big div.active{
+
+    background-color: #feab3a;
+
+}
+
+#play-body p.balance{
+
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif;
+    color: #fff;
+    line-height: 25px;
+    margin: 0;
+
+}
+
+#input-wrapper{
+    display: flex;
+    margin: auto;
+    margin-top: 2%;
+    width: 80%;
+}
+#input-box{
+    flex-grow: 2;
+}
+input {
+    width: 100%;
+    color: white;
+    margin:0 auto;
+    font-size: 28px;
+    font-family: 'Montserrat', sans-serif;;
+    background-color:  rgba(66, 0, 104, 0.678);
+    padding: 0.35em 0.45em;
+    border-width: 0;
+    /* border: 1px solid transparent;
+    transition: background-color 0.3s ease-in-out; */
+
+}
+#button-box{
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-evenly;
+}
+.button {
+
+    font-size: 28px;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    padding: 0.35em 0.45em;
+    outline: none;
+    border-width: 1px;
+    border-style:solid;
+    border-radius: 0.2vw;
+    border-color: rgb(227, 178, 255);
+    background-color: hsla(245, 41%, 21%, 0);
+    /* overflow: hidden; */
+    /* margin: 30px; */
+    width: 40%
+}
+.button:hover {
+    background-color: hsl(271, 80%, 23%);
+}
+.button:active {
+    background-color: #feab3a;
+}
+
+.play {
+    z-index: 1;
+    position: relative;
+    font-size: 28px;
+    font-family: 'Ultra', sans-serif;
+    color: #aaa;
+    background-color: #666;
+    margin: 20px 0 10px 0;
+    padding: 0.5em 1em;
+    width: 50%;
+    outline: none;
+    border: none;
+    border-radius: 0.5vw;
+  }
+
+  .play.active{
+    color: hsl(268, 100%, 15%);
+    background-image: linear-gradient(92deg, #f35626, #feab3a);
+  }
+
+.play.active::before {
+    content: '';
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fc2f70;
+    transform-origin: center right;
+    border-radius: 0.5vw;
+    transform: scaleX(0);
+    transition: transform 0.25s ease-in-out;
+}
+  
+.play.active:hover {
+    cursor: pointer;
+    color: #fff;
+}
+  
+.play.active:hover::before {
+    transform-origin: center left;
+    transform: scaleX(1);
+}
+
+#description{
+    text-align: left;
+    font-family: 'Montserrat', sans-serif;
+    width: 80%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2%;
+}
+#description>div{
+    width: 40%;
+}
+#description p.title{
+    font-size: x-large;
+    font-weight: 900;
+}
+
+nav{  
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 5vh;
+    width: 85%;
+    left: 7.5%;
+}
+
+
+nav button{
+    width: 5vw;
+    height: 5vw;
+    border-radius: 50%;
+    border-width: 0;
+    background-color: #feab3a;
+    outline: none;
+    cursor: pointer;
+}
+
+
 
 /*-----------------------------------*\
                 ANIMATIONS
@@ -104,21 +357,11 @@ body {
                 input
 \*-----------------------------------*/
 
-div {
+/* div {
     position: relative;
-}
+} */
   
-input {
-    width: 20em;
-    color: white;
-     margin:0 auto;
-    font-size: inherit;
-    font-family: inherit;
-    background-color: hsl(246, 41%, 18%);
-    padding: 0.35em 0.45em;
-    border: 1px solid transparent;
-    transition: background-color 0.3s ease-in-out;
-}
+
 
 input:focus {
     outline: none;
@@ -128,10 +371,10 @@ input::placeholder {
     color: hsla(0, 0%, 100%, 0.6);
 }
 
-span.input-border {
+/* span.input-border {
     position: absolute;
     background-color: #fc2f70;
-    transform-origin: center;
+    transform-origin: left;
     transition: transform 0.5s ease;
 }
 
@@ -149,7 +392,7 @@ span.input-border {
     top: 0;
     bottom: 0;
     transform: scaleY(0);
-}
+} */
 
 .top {
     top: 0;
@@ -181,21 +424,9 @@ input:focus ~ .left, input:focus ~ .right {
     display: inline-block;
 }
 
-.button {
-    z-index: 1;
-    position: relative;
-    font-size: inherit;
-    font-family: inherit;
-    color: white;
-    padding: 0.5em 1em;
-    outline: none;
-    border: none;
-    background-color: hsl(246, 41%, 21%);
-    overflow: hidden;
-    margin: 20px;
-}
 
-.button::after {
+
+/* .button::after {
     content: '';
     z-index: -1;
     background-color: hsla(0, 0%, 100%, 0.2);
@@ -213,7 +444,7 @@ input:focus ~ .left, input:focus ~ .right {
 .button:hover::after {
     transition: transform 0.45s ease-in-out;
     transform: translateX(200%) rotate(35deg);
-}
+} */
   
 
 /*-----------------------------------*\
@@ -272,42 +503,8 @@ input:focus ~ .left, input:focus ~ .right {
             下注与赎回
 \*-----------------------------------*/
 
-.play {
-    z-index: 1;
-    position: relative;
-    font-size: inherit;
-    font-family: inherit;
-    color: white;
-    margin: 20px 0 10px 0;
-    padding: 0.5em 1em;
-    min-width: 200px;
-    outline: none;
-    border: none;
-    background-color: hsl(246, 41%, 21%);
-  }
-  
-.play::before {
-    content: '';
-    z-index: -1;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #fc2f70;
-    transform-origin: center right;
-    transform: scaleX(0);
-    transition: transform 0.25s ease-in-out;
-}
-  
-.play:hover {
-    cursor: pointer;
-}
-  
-.play:hover::before {
-    transform-origin: center left;
-    transform: scaleX(1);
-}
+
+
 
 #bingo {
     display: none;

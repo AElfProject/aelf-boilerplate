@@ -36,7 +36,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   // Update your card number,Returns the change in the number of your cards
   function getBalance() {
     const payload = {
-      symbol: 'CARD',
+      symbol: 'ELF',
       owner: wallet.address
     };
 
@@ -52,55 +52,55 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
         .catch(err => {
           console.log(err);
         });
-    }, 3000);
+    }, 0);
 
-    return multiTokenContract.GetBalance.call(payload)
-      .then(result => {
-        // console.log('result: ', result);
-        const difference = result.balance - balance.innerText;
-        // balance.innerHTML = result.balance;
-        balance.innerHTML = 'loading...';
-        return difference;
-      })
-      .catch(err => {
-        console.log(err);
-      });;
+    // return multiTokenContract.GetBalance.call(payload)
+    //   .then(result => {
+    //     // console.log('result: ', result);
+    //     const difference = result.balance - balance.innerText;
+    //     // balance.innerHTML = result.balance;
+    //     balance.innerHTML = 'loading...';
+    //     return difference;
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   });;
   }
 
-  refreshButton.onclick = () => {
+
     getBalance();
-  };
+
 
   // register game, update the number of cards, display game interface
-  let loading = false;
-  register.onclick = () => {
-    if (loading) {
-      return;
-    }
-    loading = true;
-    loader.style.display = 'inline-block';
-    bingoGameContract.Register()
-      .then(() => {
-        return new Promise(resolve => {
-          register.innerText = 'Loading';
-          setTimeout(() => {
-            getBalance();
-            loading = false;
-            register.innerText = 'Register';
-            loader.style.display = 'none';
-            resolve()
-          }, 3000);
-        });
-      })
-      .then(() => {
-        alert('Congratulations on your successful registration！');
-        siteBody.style.display = 'block';
-        register.style.display = 'none';
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
+  // let loading = false;
+  // register.onclick = () => {
+  //   if (loading) {
+  //     return;
+  //   }
+  //   loading = true;
+  //   loader.style.display = 'inline-block';
+  //   bingoGameContract.Register()
+  //     .then(() => {
+  //       return new Promise(resolve => {
+  //         register.innerText = 'Loading';
+  //         setTimeout(() => {
+  //           getBalance();
+  //           loading = false;
+  //           register.innerText = 'Register';
+  //           loader.style.display = 'none';
+  //           resolve()
+  //         }, 3000);
+  //       });
+  //     })
+  //     .then(() => {
+  //       alert('Congratulations on your successful registration！');
+  //       siteBody.style.display = 'block';
+  //       register.style.display = 'none';
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  // };
 
   // click button to change the number of bets
   buttonBox.onclick = e => {
@@ -177,7 +177,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
 }
 
 function init() {
-  document.getElementById('register').innerText = 'Please wait...';
+  // document.getElementById('register').innerText = 'Please wait...';
   aelf.chain.getChainStatus()
     // get instance by GenesisContractAddress
     .then(res => aelf.chain.contractAt(res.GenesisContractAddress, wallet))
