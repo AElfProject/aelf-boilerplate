@@ -182,14 +182,17 @@ class MyHomePage extends React.Component {
 
     async getBingoGameContractBalane() {
         const reduxStoreData = this.props.ReduxStore;
-        const { contracts } = reduxStoreData;
-        const { bingoGameContract } = contracts;
-        if (!(bingoGameContract && bingoGameContract.address)) {
-            return;
+        const { tempContracts } = reduxStoreData;
+        
+        const { tokenContract, appContract } = tempContracts || {};
+        if (appContract && !appContract.address) {
+            return
         }
 
-        const balance = await this.getTokenBalance(null, bingoGameContract.address);
-
+        const balance = await tokenContract.GetBalance.call({
+            symbol: tokenSymbol,
+            owner: appContract.address
+        });
         if (!balance) {
             return;
         }
