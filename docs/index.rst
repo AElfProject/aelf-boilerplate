@@ -7,7 +7,7 @@ Welcome to Boilerplate doc's documentation!
 ===========================================   
 
 .. toctree::
-   :caption: Introduction
+   :caption: Getting started
 
    Introduction <introduction>
 
