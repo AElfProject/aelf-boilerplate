@@ -15,9 +15,9 @@ Welcome to Boilerplate doc's documentation!
 .. toctree::
    :caption: AElf Boilerplate guide
 
-   contract <guide/contract_folder>
-   src <guide/src_folder>
-   test <guide/test_folder>
+   contract <contract_folder>
+   src <src_folder>
+   test <test_folder>
 
 .. toctree::
    :caption: Development
