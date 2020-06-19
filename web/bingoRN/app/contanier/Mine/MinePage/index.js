@@ -61,10 +61,13 @@ class MyMinePage extends React.Component {
             ]
         }
     }
-    componentWillMount = () => {                
+    componentWillMount = () => {     
+        //It returns a function that can be called to unsubscribe from the event.
+        //We call this function in componentWillMount
         this.didBlurSubscription = this.props.navigation.addListener(
-            'focus',
-            payload => {                
+            //Press this tab     
+            'tabPress',
+            payload => {                                
                this.checkLogin()
             }
           );
@@ -84,7 +87,7 @@ class MyMinePage extends React.Component {
         this.requestOrder();
     }
     componentWillUnmount(){
-        this.didBlurSubscription();
+        this.didBlurSubscription && this.didBlurSubscription();
         clearInterval(this.updateBalance);
         this.setState = () => {};
     }

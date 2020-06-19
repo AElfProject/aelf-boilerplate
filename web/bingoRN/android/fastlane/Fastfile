@@ -50,8 +50,26 @@ platform :android do
     fir_cli(
       api_token: "",
       short: "anaelfbingodemo",
-      changelog: "Hello fir.im",
+      changelog: "Hello aelf",
       dingtalk_access_token: "",
     )
+  end
+
+  desc "Push to telegram"
+  lane :push_telegram do
+    version_name = get_version_name(app_project_dir: '**/app')
+    version = sh( "../../fastlane_version.sh");
+    UI.message("final version: " + version + version_name )
+    telegram(
+      token: "",
+      chat_id: "",
+      text: "http://d.firim.vip/anaelfbingodemo " + "aelfBingoDevDemo-" + version_name + " Android Build" + version,
+      proxy: "http://127.0.0.1:1087"
+    )
+  end
+
+  desc "Final version"
+  lane :get_version do
+    push_telegram
   end
 end

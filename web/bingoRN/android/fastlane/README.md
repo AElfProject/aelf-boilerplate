@@ -36,6 +36,21 @@ Deploy a new version to the Google Play
 fastlane android fir_im
 ```
 Deploy a new version to the fir.im
+### android show_version
+```
+fastlane android show_version
+```
+Show version code
+### android push_telegram
+```
+fastlane android push_telegram
+```
+Push to telegram
+### android get_version
+```
+fastlane android get_version
+```
+Final version
 
 ----
 
