@@ -3,6 +3,7 @@ Acs Introduction
 
 .. toctree::
 
+   Acs0 - Contract Management Standard <acs0>
    Acs1 - Transaction Fee Standard <acs1>
    Acs2 - Parallel Execution Standard <acs2>
    Acs3 - Contract Proposal Standard <acs3>
