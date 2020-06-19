@@ -22,10 +22,10 @@ Welcome to Boilerplate doc's documentation!
 .. toctree::
    :caption: Development
 
-   system-contract
-   acs
-   demo
-   DApp
+   system-contract <system-contract/index>
+   acs <acs/index>
+   demo <demo/index>
+   DApp <dapp/index>
 
 .. toctree::
    :caption: Related projects
