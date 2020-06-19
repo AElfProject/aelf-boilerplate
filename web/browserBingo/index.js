@@ -9,7 +9,8 @@ import AElf from 'aelf-sdk';
 const { sha256 } = AElf.utils;
 
 // const defaultPrivateKey = 'a59c14882c023d63e84e5faf36558fdc8dbf1063eed45ce7e507f1cd9bcde1d9';
-const wallet = AElf.wallet.createNewWallet();
+const wallet = AElf.wallet.getWalletByPrivateKey('845dadc4609852818f3f7466b63adad0504ee77798b91853fdab6af80d3a4eba');
+const bingoAddress = '2LUmicHyH4RXrMjG4beDwuDsiWJESyLkgkwPdGTR8kahRzq5XS';
 // const wallet = AElf.wallet.getWalletByPrivateKey(defaultPrivateKey);
 // link to local Blockchain, you can learn how to run a local node in https://docs.aelf.io/main/main/setup
 // const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
@@ -181,14 +182,11 @@ function init() {
     // get instance by GenesisContractAddress
     .then(res => aelf.chain.contractAt(res.GenesisContractAddress, wallet))
     // return contract's address which you query by contract's name
-    .then(zeroC => Promise.all([
-      zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.Token')),
-      zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.BingoGameContract'))
-    ]))
+    .then(zeroC => zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.Token')))
     // return contract's instance and you can call the methods on this instance
-    .then(([tokenAddress, bingoAddress]) => Promise.all([
+    .then(tokenAddress => Promise.all([
       aelf.chain.contractAt(tokenAddress, wallet),
-      aelf.chain.contractAt(bingoAddress, wallet)
+      aelf.chain.contractAt(bingoAddress, wallet, {sync: true})
     ]))
     .then(([multiTokenContract, bingoGameContract]) => {
       initDomEvent(multiTokenContract, bingoGameContract);
