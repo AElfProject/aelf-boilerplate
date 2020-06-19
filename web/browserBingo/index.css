@@ -205,8 +205,8 @@ input {
     position: relative;
     font-size: 28px;
     font-family: 'Ultra', sans-serif;
-    color: #aaa;
-    background-color: #666;
+    color: #666;
+    background-color: #aaa;
     margin: 20px 0 10px 0;
     padding: 0.5em 1em;
     width: 50%;
@@ -278,9 +278,18 @@ nav button{
     height: 5vw;
     border-radius: 50%;
     border-width: 0;
-    background-color: #feab3a;
+    color: #666;
+    background-color: #aaa;
     outline: none;
     cursor: pointer;
+    font-size: 28px;
+    font-weight: 900;
+    font-family: 'Ultra', sans-serif;
+}
+
+nav button.active{
+    background-color: #feab3a;
+    color: hsl(268, 100%, 15%);
 }
 
 
