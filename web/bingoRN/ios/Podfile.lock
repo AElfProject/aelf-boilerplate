@@ -201,19 +201,21 @@ PODS:
     - React-cxxreact (= 0.62.2)
     - React-jsi (= 0.62.2)
   - React-jsinspector (0.62.2)
-  - react-native-camera (3.23.1):
+  - react-native-camera (3.30.0):
     - React
-    - react-native-camera/RCT (= 3.23.1)
-    - react-native-camera/RN (= 3.23.1)
-  - react-native-camera/RCT (3.23.1):
+    - react-native-camera/RCT (= 3.30.0)
+    - react-native-camera/RN (= 3.30.0)
+  - react-native-camera/RCT (3.30.0):
     - React
-  - react-native-camera/RN (3.23.1):
+  - react-native-camera/RN (3.30.0):
     - React
-  - react-native-cameraroll (1.5.2):
+  - react-native-cameraroll (1.7.2):
     - React
   - react-native-get-random-values (1.4.0):
     - React
   - react-native-netinfo (2.0.10):
+    - React
+  - react-native-safe-area-context (3.0.5):
     - React
   - react-native-splash-screen (3.2.0):
     - React
@@ -278,9 +280,11 @@ PODS:
     - React-cxxreact (= 0.62.2)
     - React-jsi (= 0.62.2)
     - ReactCommon/callinvoker (= 0.62.2)
-  - RNCAsyncStorage (1.9.0):
+  - RNCAsyncStorage (1.11.0):
     - React
   - RNCClipboard (1.2.2):
+    - React
+  - RNCMaskedView (0.1.10):
     - React
   - RNDeviceInfo (2.3.2):
     - React
@@ -297,7 +301,9 @@ PODS:
     - React-Core
     - React-RCTImage
     - RSKImageCropper
-  - RNScreens (2.6.0):
+  - RNReanimated (1.9.0):
+    - React
+  - RNScreens (2.8.0):
     - React
   - RNSVG (9.13.6):
     - React
@@ -306,11 +312,11 @@ PODS:
   - RSKImageCropper (2.2.3)
   - TouchID (4.4.1):
     - React
-  - UMAppLoader (1.0.1)
+  - UMAppLoader (1.0.2)
   - UMBarCodeScannerInterface (5.1.0)
   - UMCameraInterface (5.1.0)
   - UMConstantsInterface (5.1.0)
-  - UMCore (5.1.0)
+  - UMCore (5.1.2)
   - UMFaceDetectorInterface (5.1.0)
   - UMFileSystemInterface (5.1.0)
   - UMFontInterface (5.1.0)
@@ -356,6 +362,7 @@ DEPENDENCIES:
   - "react-native-cameraroll (from `../node_modules/@react-native-community/cameraroll`)"
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-view-shot (from `../node_modules/react-native-view-shot`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -371,10 +378,12 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
+  - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -448,6 +457,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-get-random-values"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-safe-area-context:
+    :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
   react-native-view-shot:
@@ -476,6 +487,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/async-storage"
   RNCClipboard:
     :path: "../node_modules/@react-native-community/clipboard"
+  RNCMaskedView:
+    :path: "../node_modules/@react-native-community/masked-view"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNFS:
@@ -484,6 +497,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNImageCropPicker:
     :path: "../node_modules/react-native-image-crop-picker"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
@@ -524,11 +539,11 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
-  EXBarCodeScanner: 69c482f1dc8492493ccae692093d6e9914081a09
-  EXConstants: 5304709b1bea70a4828f48ba4c7fc3ec3b2d9b17
-  EXFileSystem: cf4232ba7c62dc49b78c2d36005f97b6fddf0b01
-  EXImageLoader: 5ad6896fa1ef2ee814b551873cbf7a7baccc694a
-  EXPermissions: 24b97f734ce9172d245a5be38ad9ccfcb6135964
+  EXBarCodeScanner: 5e1d94192899873d2570a1c2c161df638bac52da
+  EXConstants: 9f18e9ef229706394f41735d9c7f309d479b36c0
+  EXFileSystem: b82693d78de152efe10a77d4aac781f782e10916
+  EXImageLoader: 5c9d1bf408443ac4d4f44463eaf3b0d03bc70425
+  EXPermissions: d2cafee9c72578ecc9ca121481e6c4a04a798861
   FBLazyVector: 4aab18c93cd9546e4bfed752b4084585eca8b245
   FBReactNativeSpec: 5465d51ccfeecb7faa12f9ae0024f2044ce4044e
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
@@ -542,12 +557,13 @@ SPEC CHECKSUMS:
   React-jsi: b6dc94a6a12ff98e8877287a0b7620d365201161
   React-jsiexecutor: 1540d1c01bb493ae3124ed83351b1b6a155db7da
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
-  react-native-camera: 1b52abea404d04e040edb3e74b7c5523c01a3089
-  react-native-cameraroll: 4360c9faab50dc6844f56d222c2d0c7ef5f1fe92
+  react-native-camera: f57b28a587a81c50085b77f3fdc71818089ab45d
+  react-native-cameraroll: a16e626822c6a61ed142de9cfae9d516216beb03
   react-native-get-random-values: 2b7500cdb68066aba87cdccd97067c29e16ffe95
-  react-native-netinfo: 39c221d058dca040a69e46a083e692bbd65d5ab5
+  react-native-netinfo: c5a291927e79059bf35169097b2ff0db71418134
+  react-native-safe-area-context: e9a863c2dbbc0d42d2b12209d63fa79dfbc9662c
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
-  react-native-view-shot: 4475fde003fe8a210053d1f98fb9e06c1d834e1c
+  react-native-view-shot: 08c46c9e8e92f6681e8f2ffa55ac3d06e7e99070
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
   React-RCTAnimation: 49ab98b1c1ff4445148b72a3d61554138565bad0
   React-RCTBlob: a332773f0ebc413a0ce85942a55b064471587a71
@@ -558,33 +574,35 @@ SPEC CHECKSUMS:
   React-RCTText: fae545b10cfdb3d247c36c56f61a94cfd6dba41d
   React-RCTVibration: 4356114dbcba4ce66991096e51a66e61eda51256
   ReactCommon: ed4e11d27609d571e7eee8b65548efc191116eb3
-  RNCAsyncStorage: 453cd7c335ec9ba3b877e27d02238956b76f3268
-  RNCClipboard: 8148e21ac347c51fd6cd4b683389094c216bb543
-  RNDeviceInfo: 17e34f6dd902f08d88cbe2c0b7a01be948d43641
+  RNCAsyncStorage: db711e29e5e0500d9bd21aa0c2e397efa45302b1
+  RNCClipboard: a254f6e568bc713b7ef49646e216661369882030
+  RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
+  RNDeviceInfo: bdc3e922b2ed0f086e9d9ab534e61bc316f08576
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNImageCropPicker: cf129d17e042ce3e96fb9ada967c28f21f977c82
-  RNScreens: 19fee34a46de81b66e26960f5ac14ea616a5d089
+  RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
+  RNScreens: 62211832af51e0aebcf6e8c36bcf7dd65592f244
   RNSVG: 8ba35cbeb385a52fd960fd28db9d7d18b4c2974f
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   RSKImageCropper: a446db0e8444a036b34f3c43db01b2373baa4b2a
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
-  UMAppLoader: 90273a65f9b1d789214e0c913dfcabc7a1b1590e
-  UMBarCodeScannerInterface: 9dc692b87e5f20fe277fa57aa47f45d418c3cc6c
-  UMCameraInterface: 625878bbf2ba188a8548675e1d1d2e438a653e6d
-  UMConstantsInterface: 64060cf86587bcd90b1dbd804cceb6d377a308c1
-  UMCore: d6117852f32c74cde466b863cfdeaa0960186249
-  UMFaceDetectorInterface: d6677d6ddc9ab95a0ca857aa7f8ba76656cc770f
-  UMFileSystemInterface: c70ea7147198b9807080f3597f26236be49b0165
-  UMFontInterface: d9d3b27af698c5389ae9e20b99ef56a083f491fb
-  UMImageLoaderInterface: 14dd2c46c67167491effc9e91250e9510f12709e
-  UMPermissionsInterface: 5e83a9167c177e4a0f0a3539345983cc749efb3e
-  UMReactNativeAdapter: 126da3486c1a1f11945b649d557d6c2ebb9407b2
-  UMSensorsInterface: 48941f70175e2975af1a9386c6d6cb16d8126805
-  UMTaskManagerInterface: cb890c79c63885504ddc0efd7a7d01481760aca2
+  UMAppLoader: ae5eaee9f3c8cc847c631a579fed20d217de5913
+  UMBarCodeScannerInterface: aa3409ab9d108866e55c09ad0292e4a6c08a7775
+  UMCameraInterface: 9d5da92c521e0af7815afbf77ea19bd0312b4928
+  UMConstantsInterface: 4a1d3062a89421d3290bbe8f75efabd849935bea
+  UMCore: cb544737bc72ecfccae9dd476e4d647468b4ebd0
+  UMFaceDetectorInterface: c6d69c914426fc29f5a2442411a575e887adb823
+  UMFileSystemInterface: bee6c9ca4f3d70da5f7c9752efc8b3f3a7f47b61
+  UMFontInterface: 884955c5fd329095e2072d16de9b5bf1bce93005
+  UMImageLoaderInterface: 3781f05d7e0be1c5b00dd3cc9c390b94d8484300
+  UMPermissionsInterface: a3c5910e28a5ec31810dbfd1936e4948a4439310
+  UMReactNativeAdapter: e936c48fd15114cd1d5b06310797198a06f72ca0
+  UMSensorsInterface: fc92b1f92202166284ca0f95e0acc1daab5d16a8
+  UMTaskManagerInterface: 4e6c4c34a89512e2225d336154df1cb689226a29
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
 PODFILE CHECKSUM: 1f6597220e1fc617da01cacc8d2eada368e95c32
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.3

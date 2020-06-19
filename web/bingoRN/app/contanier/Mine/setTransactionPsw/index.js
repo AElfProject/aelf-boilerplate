@@ -28,11 +28,9 @@ export default class SetTransactionPsw extends React.Component {
         }
     }
     componentDidMount() {
-        const params = this.props.navigation.getParam("params");
         this.setState({
             modalType: 'tipTransactionPsw'
         });
-        // console.log('componentDidMount params, ', params);
     }
     goRouter(router, params) {
         navigationService.navigate(router, {
@@ -160,7 +158,7 @@ export default class SetTransactionPsw extends React.Component {
     /* 设置密码后重新设置token */
     async setToken() {
         await AsyncStorage.setItem(Storage.userToken, "userToken");
-        let params = this.props.navigation.getParam("params");
+        let params = this.props.route.params.params;
         //如果是修改密码进来的，就重置路由
         if (params) {
             navigationService.reset("MinePage");

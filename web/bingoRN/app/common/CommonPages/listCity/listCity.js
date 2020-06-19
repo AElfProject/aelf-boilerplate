@@ -111,7 +111,8 @@ componentDidMount () {
         //回调改变显示的城市
     changedata=(cityname)=>{
         this.props.navigation.goBack()
-        this.props.navigation.state.params.changeCity(cityname)
+        const changeCity = this.props.route.params.params?.changeCity ?? undefined
+        changeCity && changeCity(cityname)
         
     }
     

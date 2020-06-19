@@ -58,7 +58,7 @@ class MyGenerateQRCode extends React.Component {
     }
 
     async generateKeystore() {
-        let params = this.props.navigation.getParam("params");
+        const params = this.props.route.params?.params ?? {};
 
         var newWallet = params.wallet;
         // try {

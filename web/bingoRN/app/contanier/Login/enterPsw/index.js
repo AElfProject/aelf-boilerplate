@@ -23,7 +23,6 @@ class EnterPsw extends React.Component {
         })
     }
     async getFirstRequest() {
-        let params = this.props.navigation.getParam("params");
 
         
     }

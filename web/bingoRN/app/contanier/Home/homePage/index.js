@@ -652,7 +652,7 @@ class MyHomePage extends React.Component {
         />;
     }
     onWord = _ => {
-        this.goRouter("MyBet")
+        this.goRouter("Lottery")
         this.props.onSetNewBet({ newBet: false })
     }
     render() {

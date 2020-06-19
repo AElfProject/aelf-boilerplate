@@ -37,7 +37,6 @@ class BackupQRcode extends React.Component {
         })
     }
     async getFirstRequest() {
-        let params = this.props.navigation.getParam("params");
         let keyStoreString =  await AsyncStorage.getItem(Storage.userKeyStore);
 
         this.setState({

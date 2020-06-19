@@ -10,9 +10,9 @@ import CommonHeader from "../../../common/Components/CommonHeader/CommonHeader";
 import { TextM, TextS, TextL } from "../../../common/UI_Component/CommonText";
 
 import pTd from "../../../common/utils/unit";
-import {config} from "../../../common/utils/config";
+import { config } from "../../../common/utils/config";
 
-const {tokenDecimalFormat} = config;
+const { tokenDecimalFormat } = config;
 
 /*
  * 充值详情
@@ -21,16 +21,16 @@ class RechargeDetail extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            item:{
+            item: {
                 params: '{}'
             }
         }
     }
     componentDidMount() {
         this.requestOrder();
-        let params = this.props.navigation.getParam("params");
+        const params = this.props.route.params.params
         this.setState({
-            item : params.item
+            item: params.item
         })
     }
     requestOrder() {
@@ -46,7 +46,7 @@ class RechargeDetail extends React.Component {
             params
         })
     }
-     /* 复制账户地址 */
+    /* 复制账户地址 */
     copyAddress() {
         Clipboard.setString(this.state.accountAddress);
     }
@@ -62,7 +62,7 @@ class RechargeDetail extends React.Component {
         const params = JSON.parse(item.params);
         const amount = params.amount / tokenDecimalFormat || '-';
 
-        const routerParams = this.props.navigation.getParam("params");
+        const routerParams = this.props.route.params.params
         const txType = routerParams === 'withdraw' ? 'WithDraw' : 'Recharge';
 
         return (
@@ -75,38 +75,38 @@ class RechargeDetail extends React.Component {
                         <TextS style={{ color: Colors.fontGray }}>{moment(item.time).format('YYYY-MM-DD HH:mm')}</TextS>
                     </View>
                     <View style={Gstyle.marginArg(0, pTd(50))}>
-                        <View style={{ flexDirection: "row", alignItems: "center",marginBottom:pTd(40) }}>
+                        <View style={{ flexDirection: "row", alignItems: "center", marginBottom: pTd(40) }}>
                             <TextM>Amount：</TextM>
                             <TextL style={{ fontWeight: "500" }}>{amount}</TextL>
                         </View>
-                        <View style={{flexDirection:"row", marginBottom:pTd(20)}}>
+                        <View style={{ flexDirection: "row", marginBottom: pTd(20) }}>
                             <TextM>From：</TextM>
                             <TextM style={{ width: pTd(450) }}>{item.address_to}</TextM>
                             <TouchableOpacity onPress={() => this.copyAddress()}>
                                 <Icon name="copy1" size={18} color="#000" />
                             </TouchableOpacity>
                         </View>
-                        <View style={{flexDirection:"row", marginBottom:pTd(20)}}>
+                        <View style={{ flexDirection: "row", marginBottom: pTd(20) }}>
                             <TextM>To：</TextM>
                             <TextM style={{ width: pTd(450) }}>{item.address_from}</TextM>
                             <TouchableOpacity onPress={() => this.copyAddress()}>
                                 <Icon name="copy1" size={18} color="#000" />
                             </TouchableOpacity>
                         </View>
-                        <View style={{flexDirection:"row", marginBottom:pTd(20)}}>
+                        <View style={{ flexDirection: "row", marginBottom: pTd(20) }}>
                             <TextM>Tx ID：</TextM>
                             <TextM style={{ width: pTd(450) }}>{item.tx_id}</TextM>
 
                         </View>
-                        <View style={{flexDirection:"row", marginBottom:pTd(20)}}>
+                        <View style={{ flexDirection: "row", marginBottom: pTd(20) }}>
                             <TextM>Block：</TextM>
                             <TextM style={{ width: pTd(400) }}>{item.block_height}</TextM>
 
                         </View>
                     </View>
-                    <View style={{alignItems:"center"}}>
-                    <QRCode
-                            value={"https://explorer-test.aelf.io/tx/"+item.tx_id}
+                    <View style={{ alignItems: "center" }}>
+                        <QRCode
+                            value={"https://explorer-test.aelf.io/tx/" + item.tx_id}
                             getRef={(c) => (this.svg = c)}
                             logoSize={38}
                             logoMargin={4}
@@ -114,7 +114,7 @@ class RechargeDetail extends React.Component {
                             size={200}
                         />
                         <TouchableOpacity>
-                            <TextM style={{color:"#a39dfd"}} onPress={() => Linking.openURL("https://explorer-test.aelf.io/tx/"+item.tx_id)}>到aelf区块浏览器查看更多详细信息></TextM>
+                            <TextM style={{ color: "#a39dfd" }} onPress={() => Linking.openURL("https://explorer-test.aelf.io/tx/" + item.tx_id)}>到aelf区块浏览器查看更多详细信息></TextM>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
