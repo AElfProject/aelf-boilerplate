@@ -16,9 +16,7 @@ The [**boilerplate repo**](https://github.com/AElfProject/aelf-boilerplate) cont
 
 If not already done, open vscode and open the **aelf-boilerplate** folder. If asked to add some "required assets" say **yes**. There may also be some dependencies to restore: for all of them, choose **Restore**.
 
-<p align="center">
-  <img src="pictures/vscode-dep-autox150.png" width="200">
-</p>
+![setup-1](./pictures/vscode-dep-autox150.png)
 
 Open vscode's **Integrated Terminal** and build the project with the following command. Note: you can find out more about vscode's terminal [**here**](https://code.visualstudio.com/docs/editor/integrated-terminal).
 
