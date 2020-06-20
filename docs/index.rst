@@ -9,7 +9,7 @@ Welcome to Boilerplate doc's documentation!
 .. toctree::
    :caption: Getting started
 
-   Usage <usage>
+   Usage <usage/index>
    FAQ <faq>
 
 .. toctree::
