@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Acs9;
 using AElf.Contracts.MultiToken;
 using AElf.Contracts.Profit;
+using AElf.Contracts.TestKit;
 using AElf.Contracts.TokenHolder;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
@@ -146,6 +147,8 @@ namespace AElf.Contracts.ACS9DemoContract
                     Symbol = "APP",
                     Owner = UserAddresses[0]
                 });
+            var blockTimeProvider = GetRequiredService<IBlockTimeProvider>();
+            blockTimeProvider.SetBlockTime(60000);
             var withDrawResult = await userTokenHolderStub.Withdraw.SendAsync(ACS9DemoContractAddress);
             withDrawResult.TransactionResult.Status.ShouldBe(TransactionResultStatus.Mined);
             var resultBalance = await userTokenStub.GetBalance.CallAsync(new GetBalanceInput

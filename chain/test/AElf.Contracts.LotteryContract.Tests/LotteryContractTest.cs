@@ -11,7 +11,7 @@ using Xunit;
 namespace AElf.Contracts.LotteryContract
 {
     // ReSharper disable InconsistentNaming
-    public partial class LotteryContractTest : LotteryContractTestBase
+    public class LotteryContractTest : LotteryContractTestBase
     {
         private const long Price = 10_00000000;
 
@@ -68,6 +68,16 @@ namespace AElf.Contracts.LotteryContract
                 Symbol = "ELF",
                 Amount = 100000000_00000000
             });
+
+            await LotteryContractStub.AddRewardList.SendAsync(new RewardList
+            {
+                RewardMap =
+                {
+                    {"啊", "一等奖"},
+                    {"啊啊", "二等奖"},
+                    {"啊啊啊", "三等奖"}
+                }
+            });
         }
 
         [Fact]
@@ -76,7 +86,7 @@ namespace AElf.Contracts.LotteryContract
             await InitializeAndCheckStatus();
 
             var result = await LotteryContractStub.PrepareDraw.SendWithExceptionAsync(new Empty());
-            result.TransactionResult.Error.ShouldContain("No valid lottery exists");
+            result.TransactionResult.Error.ShouldContain("Unable to terminate this period.");
         }
 
         [Fact]
@@ -103,7 +113,7 @@ namespace AElf.Contracts.LotteryContract
 
             var currentPeriodNumber = await LotteryContractStub.GetCurrentPeriodNumber.CallAsync(new Empty());
             currentPeriodNumber.Value.ShouldBe(2);
-            
+
             {
                 var lotteries = await AliceBuy(1, 2);
                 lotteries.Count.ShouldBe(1);
@@ -111,7 +121,7 @@ namespace AElf.Contracts.LotteryContract
 
             {
                 var lotteries = await BobBuy(1, 2);
-                lotteries.Count.ShouldBe(1);// Only return 20 at one time.
+                lotteries.Count.ShouldBe(1); // Only return 20 at one time.
             }
 
             var result = await LotteryContractStub.PrepareDraw.SendWithExceptionAsync(new Empty());
@@ -123,16 +133,25 @@ namespace AElf.Contracts.LotteryContract
         {
             await PrepareDrawTest();
 
-            await LotteryContractStub.Draw.SendAsync(new DrawInput
+            await LotteryContractStub.SetRewardListForOnePeriod.SendAsync(new RewardsInfo
             {
-                LevelsCount = {1, 2, 5}
+                Period = 1,
+                Rewards =
+                {
+                    {"啊", 1},
+                    {"啊啊", 2},
+                    {"啊啊啊", 5}
+                }
             });
+
+            await LotteryContractStub.Draw.SendAsync(new Int64Value {Value = 1});
 
             var rewardResult = await LotteryContractStub.GetRewardResult.CallAsync(new Int64Value
             {
                 Value = 1
             });
-            var reward = rewardResult.RewardLotteries.First(r => r.Owner == AliceAddress && r.Level > 0);
+            var reward =
+                rewardResult.RewardLotteries.First(r => r.Owner == AliceAddress && !string.IsNullOrEmpty(r.RewardName));
             const string registrationInformation = "hiahiahia";
             await AliceLotteryContractStub.TakeReward.SendAsync(new TakeRewardInput
             {
@@ -142,29 +161,6 @@ namespace AElf.Contracts.LotteryContract
 
             var lottery = await LotteryContractStub.GetLottery.CallAsync(new Int64Value {Value = reward.Id});
             lottery.RegistrationInformation.ShouldBe(registrationInformation);
-        }
-
-        [Fact]
-        public async Task DrawSecondPeriodTest()
-        {
-            await DrawTest();
-            
-            await LotteryContractStub.PrepareDraw.SendAsync(new Empty());
-
-            var currentPeriodNumber = await LotteryContractStub.GetCurrentPeriodNumber.CallAsync(new Empty());
-            currentPeriodNumber.Value.ShouldBe(3);
-            
-            await LotteryContractStub.Draw.SendAsync(new DrawInput
-            {
-                LevelsCount = {1, 8, 10}
-            });
-
-            var rewardResult = await LotteryContractStub.GetRewardResult.CallAsync(new Int64Value
-            {
-                Value = 2
-            });
-            var reward = rewardResult.RewardLotteries.First(r => r.Owner == AliceAddress && r.Level > 0);
-            reward.Id.ShouldBeLessThan(10);
         }
 
         private async Task<RepeatedField<Lottery>> AliceBuy(int amount, long period)
