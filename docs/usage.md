@@ -1,14 +1,16 @@
-#Usage
+# Usage
 
 The main usage of aelf-boilerplate is to develop contracts for AElf blockchains. Once you've downloaded or cloned this project, that process looks something like this:
 
-1. Open **AElf.Boilerplate.sln**, run project **AElf.Boilerplate.Launcher**, and try Greeter project located in `web/greeter` to make sure the AElf blockchain can be run in local machine.
 
-2. Open **AElf.Contracts.BingoContract.sln**, run project **AElf.Boilerplate.BingoContract.Launcher**, and try Bingo Game loclated in `web/ReactNativeBingo`, famaliar with the code of Bingo Game, which is a DApp of the AElf blockchain.
+1. Use **AElf.Boilerplate.sln**, run project **AElf.Boilerplate.Launcher**, and try Greeter project located in `web/greeter` to make sure the AElf blockchain can be run in local machine.
 
-3. In **AElf.Boilerplate.sln**, modify the `appsettings.json` in project **AElf.Boilerplate.CodeGenerator**, running this project will generate a contract development template as well as a new sln file.
+2. Use **AElf.Contracts.BingoContract.sln**, run project **AElf.Boilerplate.BingoContract.Launcher**, and try Bingo Game loclated in `web/ReactNativeBingo`, famaliar with the code of Bingo Game, which is a DApp of the AElf blockchain.
+
+3. Use **AElf.Boilerplate.sln**, modify the `appsettings.json` in project **AElf.Boilerplate.CodeGenerator**, running this project will generate a contract development template as well as a new sln file.
 
 4. With the new sln file you can develop your new contract, and build your new contract project will generate a patched contract dll which can be deployed to AElf TestNet/MainNet.
+
 
 Besides, we provided demo contracts of most of our AElf Contract Standards(ACS). As shown before, aelf-boilerplate project is enough for you to getting familiar with AElf contract development, but it has to say that aelf-boilerplate is a start point of developing AElf contract, not a destination.
 
@@ -60,59 +62,6 @@ On Linux:
 ```bash
 sudo apt-get install nodejs
 ```
-
-### Database
-
-We currently support two key-value databases to store our nodes data: **Redis** or **SSDB**. Both work well, it's your decision:
-
-#### Redis (recommended for the tutorials): 
-
-Depending on your platform, enter one of the following commands (see here for more details [**Redis download page**](https://redis.io/)):
-
-On Windows:
-```bash
-choco install redis-64
-```
-
-On macOS: 
-```bash
-brew install redis
-```
-
-On Linux: 
-``` bash 
-sudo apt install redis-server
-```
-
-To test the installation (all platforms) you can just open a terminal and type ```redis-server```. This will show you the servers welcome page as well as the port it's listening on:
-
-<p align="center">
-    <img src="pictures/setup-redis.png" height="300">
-</p>
-
-#### SSDB
-Depending on your platform, enter one of the following commands (see here for more details [**SSDB**](http://ssdb.io/?lang=en)):
-
-NOTE: On a Windows machine we highly recommend you use Redis. This is an extract from the official website:
-```
-Do not run SSDB server on Windows system for a production environment. If you wish to stick with Windows system, please run a Linux virtual machine on Windows, and run SSDB server on that Linux.
-```
-
-On macOS: 
-```bash
- brew install ssdb
- ```
-
-On Linux:
-``` bash
-wget --no-check-certificate https://github.com/ideawu/ssdb/archive/master.zip
-unzip master
-cd ssdb-master
-make
-# optional, install ssdb in /usr/local/ssdb
-sudo make install
-```
-
 ## Building sources and development tools
 
 {% hint style="info" %} 
@@ -217,4 +166,146 @@ brew install protobuf@3.11
 brew link --force --overwrite protobuf@3.11
 ```
 
+## Setup Boilerplate
 
+### Clone the repository
+
+The following command will clone AElf Boilerplate into a **aelf-boilerplate** folder with Boilerplate's code inside it, open a terminal and enter the following command:
+
+```bash
+git clone https://github.com/AElfProject/aelf-boilerplate
+```
+
+The [**boilerplate repo**](https://github.com/AElfProject/aelf-boilerplate) contains a framework for easy smart contract development as well as examples (some explained in this series of articles).
+
+### Build and run
+
+#### Open the project
+
+If not already done, open vscode and open the **aelf-boilerplate** folder. If asked to add some "required assets" say **yes**. There may also be some dependencies to restore: for all of them, choose **Restore**.
+
+<p align="center">
+  <img src="pictures/vscode-dep-autox150.png" width="200">
+</p>
+
+Open vscode's **Integrated Terminal** and build the project with the following command. Note: you can find out more about vscode's terminal [**here**](https://code.visualstudio.com/docs/editor/integrated-terminal).
+
+#### Install script
+
+As stated earlier, Boilerplate takes care of the C# code generation and thus has a dependency on protobuf. If you don't already have it installed, run the following script from withing the **aelf-boilerplate** folder:
+
+```bash
+# Mac or Linux
+sh chain/scripts/install.sh
+
+# Windows
+# open a PowerShell console as administrator
+chain/scripts/install.ps1
+```
+
+{% hint style="info" %}
+If you prefer or have problems, you can refer to the following guide to [**manually install**](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md) protobuf on your system.
+{% endhint %}
+
+#### Build and run
+
+The next step is to build Boilerplate and all the contracts to ensure everything is working correctly. Once everything is built, we'll run Boilerplate's internal node.
+
+```bash
+# enter the Launcher folder and build 
+cd chain/src/AElf.Boilerplate.Launcher/
+
+# build
+dotnet build
+
+# run the node 
+dotnet run --no-build bin/Debug/netcoreapp3.1/AElf.Boilerplate.Launcher
+```
+
+{% hint style="warning" %}
+ When running Boilerplate, you might see some errors related to an incorrect password, to solve this, you need to backup your `data-dir/keys/` folder and start with an empty keys folder. Once you've cleaned the keys, stop and restart the node with the ```dotnet run``` command shown above.
+ {% endhint %}
+
+At this point, the smart contracts have been deployed and are ready to be called (Boilerplate has a functioning API). You should see the node's logs in the terminal and see the node producing blocks. You can now stop the node by killing the process (usually **control-c** or **ctrl-c** in the terminal).
+
+#### Run tests
+
+Boilerplate makes it easy to write unit tests for your contracts. Here we'll take the tests of the Hello World contract included in Boilerplate as an example. To run the tests, navigate to the **AElf.Contracts.HelloWorldContract.Test** folder and run:
+
+```bash
+cd ../../test/AElf.Contracts.HelloWorldContract.Test/
+dotnet test
+```
+The output should look somewhat like this, meaning that the tests have successfully executed:
+```bash 
+Test Run Successful.
+Total tests: 1
+     Passed: 1
+ Total time: 2.8865 Seconds
+```
+
+At this point, you have successfully downloaded, built, and run Boilerplate. You have also run the HelloWorld contract's tests that are included in Boilerplate. Later articles will show you how to add a contract and its tests and add it to the deployment process.
+
+### More on Boilerplate
+
+Boilerplate is an environment that is used to develop smart contracts and dApps. After writing and testing your contract on Boilerplate, you can deploy it to a running AElf chain. Internally Boilerplate will run an AElf node that will automatically have your contract deployed on it at genesis.
+
+Boilerplate is composed of two root folders: **chain** and **web**. This series of tutorial articles focuses on contract development so we'll only go into the details of the **chain** part of Boilerplate. Here is a brief overview of the folders:
+
+<!-- 
+## chain  // root of the contract development folder
+### src 
+### contract 
+#### AElf.Contracts.HelloWorldContract
+##### AElf.Contracts.HelloWorldContract.csproj
+##### HelloWorldContract.cs
+##### HelloWorldContractState.cs
+##### ...
+### protobuf 
+#### hello_world_contract.proto
+#### ...
+### test 
+#### AElf.Contracts.HelloWorldContract.Test 
+##### AElf.Contracts.HelloWorldContract.Test.csproj
+##### HelloWorldContractTest.cs
+### ...
+-->
+
+```
+.
+└── chain 
+    ├── src 
+    ├── contract
+    │   └── AElf.Contracts.HelloWorldContract
+    │       ├── AElf.Contracts.HelloWorldContract.csproj
+    │       ├── HelloWorldContract.cs
+    │       ├── HelloWorldContractState.cs
+    │       └── ...
+    ├── protobuf
+    │   ├── hello_world_contract.proto
+    │   └── ...
+    ├── test 
+    │   └── AElf.Contracts.HelloWorldContract.Test
+    │       ├── AElf.Contracts.HelloWorldContract.Test.csproj
+    │       └── HelloWorldContractTest.cs
+    └── ...
+```
+
+The hello world contract and its tests are split between the following folders:
+- **contract**: this folder contains the csharp projects (.csproj) along with the contract implementation (.cs files).
+- **protobuf**: contains the .proto definition of the contract.
+- **test**: contains the test project and files (basic xUnit test project).
+
+You can use this layout as a template for your future smart contracts. Before you do, we recommend you follow through all the articles of this series.
+
+{% hint style="info" %}
+You will also notice the **src** folder. This folder contains Boilerplate's modules and the executable for the node.
+{% endhint %}
+
+### Next 
+
+You've just seen a short introduction on how to run a smart contract that is already included in Boilerplate. The next article will show you a complete smart contract and extra content on how to organize your code and test files.
+
+{% hint style="warning" %}
+All production contracts (contracts destined to be deployed to a live chain) must go through a complete review process by the contract author and undergo proper testing. It is the author's responsibility to check the validity and security of his contract. The author should not simply copy the contracts contained in Boilerplate; it's the author's responsibility to ensure the security and correctness of his contracts.
+{% endhint %}
