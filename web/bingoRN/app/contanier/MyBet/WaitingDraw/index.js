@@ -1,7 +1,6 @@
-import React, { useEffect, useRef } from "react";
-import { View, Text , Linking} from "react-native";
+import React, { useRef } from "react";
+import { View, Text, Linking } from "react-native";
 import moment from 'moment'
-import Clipboard from "@react-native-community/clipboard";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import styles from '../Styles';
@@ -20,10 +19,6 @@ function WaitingDraw() {
     const ReduxStore = useSelector(state => state, shallowEqual);
     const dispatch = useDispatch()
     const list = useRef(null);
-
-    useEffect(() => {
-        onRefresh()
-    }, [])
 
     const onRefresh = async () => {
         try {
@@ -45,7 +40,7 @@ function WaitingDraw() {
             })
         }
     }
-    const renderItem = ({ item }) => {        
+    const renderItem = ({ item }) => {
         const { boutType, amount, tokenSymbol, playId, isComplete, award, betTime } = item
         const { seconds } = betTime || {}
         const list = [

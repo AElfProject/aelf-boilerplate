@@ -1,12 +1,12 @@
 /**
  * React-navigation 路由任意跳转封装
  */
-import { NavigationActions, StackActions } from 'react-navigation';
+import { CommonActions, StackActions } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native';
 
 let _navigator;
 let _routers;
 let _navigation;
-
 /**
  * 设置顶层路由导航
  * @param navigatorRef
@@ -18,24 +18,23 @@ function setTopLevelNavigator(navigatorRef) {
 
 /**
  * 跳转到指定页面
- * @param routeName
+ * @param name
  * @param params
  */
-function navigate(routeName, params) {
-    _navigator.dispatch(
-        NavigationActions.navigate({
-            type: NavigationActions.NAVIGATE,
-            routeName,
-            params,
+function navigate(name, params) {
+    _navigator && _navigator.dispatch(
+        CommonActions.navigate({
+            name,
+            params
         })
-    );
+    )
 }
 
 /**
  * 返回到顶层
  */
 function popToTop() {
-    _navigator.dispatch(NavigationActions.popToTop())
+    // _navigator.dispatch(CommonActions.popToTop())
 }
 
 /**
@@ -59,25 +58,22 @@ function popToN(n) {
  * 返回
  */
 function goBack() {
-    _navigator.dispatch(NavigationActions.back({ type: NavigationActions.BACK }));
+    _navigator && _navigator.dispatch(CommonActions.goBack());
 }
 
 /**
  * 把路由重置到首页
  */
-function reset(routeName) {
-    const resetAction = StackActions.reset({
+function reset(name) {
+    const resetAction = CommonActions.reset({
         index: 0,
-        actions: [NavigationActions.navigate({ routeName: routeName })]
+        routes: [{ name }],
     });
-    _navigator.dispatch(resetAction);
+    _navigator && _navigator.dispatch(resetAction);
 }
 
 function push(routeName, params) {
-    const pushAction = StackActions.push({
-        routeName,
-        params
-    });
+    const pushAction = StackActions.push(routeName,params);
     _navigator.dispatch(pushAction);
 }
 
@@ -86,7 +82,6 @@ export default {
     setTopLevelNavigator,
     navigate,
     goBack,
-    popToTop,
     reset,
     push
 };

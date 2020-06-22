@@ -39,7 +39,6 @@ export default class SecurityCenter extends React.Component {
         })
     }
     async getFirstRequest() {
-        let params = this.props.navigation.getParam("params");
     }
     goRouter(router, params) {
         navigationService.navigate(router, {

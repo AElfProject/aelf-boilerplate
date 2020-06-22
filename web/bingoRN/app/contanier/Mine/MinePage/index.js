@@ -61,10 +61,13 @@ class MyMinePage extends React.Component {
             ]
         }
     }
-    componentWillMount = () => {
+    componentWillMount = () => {     
+        //It returns a function that can be called to unsubscribe from the event.
+        //We call this function in componentWillMount
         this.didBlurSubscription = this.props.navigation.addListener(
-            'didFocus',
-            payload => {
+            //Press this tab     
+            'tabPress',
+            payload => {                                
                this.checkLogin()
             }
           );
@@ -74,7 +77,7 @@ class MyMinePage extends React.Component {
         this.checkTokenStatus()
         .then((token)=>{
             if(!token){
-                this.goRouter("LoginStack")
+                this.goRouter("LoginPage")
             }
             this.requestOrder();
         })
@@ -84,7 +87,7 @@ class MyMinePage extends React.Component {
         this.requestOrder();
     }
     componentWillUnmount(){
-        this.didBlurSubscription.remove();
+        this.didBlurSubscription && this.didBlurSubscription();
         clearInterval(this.updateBalance);
         this.setState = () => {};
     }

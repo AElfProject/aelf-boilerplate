@@ -38,12 +38,8 @@ class MyWithdraw extends React.Component {
         }
     }
     componentDidMount() {
-        // this.getFirstRequest();
         this.freshBalance();
     }
-    // async getFirstRequest() {
-    //     let params = this.props.navigation.getParam("params");
-    // }
     goRouter(router, params) {
         navigationService.navigate(router, {
             params

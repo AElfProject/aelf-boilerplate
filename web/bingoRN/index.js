@@ -3,6 +3,7 @@
  */
 
 import {AppRegistry} from 'react-native';
+import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
 import "./app/assets/css/theme"
 import "./app/assets/css/Gstyle"

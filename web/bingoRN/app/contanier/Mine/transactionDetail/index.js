@@ -33,7 +33,7 @@ export default class TransactionDetail extends React.Component {
         }
     }
     componentDidMount() {
-        const params = this.props.navigation.getParam("params");
+        const params = this.props.route.params.params;
         const txId = params.txId;
         if (txId) {
             this.getTxResult(txId);
@@ -69,7 +69,7 @@ export default class TransactionDetail extends React.Component {
         }
         amount = amount / tokenDecimalFormat || '-';
 
-        const routerParams = this.props.navigation.getParam("params");
+        const routerParams = this.props.route.params;
         const txType = routerParams.title === 'withdraw' ? 'WithDraw' : 'Recharge';
 
         return (

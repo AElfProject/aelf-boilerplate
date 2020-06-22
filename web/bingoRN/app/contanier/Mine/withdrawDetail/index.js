@@ -27,7 +27,7 @@ class WithdrawDetail extends React.Component {
     }
     componentDidMount() {
         this.requestOrder();
-        let params = this.props.navigation.getParam("params");
+        let params = this.props.route.params.params;
         this.setState({
             item : params.item
         })
@@ -110,7 +110,7 @@ class WithdrawDetail extends React.Component {
                             size={200}
                         />
                         <TouchableOpacity>
-                            <TextM style={{ color: "#a39dfd" }} onPress={() => Linking.openURL("https://explorer-test.aelf.io/tx/"+item.tx_id)}>到aelf区块浏览器查看更多详细信息></TextM>
+                            <TextM style={{ color: "#a39dfd" }} onPress={() => Linking.openURL("https://explorer-test.aelf.io/tx/"+item.tx_id)}>到aelf区块浏览器查看更多详细信息{'>'}</TextM>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>

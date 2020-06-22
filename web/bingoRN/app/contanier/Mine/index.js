@@ -1,7 +1,3 @@
-import React from "react";
-import { createStackNavigator } from "react-navigation";
-
-import MinePage from "./MinePage/index";
 import FundingDetail from "./fundingDetail/index";
 import Recharge from "./recharge/index";
 import RechargeDetail from "./rechargeDetail/index";
@@ -15,103 +11,19 @@ import ChangeLoginPsw from "./changeLoginPsw/index";
 import SecurityCenter from "./securityCenter/index";
 import AboutUs from "./aboutUs/index";
 
-import HowToPlay from "../Home/howToPlay/index"
+const stackNav = [
+    { name: 'FundingDetail', component: FundingDetail },
+    { name: 'TransactionDetail', component: TransactionDetail },
+    { name: 'Recharge', component: Recharge },
+    { name: 'RechargeDetail', component: RechargeDetail },
+    { name: 'Withdraw', component: Withdraw },
+    { name: 'WithdrawDetail', component: WithdrawDetail },
+    { name: 'ChangeTransactionPsw', component: ChangeTransactionPsw },
+    { name: 'SetTransactionPsw', component: SetTransactionPsw },
+    { name: 'BackupQRcode', component: BackupQRcode },
+    { name: 'ChangeLoginPsw', component: ChangeLoginPsw },
+    { name: 'SecurityCenter', component: SecurityCenter },
+    { name: 'AboutUs', component: AboutUs },
+];
 
-const MineStack = createStackNavigator({
-    MinePage: {
-        screen: MinePage,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
-    FundingDetail: {
-        screen: FundingDetail,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
-    TransactionDetail: {
-        screen: TransactionDetail,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
-    Recharge: {
-        screen: Recharge,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
-    RechargeDetail: {
-        screen: RechargeDetail,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
-    Withdraw: {
-        screen: Withdraw,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
-    WithdrawDetail: {
-        screen: WithdrawDetail,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
-
-    ChangeTransactionPsw: {
-        screen: ChangeTransactionPsw,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
-    SetTransactionPsw: {
-        screen: SetTransactionPsw,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
-    BackupQRcode: {
-        screen: BackupQRcode,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
-    ChangeLoginPsw: {
-        screen: ChangeLoginPsw,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
-    SecurityCenter: {
-        screen: SecurityCenter,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
-    AboutUs: {
-        screen: AboutUs,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
-
-    HowToPlay: {
-        screen: HowToPlay,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    }
-},{
-    initialRouteName: "MinePage",
-});
-
-MineStack.navigationOptions = ({ navigation }) => {
-    return {
-        tabBarVisible: navigation.state.index == 0
-    };
-};
-
-export default MineStack;
+export default stackNav;

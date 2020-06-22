@@ -20,7 +20,6 @@ function Lottery() {
     const list = useRef(null);
 
     useEffect(() => {
-        onRefresh()
         return () => {
             dispatch({
                 type: 'SET_NEW_BET', data: { newBet: false }
