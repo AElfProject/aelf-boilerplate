@@ -64,9 +64,7 @@ https://github.com/oblador/react-native-vector-icons
 
 ### 3.4. face id  iOS & Android
 
-https://github.com/naoufal/react-native-touch-id
-
-Todo: use https://www.npmjs.com/package/expo-local-authentication
+https://www.npmjs.com/package/expo-local-authentication
 
 ### 3.5. react-native-image-crop-picker
 

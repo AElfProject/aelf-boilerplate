@@ -9,7 +9,6 @@ import CommonModal from "../../../common/Components/CommonModal/CommonModal";
 import { DividerW, DividerH } from "../../../common/UI_Component/Divider";
 
 import AsyncStorage from "@react-native-community/async-storage"
-import TouchID from 'react-native-touch-id';
 import Storage from "../../../constants/storage"
 
 /*

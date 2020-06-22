@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, StatusBar } from "react-native";
 import Password from 'react-native-password-pay';
 import AsyncStorage from "@react-native-community/async-storage";
-import TouchID from 'react-native-touch-id';
 import Storage from "../../../constants/storage"
 import navigationService from "../../../common/utils/navigationService";
 import CommonHeader from "../../../common/Components/CommonHeader/CommonHeader";
@@ -11,6 +10,7 @@ import pTd from "../../../common/utils/unit";
 import CommonModal from "../../../common/Components/CommonModal/CommonModal";
 import { DividerW, DividerH } from "../../../common/UI_Component/Divider";
 import ConfirmTip from "../../../common/UI_Component/Confirm";
+import * as LocalAuthentication from 'expo-local-authentication';
 
 /*
  * 设置交易密码
@@ -133,17 +133,17 @@ export default class SetTransactionPsw extends React.Component {
                     if (this.state.transactionPsw.length == 6) {
                         this.setState({
                             type: "transactionPswConfirm",
-                            tip:"Please fill in again to confirm"
+                            tip: "Please fill in again to confirm"
                         })
                     }
                     break;
                 case "transactionPswConfirm":
                     if ((this.state.transactionPswConfirm.length == 6) && (this.state.transactionPswConfirm == this.state.transactionPsw)) {
                         await AsyncStorage.setItem(Storage.transactionPsw, this.state.transactionPsw)
-                        .then(()=>{
-                            this.tipMsg("Success");
-                            this.setToken();
-                        });
+                            .then(() => {
+                                this.tipMsg("Success");
+                                this.setToken();
+                            });
 
                     }
                     else if ((this.state.transactionPswConfirm.length == 6) && (this.state.transactionPswConfirm != this.state.transactionPsw)) {
@@ -166,16 +166,24 @@ export default class SetTransactionPsw extends React.Component {
                 this.goRouter("HomePage")
             }, 2000)
         } else {
-            TouchID.isSupported()    //判断设备是否支持TouchID验证
-                .then(success => {
-                    this.setState({
-                        modalVisible: true,
-                        modalType:"tipTouch"
-                    })
-                })
-                .catch(error => {
+            try {
+                const results = await LocalAuthentication.hasHardwareAsync();                
+                if (results) {
+                    const enrolled = await LocalAuthentication.isEnrolledAsync();                    
+                    if (enrolled) {
+                        this.setState({
+                            modalVisible: true,
+                            modalType: "tipTouch"
+                        })
+                    } else {
+                        this.goRouter("HomePage")
+                    }
+                } else {
                     this.goRouter("HomePage")
-                });
+                }
+            } catch (error) {
+                this.goRouter("HomePage")
+            }
         }
     }
     render() {
