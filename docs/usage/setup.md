@@ -141,9 +141,56 @@ public async Task<List<Transaction>> GenerateTransactionsAsync(Address @from, lo
 
     return new List<Transaction>();
 }
+
+private byte[] GetContractCodes()
+{
+    return ContractsDeployer.GetContractCodes<DeployContractsSystemTransactionGenerator>(_contractOptions
+        .GenesisContractDir)["AElf.Contracts.XXContract"];
+}
 ```
 
-You can customize return value here to develop more contracts.
+You can customize code in if section to add more transactions to deploy more contracts.
+
+For example, you develop two smart contract using one generated sln: `XXContract` and `YYContract`, the deployment code should be like this:
+
+```
+public async Task<List<Transaction>> GenerateTransactionsAsync(Address @from, long preBlockHeight,
+    Hash preBlockHash)
+{
+    if (preBlockHeight == 1)
+    {
+        var xxCode = ByteString.CopyFrom(GetContractCodes("AElf.Contracts.XXContract"));
+        var yyCode = ByteString.CopyFrom(GetContractCodes("AElf.Contracts.YYContract"));
+        return new List<Transaction>
+        {
+            await _transactionGeneratingService.GenerateTransactionAsync(
+                ZeroSmartContractAddressNameProvider.Name, nameof(BasicContractZero.DeploySmartContract),
+                new ContractDeploymentInput
+                {
+                    Category = KernelConstants.DefaultRunnerCategory,
+                    Code = xxCode
+                }.ToByteString()),
+            await _transactionGeneratingService.GenerateTransactionAsync(
+                ZeroSmartContractAddressNameProvider.Name, nameof(BasicContractZero.DeploySmartContract),
+                new ContractDeploymentInput
+                {
+                    Category = KernelConstants.DefaultRunnerCategory,
+                    Code = yyCode
+                }.ToByteString())
+        };
+    }
+
+    return new List<Transaction>();
+}
+
+private byte[] GetContractCodes(string contractName)
+{
+    return ContractsDeployer.GetContractCodes<DeployContractsSystemTransactionGenerator>(_contractOptions
+        .GenesisContractDir)[contractName];
+}
+```
+
+By the way, don't forget to make sure these contracts are referenced by this Launcher project.
 
 ## More on Boilerplate
 
