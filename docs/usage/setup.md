@@ -52,9 +52,7 @@ dotnet build
 dotnet run --no-build bin/Debug/netcoreapp3.1/AElf.Boilerplate.Launcher
 ```
 
-{% hint style="warning" %}
  When running Boilerplate, you might see some errors related to an incorrect password, to solve this, you need to backup your `data-dir/keys/` folder and start with an empty keys folder. Once you've cleaned the keys, stop and restart the node with the ```dotnet run``` command shown above.
- {% endhint %}
 
 At this point, the smart contracts have been deployed and are ready to be called (Boilerplate has a functioning API). You should see the node's logs in the terminal and see the node producing blocks. You can now stop the node by killing the process (usually **control-c** or **ctrl-c** in the terminal).
 
@@ -75,6 +73,77 @@ Total tests: 1
 ```
 
 At this point, you have successfully downloaded, built, and run Boilerplate. You have also run the HelloWorld contract's tests that are included in Boilerplate. Later articles will show you how to add a contract and its tests and add it to the deployment process.
+
+### Try code generator
+
+#### Code generation
+
+Navigate to **AElf.Boilerplate.CodeGenerator** folder and open `appsettings.json`, modify `Content` node, tune `New` values as you wish.
+
+For example, if you want to develop a `NovelWritingContract`.
+
+```
+    "Contents": [
+      {
+        "Origin": "AElf.Contracts.HelloWorldContract",
+        "New": "Ean.Contracts.NovelWritingContract"
+      },
+      {
+        "Origin": "HelloWorld",
+        "New": "NovelWriting"
+      },
+      {
+        "Origin": "hello_world",
+        "New": "novel_writing"
+      }
+    ],
+```
+
+Run code generator project in you IDE, or tune paths in `Folders` and `Files` nodes in appsettings.json, follow these commands:
+
+```bash
+# enter the Launcher folder and build 
+cd chain/src/AElf.Boilerplate.CodeGenerator/
+
+# build
+dotnet build
+
+# run the node 
+dotnet run --no-build bin/Debug/netcoreapp3.1/AElf.Boilerplate.CodeGenerator
+```
+
+Then you will find a `AElf.Contracts.NovelWritingContract.sln` in `aelf-boilerplate\chain`, you can use this sln to develop your own smart contract.
+
+#### Single node contract deployment
+
+With `AElf.Contracts.XXContract.sln`, you can run project `AElf.Boilerplate.XXContract.Launcher` which is newly generated via above step, the `XXContract` will automatically deployed in the block of height 2.
+
+Check following code in `AElf.Boilerplate.XXContract.Launcher/DeployContractsSystemTransactionGenerator.cs`:
+
+```
+public async Task<List<Transaction>> GenerateTransactionsAsync(Address @from, long preBlockHeight,
+    Hash preBlockHash)
+{
+    if (preBlockHeight == 1)
+    {
+        var code = ByteString.CopyFrom(GetContractCodes());
+        return new List<Transaction>
+        {
+            await _transactionGeneratingService.GenerateTransactionAsync(
+                ZeroSmartContractAddressNameProvider.Name, nameof(BasicContractZero.DeploySmartContract),
+                new ContractDeploymentInput
+                {
+                    Category = KernelConstants.DefaultRunnerCategory,
+                    Code = code
+                }.ToByteString())
+        };
+    }
+
+    return new List<Transaction>();
+}
+```
+
+You can customize return value here to develop more contracts.
 
 ## More on Boilerplate
 
@@ -128,14 +197,10 @@ The hello world contract and its tests are split between the following folders:
 
 You can use this layout as a template for your future smart contracts. Before you do, we recommend you follow through all the articles of this series.
 
-{% hint style="info" %}
 You will also notice the **src** folder. This folder contains Boilerplate's modules and the executable for the node.
-{% endhint %}
 
 ## Next 
 
 You've just seen a short introduction on how to run a smart contract that is already included in Boilerplate. The next article will show you a complete smart contract and extra content on how to organize your code and test files.
 
-{% hint style="warning" %}
 All production contracts (contracts destined to be deployed to a live chain) must go through a complete review process by the contract author and undergo proper testing. It is the author's responsibility to check the validity and security of his contract. The author should not simply copy the contracts contained in Boilerplate; it's the author's responsibility to ensure the security and correctness of his contracts.
-{% endhint %}
