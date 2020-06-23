@@ -1,22 +1,22 @@
 using System.Linq;
 using System.Threading.Tasks;
-using AElf.ContractTestKit;
+using AElf.Contracts.TestKit;
 using AElf.Types;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Shouldly;
 using Xunit;
 
-namespace AElf.Contracts.HelloWorldContract
+namespace AElf.Contracts.BingoContract
 {
-    public class HelloWorldContractTest : HelloWorldContractTestBase
+    public class BingoContractTests : BingoContractTestBase
     {
         [Fact]
         public async Task Test()
         {
             // Get a stub for testing.
             var keyPair = SampleAccount.Accounts.First().KeyPair;
-            var stub = GetHelloWorldContractStub(keyPair);
+            var stub = GetBingoContractStub(keyPair);
 
             // Use CallAsync or SendAsync method of this stub to test.
             // await stub.Hello.SendAsync(new Empty())

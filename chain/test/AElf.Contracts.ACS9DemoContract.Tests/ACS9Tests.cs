@@ -12,7 +12,7 @@ using ClaimProfitsInput = AElf.Contracts.TokenHolder.ClaimProfitsInput;
 
 namespace AElf.Contracts.ACS9DemoContract
 {
-    public class ACS9Test : ACS9DemoContractTestBase
+    public class ACS9Tests : ACS9DemoContractTestBase
     {
         [Fact]
         public async Task Test()

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace AElf.Contracts.ACS6DemoContract
 {
-    public class ACS6Test : ACS6DemoContractTestBase
+    public class ACS6Tests : ACS6DemoContractTestBase
     {
         [Fact]
         public async Task Test()

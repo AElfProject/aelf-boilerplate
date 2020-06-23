@@ -11,7 +11,7 @@ using Xunit;
 namespace AElf.Contracts.LotteryContract
 {
     // ReSharper disable InconsistentNaming
-    public class LotteryContractTest : LotteryContractTestBase
+    public class LotteryContractTests : LotteryContractTestBase
     {
         private const long Price = 10_00000000;
 

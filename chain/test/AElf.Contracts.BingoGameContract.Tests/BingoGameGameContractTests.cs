@@ -11,7 +11,7 @@ using Xunit;
 
 namespace AElf.Contracts.BingoGameContract
 {
-    public class BingoGameGameContractTest : BingoGameContractTestBase
+    public class BingoGameGameContractTests : BingoGameContractTestBase
     {
         [Fact]
         public async Task Test()

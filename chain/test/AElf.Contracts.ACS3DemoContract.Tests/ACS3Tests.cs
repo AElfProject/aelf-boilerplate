@@ -13,7 +13,7 @@ using TimestampHelper = AElf.Kernel.TimestampHelper;
 
 namespace AElf.Contracts.ACS3DemoContract
 {
-    public class ACS3Test : ACS3DemoContractTestBase
+    public class ACS3Tests : ACS3DemoContractTestBase
     {
         [Fact]
         public async Task Test()
