@@ -8,7 +8,7 @@ import AElf from 'aelf-sdk';
 
 const { sha256 } = AElf.utils;
 
-// const defaultPrivateKey = 'a59c14882c023d63e84e5faf36558fdc8dbf1063eed45ce7e507f1cd9bcde1d9';
+
 const wallet = AElf.wallet.getWalletByPrivateKey('845dadc4609852818f3f7466b63adad0504ee77798b91853fdab6af80d3a4eba');
 const bingoAddress = '2LUmicHyH4RXrMjG4beDwuDsiWJESyLkgkwPdGTR8kahRzq5XS';
 // const wallet = AElf.wallet.getWalletByPrivateKey(defaultPrivateKey);
@@ -21,17 +21,45 @@ if (!aelf.isConnected()) {
 }
 
 // add event for dom
-function initDomEvent(multiTokenContract, bingoGameContract) {
-  const register = document.getElementById('register');
+function initDomEvent(tokenContract, bingoGameContract) {
   const balance = document.getElementById('balance');
-  const siteBody = document.getElementById('site-body');
+  const feeBalance = document.getElementById('fee-balance');
   const play = document.getElementById('play');
-  const bingo = document.getElementById('bingo');
-  const buttonBox = document.querySelector('.button-box');
+  const buttonBox = document.querySelector('#button-box');
   const balanceInput = document.getElementById('balance-input');
-  const refreshButton = document.getElementById('refresh-button');
   const loader = document.getElementById('loader');
   let txId = 0;
+  const betTypeMap = {"small": 1, "big": 2};
+  let betType;
+  const betTypeSwitch = document.querySelector("#small-big");
+
+   // when input text change, whether play button is active
+  balanceInput.oninput = () => {
+    if(isNaN(Number(balance.innerHTML))){
+      play.classList.remove("active");
+      return;
+    }
+  const reg = /^[1-9]\d*$/;
+    if(!reg.test(balanceInput.value)){
+      document.querySelector("#input-alert").innerText = "* Please input valid number !! Leading zero not allowed !!";
+      play.classList.remove("active");
+      return;
+    } else if(balanceInput.value > balance.innerText){
+      document.querySelector("#input-alert").innerText = "* betting number excceds your current balance !!";
+      play.classList.remove("active");
+    }
+    else{
+    document.querySelector("#input-alert").innerText = "";
+    play.classList.add("active");
+    }
+  }
+  balanceInput.onchange = () => {
+    if(!balanceInput.value){
+      document.querySelector("#input-alert").innerText = "* Please input a number !!";
+      play.classList.remove("active");
+      return;
+    }
+  }
 
   // Update your card number,Returns the change in the number of your cards
   function getBalance() {
@@ -42,12 +70,13 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
 
     // TODO:
     setTimeout(() => {
-      multiTokenContract.GetBalance.call(payload)
+      tokenContract.GetBalance.call(payload)
         .then(result => {
           console.log('result: ', result);
-          const difference = result.balance - balance.innerText;
+          // console.log(balance.innerText);
+          // const difference = result.balance - balance.innerText;
           balance.innerHTML = result.balance;
-          return difference;
+          // return difference;
         })
         .catch(err => {
           console.log(err);
@@ -68,42 +97,28 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   }
 
 
-    getBalance();
+  getBalance();
 
+  betType = betTypeMap[document.querySelector("#small-big .active").innerHTML.toLowerCase()];
 
-  // register game, update the number of cards, display game interface
-  // let loading = false;
-  // register.onclick = () => {
-  //   if (loading) {
-  //     return;
-  //   }
-  //   loading = true;
-  //   loader.style.display = 'inline-block';
-  //   bingoGameContract.Register()
-  //     .then(() => {
-  //       return new Promise(resolve => {
-  //         register.innerText = 'Loading';
-  //         setTimeout(() => {
-  //           getBalance();
-  //           loading = false;
-  //           register.innerText = 'Register';
-  //           loader.style.display = 'none';
-  //           resolve()
-  //         }, 3000);
-  //       });
-  //     })
-  //     .then(() => {
-  //       alert('Congratulations on your successful registration！');
-  //       siteBody.style.display = 'block';
-  //       register.style.display = 'none';
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // };
+  // switch bet type
+  betTypeSwitch.onclick = e => {
+    // console.log(e.currentTarget.children);
+    Array.from(e.currentTarget.children).forEach( ele => {
+      ele.classList.remove("active");
+      }
+    )
+    e.target.classList.add("active");
+    betType = betTypeMap[e.target.innerHTML.toLowerCase()];
+    // console.log(e.target.innerHTML.toLowerCase());
+  }
 
   // click button to change the number of bets
   buttonBox.onclick = e => {
+    if(isNaN(Number(balance.innerHTML))){
+      play.classList.remove("active");
+      return;
+     }
     let value;
     switch (e.toElement.innerText) {
       case '3000':
@@ -119,62 +134,95 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
         value = parseInt(balance.innerHTML, 10);
         break;
       default:
-        value = 0;
+        return;
     }
 
     balanceInput.value = value;
+    document.querySelector("#input-alert").innerText = "";
+    play.classList.add("active");
   };
+
+
 
   // Check the format of the input, start play
-  play.onclick = () => {
-    const reg = /^[1-9]\d*$/;
-    const value = parseInt(balanceInput.value, 10);
-    if (reg.test(value) && value <= balance.innerText) {
-      loader.style.display = 'inline-block';
-      bingoGameContract.Play({ value })
-        .then(result => {
-          console.log('Play result: ', result);
-          play.style.display = 'none';
-          txId = result.TransactionId;
-          setTimeout(() => {
-            bingo.style.display = 'inline-block';
-            loader.style.display = 'none';
-          }, 400);
-          // alert('Wait patiently, click on the results when the Bingo button appears！');
+  play.onclick = async () => {
+    if(!play.classList.contains("active")){
+      return;
+    }
+
+    // display waiting spinner...
+    document.querySelector("#spinner-container").style.display = "block";
+
+    // play input
+    const playInput = {
+      buyAmount: +balanceInput.value,
+      buyType: betType,
+      tockenSymbol: 'ELF',
+    };
+
+
+    // get allowance
+    const allowance = await tokenContract.GetAllowance.call({
+      symbol : 'ELF',
+      owner : wallet.address,
+      spender: bingoGameContract.address
+    });
+
+    console.log("allowance", allowance.allowance);
+
+    if(allowance.allowance < +balanceInput.value){
+      // approve some elf
+      const approveTxId = await tokenContract.Approve({
+        symbol :  'ELF', 
+        spender: bingoGameContract.address, 
+        amount : +balanceInput.value, 
+      });
+
+      // check approve result, in every second
+      let approveResult;
+      let approveCheckInterval = setInterval(async () => {
+        approveResult = await aelf.chain.getTxResult(approveTxId.TransactionId);
+        console.log("approving", approveResult.Status);
+        if(approveResult.Status == 'MINED') {
+
+          console.log("allowance new", allowance.allowance);
+          bingoGameContract.Play(playInput)
+        .then(playTxId => {
+        console.log('Play result: ', playTxId.TransactionId);
+
+        // stop displaying waiting spinner...
+        document.querySelector("#spinner-container").style.display = "none";
+        balanceInput.value = '';
+        play.classList.remove("active");
         })
         .catch(err => {
-          console.log(err);
+        console.log(err);
         });
-    } else if (value > balance.innerText) {
-      alert('Please enter a number less than the number of cards you own!');
-    } else {
-      alert('Please enter a positive integer greater than 0!');
+          clearInterval(approveCheckInterval);}
+      }, 1000)
+    }else{
+      bingoGameContract.Play(playInput)
+        .then(playTxId => {
+        console.log('Play result: ', playTxId.TransactionId);
+
+        // stop displaying waiting spinner...
+        document.querySelector("#spinner-container").style.display = "none";
+        balanceInput.value = '';
+        play.classList.remove("active");
+        })
+        .catch(err => {
+        console.log(err);
+        });
     }
+
+
+    
+    
   };
 
-  // return to game results
-  bingo.onclick = () => {
-    bingoGameContract.Bingo(txId)
-      .then(
-        getBalance
-      )
-      .then(difference => {
-        play.style.display = 'inline-block';
-        bingo.style.display = 'none';
-        console.log('difference: ', difference);
-        if (difference > 0) {
-          alert(`Congratulations！！ You got ${difference} card`);
-        } else if (difference < 0) {
-          alert(`It’s a pity. You lost ${-difference} card`);
-        } else {
-          alert('You got nothing');
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
 }
+
+
 
 function init() {
   // document.getElementById('register').innerText = 'Please wait...';
@@ -188,8 +236,8 @@ function init() {
       aelf.chain.contractAt(tokenAddress, wallet),
       aelf.chain.contractAt(bingoAddress, wallet, {sync: true})
     ]))
-    .then(([multiTokenContract, bingoGameContract]) => {
-      initDomEvent(multiTokenContract, bingoGameContract);
+    .then(([tokenContract, bingoGameContract]) => {
+      initDomEvent(tokenContract, bingoGameContract);
     })
     .catch(err => {
       console.log(err);
