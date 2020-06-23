@@ -165,12 +165,14 @@ class MyAccountLogin extends Component {
     };
     /* 二维码扫描结果 */
     onBarCodeRead = (result) => {
-        const { data } = result; //只要拿到data就可以了
-        if (data) {
+        const { data } = result; //Determine whether to log in the QR code
+        if (data && typeof data === 'string' && data.includes('aelf')) {
             this.setState({
                 enterAccount: true,
                 keyStore: data
             })
+        } else {
+            this.tipMsg('Please use the login QR code')
         }
     };
     /* 扫描二维码 html */
