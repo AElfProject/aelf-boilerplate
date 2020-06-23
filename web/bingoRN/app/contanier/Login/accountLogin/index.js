@@ -15,7 +15,7 @@ import AsyncStorage from "@react-native-community/async-storage"
 import Storage from  "../../../constants/storage"
 
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import ImagePicker from "react-native-image-crop-picker"
+import * as ImagePicker from 'expo-image-picker';
 // import Password from 'react-native-password-pay'
 import { Button, Overlay, Input } from "react-native-elements"
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -99,20 +99,28 @@ class MyAccountLogin extends Component {
     /* 调用相册 */
     async usePhotoAlbum() {
         try {
-            const images = await ImagePicker.openPicker({
-                multiple: false
-            });
-            console.log('images: ', images);
-            this.recoginze(images);
-        } catch {
+            const camera = await ImagePicker.requestCameraPermissionsAsync();
+            const cameraRoll = await ImagePicker.requestCameraRollPermissionsAsync();
+            if (camera.status !== 'granted' && cameraRoll.status !== 'granted') {
+                alert('Sorry, we need camera roll permissions to make this work!');
+            } else {
+                const images = await ImagePicker.launchImageLibraryAsync({
+                    allowMultipleSelection: false,
+                });
+                if (images.uri) {
+                    this.recoginze(images);
+                } else {
+                    alert("Image load failed.")
+                }
+            }
+        } catch (err) {
             alert("Image load failed.")
         }
     }
     /* 识别二维码图片 */
     recoginze = async (images) => {
-        // "file:///Users/xxxx/xxxxD879F1DD.jpg", must with the protocol
         try {
-            const imageData = await BarCodeScanner.scanFromURLAsync('file://' + images.path, [
+            const imageData = await BarCodeScanner.scanFromURLAsync(images.uri, [
                 BarCodeScanner.Constants.BarCodeType.qr,
             ]);
 

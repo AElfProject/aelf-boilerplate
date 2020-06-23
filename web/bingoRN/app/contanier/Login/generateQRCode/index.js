@@ -1,9 +1,6 @@
 import React from "react"
 import { View, Text, StyleSheet, Image, TouchableOpacity ,Platform, TouchableWithoutFeedback, ScrollView, StatusBar } from "react-native"
-import CameraRoll from "@react-native-community/cameraroll"
 import QRCode from 'react-native-qrcode-svg';
-import RNFS from "react-native-fs"
-import ViewShot from "react-native-view-shot";
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Button } from "react-native-elements"
 import AsyncStorage from "@react-native-community/async-storage"
@@ -19,6 +16,7 @@ import {config} from '../../../common/utils/config';
 
 import AElf from 'aelf-sdk';
 import connect from "../../../common/utils/myReduxConnect";
+import { screenshots } from "../../../common/utils/utils";
 const {appInit} = require('../../../common/utils/aelfProvider');
 
 /*
@@ -111,21 +109,9 @@ class MyGenerateQRCode extends React.Component {
 
     /* 保存图片至相册 */
     async savePicture() {
-        const storeLocation = `${RNFS.DocumentDirectoryPath}`;
-        let pathName = new Date().getTime() + "QRcode.jpg";
-        let downloadDest = `${storeLocation}/${pathName}`;
 
-        const viewShotTmpUri = await this.refs.viewShot.capture();
+        this.refs.viewShot && screenshots(this.refs.viewShot) 
 
-        const fileInfo = await RNFS.readFile(viewShotTmpUri, 'base64');
-
-        RNFS.writeFile(downloadDest, fileInfo, 'base64')
-          .then(() => {
-              return CameraRoll.saveToCameraRoll(`file://${downloadDest}`, 'photo')
-          })
-          .then(() => {
-              this.tipMsg("Success");
-          });
     }
     render() {
         const { QRCodeValue, data } = this.state
@@ -140,10 +126,7 @@ class MyGenerateQRCode extends React.Component {
                     </View>
                     <View style={[Gstyle.marginArg(0, pTd(80)), { justifyContent: "center", alignItems: "center" }]}>
                         <MutilText style={{ textAlign: "center", marginBottom: pTd(60) }}>Lost or QR code is the same as lost account. Your assets will not be recovered. Please keep your QR code account properly</MutilText>
-                        <ViewShot
-                          ref="viewShot" options={{ format: "jpg", quality: 0.9 }}
-                          style={{width: 200}}
-                        >
+                        <View ref="viewShot" style={styles.shotView}>
                             <QRCode
                               value={ QRCodeValue }
                               getRef={(c) => (this.svg = c)}
@@ -154,7 +137,7 @@ class MyGenerateQRCode extends React.Component {
                               size={200}
                             />
                             <Text style={{marginTop: 2}}>Account: {JSON.parse(QRCodeValue).nickName}</Text>
-                        </ViewShot>
+                        </View>
 
                     </View>
                     <Image style={{width:pTd(50), height:pTd(50)}} source={{uri:`data:image/jpg;base64,${data}`}}/>
@@ -188,4 +171,9 @@ const styles = StyleSheet.create({
 
         marginBottom: pTd(30)
     },
+    shotView: {
+        padding:10,
+        backgroundColor: 'white',
+        alignItems: 'center'
+    }
 })
