@@ -4,11 +4,10 @@ using AElf.ContractDeployer;
 using AElf.Kernel.SmartContract;
 using AElf.Kernel.SmartContract.Application;
 using Microsoft.Extensions.Options;
-using Volo.Abp.DependencyInjection;
 
 namespace AElf.Boilerplate.MainChain
 {
-    public class MainChainGenesisSmartContractDtoProvider : GenesisSmartContractDtoProviderBase, ITransientDependency
+    public class MainChainGenesisSmartContractDtoProvider : GenesisSmartContractDtoProviderBase
     {
         private readonly ContractOptions _contractOptions;
 

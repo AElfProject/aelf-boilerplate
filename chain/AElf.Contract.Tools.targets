@@ -96,7 +96,7 @@
     <!-- Move dlls before codecov injection in travis -->
     <Target Name="CopyNonCodeCovContractDll" Condition="'$(IsContract)' != '' AND '$(IsContract)'" AfterTargets="PatchContractCode">
         <PropertyGroup>
-            <LauncherTargetDir>../../src/AElf.Launcher/contracts</LauncherTargetDir>
+            <LauncherTargetDir>../../src/AElf.Boilerplate.Launcher/contracts</LauncherTargetDir>
         </PropertyGroup>
         <Copy SourceFiles="$(TargetDir)$(TargetName).dll"
               DestinationFolder="$(LauncherTargetDir)"
