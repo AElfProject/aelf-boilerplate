@@ -13,7 +13,29 @@ namespace AElf.Contracts.LotteryContract
             Assert(Context.Sender == State.Admin.Value, "Sender should be admin.");
         }
 
-        private void DealWithLotteries(List<int> levelsCount, Hash randomHash)
+        private void InitialNextPeriod()
+        {
+            var periodBody = State.Periods[State.CurrentPeriod.Value];
+            if (periodBody == null)
+            {
+                periodBody = new PeriodBody
+                {
+                    StartId = State.SelfIncreasingIdForLottery.Value,
+                    BlockNumber = Context.CurrentHeight.Add(State.DrawingLag.Value),
+                    RandomHash = Hash.Empty
+                };
+            }
+            else
+            {
+                periodBody.StartId = State.SelfIncreasingIdForLottery.Value;
+                periodBody.BlockNumber = Context.CurrentHeight.Add(State.DrawingLag.Value);
+                periodBody.RandomHash = Hash.Empty;
+            }
+
+            State.Periods[State.CurrentPeriod.Value] = periodBody;
+        }
+
+        private void DealWithLotteries(Dictionary<string, int> rewards, Hash randomHash)
         {
             var currentPeriodNumber = State.CurrentPeriod.Value;
             var previousPeriodNumber = currentPeriodNumber.Sub(1);
@@ -28,19 +50,20 @@ namespace AElf.Contracts.LotteryContract
 
             period.RandomHash = randomHash;
 
+            var levelsCount = rewards.Values.ToList();
             var rewardCount = levelsCount.Sum();
             State.RewardCount.Value = State.RewardCount.Value.Add(rewardCount);
             Assert(rewardCount > 0, "Reward pool cannot be empty.");
             Assert(poolCount >= State.RewardCount.Value,
                 $"Too many rewards, lottery pool size: {poolCount.Sub(State.RewardCount.Value)}.");
 
-            var ranks = new List<int>();
+            var ranks = new List<string>();
 
-            for (var i = 0; i < levelsCount.Count; i++)
+            foreach (var reward in rewards)
             {
-                for (var j = 0; j < levelsCount[i]; j++)
+                for (var i = 0; i < reward.Value; i++)
                 {
-                    ranks.Add(i.Add(1));
+                    ranks.Add(reward.Key);
                 }
             }
 
@@ -49,7 +72,7 @@ namespace AElf.Contracts.LotteryContract
 
             for (var i = 0; i < rewardCount; i++)
             {
-                while (State.Lotteries[rewardId].Level > 0)
+                while (!string.IsNullOrEmpty(State.Lotteries[rewardId].RewardName))
                 {
                     // Keep updating luckyIndex
                     randomHash = HashHelper.ComputeFrom(randomHash);
@@ -57,11 +80,21 @@ namespace AElf.Contracts.LotteryContract
                 }
 
                 rewardIds.Add(rewardId);
-                State.Lotteries[rewardId].Level = ranks[i];
+                State.Lotteries[rewardId].RewardName = GetRewardName(ranks[i]);
             }
 
             period.RewardIds.Add(rewardIds);
             State.Periods[previousPeriodNumber] = period;
+        }
+
+        private string GetRewardName(string rewardCode)
+        {
+            return State.RewardMap[rewardCode] ?? rewardCode;
+        }
+
+        private void AssertIsNotSuspended()
+        {
+            Assert(!State.IsSuspend.Value, "Cannot do anything.");
         }
     }
 }

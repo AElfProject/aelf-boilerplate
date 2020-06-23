@@ -6,6 +6,9 @@ const wallet = AElf.wallet.createNewWallet();
 
 const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
 
+const greeterContractAddress = '2LUmicHyH4RXrMjG4beDwuDsiWJESyLkgkwPdGTR8kahRzq5XS';
+
+window.greeterContract = null;
 
 async function pollMining(txId, times = 0, delay = 2000, timeLimit = 10) {
     const currentTime = times + 1;
@@ -36,24 +39,11 @@ async function pollMining(txId, times = 0, delay = 2000, timeLimit = 10) {
     return tx;
 }
 
-let contract = {};
-let genesisContract = null;
-async function getContract(name, walletInstance) {
-    if (!genesisContract) {
-        const chainStatus = await aelf.chain.getChainStatus();
-        if (!chainStatus) {
-            throw new Error('Error occurred when getting chain status');
-        }
-        genesisContract = await aelf.chain.contractAt(chainStatus.GenesisContractAddress, walletInstance);
+async function getGreeterContract(walletInstance) {
+    if (!window.greeterContract) {
+        window.greeterContract = await aelf.chain.contractAt(greeterContractAddress, walletInstance);
     }
-    if (!contract[name]) {
-        const address = await genesisContract.GetContractAddressByName.call(sha256(name));
-        contract = {
-            ...contract,
-            [name]: await aelf.chain.contractAt(address, walletInstance)
-        };
-    }
-    return contract[name];
+    return window.greeterContract;
 }
 
 function initDomEvent() {
@@ -78,7 +68,7 @@ function initDomEvent() {
     };
 
     greet.onclick = () => {
-        getContract('AElf.ContractNames.Greeter', wallet)
+        getGreeterContract(wallet)
             .then(greeterContract => greeterContract.Greet.call())
             .then(ret => {
                 greetResponse.innerHTML = JSON.stringify(ret, null, 2);
@@ -92,13 +82,14 @@ function initDomEvent() {
         const nameToGreet = document.getElementById('nameToGreet');
         const greetToResponse = document.getElementById('greetToResponse');
 
-        getContract('AElf.ContractNames.Greeter', wallet)
+        getGreeterContract(wallet)
             .then(greeterContract => greeterContract.GreetTo({
                 value: nameToGreet.value
             }))
             .then(tx => pollMining(tx.TransactionId))
             .then(ret => {
-                greetToResponse.innerHTML = ret.ReadableReturnValue;
+                const returnValue = window.greeterContract.GreetTo.unpackOutput(ret.ReturnValue);
+                greetToResponse.innerHTML = returnValue.name;
             })
             .catch(err => {
                 console.log(err);
@@ -108,7 +99,7 @@ function initDomEvent() {
     getGreeted.onclick = () => {
         const greeted = document.getElementById('greeted');
 
-        getContract('AElf.ContractNames.Greeter', wallet)
+        getGreeterContract(wallet)
             .then(greeterContract => greeterContract.GetGreetedList.call())
             .then(ret => {
                 greeted.innerHTML = JSON.stringify(ret, null, 2);

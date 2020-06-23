@@ -1,8 +1,9 @@
 ﻿using AElf.Blockchains.BasicBaseChain;
-using AElf.Boilerplate.DAppContract;
+using AElf.Boilerplate.SystemTransactionGenerator;
 using AElf.Database;
 using AElf.Kernel.Infrastructure;
-using AElf.Kernel.SmartContractInitialization;
+using AElf.Kernel.SmartContract;
+using AElf.Kernel.SmartContract.Application;
 using AElf.Modularity;
 using AElf.OS.Node.Application;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,7 @@ namespace AElf.Boilerplate.MainChain
 {
     [DependsOn(
         typeof(BasicBaseChainAElfModule),
-        typeof(DAppContractModule)
+        typeof(SystemTransactionGeneratorModule)
     )]
     public class MainChainAElfModule : AElfModule
     {
@@ -29,12 +30,11 @@ namespace AElf.Boilerplate.MainChain
         {
             var services = context.Services;
             services.AddTransient<IContractDeploymentListProvider, MainChainContractDeploymentListProvider>();
-            services.AddTransient<IGenesisSmartContractDtoProvider, MainChainGenesisSmartContractDtoProvider>();
-
-            services.AddSingleton(typeof(ContractDeployer.ContractDeployer));
 
             services.AddKeyValueDbContext<BlockchainKeyValueDbContext>(p => p.UseInMemoryDatabase());
             services.AddKeyValueDbContext<StateKeyValueDbContext>(p => p.UseInMemoryDatabase());
+            
+            Configure<ContractOptions>(o => o.ContractDeploymentAuthorityRequired = false);
         }
     }
 }

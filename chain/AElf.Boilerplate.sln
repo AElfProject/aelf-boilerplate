@@ -5,22 +5,20 @@ VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.Launcher", "src\AElf.Boilerplate.Launcher\AElf.Boilerplate.Launcher.csproj", "{7691E8CC-C427-4361-AF9A-D769A92C2318}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.Mainchain", "src\AElf.Boilerplate.Mainchain\AElf.Boilerplate.Mainchain.csproj", "{F5B9CE98-80B4-46F0-A040-1BE75C276411}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.MainChain", "src\AElf.Boilerplate.MainChain\AElf.Boilerplate.MainChain.csproj", "{F5B9CE98-80B4-46F0-A040-1BE75C276411}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{21D85A91-5BB8-4912-8107-49435A461AAC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{DBC47323-E6A2-42A2-A624-CE2EE6139567}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.HelloWorldContract.Test", "test\AElf.Contracts.HelloWorldContract.Test\AElf.Contracts.HelloWorldContract.Test.csproj", "{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.HelloWorldContract.Tests", "test\AElf.Contracts.HelloWorldContract.Tests\AElf.Contracts.HelloWorldContract.Tests.csproj", "{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.BingoGameContract.Test", "test\AElf.Contracts.BingoGameContract.Test\AElf.Contracts.BingoGameContract.Test.csproj", "{E2491309-869C-4422-A7B6-B895C30B7D5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.BingoGameContract.Tests", "test\AElf.Contracts.BingoGameContract.Tests\AElf.Contracts.BingoGameContract.Tests.csproj", "{E2491309-869C-4422-A7B6-B895C30B7D5D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "contract", "contract", "{5C980166-C987-470D-AEE0-3858A170A903}"
 	ProjectSection(SolutionItems) = preProject
 		contract\Directory.Build.props = contract\Directory.Build.props
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.ContractDeployer", "src\AElf.Boilerplate.ContractDeployer\AElf.Boilerplate.ContractDeployer.csproj", "{9484A7A9-CA57-4FF4-9FD8-27BFEF92EDBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.BingoGameContract", "contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj", "{19311D5A-8788-4463-A6EF-6AA4E9115232}"
 EndProject
@@ -30,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.GreeterContr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.GreeterContract.Tests", "test\AElf.Contracts.GreeterContract.Tests\AElf.Contracts.GreeterContract.Tests.csproj", "{B177712A-3005-41CC-965A-62FFA32545DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.Tester", "src\AElf.Boilerplate.Tester\AElf.Boilerplate.Tester.csproj", "{217599C5-2CF0-411E-97B5-5657739CEE5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.SystemTransactionGenerator", "src\AElf.Boilerplate.SystemTransactionGenerator\AElf.Boilerplate.SystemTransactionGenerator.csproj", "{217599C5-2CF0-411E-97B5-5657739CEE5D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.CodeGenerator", "src\AElf.Boilerplate.CodeGenerator\AElf.Boilerplate.CodeGenerator.csproj", "{1E374BCA-7093-43A4-A419-23999B147B1A}"
 EndProject
@@ -56,17 +54,29 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS8DemoCont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS9DemoContract", "contract\AElf.Contracts.ACS9DemoContract\AElf.Contracts.ACS9DemoContract.csproj", "{8CBF24AC-83B8-4D43-A4AE-CB1015F91621}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS1DemoContract.Test", "test\AElf.Contracts.ACS1DemoContract.Test\AElf.Contracts.ACS1DemoContract.Test.csproj", "{F694BA5C-17DA-4EAA-81CC-FDC5F2464F74}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS1DemoContract.Tests", "test\AElf.Contracts.ACS1DemoContract.Tests\AElf.Contracts.ACS1DemoContract.Tests.csproj", "{F694BA5C-17DA-4EAA-81CC-FDC5F2464F74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS8DemoContract.Test", "test\AElf.Contracts.ACS8DemoContract.Test\AElf.Contracts.ACS8DemoContract.Test.csproj", "{BBCEAB0C-3E5E-44BB-8EBF-FD07F4B06655}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS8DemoContract.Tests", "test\AElf.Contracts.ACS8DemoContract.Tests\AElf.Contracts.ACS8DemoContract.Tests.csproj", "{BBCEAB0C-3E5E-44BB-8EBF-FD07F4B06655}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS9DemoContract.Test", "test\AElf.Contracts.ACS9DemoContract.Test\AElf.Contracts.ACS9DemoContract.Test.csproj", "{0CF3095C-3EC0-4F65-A4D4-4B18BF9CD3CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS9DemoContract.Tests", "test\AElf.Contracts.ACS9DemoContract.Tests\AElf.Contracts.ACS9DemoContract.Tests.csproj", "{0CF3095C-3EC0-4F65-A4D4-4B18BF9CD3CB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.LotteryContract", "contract\AElf.Contracts.LotteryContract\AElf.Contracts.LotteryContract.csproj", "{A279E5A3-8D80-4362-BBC7-2EADDAAAEBAE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.LotteryContract.Tests", "test\AElf.Contracts.LotteryContract.Tests\AElf.Contracts.LotteryContract.Tests.csproj", "{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.DAppContract", "src\AElf.Boilerplate.DAppContract\AElf.Boilerplate.DAppContract.csproj", "{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS2DemoContract.Tests", "test\AElf.Contracts.ACS2DemoContract.Tests\AElf.Contracts.ACS2DemoContract.Tests.csproj", "{DE01548C-FD1D-4A0C-A518-46D91AF9D00A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS3DemoContract.Tests", "test\AElf.Contracts.ACS3DemoContract.Tests\AElf.Contracts.ACS3DemoContract.Tests.csproj", "{E8200E30-FAC3-4C34-A0B8-7152E7A95E87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS4DemoContract.Tests", "test\AElf.Contracts.ACS4DemoContract.Tests\AElf.Contracts.ACS4DemoContract.Tests.csproj", "{58ED9344-2073-484D-98C4-A56CC5F3F79F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS5DemoContract.Tests", "test\AElf.Contracts.ACS5DemoContract.Tests\AElf.Contracts.ACS5DemoContract.Tests.csproj", "{B7B1894C-10F2-4348-80AE-F928C14142F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS6DemoContract.Tests", "test\AElf.Contracts.ACS6DemoContract.Tests\AElf.Contracts.ACS6DemoContract.Tests.csproj", "{A8373241-AFAB-43C1-9075-BB91CE1176C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS10DemoContract.Tests", "test\AElf.Contracts.ACS10DemoContract.Tests\AElf.Contracts.ACS10DemoContract.Tests.csproj", "{E74130E4-3AAF-44C9-9D5A-D1B2155FA4D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.ContractPatcher", "src\AElf.Boilerplate.ContractPatcher\AElf.Boilerplate.ContractPatcher.csproj", "{136BA87F-62EB-491B-80CB-2A0DAD0D7FEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,10 +100,6 @@ Global
 		{E2491309-869C-4422-A7B6-B895C30B7D5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2491309-869C-4422-A7B6-B895C30B7D5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2491309-869C-4422-A7B6-B895C30B7D5D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9484A7A9-CA57-4FF4-9FD8-27BFEF92EDBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9484A7A9-CA57-4FF4-9FD8-27BFEF92EDBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9484A7A9-CA57-4FF4-9FD8-27BFEF92EDBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9484A7A9-CA57-4FF4-9FD8-27BFEF92EDBC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{19311D5A-8788-4463-A6EF-6AA4E9115232}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{19311D5A-8788-4463-A6EF-6AA4E9115232}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19311D5A-8788-4463-A6EF-6AA4E9115232}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -194,10 +200,34 @@ Global
 		{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE01548C-FD1D-4A0C-A518-46D91AF9D00A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE01548C-FD1D-4A0C-A518-46D91AF9D00A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE01548C-FD1D-4A0C-A518-46D91AF9D00A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE01548C-FD1D-4A0C-A518-46D91AF9D00A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8200E30-FAC3-4C34-A0B8-7152E7A95E87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8200E30-FAC3-4C34-A0B8-7152E7A95E87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8200E30-FAC3-4C34-A0B8-7152E7A95E87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8200E30-FAC3-4C34-A0B8-7152E7A95E87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58ED9344-2073-484D-98C4-A56CC5F3F79F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58ED9344-2073-484D-98C4-A56CC5F3F79F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58ED9344-2073-484D-98C4-A56CC5F3F79F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58ED9344-2073-484D-98C4-A56CC5F3F79F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7B1894C-10F2-4348-80AE-F928C14142F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7B1894C-10F2-4348-80AE-F928C14142F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7B1894C-10F2-4348-80AE-F928C14142F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7B1894C-10F2-4348-80AE-F928C14142F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8373241-AFAB-43C1-9075-BB91CE1176C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8373241-AFAB-43C1-9075-BB91CE1176C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8373241-AFAB-43C1-9075-BB91CE1176C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8373241-AFAB-43C1-9075-BB91CE1176C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E74130E4-3AAF-44C9-9D5A-D1B2155FA4D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E74130E4-3AAF-44C9-9D5A-D1B2155FA4D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E74130E4-3AAF-44C9-9D5A-D1B2155FA4D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E74130E4-3AAF-44C9-9D5A-D1B2155FA4D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{136BA87F-62EB-491B-80CB-2A0DAD0D7FEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{136BA87F-62EB-491B-80CB-2A0DAD0D7FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{136BA87F-62EB-491B-80CB-2A0DAD0D7FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{136BA87F-62EB-491B-80CB-2A0DAD0D7FEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -207,7 +237,6 @@ Global
 		{F5B9CE98-80B4-46F0-A040-1BE75C276411} = {21D85A91-5BB8-4912-8107-49435A461AAC}
 		{3631B538-C617-4FCE-9C9B-1D1B5F290A7F} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 		{E2491309-869C-4422-A7B6-B895C30B7D5D} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
-		{9484A7A9-CA57-4FF4-9FD8-27BFEF92EDBC} = {21D85A91-5BB8-4912-8107-49435A461AAC}
 		{19311D5A-8788-4463-A6EF-6AA4E9115232} = {5C980166-C987-470D-AEE0-3858A170A903}
 		{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F} = {5C980166-C987-470D-AEE0-3858A170A903}
 		{4C0F6A56-667B-4534-A60F-CDAC5F3A5534} = {5C980166-C987-470D-AEE0-3858A170A903}
@@ -230,7 +259,13 @@ Global
 		{8CBF24AC-83B8-4D43-A4AE-CB1015F91621} = {BB8D5781-446C-4B7A-A3BA-68206918B046}
 		{A279E5A3-8D80-4362-BBC7-2EADDAAAEBAE} = {BB8D5781-446C-4B7A-A3BA-68206918B046}
 		{63A67A33-68A6-488F-AA3F-1DFC5D1CD9F4} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
-		{139CCF8F-38BE-4CE8-9F39-F99168ACEF9C} = {21D85A91-5BB8-4912-8107-49435A461AAC}
+		{DE01548C-FD1D-4A0C-A518-46D91AF9D00A} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
+		{E8200E30-FAC3-4C34-A0B8-7152E7A95E87} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
+		{58ED9344-2073-484D-98C4-A56CC5F3F79F} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
+		{B7B1894C-10F2-4348-80AE-F928C14142F6} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
+		{A8373241-AFAB-43C1-9075-BB91CE1176C6} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
+		{E74130E4-3AAF-44C9-9D5A-D1B2155FA4D7} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
+		{136BA87F-62EB-491B-80CB-2A0DAD0D7FEC} = {21D85A91-5BB8-4912-8107-49435A461AAC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7426B41-E959-40E4-9ED8-ED8D9C50F133}

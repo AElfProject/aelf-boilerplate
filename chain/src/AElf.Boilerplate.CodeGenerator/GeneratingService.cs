@@ -13,7 +13,7 @@ namespace AElf.Boilerplate.CodeGenerator
 {
     public class GeneratingService : ISingletonDependency
     {
-        private GeneratingOptions _options;
+        private readonly GeneratingOptions _options;
 
         public ILogger<GeneratingService> Logger { get; set; }
 
@@ -66,7 +66,6 @@ namespace AElf.Boilerplate.CodeGenerator
                 var destDir = CreateDir(folder.New ?? ReplaceContent(folder.Origin));
 
                 Logger.LogInformation($"Create directory {destDir}");
-
 
                 Queue<DirectoryInfo> queue = new Queue<DirectoryInfo>();
                 queue.Enqueue(originDir);

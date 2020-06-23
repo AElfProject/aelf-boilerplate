@@ -2,6 +2,7 @@ syntax = "proto3";
 
 import "acs5.proto";
 import "aelf/options.proto";
+import "aelf/core.proto";
 import "google/protobuf/empty.proto";
 
 option csharp_namespace = "AElf.Contracts.ACS5DemoContract";
@@ -9,7 +10,13 @@ option csharp_namespace = "AElf.Contracts.ACS5DemoContract";
 service ACS5DemoContract {
     option (aelf.csharp_state) = "AElf.Contracts.ACS5DemoContract.ACS5DemoContractState";
     option (aelf.base) = "acs5.proto";
-    
+
+    rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
+    }
     rpc Foo (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
+}
+
+message InitializeInput {
+    aelf.Address admin = 1;
 }

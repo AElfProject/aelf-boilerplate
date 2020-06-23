@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>AElf.Boilerplate.SystemTransactionGenerator</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AElf.Core" Version="1.0.0-preview3" />
+        <PackageReference Include="AElf.Kernel.Consensus.Core" Version="1.0.0-preview3" />
+        <PackageReference Include="AElf.Kernel.Core" Version="1.0.0-preview3" />
+        <PackageReference Include="AElf.Kernel.SmartContract" Version="1.0.0-preview3" />
+    </ItemGroup>
+
+</Project>
