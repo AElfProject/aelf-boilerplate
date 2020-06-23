@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions } from "react-native";
 import navigationService from "../../utils/navigationService"
 import pTd from ".././../utils/unit";
-import {isIphoneX} from '../../utils/device';
+import { isIphoneX } from '../../utils/device';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 const styles = StyleSheet.create({
@@ -40,6 +40,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     },
+    leftBox: {
+        height: '100%',
+        paddingHorizontal: 10,
+        justifyContent: 'center'
+    }
 
 });
 const CommonHeader = props => {
@@ -55,8 +60,9 @@ const CommonHeader = props => {
                 {
                     canBack ? (
                         <TouchableOpacity
+                            style={styles.leftBox}
                             activeOpacity={0.75}
-                            onPress={() =>  navigationService.goBack() }
+                            onPress={() => navigationService.goBack()}
                         >
                             <Icon name={"left"} size={24} color={Colors.fontColor} />
                         </TouchableOpacity>
