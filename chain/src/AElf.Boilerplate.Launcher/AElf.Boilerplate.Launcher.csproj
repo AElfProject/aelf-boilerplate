@@ -10,7 +10,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <PackageReference Include="AElf.Contracts.Deployer" Version="1.0.0-preview3-18424" />
+        <PackageReference Include="AElf.ContractDeployer" Version="1.0.0-preview3" />
         <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="2.9.0" />
         <PackageReference Include="Volo.Abp.Autofac" Version="1.1.2" />
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
@@ -25,11 +25,11 @@
     </ItemGroup>
     
     <ItemGroup>
-        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.0.0-preview3-18424">
+        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.0.0-preview3">
             <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.chain</PackageName>
         </PackageReference>
-        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.0.0-preview3-18424">
+        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.0.0-preview3">
             <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.net</PackageName>
         </PackageReference>

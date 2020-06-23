@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using AElf.Blockchains.BasicBaseChain;
-using AElf.Contracts.Deployer;
+using AElf.ContractDeployer;
 using AElf.Kernel.SmartContract;
 using AElf.Kernel.SmartContract.Application;
 using Microsoft.Extensions.Options;
+using Volo.Abp.DependencyInjection;
 
 namespace AElf.Boilerplate.MainChain
 {
-    public class MainChainGenesisSmartContractDtoProvider : GenesisSmartContractDtoProviderBase
+    public class MainChainGenesisSmartContractDtoProvider : GenesisSmartContractDtoProviderBase, ITransientDependency
     {
         private readonly ContractOptions _contractOptions;
 

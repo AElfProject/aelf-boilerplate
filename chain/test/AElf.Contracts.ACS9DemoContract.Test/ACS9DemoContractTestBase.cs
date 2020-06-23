@@ -4,7 +4,7 @@ using AElf.Boilerplate.TestBase;
 using AElf.Contracts.ACS10DemoContract;
 using AElf.Contracts.MultiToken;
 using AElf.Contracts.Profit;
-using AElf.Contracts.TestKit;
+using AElf.ContractTestKit;
 using AElf.Contracts.TokenHolder;
 using AElf.Cryptography.ECDSA;
 using AElf.EconomicSystem;

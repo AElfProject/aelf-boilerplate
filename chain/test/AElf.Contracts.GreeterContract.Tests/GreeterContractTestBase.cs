@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using Acs0;
-using AElf.Contracts.TestKit;
+using AElf.ContractTestKit;
 using AElf.Cryptography.ECDSA;
 using AElf.EconomicSystem;
 using AElf.Kernel;

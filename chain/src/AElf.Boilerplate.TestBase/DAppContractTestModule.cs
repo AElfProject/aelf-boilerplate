@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
-using AElf.Contracts.Deployer;
-using AElf.Contracts.TestKit;
+using AElf.ContractDeployer;
+using AElf.ContractTestKit;
 using AElf.ContractTestBase;
 using AElf.Kernel.Consensus.AEDPoS;
 using AElf.Kernel.Miner.Application;
