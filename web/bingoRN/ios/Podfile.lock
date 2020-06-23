@@ -10,6 +10,8 @@ PODS:
   - EXConstants (9.0.0):
     - UMConstantsInterface
     - UMCore
+  - EXDevice (2.2.1):
+    - UMCore
   - EXFileSystem (8.1.0):
     - UMCore
     - UMFileSystemInterface
@@ -293,8 +295,6 @@ PODS:
     - React
   - RNCMaskedView (0.1.10):
     - React
-  - RNDeviceInfo (2.3.2):
-    - React
   - RNFS (2.16.6):
     - React
   - RNGestureHandler (1.6.1):
@@ -335,6 +335,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXBarCodeScanner (from `../node_modules/expo-barcode-scanner/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
+  - EXDevice (from `../node_modules/expo-device/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - EXImagePicker (from `../node_modules/expo-image-picker/ios`)
@@ -376,7 +377,6 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
-  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -411,6 +411,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-barcode-scanner/ios"
   EXConstants:
     :path: "../node_modules/expo-constants/ios"
+  EXDevice:
+    :path: "../node_modules/expo-device/ios"
   EXFileSystem:
     :path: "../node_modules/expo-file-system/ios"
   EXImageLoader:
@@ -487,8 +489,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/clipboard"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
-  RNDeviceInfo:
-    :path: "../node_modules/react-native-device-info"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -535,6 +535,7 @@ SPEC CHECKSUMS:
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   EXBarCodeScanner: 5e1d94192899873d2570a1c2c161df638bac52da
   EXConstants: 9f18e9ef229706394f41735d9c7f309d479b36c0
+  EXDevice: 841e1078d98529b176119fecfa524faf5e9d3379
   EXFileSystem: b82693d78de152efe10a77d4aac781f782e10916
   EXImageLoader: 5c9d1bf408443ac4d4f44463eaf3b0d03bc70425
   EXImagePicker: 578529114ac96351296daccd493c419bbb347d33
@@ -573,7 +574,6 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: db711e29e5e0500d9bd21aa0c2e397efa45302b1
   RNCClipboard: a254f6e568bc713b7ef49646e216661369882030
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
-  RNDeviceInfo: bdc3e922b2ed0f086e9d9ab534e61bc316f08576
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
