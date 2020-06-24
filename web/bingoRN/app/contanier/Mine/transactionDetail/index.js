@@ -55,8 +55,9 @@ export default class TransactionDetail extends React.Component {
         })
     }
     /* 复制账户地址 */
-    copyAddress() {
-        Clipboard.setString(this.state.accountAddress);
+    copyAddress(accountAddress) {
+        Clipboard.setString(accountAddress);
+        this.tipMsg('Copied');
     }
     render() {
         const { txResult } = this.state;
@@ -89,14 +90,14 @@ export default class TransactionDetail extends React.Component {
                         <View style={{ flexDirection: "row", marginBottom: pTd(20) }}>
                             <TextM style={ styles.textKey }>From：</TextM>
                             <TextM style={ styles.textValue }>{addressUtils.format(Transaction.From)}</TextM>
-                            <TouchableOpacity onPress={() => this.copyAddress()}>
+                            <TouchableOpacity onPress={() => this.copyAddress(addressUtils.format(Transaction.From))}>
                                 <Icon name="copy1" size={18} color="#000" />
                             </TouchableOpacity>
                         </View>
                         <View style={{ flexDirection: "row", marginBottom: pTd(20) }}>
                             <TextM style={ styles.textKey }>To：</TextM>
                             <TextM style={ styles.textValue }>{addressUtils.format(params.to || Transaction.To)}</TextM>
-                            <TouchableOpacity onPress={() => this.copyAddress()}>
+                            <TouchableOpacity onPress={() => this.copyAddress(addressUtils.format(params.to || Transaction.To))}>
                                 <Icon name="copy1" size={18} color="#000" />
                             </TouchableOpacity>
                         </View>

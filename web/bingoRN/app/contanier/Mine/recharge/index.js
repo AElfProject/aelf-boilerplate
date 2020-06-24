@@ -45,7 +45,8 @@ class Recharge extends React.Component {
 
     /* 复制账户地址 */
     copyAddress() {
-        Clipboard.setString(this.state.accountAddress);
+        const { accountAddress } = this.state
+        Clipboard.setString(format(accountAddress));
         this.tipMsg('Copied');
     }
 

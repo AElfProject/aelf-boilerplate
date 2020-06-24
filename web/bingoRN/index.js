@@ -9,6 +9,7 @@ import "./app/assets/css/theme"
 import "./app/assets/css/Gstyle"
 import "./app/common/ExtendNativeAPI/index"
 import './app/common/utils/console'
+import './app/common/utils/text'
 import App from './app/contanier/root';
 import {name as appName} from './app.json';
 

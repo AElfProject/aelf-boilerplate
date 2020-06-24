@@ -61,6 +61,7 @@ const TabNavigatorStack = (props) => {
             <Tab.Navigator
                 lazy={false}
                 tabBarOptions={{
+                    allowFontScaling:false,
                     upperCaseLabel: false,
                     activeTintColor: 'white',
                     inactiveTintColor: tabActiveColor,

@@ -371,10 +371,10 @@ class MyHomePage extends React.Component {
             betType: 0,
         }, () => {
             this.tipMsg('Bet Success');
-            this.getBetList();
         });
         await sleep(2000);
         await this.checkPlayBingoStatus(transactionId.TransactionId);
+        this.getBetList();
         this.playLock = false;
     }
     async checkPlayBingoStatus(transactionId) {
