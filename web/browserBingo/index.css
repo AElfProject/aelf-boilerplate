@@ -59,6 +59,7 @@ button:focus {
   display: flex;
   margin-top: 2vh;
   width: 100%;
+    transition: 1s;
 }
 
 #prize-pool {
@@ -88,6 +89,9 @@ button:focus {
 #prize-pool > p:nth-child(2) > span {
   font-size: 28px;
 }
+#prize-pool > p:nth-child(2) > span#prize {
+    font-size: 72px;
+  }
 #prize-pool > div {
   font-size: 20px;
   font-family: "Montserrat", sans-serif;
@@ -263,6 +267,100 @@ input {
   font-weight: 900;
 }
 
+/* my Bet */
+#bet-result{
+    display: none;
+    justify-content: space-around;
+}
+#bet-result>div{
+    width: 48%;
+
+}
+#bet-result>div>div:first-child{
+    font-size: 36px;
+    font-family: "Ultra", sans-serif;
+    color: #feab3a;
+    text-align: center;
+    margin: 1rem 0 1rem 0;
+}
+#bet-result>div>div:nth-child(2){
+    width: 100%;
+    height: 60vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: rgba(9, 0, 22, 0.7);
+    border-radius: 2rem;
+    position: relative;
+}
+#bet-result .no-txs{
+    
+    position: absolute;
+    font-size: 48px;
+    font-family: "Ultra", sans-serif;
+    color: rgba(255, 255, 255, 0.555);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+#bet-result ul{
+    list-style: none;
+    margin-top: 1.5rem;
+}
+#bet-result li{
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+#bet-result li:first-child{
+    margin-top: 0rem;
+
+}
+#bet-result li>div{
+    position: relative;
+    width: 95%;
+    margin: auto;
+    border: 2px solid #feab3a;
+    border-radius: 1rem;
+}
+#bet-result li p{
+    font-size: 1.25rem;
+  font-family: "Montserrat", sans-serif;
+  /* color: #feab3a; */
+  word-wrap: break-word;
+  line-height: 1.25rem;
+  margin: 0 1.5rem 1rem 1.5rem;
+}
+#bet-result li>div>p:last-child{
+  margin-bottom: 2.5rem;
+}
+#waiting-for-draw li>div>p:first-child{
+    margin-top: 2.5rem;
+  }
+#bet-result li p>span{
+  font-weight: bolder;
+  color: #feab3a;
+}
+#bet-result p[name="outcome"]{
+    font-size: 56px;
+    font-family: "Ultra", sans-serif;
+    color: rgb(255, 46, 9);
+    margin-top: 2.5rem;
+}
+#bet-result p[name="outcome"].is-win{
+    color: rgb(1, 218, 1);
+    line-height: 40px;
+}
+#bet-result p[name="amount"]{
+    font-size: 2rem;
+    font-family: "Montserrat", sans-serif;
+    margin-top: 1.5rem;
+    margin-bottom: 3rem;
+    font-weight: lighter;
+}
+
+
+/* nav */
 nav {
   display: flex;
   align-items: center;

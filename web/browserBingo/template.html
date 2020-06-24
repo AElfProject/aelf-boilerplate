@@ -53,8 +53,12 @@
       <div id="bingo-body">
         <div id="prize-pool">
           <p>Prize Pool</p>
-          <p>255 <br /><span>AEUSD</span></p>
-          <div>My Last Bet: <br />Big <br />100.56 AEUSD</div>
+          <p><span id="prize">loading...</span> <br /><span>AEUSD</span></p>
+          <div>
+            My Last Bet: <br /><span id="last-bet-type">loading...</span
+            ><br /><span id="last-bet-amount">loading...</span> AEUSD
+          </div>
+          <!-- <div>My Last Bet: <br />Big <br />100.56 AEUSD</div> -->
         </div>
         <div class="play-body" id="play-body">
           <p class="bet">Bet Type <span>(Click to select)</span></p>
@@ -128,8 +132,48 @@
       </div>
 
       <div id="bet-result">
-        <div id="lottery"></div>
-        <div id="waiting-for-draw"></div>
+        <div id="lottery">
+          <div>Lottery</div>
+          <div>
+            <div class="no-txs">No Txs</div>
+            <ul>
+              <!-- <li>
+                <div>
+                  <div>
+                    <p name="outcome" class="is-win">WIN</p>
+                    <p name="amount" class="is-win">12344656456465.86<span>    AEUSD</span></p>
+                  </div>
+                  <p><span>Bet Type:</span> loading...</p>
+                  <p><span>Bet Amount:</span> loading...</p>
+                  <p><span>Time:</span> loading...</p>
+                  <p><span>Draw Type:</span> Middle</p>
+                  <p>
+                    <span>Tx Id:</span>    a98e0b71958562a58f9e0e633845bd2a44444444444444444444444444444444444444444444444444444444444444444444783197b5bf7d17b8ceb3c6e7f942fac8
+                  </p>
+                </div>
+              </li> -->
+            </ul>
+          </div>
+        </div>
+        <div id="waiting-for-draw">
+          <div>Waiting for Draw</div>
+          <div>
+            <div class="no-txs">No Txs</div>
+            <ul>
+              <!-- <li>
+                <div>
+                  <p><span>Bet Type:</span> loading...</p>
+                  <p><span>Bet Amount:</span> loading...</p>
+                  <p><span>Time:</span> loading...</p>
+                  <p>
+                    <span>Tx Id:</span>
+                    a98e0b71958562a58f9e0e633845bd2a44444444444444444444444444444444444444444444444444444444444444444444783197b5bf7d17b8ceb3c6e7f942fac8
+                  </p>
+                </div>
+              </li> -->
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
     <nav>
