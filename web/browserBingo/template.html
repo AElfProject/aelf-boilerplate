@@ -1,124 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>BingoGame</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    
     <!-- CSS only -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
 
     <!-- JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+      crossorigin="anonymous"
+    ></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Ultra&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./index.css" >
-
-</head>
-<body>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ultra&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body>
     <div class="dark-cover"></div>
 
     <div id="container">
-        <div class="site-header">
-                <div class="site-title" >Bingo Game</div>
-                <!-- <button id="register" class="register" type="button">Register</button> -->
-        </div>
+      <div class="site-header">
+        <div class="site-title">Bingo Game</div>
+        <!-- <button id="register" class="register" type="button">Register</button> -->
+      </div>
 
-        <div id="bingo-body">
-            <div id="prize-pool">
-                <p>Prize Pool</p>
-                <p>255 </br><span>AEUSD</span></p>
-                <div>My Last Bet: </br>Big </br>100.56 AEUSD</div>
-            </div>
-            <div class="play-body" id="play-body">
-                <p class="bet">Bet Type <span>(Click to select)</span></p>
-                <div id="small-big">
-                    <div name="small" class="active">Small</div>
-                    <div name="big">Big</div>
-                  </div>
-                  <p class="bet">Bet Amount</p>
-                <p class="balance">My Balance: <span id="balance">loading...</span> ELF</p>
-                <p class="balance">My Fee Balance: <span id="fee-balance">loading...</span> ELF</p>
-                <div id="input-wrapper">
-                    <div id="input-box">
-                    <input type="text" id="balance-input" placeholder="Please input amount">
-                    <!-- <span class="input-border bottom">2</span>
+      <div id="bingo-body">
+        <div id="prize-pool">
+          <p>Prize Pool</p>
+          <p>255 <br /><span>AEUSD</span></p>
+          <div>My Last Bet: <br />Big <br />100.56 AEUSD</div>
+        </div>
+        <div class="play-body" id="play-body">
+          <p class="bet">Bet Type <span>(Click to select)</span></p>
+          <div id="small-big">
+            <div name="small" class="active">Small</div>
+            <div name="big">Big</div>
+          </div>
+          <p class="bet">Bet Amount</p>
+          <p class="balance">
+            My Balance: <span id="balance">loading...</span> ELF
+          </p>
+          <p class="balance">
+            My Allowance: <span id="allowance">loading...</span> ELF
+          </p>
+          <div id="input-wrapper">
+            <div id="input-box">
+              <input
+                type="text"
+                id="balance-input"
+                placeholder="Please input amount"
+              />
+              <!-- <span class="input-border bottom">2</span>
                     <span class="input-border right">2</span>
                     <span class="input-border top">2</span>
                     <span class="input-border left">2</span> -->
-                    </div>
-                    <div id="button-box">
-                        <div type="button" class="button" >Half</div>
-                        <div type="button" class="button" >All-In</div>
-                    </div>
-                </div>
-                
-                <div>
-                    <button class="play" id="play" type="button">Play</button>
-                </div>
-                <div>
-                    <button class="play" id="bingo" type="button">Bingo</button>
-                </div>
-                <p id="input-alert"></p>
-
-                <div id="description">
-                    <div>
-                        <p class="title">Game Rules</p>
-                        <p class="content">The current block height and user's seed will be used to calculate a random number between [0, 255]. And we will get SMALL, MIDDLE or BIG.
-    
-                            <br>1. You can bet SMALL or BIG.
-                            
-                            <br>2. The contract always wins when getting MIDDLE.
-                            
-                            <br>3. No more than 50 bets in a time.
-                        </p>
-
-                    </div>
-
-                    <div>
-
-                        <p class="title">Game Operations</p>
-                        <p class="content">
-                            1. Select a bet type and bet your AEUSD.
-    
-                            <br>2. Waiting a minute, then the prize will be drawn automatically.
-    
-                            <br>3. You can get the last 100 histories from My Bet in the upper left corner.
-                        </p>
-                    </div>
-                </div>
-    
             </div>
-    
+            <div id="button-box">
+              <div type="button" class="button">Half</div>
+              <div type="button" class="button">All-In</div>
+            </div>
+          </div>
+
+          <div>
+            <button class="play" id="play" type="button">Play</button>
+          </div>
+          <div>
+            <button class="play" id="bingo" type="button">Bingo</button>
+          </div>
+          <p id="input-alert"></p>
+
+          <div id="description">
+            <div>
+              <p class="title">Game Rules</p>
+              <p class="content">
+                The current block height and user's seed will be used to
+                calculate a random number between [0, 255]. And we will get
+                SMALL, MIDDLE or BIG.
+
+                <br />1. You can bet SMALL or BIG.
+
+                <br />2. The contract always wins when getting MIDDLE.
+
+                <br />3. No more than 50 bets in a time.
+              </p>
+            </div>
+
+            <div>
+              <p class="title">Game Operations</p>
+              <p class="content">
+                1. Select a bet type and bet your AEUSD.
+
+                <br />2. Waiting a minute, then the prize will be drawn
+                automatically.
+
+                <br />3. You can get the last 100 histories from My Bet in the
+                upper left corner.
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div id="bet-result">
-            <div id="lottery">
-
-            </div>
-            <div id="waiting-for-draw">
-                
-            </div>
-        </div>
-
+      <div id="bet-result">
+        <div id="lottery"></div>
+        <div id="waiting-for-draw"></div>
+      </div>
     </div>
     <nav>
-            <button id="home" class="active">Home</button>
-            <button id="bet">Bet</button>
-            <button id="me">Me</button>
-
+      <button id="home" class="active">Home</button>
+      <button id="bet">Bet</button>
+      <button id="me">Me</button>
     </nav>
 
     <div id="spinner-container">
-        <div class="dark-cover"></div>
-        <div id="spinner">
-        </div>
+      <div class="dark-cover"></div>
+      <div id="spinner"></div>
     </div>
-
-</body>
+  </body>
 </html>
