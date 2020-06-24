@@ -30,6 +30,7 @@ namespace AElf.Boilerplate.MainChain
         {
             var services = context.Services;
             services.AddTransient<IContractDeploymentListProvider, MainChainContractDeploymentListProvider>();
+            services.AddTransient<IGenesisSmartContractDtoProvider, MainChainGenesisSmartContractDtoProvider>();
 
             services.AddKeyValueDbContext<BlockchainKeyValueDbContext>(p => p.UseInMemoryDatabase());
             services.AddKeyValueDbContext<StateKeyValueDbContext>(p => p.UseInMemoryDatabase());
