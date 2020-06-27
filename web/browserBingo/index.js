@@ -40,6 +40,7 @@ function initDomEvent(tokenContract, bingoGameContract) {
   let betType;
   const betTypeSwitch = document.querySelector("#small-big");
   const nav = document.querySelector("nav");
+  const childSelector = document.querySelector("#child-selector");
 
   const betCntMax = 50;
   const playBingoInterval = 30;
@@ -51,7 +52,8 @@ function initDomEvent(tokenContract, bingoGameContract) {
       return;
     }
     // const reg = /^[1-9]\d*$/;
-    if (isNaN(Number(balanceInput.value))) {
+    const reg_special = /^[1-9]\d*e\d*$/; // get rid of scientific number e.g. "2e3" deemed as 2000
+    if (balanceInput.value == '' || reg_special.test(balanceInput.value)||isNaN(Number(balanceInput.value))) {
       document.querySelector("#input-alert").innerText =
         "* Please input valid number !!";
       play.classList.remove("active");
@@ -99,7 +101,7 @@ function initDomEvent(tokenContract, bingoGameContract) {
       ).allowance
     ).toFixed(2);
   }
-  // get player information every 1s
+
   async function getUnBingoBouts() {
     return await bingoGameContract.GetPlayerInformation.call(wallet.address);
   }
@@ -249,6 +251,22 @@ function initDomEvent(tokenContract, bingoGameContract) {
       document.querySelector("#bet-result").style.display = "none";
     }
 
+  };
+
+  //switch child selector if it displays
+  childSelector.onclick = (e) => {
+    Array.from(e.currentTarget.children).forEach((ele) => {
+      ele.classList.remove("active");
+    });
+    e.target.classList.add("active");
+    
+    if(e.target.innerHTML == "Lottery"){
+      document.querySelector("#lottery").style.display = "block";
+      document.querySelector("#waiting-for-draw").style.display = "none";
+    } else if(e.target.innerHTML == "Waiting for Draw"){
+      document.querySelector("#lottery").style.display = "none";
+      document.querySelector("#waiting-for-draw").style.display = "block";
+    } 
   };
 
   // click button to change the number of bets
