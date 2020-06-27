@@ -1,0 +1,11 @@
+{
+  "runtimeOptions": {
+    "tfm": "netcoreapp2.1",
+    "framework": {
+      "name": "Microsoft.NETCore.App",
+      "version": "2.1.0"
+    },
+    "$schema": "https://gist.githubusercontent.com/natemcmaster/0bdee16450f8ec1823f2c11af880ceeb/raw/runtimeconfig.template.schema.json",
+    "rollForwardOnNoCandidateFx": 2
+  }
+}
