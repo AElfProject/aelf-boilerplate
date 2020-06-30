@@ -35,7 +35,7 @@ function WaitingDraw() {
         if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
             const playerInformation = await bingoGameContract.GetPlayerInformation.call(address)
             let { bouts } = playerInformation || {}
-            Array.isArray(bouts) && dispatch({
+            address == ReduxStore.address && Array.isArray(bouts) && dispatch({
                 type: 'SET_BET_LIST', data: { betList: bouts.reverse() }
             })
         }

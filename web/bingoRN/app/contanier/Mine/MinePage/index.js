@@ -285,14 +285,15 @@ class MyMinePage extends React.Component {
     /* 退出 */
     async loginOut() {
         this.changeModalStatus(); //
+        this.props.onLogout();
         await AsyncStorage.removeItem(Storage.userToken)
         await AsyncStorage.removeItem(Storage.userPrivateKey)
         await AsyncStorage.removeItem(Storage.userKeyStore)
+        await AsyncStorage.removeItem(Storage.transactionPsw)
+        await AsyncStorage.removeItem(Storage.openTouch)
+        await AsyncStorage.removeItem('lastBuy')
         DeviceEventEmitter.emit("checkPrivateKey");
-        this.props.onLogout();
-
-        this.goRouter("HomePage")
-
+        this.goRouter("HomePage") 
     }
     clickLoginOut(){
         this.setState({

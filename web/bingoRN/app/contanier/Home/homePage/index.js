@@ -99,7 +99,9 @@ class MyHomePage extends React.Component {
         this.initProvider();
         this.onRefresh();
         this.drawInterval = setInterval(()=>{
-            this.Draw();
+            try {
+                this.Draw();
+            } catch (error) {}
         }, waitTime);
         this.interval = setInterval((
         ) => {
@@ -526,7 +528,7 @@ class MyHomePage extends React.Component {
         if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
             const playerInformation = await bingoGameContract.GetPlayerInformation.call(address);
             let { bouts } = playerInformation || {}
-            Array.isArray(bouts) && this.props.onSetBetList({ betList: bouts.reverse() })
+            address == this.props.ReduxStore.address &&  Array.isArray(bouts) && this.props.onSetBetList({ betList: bouts.reverse() })
         }
     }
     getLotteryList = async () => {
@@ -535,7 +537,7 @@ class MyHomePage extends React.Component {
         if (bingoGameContract && bingoGameContract.GetPlayerInformationCompleted) {
             const playerInformation = await bingoGameContract.GetPlayerInformationCompleted.call(address);
             let { bouts } = playerInformation || {}
-            Array.isArray(bouts) && this.props.onSetLotteryList({ lotteryList: bouts.reverse() });
+            address == this.props.ReduxStore.address && Array.isArray(bouts) && this.props.onSetLotteryList({ lotteryList: bouts.reverse() });
         }
     }
     getTxResult = async (TransactionId) => {
@@ -551,9 +553,12 @@ class MyHomePage extends React.Component {
         if (number >= 3) return
         const txResult = await aelfInstance.chain.getTxResult(TransactionId);
         if (txResult.Status !== 'NotExisted') {
-            this.props.onSetNewBet({ newBet: true })
-            this.getBetList()
-            this.getLotteryList()
+            const { address, betList } = this.props.ReduxStore
+            if(address && Array.isArray(betList) && betList.length){
+                this.props.onSetNewBet({ newBet: true })
+                this.getBetList()
+                this.getLotteryList()
+            }
         } else {
             this.txResultTime = {
                 ...this.txResultTime,
@@ -572,7 +577,7 @@ class MyHomePage extends React.Component {
         if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
             const playerInformation = await bingoGameContract.GetPlayerInformation.call(address);
             let oldBouts = playerInformation || {}.bouts
-            Array.isArray(oldBouts) && this.props.onSetBetList({ betList: oldBouts.reverse() })
+            this.props.ReduxStore.address == address && Array.isArray(oldBouts) && this.props.onSetBetList({ betList: oldBouts.reverse() })
             const { bouts } = playerInformation || {}
             if (!bouts || !bouts.length || !bingoGameContract || !bingoGameContract.Bingo) return
             const bingo = (value) => {
