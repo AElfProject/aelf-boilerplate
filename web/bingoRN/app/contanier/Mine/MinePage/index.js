@@ -1,5 +1,5 @@
 import React from "react"
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView, TouchableWithoutFeedback } from "react-native"
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, TouchableWithoutFeedback, DeviceEventEmitter } from "react-native"
 import Clipboard from "@react-native-community/clipboard";
 import Icon from 'react-native-vector-icons/AntDesign';
 import { ListItem } from "react-native-elements"
@@ -123,7 +123,7 @@ class MyMinePage extends React.Component {
 
         let contracts = this.props.ReduxStore.contracts;
         const loggedIn = this.props.ReduxStore.is_login;
-        if (!contracts && loggedIn) {
+        if (!contracts && privateKey != null) {
             contracts = await appInit(privateKey);
         }
 
@@ -288,7 +288,7 @@ class MyMinePage extends React.Component {
         await AsyncStorage.removeItem(Storage.userToken)
         await AsyncStorage.removeItem(Storage.userPrivateKey)
         await AsyncStorage.removeItem(Storage.userKeyStore)
-
+        DeviceEventEmitter.emit("checkPrivateKey");
         this.props.onLogout();
 
         this.goRouter("HomePage")

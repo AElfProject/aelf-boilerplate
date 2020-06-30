@@ -59,9 +59,7 @@ export default class ListComponent extends Component {
     //End pull-down refresh
     endUpPullRefresh = _ => {
         this.endRefresh && clearTimeout(this.endRefresh)
-        this.endRefresh = setTimeout(() => {
-            this.setState({ refreshing: false })
-        }, 1000);
+        this.setState({ refreshing: false })
     }
     ListFooterComponent = _ => {
         const { bottomLoad } = this.state

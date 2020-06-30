@@ -8,7 +8,7 @@ import {
     PermissionsAndroid,
     default as Easing,
     ImageBackground,
-    TextInput, Platform, ActivityIndicator,
+    ActivityIndicator, DeviceEventEmitter,
 } from 'react-native';
 import { RNCamera } from 'react-native-camera'
 import AsyncStorage from "@react-native-community/async-storage"
@@ -29,7 +29,7 @@ import Loading from '../../../common/UI_Component/Loading';
 
 import AElf from 'aelf-sdk';
 import connect from "../../../common/utils/myReduxConnect";
-const {appInit} = require('../../../common/utils/aelfProvider');
+import { appInit } from '../../../common/utils/aelfProvider'
 
 class MyAccountLogin extends Component {
     constructor(props) {
@@ -91,7 +91,7 @@ class MyAccountLogin extends Component {
     }
     rightElement() {
         return (
-            <TouchableOpacity onPress={() => this.usePhotoAlbum()}>
+            <TouchableOpacity style={styles.albumBox} onPress={() => this.usePhotoAlbum()}>
                 <TextM>Album</TextM>
             </TouchableOpacity>
         )
@@ -222,47 +222,48 @@ class MyAccountLogin extends Component {
             loadingVisible : true,
         });
     }
+    loginSuccess = async (keyStoreTemp, privateKey) => {
+        try {
+            const contracts = await appInit(privateKey)
+            this.props.onLoginSuccess({
+                contracts,
+                address: keyStoreTemp.address,
+                keystore: keyStoreTemp
+            });
+        } catch (error) {
+            console.warn(error, "连接合约失败");
+        }
+    }
     /* 登陆 */
     async accountLogin() {
-
-        const { psw, originPsw,keyStore } = this.state;
+        const { psw, originPsw, keyStore } = this.state;
         const keyStoreTemp = JSON.parse(keyStore);
-        const checkResult = AElf.wallet.keyStore.checkPassword(keyStoreTemp, psw);
 
-        //登陆成功
-        if (checkResult) {
-            this.setState({
-                modalVisible: true,
-                tipStatus: true,
-                loadingVisible: false
-            });
-
+        try {
             const { mnemonic: ksMn, privateKey } = AElf.wallet.keyStore.unlockKeystore(keyStoreTemp, psw);
-            this.setToken(privateKey, keyStore);
-            try {
-                this.props.onLoginSuccess({
-                    contracts: await appInit(privateKey),
-                    address: keyStoreTemp.address,
-                    keystore: keyStoreTemp
+            if (!!privateKey) {
+                this.setState({
+                    modalVisible: true,
+                    tipStatus: true,
+                    loadingVisible: false
                 });
-            } catch (error) {
-                console.warn(error,"连接合约失败");
+                this.setToken(privateKey, keyStore);
+                this.loginSuccess(keyStoreTemp, privateKey);
+
+                setTimeout(() => {
+                    this.changeModalStatus();
+                }, 1000);
+                return true;
+            } else {
+                return false
             }
-
-
-            setTimeout(()=>{
-                this.changeModalStatus();
-            }, 1000);
-
-            return true;
-
-        }else {
+        } catch (error) {
             this.setState({
                 modalVisible: true,
                 tipStatus: false,
                 loadingVisible: false
             })
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.changeModalStatus();
             }, 1000);
             return false;
@@ -275,7 +276,7 @@ class MyAccountLogin extends Component {
         await AsyncStorage.setItem(Storage.userToken,"userToken");
         await AsyncStorage.setItem(Storage.userPrivateKey,pk);
         await AsyncStorage.setItem(Storage.userKeyStore, ks);
-
+        DeviceEventEmitter.emit("checkPrivateKey");
 
         // setTimeout(()=>{
         //     this.goRouter("HomePage",{keyStore:ks});
@@ -465,5 +466,11 @@ const styles = StyleSheet.create({
         ...Gstyle.radiusArg(pTd(10)),
         justifyContent: "center",
         alignItems: "center"
+    },
+    albumBox: {
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });

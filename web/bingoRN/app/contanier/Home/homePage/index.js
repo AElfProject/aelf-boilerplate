@@ -1,5 +1,5 @@
 import React from "react"
-import { View, Text, TouchableOpacity, RefreshControl, Linking, TextInput } from "react-native"
+import { View, Text, TouchableOpacity, RefreshControl, Linking, TextInput, DeviceEventEmitter } from "react-native"
 import { Button, Divider, Input, PricingCard, Card } from "react-native-elements"
 import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from "@react-native-community/async-storage"
@@ -46,7 +46,8 @@ const defautState = JSON.stringify({
         isWin: true,
         boutType: '',
         award: '',
-    }
+    },
+    privateKey:null
 });
 /*
  * 主页
@@ -61,12 +62,10 @@ class MyHomePage extends React.Component {
         this.drawInterval = null;
         this.txResultTime = {};
     }
-    componentWillMount(){
-        setTimeout(()=>{
-            SplashScreen.hide()
-        }, splashScreenShowTime);
+    checkPrivateKey = async () => {
+        const privateKey = await AsyncStorage.getItem(Storage.userPrivateKey)
+        this.setState({ privateKey })
     }
-
     componentWillUnmount() {
         for (let key in this.txResultTime) {
             const { timer } = this.txResultTime[key]
@@ -75,6 +74,7 @@ class MyHomePage extends React.Component {
         this.txResultTime = {}
         this.drawInterval && clearInterval(this.drawInterval)
         clearInterval(this.interval);
+        DeviceEventEmitter.removeAllListeners('checkPrivateKey')
     }
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
@@ -83,9 +83,9 @@ class MyHomePage extends React.Component {
         if (this.lastAddress !== address) {
             this.lastAddress = address;
             if (address) {
-                await this.getUserBalance();
-                await this.getBingoGameContractBalane();
-                await this.getApprovedNumber();
+                this.getUserBalance();
+                this.getBingoGameContractBalane();
+                this.getApprovedNumber();
             } else {
                 this.setState(JSON.parse(defautState));
             }
@@ -93,6 +93,9 @@ class MyHomePage extends React.Component {
     }
 
     async componentDidMount() {
+        setTimeout(()=>{
+            SplashScreen.hide()
+        }, splashScreenShowTime);
         this.initProvider();
         this.onRefresh();
         this.drawInterval = setInterval(()=>{
@@ -100,8 +103,33 @@ class MyHomePage extends React.Component {
         }, waitTime);
         this.interval = setInterval((
         ) => {
+            this.checkLoginInfo();
             this.getUserBalance();
         }, 10000);
+        DeviceEventEmitter.addListener('checkPrivateKey',this.checkPrivateKey);
+        this.checkPrivateKey();
+    }
+    checkLoginInfo = async () => {
+        try {
+            const { address } = this.props.ReduxStore || {}
+            if (!address) {
+                const privateKey = await AsyncStorage.getItem(Storage.userPrivateKey);
+                if(privateKey){                    
+                    const contracts = await appInit(privateKey);
+                    const keystore = JSON.parse(await AsyncStorage.getItem(Storage.userKeyStore) || '{}');
+                    const address = keystore.address;
+                    this.props.onLoginSuccess({
+                        contracts,
+                        address,
+                        keystore
+                    });
+                    this.setState({ privateKey })
+                }
+            }
+        } catch (error) {
+            console.log('checkLoginInfo',error);
+            
+        }
     }
 
     async initProvider(){
@@ -310,20 +338,25 @@ class MyHomePage extends React.Component {
         }));
     }
 
-    async playBingo() {
+    playBingo = async () => {
         if (this.playLock) {
             return;
         }
         const reduxStoreData = this.props.ReduxStore;
         const { contracts, address, betList } = reduxStoreData;
-
+        const { privateKey } = this.state
+        
         if (Array.isArray(betList) && betList.length >= waitDrawLimit) {
             this.tipMsg('You bet too fast, bet later');
             return;
         }
 
         if (!address) {
-            this.tipMsg('Please login');
+            if(privateKey == null){
+                this.tipMsg('Please login');
+            }else{
+                this.tipMsg('Wait game initialize');
+            }
             return;
         }
 
@@ -617,14 +650,19 @@ class MyHomePage extends React.Component {
         );
     }
 
-    renderLotteryCode(optionsInput) {
+    renderLotteryCode = (optionsInput) => {
+        const { privateKey } = this.state
+
         const {
             address, jackpot, tokenSymbol, bingoOutputUnpacked, bingoResult, showBingo, lastBetType,lastBetCount
         } = optionsInput;
-
         const jackpotButtonText = (() => {
             if (!address) {
-                return 'Please Login';
+                if (privateKey != null) {
+                    return 'Wait game initialize';
+                } else {
+                    return 'Please Login';
+                }
             }
             if(lastBetCount){
                 return `My Last bet: ${lastBetCount} ${tokenSymbol} ${lastBetType === 1 ? 'Small' : 'Big'}`;
@@ -648,8 +686,8 @@ class MyHomePage extends React.Component {
           button={{title: jackpotButtonText}}
         //   info={[lotteryInfo]}
           onButtonPress={() => {
-              if (!address) {
-                  this.goRouter("MinePage")
+              if (!address && privateKey == null) {
+                  this.goRouter("LoginPage")
               }
           }}
         />;

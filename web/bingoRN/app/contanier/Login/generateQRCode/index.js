@@ -1,5 +1,5 @@
 import React from "react"
-import { View, Text, StyleSheet, Image, TouchableOpacity ,Platform, TouchableWithoutFeedback, ScrollView, StatusBar } from "react-native"
+import { View, Text, StyleSheet, Image, TouchableOpacity ,Platform, TouchableWithoutFeedback, ScrollView, StatusBar, DeviceEventEmitter } from "react-native"
 import QRCode from 'react-native-qrcode-svg';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Button } from "react-native-elements"
@@ -76,6 +76,7 @@ class MyGenerateQRCode extends React.Component {
         await AsyncStorage.setItem(Storage.userToken,"userToken");
         await AsyncStorage.setItem(Storage.userPrivateKey,newWallet.privateKey);
         await AsyncStorage.setItem(Storage.userKeyStore, keyStore);
+        DeviceEventEmitter.emit("checkPrivateKey");
 
         this.setState({
             QRCodeValue: keyStore
