@@ -148,10 +148,15 @@ class MyMinePage extends React.Component {
     }
     async qcodeType(){
         //console.log(this.props.ReduxStore);
-        this.setState({
-            modalContentType:0,
-            modalVisible:true,
-        });
+        const { accountAddress, modalContentType, keyStore } = this.state;
+        if(keyStore){
+            this.setState({
+                modalContentType:0,
+                modalVisible:true,
+            });
+        }else{
+            this.tipMsg('please login')
+        }
     }
     async freshBalance(){
         //在这测试了下钱包
