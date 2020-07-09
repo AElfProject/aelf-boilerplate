@@ -178,15 +178,19 @@ class MyHomePage extends React.Component {
         return false;
     }
     async getUserBalance(contractsInput, addressInput) {
-        const balance = await this.getTokenBalance(contractsInput, addressInput);
-        if (!balance) {
-            return;
+        try {
+            const balance = await this.getTokenBalance(contractsInput, addressInput);
+            if (!balance) {
+                return;
+            }
+            let confirmBlance = balance.balance / tokenDecimalFormat
+            this.setState({
+                balance: isNumber(confirmBlance) ? confirmBlance : 0,
+                symbol: balance.symbol
+            });
+        } catch (error) {
+            
         }
-        let confirmBlance = balance.balance / tokenDecimalFormat
-        this.setState({
-            balance: isNumber(confirmBlance) ? confirmBlance : 0,
-            symbol: balance.symbol
-        });
     }
 
     async getApprovedNumber() {
@@ -295,9 +299,15 @@ class MyHomePage extends React.Component {
     }
 
     onBetButtonClick(value) {
-        this.setState({
-            betCount: value
-        });
+        let betCount = value;
+        if (typeof value === 'string') {
+            betCount = value;
+        } else if (typeof value === 'number') {
+            betCount = String(value);
+        } else {
+            betCount = '0';
+        }
+        this.onBetChange(betCount);
     }
 
     onBetTypeButtonClick(betType) {
@@ -775,8 +785,8 @@ class MyHomePage extends React.Component {
                                 onChangeText={betCount => this.onBetChange(betCount)}
                                 value={betCount + ''}
                                 />
-                                <Button buttonStyle={styles.bingoButton} title={'half'} onPress={() => this.onBetButtonClick(Math.floor(balance) / 2)}/>
-                                <Button buttonStyle={styles.bingoButton} title={'all in'} onPress={() => this.onBetButtonClick(Math.floor(balance))}/>
+                                <Button buttonStyle={styles.bingoButton} title={'half'} onPress={() => this.onBetButtonClick(balance / 2)}/>
+                                <Button buttonStyle={styles.bingoButton} title={'all in'} onPress={() => this.onBetButtonClick(balance)}/>
                             </View>
                         </Card>
 
