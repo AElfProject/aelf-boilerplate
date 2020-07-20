@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <IsContract>true</IsContract>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ContractBase Include="..\..\protobuf\acs0.proto">
+            <Link>Protobuf\Proto\reference\acs0.proto</Link>
+        </ContractBase>
+        <ContractBase Include="..\..\protobuf\acs1.proto">
+            <Link>Protobuf\Proto\reference\acs1.proto</Link>
+        </ContractBase>
+        <ContractReference Include="..\..\protobuf\token_contract.proto">
+            <Link>Protobuf\Proto\reference\token_contract.proto</Link>
+        </ContractReference>
+        <ContractReference Include="..\..\protobuf\basic_contract_zero.proto">
+            <Link>Protobuf\Proto\reference\basic_contract_zero.proto</Link>
+        </ContractReference>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ContractCode Include="..\..\protobuf\finance_contract.proto">
+            <Link>Protobuf\Proto\finance_contract.proto</Link>
+        </ContractCode>
+    </ItemGroup>
+</Project>
