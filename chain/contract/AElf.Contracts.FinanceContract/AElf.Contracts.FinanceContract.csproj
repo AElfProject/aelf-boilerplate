@@ -32,4 +32,8 @@
             <Link>Protobuf\Proto\finance_contract.proto</Link>
         </ContractCode>
     </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="Google.Protobuf" Version="3.12.3" />
+    </ItemGroup>
 </Project>
