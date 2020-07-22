@@ -14,12 +14,12 @@ namespace AElf.Contracts.FinanceContract
         /// <summary>
         /// Contract administrator
         /// </summary>
-        public StringState Admin { get; set; }
+        public SingletonState<Address> Admin { get; set; }
         
         /// <summary>
         /// Contract pending administrator
         /// </summary>
-        public StringState PendingAdmin { get; set; }
+        public SingletonState<Address> PendingAdmin { get; set; }
         
         /// <summary>
         /// Market administrator

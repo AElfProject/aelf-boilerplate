@@ -248,7 +248,7 @@ message BorrowSnapshot {
     //Total balance (with accrued interest), after applying the most recent balance-changing action
     int64 principal = 1;
     //Global borrowIndex as of the most recent balance-changing action
-    int64 interest_index = 2;
+    string interest_index = 2;
 }
 
 message Market {
