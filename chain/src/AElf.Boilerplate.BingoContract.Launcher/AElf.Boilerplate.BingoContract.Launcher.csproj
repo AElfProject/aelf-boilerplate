@@ -4,13 +4,13 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <ServerGarbageCollection>true</ServerGarbageCollection>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <ProjectReference Include="..\AElf.Boilerplate.MainChain\AElf.Boilerplate.MainChain.csproj" />
     </ItemGroup>
-    
+
     <ItemGroup>
-        <PackageReference Include="AElf.Contracts.Deployer" Version="1.0.0-preview3-18424" />
+        <PackageReference Include="AElf.ContractDeployer" Version="1.0.0-preview3" />
         <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="2.9.0" />
         <PackageReference Include="Volo.Abp.Autofac" Version="1.1.2" />
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
@@ -23,13 +23,13 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </ProjectReference>
     </ItemGroup>
-    
+
     <ItemGroup>
-        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.0.0-preview3-18424">
+        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.0.0-preview3">
             <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.chain</PackageName>
         </PackageReference>
-        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.0.0-preview3-18424">
+        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.0.0-preview3">
             <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.net</PackageName>
         </PackageReference>
@@ -49,7 +49,7 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
-    
+
     <ItemGroup>
         <None Update="log4net.config">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

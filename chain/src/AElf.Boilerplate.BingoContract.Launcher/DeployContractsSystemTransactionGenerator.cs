@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Acs0;
 using AElf.Boilerplate.SystemTransactionGenerator;
-using AElf.Contracts.Deployer;
+using AElf.ContractDeployer;
 using AElf.Contracts.Genesis;
 using AElf.Kernel;
 using AElf.Kernel.Miner.Application;
