@@ -5,6 +5,7 @@ using AElf.Contracts.Genesis;
 using AElf.Contracts.MultiToken;
 using AElf.CSharp.Core;
 using AElf.Sdk.CSharp;
+using AElf.Sdk.CSharp.State;
 using AElf.Types;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
@@ -150,7 +151,7 @@ namespace AElf.Contracts.FinanceContract
            }
            var shortfall=GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Symbol, redeemTokens, 0);
            Assert(shortfall<=0,"INSUFFICIENT_LIQUIDITY");
-           long accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
+           var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
            Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
            //totalSupplyNew = totalSupply - redeemTokens
            //accountTokensNew = accountTokens[redeemer] - redeemTokens
@@ -181,17 +182,223 @@ namespace AElf.Contracts.FinanceContract
            }
            var shortfall= GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Symbol, redeemTokens, 0);
            Assert(shortfall<=0,"INSUFFICIENT_LIQUIDITY");
-           long accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
+           var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
            Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
            //totalSupplyNew = totalSupply - redeemTokens
            //accountTokensNew = accountTokens[redeemer] - redeemTokens
            var totalSupplyNew = State.TotalSupply[input.Symbol].Sub(redeemTokens);
            var accountTokensNew = State.AccountTokens[input.Symbol][Context.Sender].Sub(redeemTokens);
-           Assert(GetCashPrior(input.Symbol) < redeemAmount,"TOKEN_INSUFFICIENT_CASH");
+           Assert(GetCashPrior(input.Symbol) >=redeemAmount,"TOKEN_INSUFFICIENT_CASH");
            DoTransferOut(Context.Sender,redeemAmount,input.Symbol);
            //We write previously calculated values into storage
            State.TotalSupply[input.Symbol] = totalSupplyNew;
            State.AccountTokens[input.Symbol][Context.Sender] = accountTokensNew;
+           return new Empty();
+       }
+
+       public override EnterMarketsOutput EnterMarkets(EnterMarketsInput input)
+       {
+           var len = input.Symbols.Count;
+           var enterMarketsOutput = new EnterMarketsOutput();
+           for (int i = 0; i < len; i++)
+           {
+               var isSuccess = true;
+               try
+               {
+                   AddToMarketInternal(input.Symbols[i], Context.Sender);
+               }
+               catch (Exception e)
+               {
+                   isSuccess = false;
+               }
+               finally
+               {
+                   enterMarketsOutput.Results[i]=   new EnterMarketResult()
+                   {
+                       Symbol = input.Symbols[i],
+                       Success = isSuccess
+                   };
+               };
+           }
+           return enterMarketsOutput;
+       }
+
+       public override Empty ExitMarket(StringValue input)
+       {
+           var account = new Account()
+           {
+               Symbol = input.Value,
+               Address = Context.Sender
+           };
+           var result = GetAccountSnapshot(account);
+           Assert(result.BorrowBalance==0,"NONZERO_BORROW_BALANCE");
+           Assert(State.Markets[input.Value].IsListed,"Market is not listed");
+           var shortfall= GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Value, result.CTokenBalance, 0);
+           Assert(shortfall<=0,"INSUFFICIENT_LIQUIDITY");
+           if(!State.Markets[input.Value].AccountMembership[Context.Sender.Value.ToString()])
+               return new Empty() ;
+           State.Markets[input.Value].AccountMembership[Context.Sender.Value.ToString()] = false;
+           //Delete cToken from the account’s list of assets
+           var userAssetList =State.AccountAssets[Context.Sender];
+           var len = userAssetList.Assets.Count;
+           var assetIndex = len;
+           for (int i = 0; i < len; i++)
+           {
+               if (userAssetList.Assets[i] == input.Value)
+               {
+                   assetIndex = i;
+                   break;
+               }
+           }
+           Assert(assetIndex < len,"IndexOutOfBounds");
+           userAssetList.Assets[assetIndex] = userAssetList.Assets[len - 1];
+           userAssetList.Assets.RemoveAt(len - 1);
+           return new Empty() ;
+       }
+       /*** Admin Functions ***/ 
+       
+       public override Empty AcceptAdmin(Empty input)
+       {
+          Assert(Context.Sender==State.PendingAdmin.Value,"UNAUTHORIZED");  
+          //Store admin with value pendingAdmin
+          State.Admin = State.PendingAdmin;
+          State.PendingAdmin.Value=new Address();
+          return new Empty();
+       }
+
+       public override Empty SetPendingAdmin(Address input)
+       {
+           Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");  
+           // Store pendingAdmin with value newPendingAdmin
+           State.PendingAdmin.Value = input;
+           return new Empty();
+       }
+
+       public override BoolValue SetBorrowPaused(SetPausedInput input)
+       {
+           Assert(State.Markets[input.Symbol].IsListed,"cannot pause a market that is not listed");
+           Assert(Context.Sender==State.PauseGuardian.Value || Context.Sender==State.Admin.Value,"only pause guardian and admin can pause");
+           Assert(Context.Sender==State.Admin.Value|| input.State ,"only admin can unpause");
+           State.BorrowGuardianPaused[input.Symbol] = input.State;
+           return new BoolValue()
+           {
+               Value = input.State
+           };
+       }
+
+       public override Empty SetCloseFactor(StringValue input)
+       {
+           var newCloseFactor = decimal.Parse(input.Value);
+           Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");  
+           Assert(newCloseFactor>decimal.Parse(MinCloseFactor)&&newCloseFactor<decimal.Parse(MaxCloseFactor),"INVALID_CLOSE_FACTOR");
+           State.CloseFactor.Value = input.Value;
+           return new Empty();
+       }
+
+       public override BoolValue SetSeizePaused(SetPausedInput input)
+       {
+           Assert(Context.Sender==State.PauseGuardian.Value || Context.Sender==State.Admin.Value,"only pause guardian and admin can pause");
+           Assert(Context.Sender==State.Admin.Value|| input.State ,"only admin can unpause");
+           State.SeizeGuardianPaused.Value = input.State;
+           return new BoolValue()
+           {
+               Value = input.State
+           };
+       }
+
+       public override Empty SetCollateralFactor(SetCollateralFactorInput input)
+       {
+           Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
+           var market = State.Markets[input.Symbol];
+           Assert(market.IsListed,"MARKET_NOT_LISTED");
+           var newCollateralFactor = decimal.Parse(input.CollateralFactor);
+           Assert(newCollateralFactor<=decimal.Parse(MaxCollateralFactor),"INVALID_CLOSE_FACTOR");
+           Assert(newCollateralFactor!=0 && GetUnderlyingPrice(input.Symbol)==0,"Error.PRICE_ERROR");
+           market.CollateralFactor = input.CollateralFactor;
+           return new Empty();
+       }
+
+       public override Empty SetInterestRate(SetInterestRateInput input)
+       {   
+           var symbol = new StringValue()
+           {
+               Value = input.Symbol
+           };
+           AccrueInterest(symbol);
+           Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
+           var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
+           Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
+           State.MultiplierPerBlock[input.Symbol] = input.MultiplierPerBlock;
+           State.BaseRatePerBlock[input.Symbol]=input.BaseRatePerBlock;
+           return new Empty();
+       }
+
+       public override Empty SetLiquidationIncentive(StringValue input)
+       {
+           Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
+           var newLiquidationIncentive = decimal.Parse(input.Value); 
+           Assert(newLiquidationIncentive<=decimal.Parse(MaxLiquidationIncentive)&&newLiquidationIncentive>=decimal.Parse(MinLiquidationIncentive),"INVALID_LIQUIDATION_INCENTIVE");
+           State.LiquidationIncentive.Value = input.Value;
+           return new Empty();
+       }
+
+       public override Empty SetMaxAssets(Int32Value input)
+       {
+           Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
+           State.MaxAssets.Value = input.Value;
+           return new Empty();
+       }
+
+       public override BoolValue SetMintPaused(SetPausedInput input)
+       {
+           var market = State.Markets[input.Symbol];
+           Assert(market.IsListed,"MARKET_NOT_LISTED");
+           Assert(Context.Sender==State.PauseGuardian.Value || Context.Sender==State.Admin.Value,"only pause guardian and admin can pause");
+           Assert(Context.Sender==State.Admin.Value|| input.State ,"only admin can unpause");
+           State.MintGuardianPaused[input.Symbol] = input.State;
+           return new BoolValue()
+           {
+               Value = input.State
+           };
+       }
+
+       public override Empty SetPauseGuardian(Address input)
+       {
+           Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
+           var newPauseGuardian = input;
+           State.PauseGuardian.Value = newPauseGuardian;
+           return new Empty();
+       }
+
+       public override Empty SetReserveFactor(SetReserveFactorInput input)
+       {
+           var symbol = new StringValue()
+           {
+               Value = input.Symbol
+           };
+           AccrueInterest(symbol);
+           Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
+           var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
+           Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
+           var newReserveFactor = decimal.Parse(input.ReserveFactor);
+           Assert(newReserveFactor <=decimal.Parse(MaxReserveFactor),"BAD_INPUT");
+           State.ReserveFactor[input.Symbol] = input.ReserveFactor;
+           return new Empty();
+       }
+
+       public override Empty SetUnderlyingPrice(SetUnderlyingPriceInput input)
+       {
+           var symbol = new StringValue()
+           {
+               Value = input.Symbol
+           };
+           AccrueInterest(symbol);
+           Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
+           var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
+           Assert(accrualBlockNumberPrior == Context.CurrentHeight,
+               "market's block number should equals current block number");
+           var priceNew = input.Price;
+           State.Prices[input.Symbol]=Int64.Parse(priceNew);
            return new Empty();
        }
 
@@ -402,7 +609,7 @@ namespace AElf.Contracts.FinanceContract
                Symbol = symbol,
                To = Context.Self
            };
-          State.TokenContract.TransferFrom.Call(input);
+          State.TokenContract.TransferFrom.Send(input);
           var balanceAfter = GetCashPrior(symbol);
           Assert(balanceAfter >= balanceBefore, "TOKEN_TRANSFER_IN_OVERFLOW");
           return  balanceAfter - balanceBefore; 
@@ -417,7 +624,7 @@ namespace AElf.Contracts.FinanceContract
                Symbol = symbol,
                To = to
            };
-           State.TokenContract.Transfer.Call(input);
+           State.TokenContract.Transfer.Send(input);
        }
 
         private void AddToMarketInternal(string symbol,Address borrower)
@@ -454,5 +661,14 @@ namespace AElf.Contracts.FinanceContract
            }
            return 0;
         }
+/// <summary>
+/// Get the underlying price of a listed cToken asset
+/// </summary>
+/// <param name="cToken"></param>
+/// <returns></returns>
+         private long GetUnderlyingPrice(string cToken)
+         {
+                return State.Prices[cToken];
+         }
     }
 }

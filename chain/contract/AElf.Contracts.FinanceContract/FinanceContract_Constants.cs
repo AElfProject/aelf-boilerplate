@@ -5,12 +5,12 @@ namespace AElf.Contracts.FinanceContract
         /// <summary>
         /// Maximum borrow rate that can ever be applied (.0005% / block)
         /// </summary>
-        public const long MaxBorrowRate = 500_000_000_000_000;
+        public const string MaxBorrowRate = "0.005";
 
         /// <summary>
         /// Maximum fraction of interest that can be set aside for reserves
         /// </summary>
-        public const long MaxReserveFactor = 1000_000_000_000_000_000;
+        public const string MaxReserveFactor = "1.00";
         
         /// <summary>
         /// The approximate number of blocks per year that is assumed by the interest rate model
