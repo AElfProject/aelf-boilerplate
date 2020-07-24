@@ -1,28 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <!-- The root namespace -->
-    <RootNamespace>AElf.Contracts.BingoContract</RootNamespace>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <!-- Mark this project as a contract -->
-    <IsContract>true</IsContract>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-  </PropertyGroup>
-  <ItemGroup>
-    <!-- Reference the protobuf definition of the contract -->
-    <ContractCode Include="..\..\protobuf\bingo_contract.proto">
-      <Link>Protobuf\Proto\bingo_contract.proto</Link>
-    </ContractCode>
-    <ContractReference Include="..\..\protobuf\token_contract.proto">
-      <Link>Protobuf\Proto\reference\token_contract.proto</Link>
-    </ContractReference>
-    <ContractReference Include="..\..\protobuf\aedpos_contract.proto">
-      <Link>Protobuf\Proto\reference\aedpos_contract.proto</Link>
-    </ContractReference>
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <!-- The root namespace -->
+        <RootNamespace>AElf.Contracts.BingoContract</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <!-- Mark this project as a contract -->
+        <IsContract>true</IsContract>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <ItemGroup>
+        <!-- Reference the protobuf definition of the contract -->
+        <ContractCode Include="..\..\protobuf\bingo_contract.proto">
+            <Link>Protobuf\Proto\bingo_contract.proto</Link>
+        </ContractCode>
+        <ContractReference Include="..\..\protobuf\token_contract.proto">
+            <Link>Protobuf\Proto\reference\token_contract.proto</Link>
+        </ContractReference>
+        <ContractReference Include="..\..\protobuf\aedpos_contract.proto">
+            <Link>Protobuf\Proto\reference\aedpos_contract.proto</Link>
+        </ContractReference>
+    </ItemGroup>
 </Project>
