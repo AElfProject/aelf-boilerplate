@@ -379,6 +379,7 @@ message ReserveFactorChanged{
     option (aelf.is_event) = true;
     string old_reserve_factor = 1;
     string new_reserve_factor = 2;
+    string symbol=3;
 }
 
 message ReservesAdded{
@@ -407,6 +408,9 @@ message PricePosted{
 message MarketListed{
     option (aelf.is_event) = true;
     string symbol = 1;
+    string base_rate_per_block = 2;
+    string multiplier_per_block = 3;
+    string reserve_factor = 4;
 };
 
 message MarketEntered{
@@ -431,6 +435,7 @@ message CollateralFactorChanged{
     option (aelf.is_event) = true;
     string old_collateral_factor = 1;
     string new_collateral_factor = 2;
+    string symbol=4;
 }
 
 message LiquidationIncentiveChanged{
