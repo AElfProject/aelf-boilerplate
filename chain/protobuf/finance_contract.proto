@@ -119,6 +119,33 @@ service FinanceContract {
     rpc LiquidateCalculateSeizeTokens(LiquidateCalculateSeizeTokensInput) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
+    rpc GetReserveFactor (google.protobuf.StringValue) returns (google.protobuf.StringValue){
+        option (aelf.is_view) = true;
+    }
+    rpc GetPendingAdmin (google.protobuf.Empty) returns (aelf.Address){
+        option (aelf.is_view) = true;
+    }
+    rpc GetAdmin (google.protobuf.Empty) returns (aelf.Address){
+        option (aelf.is_view) = true;
+    }
+    rpc GetCloseFactor (google.protobuf.Empty) returns (google.protobuf.StringValue) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetCollateralFactor(google.protobuf.StringValue) returns (google.protobuf.StringValue) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetMaxAssets (google.protobuf.Empty) returns (google.protobuf.Int32Value) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetLiquidationIncentive (google.protobuf.Empty) returns (google.protobuf.StringValue) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetPauseGuardian (google.protobuf.Empty) returns (aelf.Address) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetInterestRate (google.protobuf.StringValue) returns (GetInterestRateOutput){
+        option (aelf.is_view) = true;
+    }
 
     /** price **/
     rpc GetUnderlyingPrice(google.protobuf.StringValue) returns (google.protobuf.StringValue) {
@@ -232,6 +259,11 @@ message SetUnderlyingPriceInput{
 
 message SetInterestRateInput{
     string symbol = 1;
+    string base_rate_per_block = 2;
+    string multiplier_per_block = 3;
+}
+
+message GetInterestRateOutput{
     string base_rate_per_block = 2;
     string multiplier_per_block = 3;
 }
