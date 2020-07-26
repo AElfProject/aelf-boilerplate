@@ -1,0 +1,65 @@
+/* This files is part of the Hello World smart contract example that is included in Boilerplate.
+ * It is only the definition of the contract, implementation is located in the "contract" folder
+ * and tests are located in the "test" folder.
+ *
+ * You can use this as a basic template for new contracts.
+ * 
+ * When building Boilerplate or the contract project located in the "../contract/AElf.Contracts.RandomContract/" 
+ * protoc (the protobuf compiler) will be invoked and this file will produce a .c.cs file and .g.cs file, in the 
+ * "../contract/AElf.Contracts.RandomContract/Protobuf/Generated/" folder. 
+ */
+
+// the version of the language, use proto3 for contracts
+syntax = "proto3";
+
+// some core imports for aelf chain types
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/wrappers.proto";
+
+// import for using the google.protobuf.Empty type.
+import "google/protobuf/empty.proto";
+
+// the name of the C# namespace in which the contract code will be,
+// generated code will also be in this namespace.
+option csharp_namespace = "AElf.Contracts.RandomContract";
+
+// the contract definition: a gRPC service definition.
+service RandomContract {
+
+    // the full name of the C# class that will contain the state (here <namespace>.<state-class-name> format).
+    option (aelf.csharp_state) = "AElf.Contracts.RandomContract.RandomContractState";
+
+    // Call Hello at first. It will initialize this contract.
+    rpc Hello (google.protobuf.Empty) returns (HelloReturn) { }
+    
+    // You can a random hash depend on current block height.
+    rpc GetRandomHash(google.protobuf.Empty) returns (aelf.Hash) {
+        option (aelf.is_view) = true;
+    }
+    
+    rpc GetRandomNumber(GetRandomInput) returns (google.protobuf.Int64Value) {
+        option (aelf.is_view) = true;
+    }
+    
+    rpc ConvertHashToInt64(ConvertHashToInt64Input) returns (google.protobuf.Int64Value) {
+        option (aelf.is_view) = true;
+    }
+}
+
+// a custom message, used as the return type of the Hello action
+message HelloReturn {
+    string Value = 1;
+}
+
+message GetRandomInput {
+    int64 min = 1;
+    int64 max = 2;
+    int64 blockHeight = 3;
+}
+
+message ConvertHashToInt64Input {
+    int64 min = 1;
+    int64 max = 2;
+    aelf.Hash hash = 3;
+}
