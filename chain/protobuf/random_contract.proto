@@ -33,7 +33,7 @@ service RandomContract {
     // Call Hello at first. It will initialize this contract.
     rpc Hello (google.protobuf.Empty) returns (HelloReturn) { }
     
-    // You can a random hash depend on current block height.
+    // You can get a random hash depend on current block height.
     rpc GetRandomHash(google.protobuf.Empty) returns (aelf.Hash) {
         option (aelf.is_view) = true;
     }
@@ -55,7 +55,7 @@ message HelloReturn {
 message GetRandomInput {
     int64 min = 1;
     int64 max = 2;
-    int64 blockHeight = 3;
+//    int64 blockHeight = 3;
 }
 
 message ConvertHashToInt64Input {

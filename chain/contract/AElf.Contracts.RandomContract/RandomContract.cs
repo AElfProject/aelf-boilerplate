@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using AElf.Types;
 using AElf.Sdk.CSharp;
 using Google.Protobuf.WellKnownTypes;
@@ -37,11 +38,11 @@ namespace AElf.Contracts.RandomContract
         
         public override Int64Value GetRandomNumber(GetRandomInput input)
         {
-            Assert(Context.CurrentHeight >= input.BlockHeight, "Block height not enough.");
+            // Assert(Context.CurrentHeight >= input.BlockHeight, "Block height not enough.");
             Assert(input.Max > input.Min, "Max > min is expected.");
             var randomHash = State.AEDPoSContract.GetRandomHash.Call(new Int64Value
             {
-                Value = input.BlockHeight
+                Value = Context.CurrentHeight - 1
             });
             
             var convertHashToInt64Input = new ConvertHashToInt64Input
