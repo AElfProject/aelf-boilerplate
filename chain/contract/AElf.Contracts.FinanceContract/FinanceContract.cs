@@ -5,11 +5,9 @@ using AElf.Contracts.Genesis;
 using AElf.Contracts.MultiToken;
 using AElf.CSharp.Core;
 using AElf.Sdk.CSharp;
-using AElf.Sdk.CSharp.State;
 using AElf.Types;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using Enum = System.Enum;
 
 namespace AElf.Contracts.FinanceContract
 {
@@ -39,7 +37,10 @@ namespace AElf.Contracts.FinanceContract
             /* Remember the initial block number */
             long currentBlockNumber = Context.CurrentHeight;
             long accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Value];
-            Assert(accrualBlockNumberPrior == currentBlockNumber, "accumulating 0 interest");
+            if (accrualBlockNumberPrior == currentBlockNumber)
+            {
+                return new Empty();
+            }
             /*
                * Calculate the interest accumulated into borrows and reserves and the new index:
                *  simpleInterestFactor = borrowRate * blockDelta
@@ -52,10 +53,12 @@ namespace AElf.Contracts.FinanceContract
               var borrowPrior = State.TotalBorrows[input.Value];
               var reservesPrior = State.TotalReserves[input.Value];
               var borrowIndexPrior = decimal.Parse(State.BorrowIndex[input.Value]);
-              var borrowRate = GetBorrowRatePerBlock(input);
+              var supplyRate = GetSupplyRatePerBlock(input);
+              var borrowRate = GetBorrowRatePerBlock(input.Value);
+              Assert(borrowRate<=decimal.Parse(MaxBorrowRate),"BorrowRate is higher than MaxBorrowRate");
               //Calculate the number of blocks elapsed since the last accrual 
             var blockDelta=  Context.CurrentHeight.Sub(State.AccrualBlockNumbers[input.Value]);
-            var simpleInterestFactor = decimal.Parse(borrowRate.Value) * blockDelta;
+            var simpleInterestFactor = borrowRate * blockDelta;
             var interestAccumulated = simpleInterestFactor * borrowPrior;
             var totalBorrowsNew = interestAccumulated + borrowPrior;
             var totalReservesNew = decimal.Parse(State.ReserveFactor[input.Value]) * interestAccumulated +
@@ -65,6 +68,16 @@ namespace AElf.Contracts.FinanceContract
             State.BorrowIndex[input.Value] = borrowIndexNew.ToString();
             State.TotalBorrows[input.Value] = decimal.ToInt64(totalBorrowsNew) ;
             State.TotalReserves[input.Value] = decimal.ToInt64(totalReservesNew) ;
+            Context.Fire(new AccrueInterest()
+            {
+                Symbol = input.Value,
+                Cash = cashPrior,
+                InterestAccumulated = decimal.ToInt64(interestAccumulated),
+                BorrowIndex = borrowIndexNew.ToString(),
+                TotalBorrows =decimal.ToInt64(totalBorrowsNew),
+                BorrowRatePerBlock = borrowRate.ToString(),
+                SupplyRatePerBlock = supplyRate.Value
+            });
             return new Empty();
         }
        //Action Method
@@ -89,6 +102,13 @@ namespace AElf.Contracts.FinanceContract
            //write previously calculated values into storage
            State.TotalSupply[mintInput.Symbol] = totalSupplyNew;
            State.AccountTokens[mintInput.Symbol][Context.Sender] = accountTokensNew;
+           Context.Fire(new Mint()
+           {
+               Address = Context.Sender,
+               Amount = mintInput.Amount,
+               CTokenAmount = mintTokens,
+               Symbol = mintInput.Symbol
+           });
            return new Empty();
        }
 
@@ -116,7 +136,7 @@ namespace AElf.Contracts.FinanceContract
          *  totalBorrowsNew = totalBorrows + borrowAmount
          */
            var accountBorrows =
-               borrowBalanceStoredInternal(new Account() {Address = Context.Sender, Symbol = input.Symbol});
+               BorrowBalanceStoredInternal(new Account() {Address = Context.Sender, Symbol = input.Symbol});
            var accountBorrowsNew = accountBorrows.Add(input.Amount);
            var totalBorrowsNew = State.TotalBorrows[input.Symbol].Add(input.Amount);
            DoTransferOut(Context.Sender,input.Amount,input.Symbol);
@@ -124,7 +144,13 @@ namespace AElf.Contracts.FinanceContract
            State.AccountBorrows[input.Symbol][Context.Sender].Principal = accountBorrowsNew;
            State.AccountBorrows[input.Symbol][Context.Sender].InterestIndex = State.BorrowIndex[input.Symbol];
            State.TotalBorrows[input.Symbol] = totalBorrowsNew;
-           
+           Context.Fire(new Borrow()
+           {
+               Address = Context.Sender,
+               Amount = input.Amount,
+               BorrowBalance = accountBorrowsNew,
+               TotalBorrows = totalBorrowsNew
+           });
            return new Empty();
        }
 
@@ -221,6 +247,20 @@ namespace AElf.Contracts.FinanceContract
            var accrualBorrowSymbolBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
            Assert(accrualBorrowSymbolBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
            Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
+           Assert(GetCashPrior(input.Symbol) >= input.Amount,"TOKEN_INSUFFICIENT_CASH");
+           var totalReserves = State.TotalReserves[input.Symbol];
+           Assert(totalReserves > input.Amount, "RESERVES_VALIDATION");
+           var totalReservesNew = totalReserves.Sub(input.Amount);
+           Assert(totalReservesNew <= totalReserves, "reduce reserves unexpected underflow");
+           State.TotalReserves[input.Symbol] = totalReservesNew;
+           DoTransferOut(State.Admin.Value, input.Amount, input.Symbol);
+           Context.Fire(new ReservesReduced()
+           {
+               Address = Context.Sender,
+               Amount = input.Amount,
+               Symbol = input.Symbol,
+               TotalReserves = totalReservesNew
+           });
            return base.ReduceReserves(input);
        }
       //MarketListed
@@ -290,6 +330,13 @@ namespace AElf.Contracts.FinanceContract
            //We write previously calculated values into storage
            State.TotalSupply[input.Symbol] = totalSupplyNew;
            State.AccountTokens[input.Symbol][Context.Sender] = accountTokensNew;
+           Context.Fire(new Redeem()
+           {
+               Address = Context.Sender,
+               Amount = redeemAmount,
+               CTokenAmount = accountTokensNew,
+               Symbol = input.Symbol
+           });
            return new Empty();
        }
 
@@ -321,6 +368,13 @@ namespace AElf.Contracts.FinanceContract
            //We write previously calculated values into storage
            State.TotalSupply[input.Symbol] = totalSupplyNew;
            State.AccountTokens[input.Symbol][Context.Sender] = accountTokensNew;
+           Context.Fire(new Redeem()
+           {
+               Address = Context.Sender,
+               Amount = redeemAmount,
+               CTokenAmount = accountTokensNew,
+               Symbol = input.Symbol
+           });
            return new Empty();
        }
 
@@ -346,7 +400,7 @@ namespace AElf.Contracts.FinanceContract
                        Symbol = input.Symbols[i],
                        Success = isSuccess
                    };
-               };
+               }
            }
            return enterMarketsOutput;
        }
@@ -381,6 +435,11 @@ namespace AElf.Contracts.FinanceContract
            Assert(assetIndex < len,"IndexOutOfBounds");
            userAssetList.Assets[assetIndex] = userAssetList.Assets[len - 1];
            userAssetList.Assets.RemoveAt(len - 1);
+           Context.Fire(new MarketExited()
+           {
+               Address = Context.Sender,
+               Symbol = input.Value
+           });
            return new Empty() ;
        }
        /*** Admin Functions ***/ 
@@ -389,8 +448,20 @@ namespace AElf.Contracts.FinanceContract
        {
           Assert(Context.Sender==State.PendingAdmin.Value,"UNAUTHORIZED");  
           //Store admin with value pendingAdmin
+          var oldAdmin = State.Admin.Value;
+          var oldPenDingAdmin = State.PendingAdmin.Value;
           State.Admin = State.PendingAdmin;
           State.PendingAdmin.Value=new Address();
+          Context.Fire(new AdminChanged()
+          {
+              OldAdmin = oldAdmin,
+              NewAdmin = State.Admin.Value
+          });
+          Context.Fire(new PendingAdminChanged()
+          {
+              OldPendingAdmin = oldPenDingAdmin,
+              NewPendingAdmin = State.PendingAdmin.Value
+          });
           return new Empty();
        }
 
@@ -399,6 +470,12 @@ namespace AElf.Contracts.FinanceContract
            Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");  
            // Store pendingAdmin with value newPendingAdmin
            State.PendingAdmin.Value = input;
+           var oldPenDingAdmin=new Address();
+           Context.Fire(new PendingAdminChanged()
+           {
+               OldPendingAdmin = oldPenDingAdmin,
+               NewPendingAdmin = State.PendingAdmin.Value
+           });
            return new Empty();
        }
 
@@ -438,11 +515,18 @@ namespace AElf.Contracts.FinanceContract
        {
            Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
            var market = State.Markets[input.Symbol];
+           var oldCollateralFactor = market.CollateralFactor;
            Assert(market.IsListed,"MARKET_NOT_LISTED");
            var newCollateralFactor = decimal.Parse(input.CollateralFactor);
            Assert(newCollateralFactor<=decimal.Parse(MaxCollateralFactor),"INVALID_CLOSE_FACTOR");
            Assert(newCollateralFactor!=0 && GetUnderlyingPrice(input.Symbol)==0,"Error.PRICE_ERROR");
            market.CollateralFactor = input.CollateralFactor;
+           Context.Fire(new CollateralFactorChanged()
+           {
+               OldCollateralFactor = oldCollateralFactor,
+               NewCollateralFactor = market.CollateralFactor,
+               Symbol = input.Symbol
+           });
            return new Empty();
        }
 
@@ -458,22 +542,40 @@ namespace AElf.Contracts.FinanceContract
            Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
            State.MultiplierPerBlock[input.Symbol] = input.MultiplierPerBlock;
            State.BaseRatePerBlock[input.Symbol]=input.BaseRatePerBlock;
+           Context.Fire(new InterestRateSet()
+           {
+               BaseRatePerBlock = input.BaseRatePerBlock,
+               MultiplierPerBlock = input.MultiplierPerBlock,
+               Symbol = input.Symbol
+           });
            return new Empty();
        }
 
        public override Empty SetLiquidationIncentive(StringValue input)
        {
            Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
+           var oldLiquidationIncentive = State.LiquidationIncentive.Value;
            var newLiquidationIncentive = decimal.Parse(input.Value); 
            Assert(newLiquidationIncentive<=decimal.Parse(MaxLiquidationIncentive)&&newLiquidationIncentive>=decimal.Parse(MinLiquidationIncentive),"INVALID_LIQUIDATION_INCENTIVE");
            State.LiquidationIncentive.Value = input.Value;
+           Context.Fire(new LiquidationIncentiveChanged()
+           {
+               OldLiquidationIncentive = oldLiquidationIncentive,
+               NewLiquidationIncentive = input.Value
+           });
            return new Empty();
        }
 
        public override Empty SetMaxAssets(Int32Value input)
        {
            Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
+           var oldMaxAssets = State.MaxAssets.Value;
            State.MaxAssets.Value = input.Value;
+           Context.Fire(new MaxAssetsChanged()
+           {
+               NewMaxAssets = State.MaxAssets.Value.ToString(),
+               OldMaxAssets = oldMaxAssets.ToString()
+           });
            return new Empty();
        }
 
@@ -493,8 +595,14 @@ namespace AElf.Contracts.FinanceContract
        public override Empty SetPauseGuardian(Address input)
        {
            Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
+           var oldPauseGuardian = State.PauseGuardian.Value;
            var newPauseGuardian = input;
            State.PauseGuardian.Value = newPauseGuardian;
+           Context.Fire(new PauseGuardianChanged()
+           {
+               OldPauseGuardian = oldPauseGuardian,
+               NewPauseGuardian = newPauseGuardian
+           });
            return new Empty();
        }
 
@@ -508,9 +616,16 @@ namespace AElf.Contracts.FinanceContract
            Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
            var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
            Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
+           var oldReserveFactor = State.ReserveFactor[input.Symbol];
            var newReserveFactor = decimal.Parse(input.ReserveFactor);
            Assert(newReserveFactor <=decimal.Parse(MaxReserveFactor),"BAD_INPUT");
            State.ReserveFactor[input.Symbol] = input.ReserveFactor;
+           Context.Fire(new ReserveFactorChanged()
+           {
+               OldReserveFactor = oldReserveFactor,
+               NewReserveFactor = input.ReserveFactor,
+               Symbol = input.Symbol
+           });
            return new Empty();
        }
 
@@ -525,128 +640,16 @@ namespace AElf.Contracts.FinanceContract
            var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
            Assert(accrualBlockNumberPrior == Context.CurrentHeight,
                "market's block number should equals current block number");
+           var previousPrice = State.Prices[input.Symbol].ToString();
            var priceNew = input.Price;
            State.Prices[input.Symbol]=Int64.Parse(priceNew);
+           Context.Fire(new PricePosted()
+           {
+               Symbol = input.Symbol,
+               PreviousPrice = previousPrice,
+               NewPrice = priceNew
+           });
            return new Empty();
-       }
-
-       //View Method
-       public override SymbolList GetAllMarkets(Empty empty)
-       {
-           return State.AllMarkets.Value;
-       }
-
-       public override Int64Value GetBalance(Account input)
-       {
-           var balance = new Int64Value()
-           {
-               Value = State.AccountTokens[input.Symbol][input.Address]
-           };
-           return  balance;
-       }
-
-       public override Int64Value GetUnderlyingBalance(Account input)
-       {
-           var result = State.InitialExchangeRate[input.Symbol];
-           Assert(result!=null,"no such type of token in InitialExchangeRate");
-           var rate = decimal.Parse(result);
-           var underlyingBalance = rate * State.AccountTokens[input.Symbol][input.Address];
-           var balance = new Int64Value()
-           {
-               Value = decimal.ToInt64(underlyingBalance)
-           };
-           return balance;
-       }
-       public override GetAccountSnapshotOutput GetAccountSnapshot(Account input)
-       {
-           var cTokenBalance = State.AccountTokens[input.Symbol][input.Address];
-           var borrowBalance = borrowBalanceStoredInternal(input);
-           var exchangeRate = ExchangeRateStoredInternal(input.Symbol);
-           return new GetAccountSnapshotOutput()
-           {
-               BorrowBalance = borrowBalance,
-               CTokenBalance = cTokenBalance,
-               ExchangeRate = exchangeRate.ToString()
-           };
-       }
-       public override StringValue GetBorrowRatePerBlock (StringValue input)
-       {
-
-           var utilizationRate = GetUtilizationRate(input.Value);
-           var multiplierPerBlock = decimal.Parse(State.MultiplierPerBlock[input.Value]);
-           var baseRatePerBlock =decimal.Parse(State.BaseRatePerBlock[input.Value]) ;
-           var BorrowRate = utilizationRate*multiplierPerBlock+baseRatePerBlock;
-           return new StringValue()
-           {
-               Value = BorrowRate.ToString()
-           };
-       }
-       public override StringValue GetSupplyRatePerBlock (StringValue input) 
-       {
-           //underlying = totalSupply × exchangeRate
-           // borrowsPer = totalBorrows ÷ underlying
-           //supplyRate = borrowRate × (1 − reserveFactor) × borrowsPer
-           return new StringValue();
-       }
-       public override Int64Value GetTotalBorrows ( StringValue input)
-       {
-           return new Int64Value
-           {
-               Value = State.TotalBorrows[input.Value]
-           };
-       }
-       public override Int64Value GetCurrentBorrowBalance (Account input)
-       {
-           var symbol = new StringValue()
-           {
-               Value = input.Symbol
-           };
-           AccrueInterest(symbol);
-           return new Int64Value()
-           {
-            Value  = borrowBalanceStoredInternal(input)
-           };
-
-       }
-       public override Int64Value GetBorrowBalanceStored (Account input) 
-       {
-           return new Int64Value()
-           {
-               Value  = borrowBalanceStoredInternal(input)
-           };
-       }
-       public override StringValue GetCurrentExchangeRate (StringValue input) 
-       {
-           AccrueInterest(input);
-           return new StringValue()
-           {
-               Value = ExchangeRateStoredInternal(input.Value).ToString()
-           };
-       }
-       public  override StringValue GetExchangeRateStored ( StringValue input) 
-       {
-           return new StringValue()
-           {
-               Value = ExchangeRateStoredInternal(input.Value).ToString()
-           };
-       }
-       public override Int64Value GetCash ( StringValue input) 
-       {
-          return new Int64Value()
-          {
-           Value = GetCashPrior(input.Value)
-          };
-       }
-       public override AssetList GetAssetsIn (Address input)
-       {
-           return new AssetList();
-       }
-       public override BoolValue CheckMembership (Account input)
-       {
-           return new BoolValue()
-          {
-              Value =  State.Markets[input.Symbol].AccountMembership[input.Address.Value.ToString()]
-          };
        }
        public override Int64Value LiquidateCalculateSeizeTokens(LiquidateCalculateSeizeTokensInput input)
        {
@@ -666,210 +669,5 @@ namespace AElf.Contracts.FinanceContract
                Value=seizeTokens
            };
        }
-       
-/// <summary>
-///  Return the borrow balance of account based on stored data
-/// </summary>
-/// <param name="account">The address whose balance should be calculated</param>
-/// <returns></returns>
-        private long borrowBalanceStoredInternal(Account input)
-        {
-            BorrowSnapshot borrowSnapshot = State.AccountBorrows[input.Symbol][input.Address];
-            if (borrowSnapshot.Principal == 0) {
-                return 0;
-            }
-            //Calculate new borrow balance using the interest index:
-            //recentBorrowBalance = borrower.borrowBalance * market.borrowIndex / borrower.borrowIndex
-             var borrowIndex = State.BorrowIndex[input.Symbol];
-             if (borrowSnapshot.InterestIndex == "0")
-             {
-                 return 0;
-             }
-            try
-            {
-              var result=decimal.Parse(borrowIndex) * borrowSnapshot.Principal/ decimal.Parse(borrowSnapshot.InterestIndex);
-              return  Convert.ToInt64(result);
-            }
-            catch (Exception e)
-            {
-                Assert(e!=null,"Error in math");
-                return 0;
-            }
-        }
-
-       private decimal ExchangeRateStoredInternal(string input)
-       {
-           var token = input;
-           var totalSupply = State.TotalSupply[token];
-           var totalCash = GetCashPrior(token);
-           var totalBorrow = State.TotalBorrows[token];
-           var totalReserves = State.TotalReserves[token];
-           if (totalSupply == 0)
-           {
-               return Convert.ToDecimal(State.InitialExchangeRate[token]);
-           }
-           
-           // exchangeRate = (totalCash + totalBorrows - totalReserves) / totalSupply
-           var exchangeRate = Convert.ToDecimal(totalCash.Add(totalBorrow).Sub(totalReserves)) / totalSupply;
-           return exchangeRate;
-       }
-
-       private long GetCashPrior(string input)
-       {
-          var result= State.TokenContract.GetBalance.Call(new GetBalanceInput()
-           {
-               Owner = Context.Self,
-               Symbol = input
-           });
-          return result.Balance;
-       }
-
-       private decimal GetUtilizationRate(string token)
-       {
-           var totalCash = GetCashPrior(token);
-           var totalBorrow = State.TotalBorrows[token];
-           var totalReserves = State.TotalReserves[token];
-           var denominator = totalCash.Add(totalBorrow).Sub(totalReserves);
-           if (denominator == 0)
-           {
-               return 0;
-           }
-           // utilizationRate = totalBorrows/(totalCash + totalBorrows - totalReserves)
-           var utilizationRate = Convert.ToDecimal(totalBorrow)/denominator;
-           return utilizationRate;
-       }
-
-/// <returns> the actual amount received</returns>
-       private long DoTransferIn(Address from,long amount,string symbol)
-       {
-           var balanceBefore = GetCashPrior(symbol);
-           var input = new TransferFromInput()
-           {
-               Amount = amount,
-               From = from,
-               Memo = "TransferIn",
-               Symbol = symbol,
-               To = Context.Self
-           };
-          State.TokenContract.TransferFrom.Send(input);
-          var balanceAfter = GetCashPrior(symbol);
-          Assert(balanceAfter >= balanceBefore, "TOKEN_TRANSFER_IN_OVERFLOW");
-          return  balanceAfter - balanceBefore; 
-       }
-
-        private void DoTransferOut(Address to,long amount,string symbol)
-       {
-           var input = new TransferInput()
-           {
-               Amount = amount,
-               Memo = "TransferOut",
-               Symbol = symbol,
-               To = to
-           };
-           State.TokenContract.Transfer.Send(input);
-       }
-
-        private void AddToMarketInternal(string symbol,Address borrower)
-        {
-            var market = State.Markets[symbol];
-            Assert(market.IsListed,"MARKET_NOT_LISTED");
-            if (market.AccountMembership[borrower.ToString()])
-            {
-                return;
-            }
-            Assert(State.AccountAssets[borrower].Assets.Count>=State.MaxAssets.Value,"TOO_MANY_ASSETS");
-            market.AccountMembership[borrower.ToString()] = true;
-            State.AccountAssets[borrower].Assets.Add(symbol);
-        }
-        //hook    to verify the cToken price not be zero
-        private bool UnderlyingPriceVerify(string cToken)
-        {
-            return true;
-        }
-/// <summary>
-/// Determine what the account liquidity would be if the given amounts were redeemed/borrowed
-/// </summary>
-/// <returns></returns>
-        private long GetHypotheticalAccountLiquidityInternal(Address account,string cToken,long redeemTokens,long borrowAmount)
-        {
-          var assets = State.AccountAssets[account];
-          decimal sumCollateral = 0;
-          decimal sumBorrowPlusEffects = 0;
-           for (int i = 0; i < assets.Assets.Count; i++)
-           {
-              var symbol = assets.Assets[i];
-              // Read the balances and exchange rate from the cToken
-              var  accountSnapshot =  GetAccountSnapshot(new Account() {Address = account, Symbol = symbol});
-              
-              var cTokenBalance = State.AccountTokens[symbol][account];
-             // var borrowBalance = borrowBalanceStoredInternal(input);
-             // var borrowBalance = State.AccountBorrows[symbol][account];
-              var exchangeRate = ExchangeRateStoredInternal(symbol);
-              var price = State.Prices[symbol];
-              var collateralFactor = decimal.Parse(State.Markets[symbol].CollateralFactor);
-              var tokensToDenom = exchangeRate * price * collateralFactor;
-              sumCollateral += cTokenBalance *tokensToDenom;
-              sumBorrowPlusEffects += accountSnapshot.BorrowBalance * price;
-              if (symbol == cToken)
-              {
-                  // redeem effect
-                  // sumBorrowPlusEffects += tokensToDenom * redeemTokens
-                  sumBorrowPlusEffects += tokensToDenom * redeemTokens;
-                  // borrow effect
-                  // sumBorrowPlusEffects += oraclePrice * borrowAmount
-                  sumBorrowPlusEffects += price * borrowAmount;
-              }
-           }
-         
-           return decimal.ToInt64(sumBorrowPlusEffects-sumCollateral);
-        }
-/// <summary>
-/// Get the underlying price of a listed cToken asset
-/// </summary>
-/// <param name="cToken"></param>
-/// <returns></returns>
-         private long GetUnderlyingPrice(string cToken)
-         {
-                return State.Prices[cToken];
-         }
-
-          private long RepayBorrowFresh(Address payer, Address borrower, long repayAmount,string symbol)
-          {
-              Assert(State.Markets[symbol].IsListed,"Market is not listed");
-              var accrualBlockNumberPrior = State.AccrualBlockNumbers[symbol];
-              Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
-             // var borrowerIndex = State.AccountBorrows[symbol][borrower].InterestIndex;
-              var account = new Account()
-              {
-                  Address = borrower,
-                  Symbol = symbol
-              };
-             var accountBorrows = borrowBalanceStoredInternal(account);
-             if (repayAmount == -1)
-             {
-                 repayAmount = accountBorrows;
-             }
-             var actualRepayAmount = DoTransferIn(payer, repayAmount, symbol);
-             //accountBorrowsNew = accountBorrows - actualRepayAmount
-             // totalBorrowsNew = totalBorrows - actualRepayAmount
-             var accountBorrowsNew = accountBorrows.Sub(actualRepayAmount);
-             var totalBorrowsNew = State.TotalBorrows[symbol].Sub(actualRepayAmount);
-             State.AccountBorrows[symbol][borrower].Principal = accountBorrowsNew;
-             State.AccountBorrows[symbol][borrower].InterestIndex = State.BorrowIndex[symbol];
-             State.TotalBorrows[symbol] = totalBorrowsNew;
-             return actualRepayAmount;
-          }
-
-          private void SeizeInternal(Address liquidator, Address borrower, long seizeTokens,string symbol)
-          {
-             Assert(!State.SeizeGuardianPaused.Value, "seize is paused");
-             Assert(State.Markets[symbol].IsListed,"Market is not listed");
-             Assert(borrower!=liquidator,"LIQUIDATE_SEIZE_LIQUIDATOR_IS_BORROWER");
-             var borrowerTokensNew = State.AccountTokens[symbol][borrower].Sub(seizeTokens);
-             var liquidatorTokensNew=State.AccountTokens[symbol][liquidator].Add(seizeTokens);
-             State.AccountTokens[symbol][borrower] = borrowerTokensNew;
-             State.AccountTokens[symbol][liquidator] = liquidatorTokensNew;
-          }
-
     }
 }

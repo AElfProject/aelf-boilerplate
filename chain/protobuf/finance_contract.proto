@@ -219,7 +219,7 @@ message SetCollateralFactorInput{
 
 message ReduceReservesInput{
     string symbol = 1;
-    string reserve_factor = 2;
+    int64 amount = 2;
 }
 
 message GetAccountSnapshotOutput{
@@ -340,7 +340,7 @@ message Borrow{
     int64 amount = 3;
     int64 borrow_balance = 4;
     int64 total_borrows = 5;
-    string borrow_rate = 6;
+  //  string borrow_rate = 6;
 }
 
 message RepayBorrow{
@@ -454,4 +454,11 @@ message PauseGuardianChanged{
     option (aelf.is_event) = true;
     aelf.Address old_pause_guardian = 1;
     aelf.Address new_pause_guardian = 2;
+}
+
+message InterestRateSet{
+    option (aelf.is_event) = true;
+    string symbol = 1;
+    string base_rate_per_block = 2;
+    string multiplier_per_block = 3;
 }
