@@ -36,7 +36,7 @@ namespace AElf.Contracts.RandomContract
             return randomHash;
         }
         
-        public override Int64Value GetRandomNumber(GetRandomInput input)
+        public override GetRandomNumberOutput GetRandomNumber(GetRandomInput input)
         {
             // Assert(Context.CurrentHeight >= input.BlockHeight, "Block height not enough.");
             Assert(input.Max > input.Min, "Max > min is expected.");
@@ -52,7 +52,14 @@ namespace AElf.Contracts.RandomContract
                 Hash = randomHash
             };
 
-            return UtilConvertHashToInt64(convertHashToInt64Input);
+            var randomNumber = UtilConvertHashToInt64(convertHashToInt64Input);
+
+            return new GetRandomNumberOutput
+            {
+                Random = randomNumber.Value,
+                Hash = randomHash,
+                BlockHeight = Context.CurrentHeight - 1
+            };
         }
 
         public override Int64Value ConvertHashToInt64(ConvertHashToInt64Input input)
