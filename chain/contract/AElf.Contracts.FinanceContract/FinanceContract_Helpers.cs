@@ -81,7 +81,7 @@ namespace AElf.Contracts.FinanceContract
        }
 
 /// <returns> the actual amount received</returns>
-       private long DoTransferIn(Address from,long amount,string symbol)
+       private void DoTransferIn(Address from,long amount,string symbol)
        {
            var balanceBefore = GetCashPrior(symbol);
            var input = new TransferFromInput()
@@ -93,9 +93,9 @@ namespace AElf.Contracts.FinanceContract
                To = Context.Self
            };
           State.TokenContract.TransferFrom.Send(input);
-          var balanceAfter = GetCashPrior(symbol);
-          Assert(balanceAfter >= balanceBefore, "TOKEN_TRANSFER_IN_OVERFLOW");
-          return  balanceAfter - balanceBefore; 
+          // var balanceAfter = GetCashPrior(symbol);
+          // Assert(balanceAfter >= balanceBefore, "TOKEN_TRANSFER_IN_OVERFLOW");
+          // return  balanceAfter - balanceBefore; 
        }
 
         private void DoTransferOut(Address to,long amount,string symbol)
@@ -118,7 +118,7 @@ namespace AElf.Contracts.FinanceContract
             {
                 return;
             }
-            Assert(State.AccountAssets[borrower].Assets.Count>=State.MaxAssets.Value,"TOO_MANY_ASSETS");
+            Assert(State.AccountAssets[borrower].Assets.Count<State.MaxAssets.Value,"TOO_MANY_ASSETS");
             market.AccountMembership[borrower.ToString()] = true;
             State.AccountAssets[borrower].Assets.Add(symbol);
             Context.Fire(new MarketEntered()
@@ -130,24 +130,27 @@ namespace AElf.Contracts.FinanceContract
         //hook    to verify the cToken price not be zero
         private bool UnderlyingPriceVerify(string cToken)
         {
+            if ( State.Prices[cToken]==0)
+            {
+                return false;
+            }
             return true;
         }
 /// <summary>
 /// Determine what the account liquidity would be if the given amounts were redeemed/borrowed
 /// </summary>
 /// <returns></returns>
-        private long GetHypotheticalAccountLiquidityInternal(Address account,string cToken,long redeemTokens,long borrowAmount)
+        private long GetHypotheticalAccountLiquidityInternal(Address address,string cToken,long redeemTokens,long borrowAmount)
         {
-          var assets = State.AccountAssets[account];
+          var assets = State.AccountAssets[address];
           decimal sumCollateral = 0;
           decimal sumBorrowPlusEffects = 0;
            for (int i = 0; i < assets.Assets.Count; i++)
            {
               var symbol = assets.Assets[i];
               // Read the balances and exchange rate from the cToken
-              var  accountSnapshot =  GetAccountSnapshot(new Account() {Address = account, Symbol = symbol});
-              
-              var cTokenBalance = State.AccountTokens[symbol][account];
+              var  accountSnapshot =  GetAccountSnapshot(address, symbol);
+              var cTokenBalance = State.AccountTokens[symbol][address];
              // var borrowBalance = BorrowBalanceStoredInternal(input);
              // var borrowBalance = State.AccountBorrows[symbol][account];
               var exchangeRate = ExchangeRateStoredInternal(symbol);
@@ -195,7 +198,8 @@ namespace AElf.Contracts.FinanceContract
              {
                  repayAmount = accountBorrows;
              }
-             var actualRepayAmount = DoTransferIn(payer, repayAmount, symbol);
+             var actualRepayAmount =repayAmount; 
+             DoTransferIn(payer, repayAmount, symbol);
              //accountBorrowsNew = accountBorrows - actualRepayAmount
              // totalBorrowsNew = totalBorrows - actualRepayAmount
              var accountBorrowsNew = accountBorrows.Sub(actualRepayAmount);
@@ -233,6 +237,61 @@ namespace AElf.Contracts.FinanceContract
               var baseRatePerBlock =decimal.Parse(State.BaseRatePerBlock[symbol]) ;
               var BorrowRate = utilizationRate*multiplierPerBlock+baseRatePerBlock;
               return BorrowRate;
+          }
+
+          private decimal GetSupplyRatePerBlock(string symbol)
+          {
+              var reserveFactor = decimal.Parse(State.ReserveFactor[symbol]);
+              var borrowRate = GetBorrowRatePerBlock(symbol);
+              var rateToPool = borrowRate- borrowRate * reserveFactor;
+              var utilizationRate = GetUtilizationRate(symbol);
+              var SupplyRate = utilizationRate * rateToPool;
+              return SupplyRate;
+          }
+          private GetAccountSnapshotOutput GetAccountSnapshot(Address address, string symbol)
+          {
+             var  account=new Account()
+             {
+                 Address = address,
+                 Symbol = symbol
+             };
+              var cTokenBalance = State.AccountTokens[symbol][address];
+              var borrowBalance = BorrowBalanceStoredInternal(account);
+              var exchangeRate = ExchangeRateStoredInternal(symbol);
+              return new GetAccountSnapshotOutput()
+              {
+                  BorrowBalance = borrowBalance,
+                  CTokenBalance = cTokenBalance,
+                  ExchangeRate = exchangeRate.ToString()
+              };
+          }
+
+          private void Redeem(Address address,string symbol,long redeemTokens,long redeemAmount)
+          {
+              Assert(State.Markets[symbol].IsListed,"Market is not listed");
+              if (State.Markets[symbol].AccountMembership[Context.Sender.Value.ToString()])
+              {
+                  var shortfall=GetHypotheticalAccountLiquidityInternal(Context.Sender, symbol, redeemTokens, 0);
+                  Assert(shortfall<=0,"INSUFFICIENT_LIQUIDITY");
+              }
+              var accrualBlockNumberPrior = State.AccrualBlockNumbers[symbol];
+              Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
+              //totalSupplyNew = totalSupply - redeemTokens
+              //accountTokensNew = accountTokens[redeemer] - redeemTokens
+              var totalSupplyNew = State.TotalSupply[symbol].Sub(redeemTokens);
+              var accountTokensNew = State.AccountTokens[symbol][Context.Sender].Sub(redeemTokens);
+              Assert(GetCashPrior(symbol) >= redeemAmount,"TOKEN_INSUFFICIENT_CASH");
+              DoTransferOut(Context.Sender,redeemAmount,symbol);
+              //We write previously calculated values into storage
+              State.TotalSupply[symbol] = totalSupplyNew;
+              State.AccountTokens[symbol][Context.Sender] = accountTokensNew;
+              Context.Fire(new Redeem()
+              {
+                  Address = Context.Sender,
+                  Amount = redeemAmount,
+                  CTokenAmount = accountTokensNew,
+                  Symbol = symbol
+              });
           }
     }
 }

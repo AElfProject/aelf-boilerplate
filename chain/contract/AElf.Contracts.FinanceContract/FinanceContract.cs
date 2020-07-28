@@ -53,7 +53,7 @@ namespace AElf.Contracts.FinanceContract
               var borrowPrior = State.TotalBorrows[input.Value];
               var reservesPrior = State.TotalReserves[input.Value];
               var borrowIndexPrior = decimal.Parse(State.BorrowIndex[input.Value]);
-              var supplyRate = GetSupplyRatePerBlock(input);
+              var supplyRate = GetSupplyRatePerBlock(input.Value);
               var borrowRate = GetBorrowRatePerBlock(input.Value);
               Assert(borrowRate<=decimal.Parse(MaxBorrowRate),"BorrowRate is higher than MaxBorrowRate");
               //Calculate the number of blocks elapsed since the last accrual 
@@ -65,7 +65,7 @@ namespace AElf.Contracts.FinanceContract
                                    reservesPrior;
             var borrowIndexNew = simpleInterestFactor * borrowIndexPrior + borrowIndexPrior;
             State.AccrualBlockNumbers[input.Value] = currentBlockNumber;
-            State.BorrowIndex[input.Value] = borrowIndexNew.ToString();
+            State.BorrowIndex[input.Value] = borrowIndexNew.ToInvariantString();
             State.TotalBorrows[input.Value] = decimal.ToInt64(totalBorrowsNew) ;
             State.TotalReserves[input.Value] = decimal.ToInt64(totalReservesNew) ;
             Context.Fire(new AccrueInterest()
@@ -73,10 +73,10 @@ namespace AElf.Contracts.FinanceContract
                 Symbol = input.Value,
                 Cash = cashPrior,
                 InterestAccumulated = decimal.ToInt64(interestAccumulated),
-                BorrowIndex = borrowIndexNew.ToString(),
+                BorrowIndex = borrowIndexNew.ToInvariantString(),
                 TotalBorrows =decimal.ToInt64(totalBorrowsNew),
-                BorrowRatePerBlock = borrowRate.ToString(),
-                SupplyRatePerBlock = supplyRate.Value
+                BorrowRatePerBlock = borrowRate.ToInvariantString(),
+                SupplyRatePerBlock = supplyRate.ToInvariantString()
             });
             return new Empty();
         }
@@ -92,7 +92,8 @@ namespace AElf.Contracts.FinanceContract
            long accrualBlockNumberPrior = State.AccrualBlockNumbers[mintInput.Symbol];
            Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
            var exchangeRate=ExchangeRateStoredInternal(mintInput.Symbol);
-           var actualMintAmount= DoTransferIn(Context.Sender,mintInput.Amount,mintInput.Symbol);
+           var actualMintAmount = mintInput.Amount;
+           DoTransferIn(Context.Sender,mintInput.Amount,mintInput.Symbol);
            //  mintTokens = actualMintAmount / exchangeRate
            var mintTokens = decimal.ToInt64(actualMintAmount / exchangeRate);
            // totalSupplyNew = totalSupply + mintTokens
@@ -149,7 +150,8 @@ namespace AElf.Contracts.FinanceContract
                Address = Context.Sender,
                Amount = input.Amount,
                BorrowBalance = accountBorrowsNew,
-               TotalBorrows = totalBorrowsNew
+               TotalBorrows = totalBorrowsNew,
+               Symbol = input.Symbol
            });
            return new Empty();
        }
@@ -188,7 +190,7 @@ namespace AElf.Contracts.FinanceContract
            Assert(accrualBorrowSymbolBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
            var accrualCollateralSymbolBlockNumberPrior = State.AccrualBlockNumbers[input.CollateralSymbol];
            Assert(accrualCollateralSymbolBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
-           Assert(input.Borrower== Context.Sender,"LIQUIDATE_LIQUIDATOR_IS_BORROWER");
+           Assert(input.Borrower!=Context.Sender,"LIQUIDATE_LIQUIDATOR_IS_BORROWER");
            var borrowBalance = State.AccountBorrows[input.BorrowSymbol][input.Borrower].Principal;
            var maxClose = decimal.Parse(State.CloseFactor.Value) * borrowBalance;
            Assert(input.RepayAmount <= maxClose,"TOO_MUCH_REPAY");
@@ -223,7 +225,8 @@ namespace AElf.Contracts.FinanceContract
          //  Assert(Context.Sender==State.Admin.Value,"only admin can add Reserves");
            var accrualBorrowSymbolBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
            Assert(accrualBorrowSymbolBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
-           var actualAddAmount = DoTransferIn(Context.Sender, input.Amount, input.Symbol);
+           var actualAddAmount = input.Amount;
+           DoTransferIn(Context.Sender, input.Amount, input.Symbol);
            var totalReservesNew = State.TotalReserves[input.Symbol].Add(actualAddAmount);
            Assert(totalReservesNew >= State.TotalReserves[input.Symbol],"add reserves unexpected overflow");
            State.TotalReserves[input.Symbol] = totalReservesNew;
@@ -261,7 +264,7 @@ namespace AElf.Contracts.FinanceContract
                Symbol = input.Symbol,
                TotalReserves = totalReservesNew
            });
-           return base.ReduceReserves(input);
+           return new Empty();
        }
       //MarketListed
        public override Empty SupportMarket(SupportMarketInput input)
@@ -312,31 +315,7 @@ namespace AElf.Contracts.FinanceContract
            //redeemAmount = redeemTokensIn x exchangeRateCurrent
            var redeemTokens = input.Amount;
            var redeemAmount = decimal.ToInt64(input.Amount * exchangeRate);
-           Assert(State.Markets[input.Symbol].IsListed,"Market is not listed");
-           if (!State.Markets[input.Symbol].AccountMembership[Context.Sender.Value.ToString()])
-           {
-               AddToMarketInternal(input.Symbol, Context.Sender);
-           }
-           var shortfall=GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Symbol, redeemTokens, 0);
-           Assert(shortfall<=0,"INSUFFICIENT_LIQUIDITY");
-           var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
-           Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
-           //totalSupplyNew = totalSupply - redeemTokens
-           //accountTokensNew = accountTokens[redeemer] - redeemTokens
-           var totalSupplyNew = State.TotalSupply[input.Symbol].Sub(redeemTokens);
-           var accountTokensNew = State.AccountTokens[input.Symbol][Context.Sender].Sub(redeemTokens);
-           Assert(GetCashPrior(input.Symbol) < redeemAmount,"TOKEN_INSUFFICIENT_CASH");
-           DoTransferOut(Context.Sender,redeemAmount,input.Symbol);
-           //We write previously calculated values into storage
-           State.TotalSupply[input.Symbol] = totalSupplyNew;
-           State.AccountTokens[input.Symbol][Context.Sender] = accountTokensNew;
-           Context.Fire(new Redeem()
-           {
-               Address = Context.Sender,
-               Amount = redeemAmount,
-               CTokenAmount = accountTokensNew,
-               Symbol = input.Symbol
-           });
+           Redeem(Context.Sender, input.Symbol, redeemTokens, redeemAmount);
            return new Empty();
        }
 
@@ -351,30 +330,7 @@ namespace AElf.Contracts.FinanceContract
            //  redeemAmount = redeemAmountIn
            var redeemTokens = decimal.ToInt64(input.Amount / exchangeRate);
            var redeemAmount = input.Amount;
-           if (!State.Markets[input.Symbol].AccountMembership[Context.Sender.Value.ToString()])
-           {
-               AddToMarketInternal(input.Symbol, Context.Sender);
-           }
-           var shortfall= GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Symbol, redeemTokens, 0);
-           Assert(shortfall<=0,"INSUFFICIENT_LIQUIDITY");
-           var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
-           Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
-           //totalSupplyNew = totalSupply - redeemTokens
-           //accountTokensNew = accountTokens[redeemer] - redeemTokens
-           var totalSupplyNew = State.TotalSupply[input.Symbol].Sub(redeemTokens);
-           var accountTokensNew = State.AccountTokens[input.Symbol][Context.Sender].Sub(redeemTokens);
-           Assert(GetCashPrior(input.Symbol) >=redeemAmount,"TOKEN_INSUFFICIENT_CASH");
-           DoTransferOut(Context.Sender,redeemAmount,input.Symbol);
-           //We write previously calculated values into storage
-           State.TotalSupply[input.Symbol] = totalSupplyNew;
-           State.AccountTokens[input.Symbol][Context.Sender] = accountTokensNew;
-           Context.Fire(new Redeem()
-           {
-               Address = Context.Sender,
-               Amount = redeemAmount,
-               CTokenAmount = accountTokensNew,
-               Symbol = input.Symbol
-           });
+           Redeem(Context.Sender, input.Symbol, redeemTokens, redeemAmount);
            return new Empty();
        }
 
@@ -407,18 +363,14 @@ namespace AElf.Contracts.FinanceContract
 
        public override Empty ExitMarket(StringValue input)
        {
-           var account = new Account()
-           {
-               Symbol = input.Value,
-               Address = Context.Sender
-           };
-           var result = GetAccountSnapshot(account);
+           var result = GetAccountSnapshot(Context.Sender,input.Value);
            Assert(result.BorrowBalance==0,"NONZERO_BORROW_BALANCE");
            Assert(State.Markets[input.Value].IsListed,"Market is not listed");
-           var shortfall= GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Value, result.CTokenBalance, 0);
-           Assert(shortfall<=0,"INSUFFICIENT_LIQUIDITY");
-           if(!State.Markets[input.Value].AccountMembership[Context.Sender.Value.ToString()])
-               return new Empty() ;
+           if (State.Markets[input.Value].AccountMembership[Context.Sender.Value.ToString()])
+           {
+               var shortfall= GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Value, result.CTokenBalance, 0);
+               Assert(shortfall<=0,"INSUFFICIENT_LIQUIDITY");
+           }
            State.Markets[input.Value].AccountMembership[Context.Sender.Value.ToString()] = false;
            //Delete cToken from the account’s list of assets
            var userAssetList =State.AccountAssets[Context.Sender];
@@ -493,10 +445,16 @@ namespace AElf.Contracts.FinanceContract
 
        public override Empty SetCloseFactor(StringValue input)
        {
+           var oldCloseFactor = State.CloseFactor.Value;
            var newCloseFactor = decimal.Parse(input.Value);
            Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");  
            Assert(newCloseFactor>decimal.Parse(MinCloseFactor)&&newCloseFactor<decimal.Parse(MaxCloseFactor),"INVALID_CLOSE_FACTOR");
            State.CloseFactor.Value = input.Value;
+           Context.Fire(new CloseFactorChanged()
+           {
+            OldCloseFactor  = oldCloseFactor,
+            NewCloseFactor = input.Value
+           });
            return new Empty();
        }
 
