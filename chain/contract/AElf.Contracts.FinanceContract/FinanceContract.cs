@@ -15,7 +15,7 @@ namespace AElf.Contracts.FinanceContract
     {
         public override Empty Initialize(InitializeInput initializeInput)
         {  
-            var address=Context.GetZeroSmartContractAddress();
+         // var address=Context.GetZeroSmartContractAddress();
             State.GenesisContract.Value=Context.GetZeroSmartContractAddress();
             State.TokenContract.Value =
                 Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
@@ -23,7 +23,7 @@ namespace AElf.Contracts.FinanceContract
             State.LiquidationIncentive.Value = initializeInput.LiquidationIncentive;
             State.MaxAssets.Value = initializeInput.MaxAssets;
             State.Admin.Value =
-                State.GenesisContract.GetContractInfo.Call(new Address() {Value = address.ToByteString()}).Author;
+                State.GenesisContract.GetContractInfo.Call(Context.Self).Author;
             Assert(Context.Sender== State.Admin.Value, "only admin may initialize the market");
             return new Empty();
         }
@@ -32,7 +32,7 @@ namespace AElf.Contracts.FinanceContract
        /// </summary>
        /// <param name="stringValue">token name</param>
        /// <returns></returns>
-        public override Empty  AccrueInterest(StringValue input)
+        public override Empty AccrueInterest(StringValue input)
        {
            AccrueInterest(input.Value);
            return new Empty();
@@ -197,7 +197,11 @@ namespace AElf.Contracts.FinanceContract
        public override Empty SupportMarket(SupportMarketInput input)
        {
            Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
-           Assert(!State.Markets[input.Symbol].IsListed,"SUPPORT_MARKET_EXISTS");
+           var market = State.Markets[input.Symbol];
+           if (market != null)
+           {
+               Assert(market.IsListed,"SUPPORT_MARKET_EXISTS");
+           }
           // check to make sure its really a CToken
           State.Markets[input.Symbol]=  new Market()
           {
@@ -207,11 +211,18 @@ namespace AElf.Contracts.FinanceContract
           State.InitialExchangeRate[input.Symbol]= input.InitialExchangeRate;
           State.MultiplierPerBlock[input.Symbol] = input.MultiplierPerBlock;
           State.BaseRatePerBlock[input.Symbol] = input.BaseRatePerBlock;
-          for (int i = 0; i < State.AllMarkets.Value.Symbols.Count; i++)
+          var list = State.AllMarkets.Value;
+          var symbolList = new SymbolList();
+          if (list != null)
           {
-              Assert(State.AllMarkets.Value.Symbols[i]!=input.Symbol,"market already added");
+             Assert(State.AllMarkets.Value.Symbols.Contains(input.Symbol),"market already added");
+             symbolList = State.AllMarkets.Value;
           }
-          State.AllMarkets.Value.Symbols.Add(input.Symbol);
+          symbolList.Symbols.Add(input.Symbol);
+          State.AllMarkets.Value = symbolList;
+           // Initialize block number and borrow index
+           State.AccrualBlockNumbers[input.Symbol] = Context.CurrentHeight;
+           State.BorrowIndex[input.Symbol] = "1";
           Context.Fire(new MarketListed()
           {
             Symbol = input.Symbol,
@@ -219,7 +230,7 @@ namespace AElf.Contracts.FinanceContract
             MultiplierPerBlock = input.MultiplierPerBlock,
             ReserveFactor = input.ReserveFactor
           });
-         return base.SupportMarket(input);
+         return new Empty();
        }
 
      
