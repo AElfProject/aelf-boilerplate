@@ -1,4 +1,3 @@
-using System;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
 
@@ -74,7 +73,7 @@ namespace AElf.Contracts.FinanceContract
         {
             return new StringValue()
             {
-                Value = State.Prices[input.Value].ToString()
+                Value = State.Prices[input.Value]
             };
         }
         
@@ -93,10 +92,9 @@ namespace AElf.Contracts.FinanceContract
        }
 
        public override Int64Value GetUnderlyingBalance(Account input)
-       {
-           var result = State.InitialExchangeRate[input.Symbol];
-           Assert(result!=null,"no such type of token in InitialExchangeRate");
-           var rate = decimal.Parse(result);
+       { 
+           AccrueInterest(input.Symbol);
+           var rate = ExchangeRateStoredInternal(input.Symbol);
            var underlyingBalance = rate * State.AccountTokens[input.Symbol][input.Address];
            var balance = new Int64Value()
            {
@@ -113,7 +111,7 @@ namespace AElf.Contracts.FinanceContract
            {
                BorrowBalance = borrowBalance,
                CTokenBalance = cTokenBalance,
-               ExchangeRate = exchangeRate.ToString()
+               ExchangeRate = exchangeRate.ToInvariantString()
            };
        }
        public override StringValue GetBorrowRatePerBlock (StringValue input)
@@ -122,10 +120,10 @@ namespace AElf.Contracts.FinanceContract
            var utilizationRate = GetUtilizationRate(input.Value);
            var multiplierPerBlock = decimal.Parse(State.MultiplierPerBlock[input.Value]);
            var baseRatePerBlock =decimal.Parse(State.BaseRatePerBlock[input.Value]) ;
-           var BorrowRate = utilizationRate*multiplierPerBlock+baseRatePerBlock;
+           var borrowRate = utilizationRate*multiplierPerBlock+baseRatePerBlock;
            return new StringValue()
            {
-               Value = BorrowRate.ToString()
+               Value = borrowRate.ToInvariantString()
            };
        }
        public override StringValue GetSupplyRatePerBlock (StringValue input)
@@ -134,10 +132,10 @@ namespace AElf.Contracts.FinanceContract
            var borrowRate = GetBorrowRatePerBlock(input.Value);
            var rateToPool = borrowRate- borrowRate * reserveFactor;
            var utilizationRate = GetUtilizationRate(input.Value);
-           var SupplyRate = utilizationRate * rateToPool;
+           var supplyRate = utilizationRate * rateToPool;
            return new StringValue()
            {
-               Value = SupplyRate.ToString()
+               Value = supplyRate.ToInvariantString()
            };
        }
        public override Int64Value GetTotalBorrows ( StringValue input)
@@ -149,11 +147,7 @@ namespace AElf.Contracts.FinanceContract
        }
        public override Int64Value GetCurrentBorrowBalance (Account input)
        {
-           var symbol = new StringValue()
-           {
-               Value = input.Symbol
-           };
-           AccrueInterest(symbol);
+           AccrueInterest(input.Symbol);
            return new Int64Value()
            {
             Value  = BorrowBalanceStoredInternal(input)
@@ -169,17 +163,17 @@ namespace AElf.Contracts.FinanceContract
        }
        public override StringValue GetCurrentExchangeRate (StringValue input) 
        {
-           AccrueInterest(input);
+           AccrueInterest(input.Value);
            return new StringValue()
            {
-               Value = ExchangeRateStoredInternal(input.Value).ToString()
+               Value = ExchangeRateStoredInternal(input.Value).ToInvariantString()
            };
        }
        public  override StringValue GetExchangeRateStored ( StringValue input) 
        {
            return new StringValue()
            {
-               Value = ExchangeRateStoredInternal(input.Value).ToString()
+               Value = ExchangeRateStoredInternal(input.Value).ToInvariantString()
            };
        }
        public override Int64Value GetCash ( StringValue input) 

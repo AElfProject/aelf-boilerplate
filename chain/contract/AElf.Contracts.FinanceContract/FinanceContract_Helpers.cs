@@ -83,7 +83,6 @@ namespace AElf.Contracts.FinanceContract
 /// <returns> the actual amount received</returns>
        private void DoTransferIn(Address from,long amount,string symbol)
        {
-           var balanceBefore = GetCashPrior(symbol);
            var input = new TransferFromInput()
            {
                Amount = amount,
@@ -130,7 +129,7 @@ namespace AElf.Contracts.FinanceContract
         //hook    to verify the cToken price not be zero
         private bool UnderlyingPriceVerify(string cToken)
         {
-            if ( State.Prices[cToken]==0)
+            if ( decimal.Parse(State.Prices[cToken])==0)
             {
                 return false;
             }
@@ -154,7 +153,7 @@ namespace AElf.Contracts.FinanceContract
              // var borrowBalance = BorrowBalanceStoredInternal(input);
              // var borrowBalance = State.AccountBorrows[symbol][account];
               var exchangeRate = ExchangeRateStoredInternal(symbol);
-              var price = State.Prices[symbol];
+              var price = decimal.Parse(State.Prices[symbol]);
               var collateralFactor = decimal.Parse(State.Markets[symbol].CollateralFactor);
               var tokensToDenom = exchangeRate * price * collateralFactor;
               sumCollateral += cTokenBalance *tokensToDenom;
@@ -177,9 +176,9 @@ namespace AElf.Contracts.FinanceContract
 /// </summary>
 /// <param name="cToken"></param>
 /// <returns></returns>
-         private long GetUnderlyingPrice(string cToken)
+         private decimal GetUnderlyingPrice(string cToken)
          {
-                return State.Prices[cToken];
+                return decimal.Parse(State.Prices[cToken]);
          }
 
           private long RepayBorrowFresh(Address payer, Address borrower, long repayAmount,string symbol)
@@ -235,8 +234,8 @@ namespace AElf.Contracts.FinanceContract
               var utilizationRate = GetUtilizationRate(symbol);
               var multiplierPerBlock = decimal.Parse(State.MultiplierPerBlock[symbol]);
               var baseRatePerBlock =decimal.Parse(State.BaseRatePerBlock[symbol]) ;
-              var BorrowRate = utilizationRate*multiplierPerBlock+baseRatePerBlock;
-              return BorrowRate;
+              var borrowRate = utilizationRate*multiplierPerBlock+baseRatePerBlock;
+              return borrowRate;
           }
 
           private decimal GetSupplyRatePerBlock(string symbol)
@@ -245,8 +244,8 @@ namespace AElf.Contracts.FinanceContract
               var borrowRate = GetBorrowRatePerBlock(symbol);
               var rateToPool = borrowRate- borrowRate * reserveFactor;
               var utilizationRate = GetUtilizationRate(symbol);
-              var SupplyRate = utilizationRate * rateToPool;
-              return SupplyRate;
+              var supplyRate = utilizationRate * rateToPool;
+              return supplyRate;
           }
           private GetAccountSnapshotOutput GetAccountSnapshot(Address address, string symbol)
           {
@@ -262,16 +261,16 @@ namespace AElf.Contracts.FinanceContract
               {
                   BorrowBalance = borrowBalance,
                   CTokenBalance = cTokenBalance,
-                  ExchangeRate = exchangeRate.ToString()
+                  ExchangeRate = exchangeRate.ToInvariantString()
               };
           }
 
           private void Redeem(Address address,string symbol,long redeemTokens,long redeemAmount)
           {
               Assert(State.Markets[symbol].IsListed,"Market is not listed");
-              if (State.Markets[symbol].AccountMembership[Context.Sender.Value.ToString()])
+              if (State.Markets[symbol].AccountMembership[address.ToString()])
               {
-                  var shortfall=GetHypotheticalAccountLiquidityInternal(Context.Sender, symbol, redeemTokens, 0);
+                  var shortfall=GetHypotheticalAccountLiquidityInternal(address, symbol, redeemTokens, 0);
                   Assert(shortfall<=0,"INSUFFICIENT_LIQUIDITY");
               }
               var accrualBlockNumberPrior = State.AccrualBlockNumbers[symbol];
@@ -281,17 +280,81 @@ namespace AElf.Contracts.FinanceContract
               var totalSupplyNew = State.TotalSupply[symbol].Sub(redeemTokens);
               var accountTokensNew = State.AccountTokens[symbol][Context.Sender].Sub(redeemTokens);
               Assert(GetCashPrior(symbol) >= redeemAmount,"TOKEN_INSUFFICIENT_CASH");
-              DoTransferOut(Context.Sender,redeemAmount,symbol);
+              DoTransferOut(address,redeemAmount,symbol);
               //We write previously calculated values into storage
               State.TotalSupply[symbol] = totalSupplyNew;
-              State.AccountTokens[symbol][Context.Sender] = accountTokensNew;
+              State.AccountTokens[symbol][address] = accountTokensNew;
               Context.Fire(new Redeem()
               {
-                  Address = Context.Sender,
+                  Address = address,
                   Amount = redeemAmount,
                   CTokenAmount = accountTokensNew,
                   Symbol = symbol
               });
+          }
+
+          private void AccrueInterest(string symbol)
+          {
+               /* Remember the initial block number */
+            var currentBlockNumber = Context.CurrentHeight;
+            var accrualBlockNumberPrior = State.AccrualBlockNumbers[symbol];
+            if (accrualBlockNumberPrior == currentBlockNumber)
+            {
+                return;
+            }
+            /*
+               * Calculate the interest accumulated into borrows and reserves and the new index:
+               *  simpleInterestFactor = borrowRate * blockDelta
+               *  interestAccumulated = simpleInterestFactor * totalBorrows
+               *  totalBorrowsNew = interestAccumulated + totalBorrows
+               *  totalReservesNew = interestAccumulated * reserveFactor + totalReserves
+               *  borrowIndexNew = simpleInterestFactor * borrowIndex + borrowIndex
+               */
+            var cashPrior= GetCashPrior(symbol);
+            var borrowPrior = State.TotalBorrows[symbol];
+            var reservesPrior = State.TotalReserves[symbol];
+            var borrowIndexPrior = decimal.Parse(State.BorrowIndex[symbol]);
+            var supplyRate = GetSupplyRatePerBlock(symbol);
+            var borrowRate = GetBorrowRatePerBlock(symbol);
+            Assert(borrowRate<=decimal.Parse(MaxBorrowRate),"BorrowRate is higher than MaxBorrowRate");
+            //Calculate the number of blocks elapsed since the last accrual 
+            var blockDelta=  Context.CurrentHeight.Sub(State.AccrualBlockNumbers[symbol]);
+            var simpleInterestFactor = borrowRate * blockDelta;
+            var interestAccumulated = simpleInterestFactor * borrowPrior;
+            var totalBorrowsNew = interestAccumulated + borrowPrior;
+            var totalReservesNew = decimal.Parse(State.ReserveFactor[symbol]) * interestAccumulated +
+                                   reservesPrior;
+            var borrowIndexNew = simpleInterestFactor * borrowIndexPrior + borrowIndexPrior;
+            State.AccrualBlockNumbers[symbol] = currentBlockNumber;
+            State.BorrowIndex[symbol] = borrowIndexNew.ToInvariantString();
+            State.TotalBorrows[symbol] = decimal.ToInt64(totalBorrowsNew) ;
+            State.TotalReserves[symbol] = decimal.ToInt64(totalReservesNew) ;
+            Context.Fire(new AccrueInterest()
+            {
+                Symbol =symbol,
+                Cash = cashPrior,
+                InterestAccumulated = decimal.ToInt64(interestAccumulated),
+                BorrowIndex = borrowIndexNew.ToInvariantString(),
+                TotalBorrows =decimal.ToInt64(totalBorrowsNew),
+                BorrowRatePerBlock = borrowRate.ToInvariantString(),
+                SupplyRatePerBlock = supplyRate.ToInvariantString()
+            });
+          }
+
+          private long LiquidateCalculateSeizeTokens(string borrowSymbol, string collateralSymbol, decimal repayAmount)
+          {
+              var priceBorrow = decimal.Parse(State.Prices[borrowSymbol]);
+              var priceCollateral = decimal.Parse(State.Prices[collateralSymbol]);
+              Assert(priceBorrow!=0&&priceCollateral!=0,"PRICE_ERROR");
+              var exchangeRate= ExchangeRateStoredInternal(collateralSymbol);
+              //Get the exchange rate and calculate the number of collateral tokens to seize:
+              // *  seizeAmount = actualRepayAmount * liquidationIncentive * priceBorrowed / priceCollateral
+              //    seizeTokens = seizeAmount / exchangeRate
+              //   = actualRepayAmount * (liquidationIncentive * priceBorrowed) / (priceCollateral * exchangeRate)
+              var seizeAmount = repayAmount * decimal.Parse(State.LiquidationIncentive.Value) *
+                  priceBorrow/priceCollateral;
+              var seizeTokens = decimal.ToInt64(seizeAmount / exchangeRate);
+              return seizeTokens;
           }
     }
 }

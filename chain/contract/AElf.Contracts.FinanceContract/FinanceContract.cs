@@ -33,63 +33,17 @@ namespace AElf.Contracts.FinanceContract
        /// <param name="stringValue">token name</param>
        /// <returns></returns>
         public override Empty  AccrueInterest(StringValue input)
-        {
-            /* Remember the initial block number */
-            long currentBlockNumber = Context.CurrentHeight;
-            long accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Value];
-            if (accrualBlockNumberPrior == currentBlockNumber)
-            {
-                return new Empty();
-            }
-            /*
-               * Calculate the interest accumulated into borrows and reserves and the new index:
-               *  simpleInterestFactor = borrowRate * blockDelta
-               *  interestAccumulated = simpleInterestFactor * totalBorrows
-               *  totalBorrowsNew = interestAccumulated + totalBorrows
-               *  totalReservesNew = interestAccumulated * reserveFactor + totalReserves
-               *  borrowIndexNew = simpleInterestFactor * borrowIndex + borrowIndex
-               */
-              var cashPrior= GetCashPrior(input.Value);
-              var borrowPrior = State.TotalBorrows[input.Value];
-              var reservesPrior = State.TotalReserves[input.Value];
-              var borrowIndexPrior = decimal.Parse(State.BorrowIndex[input.Value]);
-              var supplyRate = GetSupplyRatePerBlock(input.Value);
-              var borrowRate = GetBorrowRatePerBlock(input.Value);
-              Assert(borrowRate<=decimal.Parse(MaxBorrowRate),"BorrowRate is higher than MaxBorrowRate");
-              //Calculate the number of blocks elapsed since the last accrual 
-            var blockDelta=  Context.CurrentHeight.Sub(State.AccrualBlockNumbers[input.Value]);
-            var simpleInterestFactor = borrowRate * blockDelta;
-            var interestAccumulated = simpleInterestFactor * borrowPrior;
-            var totalBorrowsNew = interestAccumulated + borrowPrior;
-            var totalReservesNew = decimal.Parse(State.ReserveFactor[input.Value]) * interestAccumulated +
-                                   reservesPrior;
-            var borrowIndexNew = simpleInterestFactor * borrowIndexPrior + borrowIndexPrior;
-            State.AccrualBlockNumbers[input.Value] = currentBlockNumber;
-            State.BorrowIndex[input.Value] = borrowIndexNew.ToInvariantString();
-            State.TotalBorrows[input.Value] = decimal.ToInt64(totalBorrowsNew) ;
-            State.TotalReserves[input.Value] = decimal.ToInt64(totalReservesNew) ;
-            Context.Fire(new AccrueInterest()
-            {
-                Symbol = input.Value,
-                Cash = cashPrior,
-                InterestAccumulated = decimal.ToInt64(interestAccumulated),
-                BorrowIndex = borrowIndexNew.ToInvariantString(),
-                TotalBorrows =decimal.ToInt64(totalBorrowsNew),
-                BorrowRatePerBlock = borrowRate.ToInvariantString(),
-                SupplyRatePerBlock = supplyRate.ToInvariantString()
-            });
-            return new Empty();
+       {
+           AccrueInterest(input.Value);
+           return new Empty();
         }
        //Action Method
        public override Empty Mint(MintInput mintInput)
        {
-           AccrueInterest(new StringValue()
-           {
-               Value = mintInput.Symbol
-           });
+           AccrueInterest(mintInput.Symbol);
            Assert(!State.MintGuardianPaused[mintInput.Symbol],"Mint is paused");
            Assert(State.Markets[mintInput.Symbol].IsListed,"Market is not listed");
-           long accrualBlockNumberPrior = State.AccrualBlockNumbers[mintInput.Symbol];
+           var accrualBlockNumberPrior = State.AccrualBlockNumbers[mintInput.Symbol];
            Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
            var exchangeRate=ExchangeRateStoredInternal(mintInput.Symbol);
            var actualMintAmount = mintInput.Amount;
@@ -115,10 +69,7 @@ namespace AElf.Contracts.FinanceContract
 
        public override Empty Borrow(BorrowInput input)
        {
-           AccrueInterest(new StringValue()
-           {
-               Value = input.Symbol
-           });
+           AccrueInterest(input.Symbol);
            Assert(!State.BorrowGuardianPaused[input.Symbol],"borrow is paused");
            Assert(State.Markets[input.Symbol].IsListed,"Market is not listed");
            if (!State.Markets[input.Symbol].AccountMembership[Context.Sender.Value.ToString()])
@@ -128,7 +79,7 @@ namespace AElf.Contracts.FinanceContract
            Assert(UnderlyingPriceVerify(input.Symbol),"PRICE_ERROR");
            var  shortfall = GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Symbol, 0, input.Amount);
            Assert(shortfall<=0,"INSUFFICIENT_LIQUIDITY");
-           long accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
+           var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
            Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
            Assert(GetCashPrior(input.Symbol) >= input.Amount, "BORROW_CASH_NOT_AVAILABLE");
            /*
@@ -158,34 +109,22 @@ namespace AElf.Contracts.FinanceContract
 
        public override Empty RepayBorrow(RepayBorrowInput input)
        {
-           AccrueInterest(new StringValue()
-           {
-               Value = input.Symbol
-           });
+           AccrueInterest(input.Symbol);
            RepayBorrowFresh(Context.Sender, Context.Sender, input.Amount, input.Symbol);
            return new Empty();
        }
         
        public override Empty RepayBorrowBehalf(RepayBorrowBehalfInput input)
        {
-           AccrueInterest(new StringValue()
-           {
-               Value = input.Symbol
-           });
+           AccrueInterest(input.Symbol);
            RepayBorrowFresh(Context.Sender, input.Borrower, input.Amount, input.Symbol);
            return new Empty();
        }
 
        public override Empty LiquidateBorrow(LiquidateBorrowInput input)
        {
-           AccrueInterest(new StringValue()
-           {
-               Value = input.BorrowSymbol
-           });
-           AccrueInterest(new StringValue()
-           {
-               Value = input.CollateralSymbol
-           });
+           AccrueInterest(input.BorrowSymbol);
+           AccrueInterest(input.CollateralSymbol);
            var accrualBorrowSymbolBlockNumberPrior = State.AccrualBlockNumbers[input.BorrowSymbol];
            Assert(accrualBorrowSymbolBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
            var accrualCollateralSymbolBlockNumberPrior = State.AccrualBlockNumbers[input.CollateralSymbol];
@@ -195,15 +134,9 @@ namespace AElf.Contracts.FinanceContract
            var maxClose = decimal.Parse(State.CloseFactor.Value) * borrowBalance;
            Assert(input.RepayAmount <= maxClose,"TOO_MUCH_REPAY");
            var actualRepayAmount=  RepayBorrowFresh(Context.Sender, input.Borrower, input.RepayAmount, input.BorrowSymbol);
-           var liquidateCalculateSeizeTokensInput= new LiquidateCalculateSeizeTokensInput()
-           {
-              BorrowSymbol = input.BorrowSymbol,
-              CollateralSymbol = input.CollateralSymbol,
-              RepayAmount = input.RepayAmount.ToString()
-           };
-           var seizeTokens = LiquidateCalculateSeizeTokens(liquidateCalculateSeizeTokensInput);
-           Assert(State.AccountTokens[input.CollateralSymbol][input.Borrower]>seizeTokens.Value,"LIQUIDATE_SEIZE_TOO_MUCH");
-           SeizeInternal(Context.Sender, input.Borrower, seizeTokens.Value, input.CollateralSymbol);
+           var seizeTokens = LiquidateCalculateSeizeTokens(input.BorrowSymbol,input.CollateralSymbol,actualRepayAmount);
+           Assert(State.AccountTokens[input.CollateralSymbol][input.Borrower]>seizeTokens,"LIQUIDATE_SEIZE_TOO_MUCH");
+           SeizeInternal(Context.Sender, input.Borrower, seizeTokens, input.CollateralSymbol);
            Context.Fire(new LiquidateBorrow()
            {
                Liquidator = Context.Sender,
@@ -211,17 +144,14 @@ namespace AElf.Contracts.FinanceContract
                RepayAmount = actualRepayAmount,
                RepaySymbol = input.BorrowSymbol,
                SeizeSymbol = input.CollateralSymbol,
-               SeizeTokenAmount = seizeTokens.Value
+               SeizeTokenAmount = seizeTokens
            });
            return base.LiquidateBorrow(input);
        }
 
        public override Empty AddReserves(AddReservesInput input)
        {
-           AccrueInterest(new StringValue()
-           {
-               Value = input.Symbol
-           });
+           AccrueInterest(input.Symbol);
          //  Assert(Context.Sender==State.Admin.Value,"only admin can add Reserves");
            var accrualBorrowSymbolBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
            Assert(accrualBorrowSymbolBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
@@ -242,10 +172,7 @@ namespace AElf.Contracts.FinanceContract
 
        public override Empty ReduceReserves(ReduceReservesInput input)
        {
-           AccrueInterest(new StringValue()
-           {
-               Value = input.Symbol
-           });
+           AccrueInterest(input.Symbol);
            //  Assert(Context.Sender==State.Admin.Value,"only admin can add Reserves");
            var accrualBorrowSymbolBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
            Assert(accrualBorrowSymbolBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
@@ -306,10 +233,7 @@ namespace AElf.Contracts.FinanceContract
        /// <returns></returns>
        public override Empty Redeem(RedeemInput input)
        {
-           AccrueInterest(new StringValue()
-           {
-               Value = input.Symbol
-           });
+           AccrueInterest(input.Symbol);
            var exchangeRate = ExchangeRateStoredInternal(input.Symbol);
            //redeemTokens = redeemTokensIn
            //redeemAmount = redeemTokensIn x exchangeRateCurrent
@@ -321,10 +245,7 @@ namespace AElf.Contracts.FinanceContract
 
        public override Empty RedeemUnderlying(RedeemUnderlyingInput input)
        {
-           AccrueInterest(new StringValue()
-           {
-               Value = input.Symbol
-           });
+           AccrueInterest(input.Symbol);
            var exchangeRate = ExchangeRateStoredInternal(input.Symbol);
            //  redeemTokens = redeemAmountIn / exchangeRate
            //  redeemAmount = redeemAmountIn
@@ -477,7 +398,7 @@ namespace AElf.Contracts.FinanceContract
            Assert(market.IsListed,"MARKET_NOT_LISTED");
            var newCollateralFactor = decimal.Parse(input.CollateralFactor);
            Assert(newCollateralFactor<=decimal.Parse(MaxCollateralFactor),"INVALID_CLOSE_FACTOR");
-           Assert(newCollateralFactor!=0 && GetUnderlyingPrice(input.Symbol)==0,"Error.PRICE_ERROR");
+           Assert(newCollateralFactor!=0 && GetUnderlyingPrice(input.Symbol)!=0,"Error.PRICE_ERROR");
            market.CollateralFactor = input.CollateralFactor;
            Context.Fire(new CollateralFactorChanged()
            {
@@ -490,11 +411,7 @@ namespace AElf.Contracts.FinanceContract
 
        public override Empty SetInterestRate(SetInterestRateInput input)
        {   
-           var symbol = new StringValue()
-           {
-               Value = input.Symbol
-           };
-           AccrueInterest(symbol);
+           AccrueInterest(input.Symbol);
            Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
            var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
            Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
@@ -528,6 +445,7 @@ namespace AElf.Contracts.FinanceContract
        {
            Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
            var oldMaxAssets = State.MaxAssets.Value;
+           Assert(input.Value>0,"invalid input");
            State.MaxAssets.Value = input.Value;
            Context.Fire(new MaxAssetsChanged()
            {
@@ -566,11 +484,7 @@ namespace AElf.Contracts.FinanceContract
 
        public override Empty SetReserveFactor(SetReserveFactorInput input)
        {
-           var symbol = new StringValue()
-           {
-               Value = input.Symbol
-           };
-           AccrueInterest(symbol);
+           AccrueInterest(input.Symbol);
            Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
            var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
            Assert(accrualBlockNumberPrior == Context.CurrentHeight, "market's block number should equals current block number");
@@ -589,18 +503,14 @@ namespace AElf.Contracts.FinanceContract
 
        public override Empty SetUnderlyingPrice(SetUnderlyingPriceInput input)
        {
-           var symbol = new StringValue()
-           {
-               Value = input.Symbol
-           };
-           AccrueInterest(symbol);
+           AccrueInterest(input.Symbol);
            Assert(Context.Sender==State.Admin.Value,"UNAUTHORIZED");
            var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
            Assert(accrualBlockNumberPrior == Context.CurrentHeight,
                "market's block number should equals current block number");
-           var previousPrice = State.Prices[input.Symbol].ToString();
+           var previousPrice = State.Prices[input.Symbol];
            var priceNew = input.Price;
-           State.Prices[input.Symbol]=Int64.Parse(priceNew);
+           State.Prices[input.Symbol]=priceNew;
            Context.Fire(new PricePosted()
            {
                Symbol = input.Symbol,
@@ -611,18 +521,8 @@ namespace AElf.Contracts.FinanceContract
        }
        public override Int64Value LiquidateCalculateSeizeTokens(LiquidateCalculateSeizeTokensInput input)
        {
-           var priceBorrow = State.Prices[input.BorrowSymbol];
-           var priceCollateral = State.Prices[input.CollateralSymbol];
-           Assert(priceBorrow!=0&&priceCollateral!=0,"PRICE_ERROR");
-          var exchangeRate= ExchangeRateStoredInternal(input.CollateralSymbol);
-        //Get the exchange rate and calculate the number of collateral tokens to seize:
-        // *  seizeAmount = actualRepayAmount * liquidationIncentive * priceBorrowed / priceCollateral
-        //    seizeTokens = seizeAmount / exchangeRate
-        //   = actualRepayAmount * (liquidationIncentive * priceBorrowed) / (priceCollateral * exchangeRate)
-        var seizeAmount = decimal.Parse(input.RepayAmount) * decimal.Parse(State.LiquidationIncentive.Value) *
-                          priceBorrow/priceCollateral;
-        var seizeTokens = decimal.ToInt64(seizeAmount / exchangeRate);
-        return new Int64Value()
+         var seizeTokens= LiquidateCalculateSeizeTokens(input.BorrowSymbol, input.CollateralSymbol, decimal.Parse(input.RepayAmount));
+         return new Int64Value()
            {
                Value=seizeTokens
            };

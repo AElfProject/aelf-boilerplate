@@ -126,7 +126,7 @@ namespace AElf.Contracts.FinanceContract
         
         public MappedState<string,bool> BorrowGuardianPaused { get; set; }
         
-        public MappedState<string,long> Prices { get; set; }
+        public MappedState<string,string> Prices { get; set; }
 
         /// <summary>
         /// The base interest rate which is the y-intercept when utilization rate is 0
