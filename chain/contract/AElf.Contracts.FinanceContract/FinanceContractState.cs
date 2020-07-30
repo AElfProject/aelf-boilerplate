@@ -8,19 +8,19 @@ namespace AElf.Contracts.FinanceContract
     public class FinanceContractState : ContractState
     {
         internal TokenContractContainer.TokenContractReferenceState TokenContract { get; set; }
-        
-        internal BasicContractZeroContainer.BasicContractZeroReferenceState GenesisContract { get; set ; }
+
+        internal BasicContractZeroContainer.BasicContractZeroReferenceState GenesisContract { get; set; }
 
         /// <summary>
         /// Contract administrator
         /// </summary>
         public SingletonState<Address> Admin { get; set; }
-        
+
         /// <summary>
         /// Contract pending administrator
         /// </summary>
         public SingletonState<Address> PendingAdmin { get; set; }
-        
+
         /// <summary>
         /// Market administrator
         /// </summary>
@@ -45,7 +45,7 @@ namespace AElf.Contracts.FinanceContract
         /// Total amount of reserves of the underlying held in this market
         /// </summary>
         public MappedState<string, long> TotalReserves { get; set; }
-        
+
         /// <summary>
         /// Total number of tokens in circulation(CToken)
         /// </summary>
@@ -76,18 +76,18 @@ namespace AElf.Contracts.FinanceContract
         /// Token balances for each account(CToken)
         /// </summary>
         public MappedState<string, Address, long> AccountTokens { get; set; }
-        
+
         /// <summary>
         /// Market metadata
         /// </summary>
         public MappedState<string, Market> Markets { get; set; }
-        
+
         /// <summary>
         /// Per-account mapping of "assets you are in", capped by maxAssets
         /// </summary>
-        public MappedState<Address,AssetList> AccountAssets { get; set; }
-        
-        
+        public MappedState<Address, AssetList> AccountAssets { get; set; }
+
+
         /// <summary>
         /// Multiplier used to calculate the maximum repayAmount when liquidating a borrow
         /// </summary>
@@ -105,7 +105,7 @@ namespace AElf.Contracts.FinanceContract
         /// </summary>
         /// <returns></returns>
         public Int32State MaxAssets { get; set; }
-        
+
         /// <summary>
         /// A list of all markets
         /// </summary>
@@ -117,16 +117,16 @@ namespace AElf.Contracts.FinanceContract
         *  Liquidation / seizing / transfer can only be paused globally, not by market.
         */
         public SingletonState<Address> PauseGuardian { get; set; }
-        
+
         public BoolState TransferGuardianPaused { get; set; }
-        
+
         public BoolState SeizeGuardianPaused { get; set; }
-        
-        public MappedState<string,bool> MintGuardianPaused { get; set; }
-        
-        public MappedState<string,bool> BorrowGuardianPaused { get; set; }
-        
-        public MappedState<string,string> Prices { get; set; }
+
+        public MappedState<string, bool> MintGuardianPaused { get; set; }
+
+        public MappedState<string, bool> BorrowGuardianPaused { get; set; }
+
+        public MappedState<string, string> Prices { get; set; }
 
         /// <summary>
         /// The base interest rate which is the y-intercept when utilization rate is 0

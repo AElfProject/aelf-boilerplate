@@ -151,6 +151,10 @@ service FinanceContract {
     rpc GetUnderlyingPrice(google.protobuf.StringValue) returns (google.protobuf.StringValue) {
         option (aelf.is_view) = true;
     }
+    
+    rpc GetUnitSymbol(google.protobuf.Empty) returns(google.protobuf.StringValue){
+        option (aelf.is_view) = true;
+    }
 }
 
 message InitializeInput{
@@ -456,7 +460,7 @@ message PauseGuardianChanged{
     aelf.Address new_pause_guardian = 2;
 }
 
-message InterestRateSet{
+message InterestRateChanged{
     option (aelf.is_event) = true;
     string symbol = 1;
     string base_rate_per_block = 2;
