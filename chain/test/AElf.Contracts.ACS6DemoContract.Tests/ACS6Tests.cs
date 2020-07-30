@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
-using AElf.ContractTestKit;
-using AElf.Types;
+using AElf.ContractTestBase.ContractTestKit;
 using Shouldly;
 using Xunit;
 

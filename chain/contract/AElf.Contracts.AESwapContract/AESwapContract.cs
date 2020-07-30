@@ -54,13 +54,13 @@ namespace AElf.Contracts.AESwapContract
             var tokenPair = SortTokens(input.SymbolPair);
             Assert(tokenPair[0] != tokenPair[1], "Identical Tokens");
             Assert(State.Pairs[tokenPair[0]][tokenPair[1]] == null, "Pair Exists");
-            State.Pairs[tokenPair[0]][tokenPair[1]]=new Pair();
+            var pair = new Pair();
             var hash = HashHelper.ComputeFrom(GetPair(input.SymbolPair));
-            State.Pairs[tokenPair[0]][tokenPair[1]].Hash = hash;
-            State.Pairs[tokenPair[1]][tokenPair[0]].Hash = hash;
+            pair.Hash = hash;
             var address = Context.ConvertVirtualAddressToContractAddress(hash);
-            State.Pairs[tokenPair[1]][tokenPair[0]].Address = address;
-            State.Pairs[tokenPair[1]][tokenPair[0]].Address = address;
+            pair.Address = address;
+            State.Pairs[tokenPair[0]][tokenPair[1]] = pair;
+            State.Pairs[tokenPair[1]][tokenPair[0]] = pair;
             //add to PairList
             var pairList = State.AllPairs.Value ?? new PairList();
             pairList.SymbolPair.Add(input.SymbolPair);

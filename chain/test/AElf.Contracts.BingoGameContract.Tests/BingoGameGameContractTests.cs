@@ -1,8 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AElf.Contracts.MultiToken;
-using AElf.ContractTestKit;
-using AElf.Kernel.Infrastructure;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.Kernel.Token;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;

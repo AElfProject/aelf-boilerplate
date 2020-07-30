@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using AElf.Boilerplate.TestBase;
 using AElf.ContractTestBase;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.Kernel.SmartContract.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
@@ -19,6 +20,7 @@ namespace AElf.Contracts.ACS9DemoContract
             context.Services.AddSingleton<IContractInitializationProvider, ACS9DemoContractInitializationProvider>();
             context.Services.AddSingleton<IContractInitializationProvider, ACS10DemoContractInitializationProvider>();
             context.Services.AddSingleton<IContractDeploymentListProvider, ACS9DemoContractDeploymentList>();
+            context.Services.AddSingleton<IBlockTimeProvider, BlockTimeProvider>();
         }
 
         public override void OnPreApplicationInitialization(ApplicationInitializationContext context)

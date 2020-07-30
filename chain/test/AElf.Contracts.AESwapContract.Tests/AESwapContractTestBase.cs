@@ -10,7 +10,7 @@ using System.Linq;
 using AElf.Boilerplate.TestBase;
 using AElf.Contracts.AESwapContract;
 using AElf.Contracts.MultiToken;
-using AElf.ContractTestKit;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.Cryptography.ECDSA;
 using AElf.Kernel;
 using AElf.Kernel.Blockchain.Application;

@@ -1,44 +1,28 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IsContract>true</IsContract>
-        <OutputType>Library</OutputType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     </PropertyGroup>
 
     <ItemGroup>
         <ContractBase Include="..\..\protobuf\acs1.proto">
             <Link>Protobuf\Proto\reference\acs1.proto</Link>
         </ContractBase>
-        <ContractReference Include="..\..\protobuf\acs2.proto">
-            <Link>Protobuf\Proto\reference\acs2.proto</Link>
-        </ContractReference>
-        <ContractReference Include="..\..\protobuf\acs3.proto">
-            <Link>Protobuf\Proto\reference\acs3.proto</Link>
-        </ContractReference>
         <ContractReference Include="..\..\protobuf\token_contract.proto">
             <Link>Protobuf\Proto\reference\token_contract.proto</Link>
-        </ContractReference>
-        <ContractReference Include="..\..\protobuf\token_contract_impl.proto">
-            <Link>Protobuf\Proto\reference\token_contract_impl.proto</Link>
-        </ContractReference>
-        <ContractReference Include="..\..\protobuf\aedpos_contract.proto">
-            <Link>Protobuf\Proto\reference\aedpos_contract.proto</Link>
-        </ContractReference>
-        <ContractReference Include="..\..\protobuf\parliament_contract.proto">
-            <Link>Protobuf\Proto\reference\parliament_contract.proto</Link>
-        </ContractReference>
-        <ContractReference Include="..\..\protobuf\transaction_fee.proto">
-            <Link>Protobuf\Proto\reference\transaction_fee.proto</Link>
         </ContractReference>
     </ItemGroup>
     <ItemGroup>
         <ContractCode Include="..\..\protobuf\aeswap_contract.proto">
             <Link>Protobuf\Proto\aeswap_contract.proto</Link>
         </ContractCode>
-    </ItemGroup>
-    <ItemGroup>
-      <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-preview3" />
     </ItemGroup>
 </Project>

@@ -20,7 +20,7 @@ namespace AElf.Contract.AESwapContract.Tests
         [Fact]
         public async Task SetUnderlyingPriceTest()
         {
-            CreateAndGetToken();
+            await CreateAndGetToken();
             await AESwapContractStub.Initialize.SendAsync(new Empty());
             await UserTomStub.CreatePair.SendAsync(new CreatePairInput()
             {
@@ -29,7 +29,7 @@ namespace AElf.Contract.AESwapContract.Tests
         }
         
         
-         private async Task CreateAndGetToken()
+        private async Task CreateAndGetToken()
         {
             //TEST
             var result = await TokenContractStub.Create.SendAsync(new CreateInput
