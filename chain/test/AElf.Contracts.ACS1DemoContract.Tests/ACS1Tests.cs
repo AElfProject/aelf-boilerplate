@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Acs1;
-using AElf.ContractTestKit;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
 using Shouldly;

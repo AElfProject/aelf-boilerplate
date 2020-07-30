@@ -1,9 +1,6 @@
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using AElf.ContractTestKit;
-using AElf.Types;
-using Google.Protobuf;
+using AElf.ContractTestBase.ContractTestKit;
 using Google.Protobuf.WellKnownTypes;
 using Shouldly;
 using Xunit;

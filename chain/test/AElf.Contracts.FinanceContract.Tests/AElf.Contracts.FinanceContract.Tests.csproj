@@ -11,9 +11,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.EconomicSystem" Version="1.0.0-preview3" />
-        <PackageReference Include="AElf.GovernmentSystem" Version="1.0.0-preview3" />
-        <PackageReference Include="AElf.Kernel.Types" Version="1.0.0-preview3" />
         <PackageReference Include="coverlet.msbuild" Version="2.5.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
         <PackageReference Include="Shouldly" Version="3.0.2" />
@@ -23,11 +20,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.ContractTestKit" Version="1.0.0-preview3" />
-        <PackageReference Include="AElf.ContractTestBase" Version="1.0.0-preview3" />
-    </ItemGroup>
-
-    <ItemGroup>
+        <ContractStub Include="..\..\protobuf\acs0.proto">
+            <Link>Protobuf\Proto\acs0.proto</Link>
+        </ContractStub>
         <ContractStub Include="..\..\protobuf\finance_contract.proto">
             <Link>Protobuf\Proto\finance_contract.proto</Link>
         </ContractStub>

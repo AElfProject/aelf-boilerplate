@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using AElf.Boilerplate.TestBase;
-using AElf.ContractTestKit;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.Kernel.SmartContract.Application;
 using AElf.Types;
 using Google.Protobuf;

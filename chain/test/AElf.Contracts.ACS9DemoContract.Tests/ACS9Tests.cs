@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Acs9;
 using AElf.Contracts.MultiToken;
 using AElf.Contracts.Profit;
-using AElf.ContractTestKit;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.Contracts.TokenHolder;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
