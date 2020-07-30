@@ -11,5 +11,8 @@ namespace AElf.Contracts.RandomContract
     {
         // state definitions go here.
         internal AEDPoSContractContainer.AEDPoSContractReferenceState AEDPoSContract { get; set; }
+        
+        public MappedState<Address, RequestRandomInformationList> RequestRandomInformationList { get; set; }
+        public MappedState<Address, RequestRandomInformationList> RequestRandomInformationListCompleted { get; set; }
     }
 }

@@ -33,12 +33,20 @@ service RandomContract {
     // Call Hello at first. It will initialize this contract.
     rpc Hello (google.protobuf.Empty) returns (HelloReturn) { }
     
+    rpc RequestRandom (RequestRandomInput) returns (RequestRandomInformation) {}
+    
+    // aelf.Hash === txId of RequestRandom
+    rpc GetRandom (aelf.Hash) returns (RequestRandomInformation) {}
+    // Will save 100 history for each address
+    rpc GetRandomInformation (aelf.Address) returns (RequestRandomInformationList) {}
+    rpc GetRandomInformationCompleted (aelf.Address) returns (RequestRandomInformationList) {}
+    
     // You can get a random hash depend on current block height.
     rpc GetRandomHash(google.protobuf.Empty) returns (aelf.Hash) {
         option (aelf.is_view) = true;
     }
     
-    rpc GetRandomNumber(GetRandomInput) returns (GetRandomNumberOutput) {
+    rpc GetRandomNumber(GetRandomNumberInput) returns (GetRandomNumberOutput) {
         option (aelf.is_view) = true;
     }
     
@@ -47,12 +55,37 @@ service RandomContract {
     }
 }
 
+message RequestRandomInput {
+    int64 block_height = 1;
+    int64 min = 2;
+    int64 max = 3;
+}
+
+//message GetRandomInput {
+//    aelf.Hash play_id = 1;
+//}
+
+message RequestRandomInformationList {
+    repeated RequestRandomInformation list = 1;
+}
+
+message RequestRandomInformation {
+    int64 random = 1; // random number
+    int64 random_block_height = 2; // Block height, which the random belongs to.
+    int64 current_block_height = 3; // Which block height request the random.
+    int64 request_block_height = 4; // Which height call RequestRandom .
+    int64 min = 5;
+    int64 max =6;
+    aelf.Hash hash = 10; // random hash
+    aelf.Hash play_id = 11; // txid of the [request the random]
+}
+
 // a custom message, used as the return type of the Hello action
 message HelloReturn {
     string Value = 1;
 }
 
-message GetRandomInput {
+message GetRandomNumberInput {
     int64 min = 1;
     int64 max = 2;
 //    int64 blockHeight = 3;
@@ -60,7 +93,7 @@ message GetRandomInput {
 
 message GetRandomNumberOutput {
     int64 random = 1;
-    int64 blockHeight = 2;
+    int64 block_height = 2;
     aelf.Hash hash = 3;
 }
 
