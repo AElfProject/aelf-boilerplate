@@ -33,16 +33,23 @@ namespace AElf.Contracts.RandomContract
         
         public override RequestRandomInformation RequestRandom(RequestRandomInput input)
         {
-            Assert(input.BlockHeight > Context.CurrentHeight + BlockInterval, 
-                "Suggested to request random data after 8 blocks");
+            var randomBlockHeight = Context.CurrentHeight + input.BlockInterval;
+            if (input.BlockInterval < BlockInterval)
+            {
+                Assert(input.BlockHeight > Context.CurrentHeight + BlockInterval, 
+                    $"Suggested to request random data after {BlockInterval} blocks");
+                randomBlockHeight = input.BlockHeight;
+            }
+            
             var requestRandomInformationList = RegisterOrGetRandomInformation(Context.Sender);
             
             Assert(requestRandomInformationList.List.Count < RequestLimit,
                 $"User {Context.Sender} request to much random data at the same time");
+            
             var information = new RequestRandomInformation
             {
                 Random = 0,
-                RandomBlockHeight = input.BlockHeight,
+                RandomBlockHeight = randomBlockHeight,
                 CurrentBlockHeight = -1,
                 RequestBlockHeight = Context.CurrentHeight,
                 Min = input.Min,
