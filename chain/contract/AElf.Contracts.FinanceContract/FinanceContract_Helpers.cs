@@ -3,6 +3,7 @@ using AElf.Contracts.MultiToken;
 using AElf.CSharp.Core;
 using AElf.Sdk.CSharp;
 using AElf.Types;
+using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.FinanceContract
 {
@@ -113,19 +114,16 @@ namespace AElf.Contracts.FinanceContract
         {
             var market = State.Markets[symbol];
             Assert(market.IsListed, "MARKET_NOT_LISTED");
-            var isMembership = market.AccountMembership[borrower.ToString()];
-            if (isMembership != null)
+            market.AccountMembership.TryGetValue(borrower.ToString(), out var isMembership);
+            if (isMembership)
             {
-                if (isMembership)
-                {
-                    return;
-                }
+                return;
             }
-
             var asset = State.AccountAssets[borrower];
             if (asset == null)
             {
-                return;
+                State.AccountAssets[borrower]=new AssetList();
+               
             }
             Assert(State.AccountAssets[borrower].Assets.Count < State.MaxAssets.Value, "TOO_MANY_ASSETS");
             market.AccountMembership[borrower.ToString()] = true;
@@ -140,11 +138,11 @@ namespace AElf.Contracts.FinanceContract
         //hook    to verify the cToken price not be zero
         private bool UnderlyingPriceVerify(string cToken)
         {
-            if (decimal.Parse(State.Prices[cToken]) == 0)
-            {
+           var price = State.Prices[cToken];
+            if (price == null)
                 return false;
-            }
-
+            if (decimal.Parse(price) <= 0)
+                return false;
             return true;
         }
 

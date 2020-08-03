@@ -3,9 +3,9 @@ namespace AElf.Contracts.FinanceContract
     public partial class FinanceContract
     {
         /// <summary>
-        /// Maximum borrow rate that can ever be applied (.0005% / block)
+        /// Maximum borrow rate that can ever be applied (0.000016% / block)
         /// </summary>
-        public const string MaxBorrowRate = "0.005";
+        public const string MaxBorrowRate = "0.00000016";
 
         /// <summary>
         /// Maximum fraction of interest that can be set aside for reserves
@@ -25,6 +25,8 @@ namespace AElf.Contracts.FinanceContract
 
         // No collateralFactorMantissa may exceed this value
         public const string MaxCollateralFactor = "0.9"; // 0.9
+        
+        public const string DefaultCollateralFactor = "0.75"; // 0.9
 
         // liquidationIncentiveMantissa must be no less than this value
         public const string MinLiquidationIncentive = "1"; // 1.0
@@ -33,5 +35,9 @@ namespace AElf.Contracts.FinanceContract
         public const string MaxLiquidationIncentive = "1.5"; // 1.5
 
         public const int CTokenDecimals = 18;
+
+        public const string DefaultPrice = "1";
+
+        public const string InitialBorrowIndex = "1";
     }
 }

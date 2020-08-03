@@ -31,6 +31,7 @@ namespace AElf.Contracts.FinanceContract
             State.Admin.Value =
                 State.GenesisContract.GetContractInfo.Call(Context.Self).Author;
             Assert(Context.Sender == State.Admin.Value, "only admin may initialize the market");
+            State.SeizeGuardianPaused.Value = false;
             return new Empty();
         }
 
@@ -81,7 +82,8 @@ namespace AElf.Contracts.FinanceContract
             AccrueInterest(input.Symbol);
             Assert(!State.BorrowGuardianPaused[input.Symbol], "borrow is paused");
             Assert(State.Markets[input.Symbol].IsListed, "Market is not listed");
-            if (!State.Markets[input.Symbol].AccountMembership[Context.Sender.Value.ToString()])
+            State.Markets[input.Symbol].AccountMembership.TryGetValue(Context.Sender.ToString(), out var isExist);
+            if (!isExist)
             {
                 AddToMarketInternal(input.Symbol, Context.Sender);
             }
@@ -104,7 +106,12 @@ namespace AElf.Contracts.FinanceContract
             var totalBorrowsNew = State.TotalBorrows[input.Symbol].Add(input.Amount);
             DoTransferOut(Context.Sender, input.Amount, input.Symbol);
             //We write the previously calculated values into storage 
-            State.AccountBorrows[input.Symbol][Context.Sender].Principal = accountBorrowsNew;
+            var  BorrowSnapshot= State.AccountBorrows[input.Symbol][Context.Sender];
+            if (BorrowSnapshot == null)
+            {
+                State.AccountBorrows[input.Symbol][Context.Sender]=  new BorrowSnapshot();
+            }
+            State.AccountBorrows[input.Symbol][Context.Sender].Principal=accountBorrowsNew;
             State.AccountBorrows[input.Symbol][Context.Sender].InterestIndex = State.BorrowIndex[input.Symbol];
             State.TotalBorrows[input.Symbol] = totalBorrowsNew;
             Context.Fire(new Borrow()
@@ -139,7 +146,7 @@ namespace AElf.Contracts.FinanceContract
             //Checks if the liquidation should be allowed to occur
             Assert(State.Markets[input.BorrowSymbol].IsListed&& State.Markets[input.CollateralSymbol].IsListed,"MARKET_NOT_LISTED");
             var shortfall = GetHypotheticalAccountLiquidityInternal(input.Borrower, "ctoken", 0, 0);
-            Assert(shortfall!=0,"INSUFFICIENT_SHORTFALL");
+            Assert(shortfall>0,"INSUFFICIENT_SHORTFALL");
             var borrowBalance = State.AccountBorrows[input.BorrowSymbol][input.Borrower].Principal;
             var maxClose = decimal.Parse(State.CloseFactor.Value) * borrowBalance;
             Assert(input.RepayAmount <= maxClose, "TOO_MUCH_REPAY");
@@ -230,7 +237,8 @@ namespace AElf.Contracts.FinanceContract
             // check to make sure its really a CToken
             State.Markets[input.Symbol] = new Market()
             {
-                IsListed = true
+                IsListed = true,
+                CollateralFactor = DefaultCollateralFactor,
             };
             Assert(decimal.Parse(input.ReserveFactor)>=0&& decimal.Parse(input.ReserveFactor)<decimal.Parse(MaxReserveFactor),"Invalid ReserveFactor");
             Assert(decimal.Parse(input.InitialExchangeRate)>0,"Invalid InitialExchangeRate");
@@ -252,7 +260,10 @@ namespace AElf.Contracts.FinanceContract
             State.AllMarkets.Value = symbolList;
             // Initialize block number and borrow index
             State.AccrualBlockNumbers[input.Symbol] = Context.CurrentHeight;
-            State.BorrowIndex[input.Symbol] = "1";
+            State.BorrowIndex[input.Symbol] = InitialBorrowIndex;
+            State.MintGuardianPaused[input.Symbol] = false;
+            State.BorrowGuardianPaused[input.Symbol] = false;
+            State.Prices["ELF"] = DefaultPrice;
             Context.Fire(new MarketListed()
             {
                 Symbol = input.Symbol,
@@ -326,18 +337,18 @@ namespace AElf.Contracts.FinanceContract
             var result = GetAccountSnapshot(Context.Sender, input.Value);
             Assert(result.BorrowBalance == 0, "NONZERO_BORROW_BALANCE");
             Assert(State.Markets[input.Value].IsListed, "Market is not listed");
-            if (State.Markets[input.Value].AccountMembership[Context.Sender.Value.ToString()])
+            if (State.Markets[input.Value].AccountMembership[Context.Sender.ToString()])
             {
                 var shortfall =
                     GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Value, result.CTokenBalance, 0);
                 Assert(shortfall <= 0, "INSUFFICIENT_LIQUIDITY");
             }
-            var isMembership= State.Markets[input.Value].AccountMembership.ContainsKey(Context.Sender.Value.ToString());
+            var isMembership= State.Markets[input.Value].AccountMembership.ContainsKey(Context.Sender.ToString());
             if (!isMembership)
             {
                 return new Empty();
             }
-            State.Markets[input.Value].AccountMembership[Context.Sender.Value.ToString()] = false;
+            State.Markets[input.Value].AccountMembership[Context.Sender.ToString()] = false;
             //Delete cToken from the account’s list of assets
             var userAssetList = State.AccountAssets[Context.Sender];
             Assert(userAssetList.Assets.Contains(input.Value),"input token is not in the assets");
@@ -357,7 +368,7 @@ namespace AElf.Contracts.FinanceContract
             //Store admin with value pendingAdmin
             var oldAdmin = State.Admin.Value;
             var oldPenDingAdmin = State.PendingAdmin.Value;
-            State.Admin = State.PendingAdmin;
+            State.Admin.Value = State.PendingAdmin.Value;
             State.PendingAdmin.Value = new Address();
             Context.Fire(new AdminChanged()
             {
@@ -435,7 +446,8 @@ namespace AElf.Contracts.FinanceContract
             Assert(market.IsListed, "MARKET_NOT_LISTED");
             var newCollateralFactor = decimal.Parse(input.CollateralFactor);
             Assert(newCollateralFactor <= decimal.Parse(MaxCollateralFactor), "INVALID_CLOSE_FACTOR");
-            if (newCollateralFactor >= 0 && GetUnderlyingPrice(input.Symbol) == 0)
+            Assert(newCollateralFactor>=0,"INVALID_CLOSE_FACTOR");
+            if (newCollateralFactor > 0 && GetUnderlyingPrice(input.Symbol) == 0)
             {
                 throw new AssertionException("PRICE_ERROR");
             }
@@ -492,8 +504,8 @@ namespace AElf.Contracts.FinanceContract
             State.MaxAssets.Value = input.Value;
             Context.Fire(new MaxAssetsChanged()
             {
-                NewMaxAssets = State.MaxAssets.Value.ToString(),
-                OldMaxAssets = oldMaxAssets.ToString()
+                NewMaxAssets = State.MaxAssets.Value,
+                OldMaxAssets = oldMaxAssets
             });
             return new Empty();
         }
@@ -559,7 +571,7 @@ namespace AElf.Contracts.FinanceContract
             Context.Fire(new PricePosted()
             {
                 Symbol = input.Symbol,
-                PreviousPrice = previousPrice,
+                PreviousPrice = previousPrice ?? "0",
                 NewPrice = priceNew
             });
             return new Empty();

@@ -101,7 +101,7 @@ namespace AElf.Contracts.FinanceContract
                 Value = decimal.ToInt64(underlyingBalance)
             };
             return balance;
-        }
+        } 
 
         public override GetAccountSnapshotOutput GetAccountSnapshot(Account input)
         {
@@ -209,6 +209,15 @@ namespace AElf.Contracts.FinanceContract
             {
                 Value = "ELF"
             };
+        }
+
+        public override Int64Value GetTotalReserves(StringValue input)
+        {
+            AccrueInterest(input.Value);
+            return new Int64Value()
+            {
+                Value = State.TotalReserves[input.Value]
+            }; 
         }
     }
 }

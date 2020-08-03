@@ -154,6 +154,10 @@ service FinanceContract {
     
     rpc GetUnitSymbol(google.protobuf.Empty) returns(google.protobuf.StringValue){
         option (aelf.is_view) = true;
+        }
+    
+    rpc GetTotalReserves(google.protobuf.StringValue) returns(google.protobuf.Int64Value){
+            option (aelf.is_view) = true;
     }
 }
 
@@ -450,8 +454,8 @@ message LiquidationIncentiveChanged{
 
 message MaxAssetsChanged{
     option (aelf.is_event) = true;
-    string old_max_assets = 1;
-    string new_max_assets = 2;
+    int32 old_max_assets = 1;
+    int32 new_max_assets = 2;
 }
 
 message PauseGuardianChanged{

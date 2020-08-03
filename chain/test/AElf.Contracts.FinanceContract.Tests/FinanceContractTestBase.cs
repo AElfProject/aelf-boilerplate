@@ -23,9 +23,9 @@ namespace AElf.Contracts.FinanceContract
 {
     public class FinanceContractTestBase : ContractTestBase<FinanceContractTestModule>
     {
-        internal Address FinanceContractAddress;
-        internal TokenContractContainer.TokenContractStub UserTokenContractStub => GetTokenContractStub(UserKeyPair);
-        internal Address tokenContractAddress => GetAddress(TokenSmartContractAddressNameProvider.StringName);
+        internal readonly Address FinanceContractAddress;
+       
+        private Address tokenContractAddress => GetAddress(TokenSmartContractAddressNameProvider.StringName);
 
         internal FinanceContractContainer.FinanceContractStub GetFinanceContractStub(ECKeyPair senderKeyPair)
         {
@@ -35,12 +35,11 @@ namespace AElf.Contracts.FinanceContract
         internal FinanceContractContainer.FinanceContractStub FinanceContractStub =>
             GetFinanceContractStub(SampleAccount.Accounts.First().KeyPair);
 
-        internal FinanceContractContainer.FinanceContractStub UserStub =>
-            GetFinanceContractStub(UserKeyPair);
+      
 
         internal TokenContractContainer.TokenContractStub TokenContractStub =>
             GetTokenContractStub(SampleAccount.Accounts.First().KeyPair);
-
+        
         internal TokenContractContainer.TokenContractStub GetTokenContractStub(ECKeyPair senderKeyPair)
         {
             return Application.ServiceProvider.GetRequiredService<IContractTesterFactory>()
@@ -69,9 +68,22 @@ namespace AElf.Contracts.FinanceContract
             return executionResult.Output;
         }
 
-        internal ECKeyPair UserKeyPair { get; set; } = SampleAccount.Accounts.Last().KeyPair;
-        internal Address UserAddress => Address.FromPublicKey(UserKeyPair.PublicKey);
+        private ECKeyPair AdminKeyPair { get; set; } = SampleAccount.Accounts[0].KeyPair;
+        private ECKeyPair UserTomKeyPair { get; set; } = SampleAccount.Accounts.Last().KeyPair;
+        private ECKeyPair UserLilyKeyPair { get; set; } = SampleAccount.Accounts.Reverse().Skip(1).First().KeyPair;
+        
+        internal Address UserTomAddress => Address.FromPublicKey(UserTomKeyPair.PublicKey);
+        internal Address UserLilyAddress => Address.FromPublicKey(UserLilyKeyPair.PublicKey);
 
+        internal Address AdminAddress => Address.FromPublicKey(AdminKeyPair.PublicKey);
+
+        internal FinanceContractContainer.FinanceContractStub UserTomStub =>
+            GetFinanceContractStub(UserTomKeyPair);
+        internal FinanceContractContainer.FinanceContractStub UserLilyStub =>
+            GetFinanceContractStub(UserLilyKeyPair);
+        internal TokenContractContainer.TokenContractStub UserTomTokenContractStub => GetTokenContractStub(UserTomKeyPair);
+        internal TokenContractContainer.TokenContractStub UserLilyTokenContractStub => GetTokenContractStub(UserLilyKeyPair);
+        
         private Address GetAddress(string contractName)
         {
             var addressService = Application.ServiceProvider.GetRequiredService<ISmartContractAddressService>();
