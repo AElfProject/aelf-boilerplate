@@ -82,8 +82,7 @@ namespace AElf.Contracts.FinanceContract
             AccrueInterest(input.Symbol);
             Assert(!State.BorrowGuardianPaused[input.Symbol], "borrow is paused");
             Assert(State.Markets[input.Symbol].IsListed, "Market is not listed");
-            State.Markets[input.Symbol].AccountMembership.TryGetValue(Context.Sender.ToString(), out var isExist);
-            if (!isExist)
+            if(!State.Markets[input.Symbol].AccountMembership.TryGetValue(Context.Sender.ToString(), out var isExist) || !isExist)
             {
                 AddToMarketInternal(input.Symbol, Context.Sender);
             }
@@ -264,6 +263,9 @@ namespace AElf.Contracts.FinanceContract
             State.MintGuardianPaused[input.Symbol] = false;
             State.BorrowGuardianPaused[input.Symbol] = false;
             State.Prices["ELF"] = DefaultPrice;
+            State.TotalBorrows[input.Symbol] = 0;
+            State.TotalSupply[input.Symbol] = 0;
+            State.TotalReserves[input.Symbol] = 0;
             Context.Fire(new MarketListed()
             {
                 Symbol = input.Symbol,
@@ -337,17 +339,18 @@ namespace AElf.Contracts.FinanceContract
             var result = GetAccountSnapshot(Context.Sender, input.Value);
             Assert(result.BorrowBalance == 0, "NONZERO_BORROW_BALANCE");
             Assert(State.Markets[input.Value].IsListed, "Market is not listed");
-            if (State.Markets[input.Value].AccountMembership[Context.Sender.ToString()])
-            {
-                var shortfall =
-                    GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Value, result.CTokenBalance, 0);
-                Assert(shortfall <= 0, "INSUFFICIENT_LIQUIDITY");
-            }
             var isMembership= State.Markets[input.Value].AccountMembership.ContainsKey(Context.Sender.ToString());
             if (!isMembership)
             {
                 return new Empty();
             }
+            if (!State.Markets[input.Value].AccountMembership[Context.Sender.ToString()])
+            {
+                return new Empty();
+            }
+            var shortfall =
+                GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Value, result.CTokenBalance, 0);
+            Assert(shortfall <= 0, "INSUFFICIENT_LIQUIDITY");
             State.Markets[input.Value].AccountMembership[Context.Sender.ToString()] = false;
             //Delete cToken from the account’s list of assets
             var userAssetList = State.AccountAssets[Context.Sender];
@@ -445,8 +448,7 @@ namespace AElf.Contracts.FinanceContract
             var oldCollateralFactor = market.CollateralFactor;
             Assert(market.IsListed, "MARKET_NOT_LISTED");
             var newCollateralFactor = decimal.Parse(input.CollateralFactor);
-            Assert(newCollateralFactor <= decimal.Parse(MaxCollateralFactor), "INVALID_CLOSE_FACTOR");
-            Assert(newCollateralFactor>=0,"INVALID_CLOSE_FACTOR");
+            Assert(newCollateralFactor <= decimal.Parse(MaxCollateralFactor)&& newCollateralFactor>=0, "INVALID_CLOSE_FACTOR");
             if (newCollateralFactor > 0 && GetUnderlyingPrice(input.Symbol) == 0)
             {
                 throw new AssertionException("PRICE_ERROR");

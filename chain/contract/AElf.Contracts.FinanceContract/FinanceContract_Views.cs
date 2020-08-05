@@ -199,7 +199,7 @@ namespace AElf.Contracts.FinanceContract
         {
             return new BoolValue()
             {
-                Value = State.Markets[input.Symbol].AccountMembership[input.Address.Value.ToString()]
+                Value = State.Markets[input.Symbol].AccountMembership[input.Address.ToString()]
             };
         }
 
