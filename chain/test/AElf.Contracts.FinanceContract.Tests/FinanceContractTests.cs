@@ -580,10 +580,10 @@ namespace AElf.Contracts.FinanceContract
             await Mint(10000000, "ELF");
             var enterMarketsResult = await UserTomStub.EnterMarkets.SendAsync(new EnterMarketsInput()
             {
-                Symbols = {"TEST", "ELF"}
+                Symbols = {"TEST", "ELF","DAI"}
             });
-            enterMarketsResult.Output.Results.First().Success.ShouldBe(false);
-            enterMarketsResult.Output.Results.Reverse().First().Success.ShouldBe(true);
+            enterMarketsResult.Output.Results.First().Success.ShouldBe(true);
+            enterMarketsResult.Output.Results.Reverse().First().Success.ShouldBe(false);
             var isMember = await UserTomStub.CheckMembership.CallAsync(new Account()
             {
                 Address = UserTomAddress,
@@ -592,11 +592,11 @@ namespace AElf.Contracts.FinanceContract
             isMember.Value.ShouldBe(true);
             //ExitMarket
             await Borrow("ELF", 1000);
-            var NonzeroException = await UserTomStub.ExitMarket.SendWithExceptionAsync(new StringValue()
+            var nonzeroException = await UserTomStub.ExitMarket.SendWithExceptionAsync(new StringValue()
             {
                 Value = "ELF"
             });
-            NonzeroException.TransactionResult.Error.ShouldContain("NONZERO_BORROW_BALANCE");
+            nonzeroException.TransactionResult.Error.ShouldContain("NONZERO_BORROW_BALANCE");
             await Repay("ELF", -1);
             await UserTomStub.ExitMarket.SendAsync(new StringValue()
             {
@@ -609,6 +609,122 @@ namespace AElf.Contracts.FinanceContract
             });
             isMemberAfterExit.Value.ShouldBe(false);
         }
+
+        [Fact]
+        public async Task LiquidateBorrowTest()
+        {
+            await Initialize();
+            await SupportMarket();
+            await Mint(1000000, "ELF");
+            await EnterMarket();
+            await UserLilyStub.Mint.SendAsync(new MintInput()
+            {
+                Symbol = "TEST",
+                Amount = 1000000
+            });
+            await UserLilyStub.EnterMarkets.SendAsync(new EnterMarketsInput()
+            {
+                Symbols = {"TEST"}
+            });
+            await UserTomStub.Borrow.SendAsync(new BorrowInput()
+            {
+                Symbol = "TEST",
+                Amount = 500000
+            });
+            var balance = await UserTomStub.GetBorrowBalanceStored.SendAsync(new Account()
+            {
+                Address = UserTomAddress,
+                Symbol = "TEST"
+            });
+            balance.Output.Value.ShouldBe(500000);
+            //shortfall<=0 INSUFFICIENT_SHORTFALL Exception
+            var shortfallException = await UserLilyStub.LiquidateBorrow.SendWithExceptionAsync(
+                new LiquidateBorrowInput()
+                {
+                    Borrower = UserTomAddress,
+                    BorrowSymbol = "TEST",
+                    CollateralSymbol = "ELF",
+                });
+            shortfallException.TransactionResult.Error.ShouldContain("INSUFFICIENT_SHORTFALL");
+            //set test price arise to cause LiquidateBorrow
+            await FinanceContractStub.SetUnderlyingPrice.SendAsync(new SetUnderlyingPriceInput()
+            {
+                Price = "3",
+                Symbol = "TEST"
+            });
+            //TOO_MUCH_REPAY  Exception
+            var  tooMuchRepayException= await UserLilyStub.LiquidateBorrow.SendWithExceptionAsync(new LiquidateBorrowInput()
+            {
+                Borrower = UserTomAddress,
+                BorrowSymbol = "TEST",
+                CollateralSymbol = "ELF",
+                RepayAmount = 100000
+            });
+            tooMuchRepayException.TransactionResult.Error.ShouldContain("TOO_MUCH_REPAY");
+            //LIQUIDATE_LIQUIDATOR_IS_BORROWER
+            var  liquidatorException= await UserTomStub.LiquidateBorrow.SendWithExceptionAsync(new LiquidateBorrowInput()
+            {
+                Borrower = UserTomAddress,
+                BorrowSymbol = "TEST",
+                CollateralSymbol = "ELF",
+                RepayAmount = 10000
+            });
+            liquidatorException.TransactionResult.Error.ShouldContain("LIQUIDATE_LIQUIDATOR_IS_BORROWER");
+            //INVALID_CLOSE_AMOUNT_REQUESTED
+            var  invalidRepayException= await UserLilyStub.LiquidateBorrow.SendWithExceptionAsync(new LiquidateBorrowInput()
+            {
+                Borrower = UserTomAddress,
+                BorrowSymbol = "TEST",
+                CollateralSymbol = "ELF",
+                RepayAmount = -1
+            });
+            invalidRepayException.TransactionResult.Error.ShouldContain("INVALID_CLOSE_AMOUNT_REQUESTED");
+            //LIQUIDATE_SEIZE_TOO_MUCH
+            await UserTomStub.Mint.SendAsync(new MintInput()
+            {
+                Amount = 100,
+                Symbol = "DAI"
+            });
+            await UserTomStub.EnterMarkets.SendAsync(new EnterMarketsInput()
+            {
+                Symbols = {"DAI"}
+            });
+            var  seizeException= await UserLilyStub.LiquidateBorrow.SendWithExceptionAsync(new LiquidateBorrowInput()
+            {
+                Borrower = UserTomAddress,
+                BorrowSymbol = "TEST",
+                CollateralSymbol = "DAI",
+                RepayAmount = 10000
+            });
+            seizeException.TransactionResult.Error.ShouldContain("LIQUIDATE_SEIZE_TOO_MUCH");
+            //SUCCESS
+            var lilyBalanceBefore= UserLilyStub.GetBalance.CallAsync(new Account()
+            {
+                Address = UserLilyAddress,
+                Symbol = "ELF"
+            });
+            lilyBalanceBefore.Result.Value.ShouldBe(0);
+            var seizeTokens=  await UserLilyStub.LiquidateCalculateSeizeTokens.SendAsync(new LiquidateCalculateSeizeTokensInput()
+            {
+                BorrowSymbol = "TEST",
+                CollateralSymbol = "ELF",
+                RepayAmount = "10000"
+            });
+            await UserLilyStub.LiquidateBorrow.SendAsync(new LiquidateBorrowInput()
+            {
+                Borrower = UserTomAddress,
+                BorrowSymbol = "TEST",
+                CollateralSymbol = "ELF",
+                RepayAmount = 10000
+            });
+           var lilyBalanceAfter= UserLilyStub.GetBalance.CallAsync(new Account()
+            {
+                Address = UserLilyAddress,
+                Symbol = "ELF"
+            });
+           lilyBalanceAfter.Result.Value.ShouldBe(seizeTokens.Output.Value);
+        }
+        
         private async Task Initialize()
         {
             await FinanceContractStub.Initialize.SendAsync(new InitializeInput()
@@ -617,12 +733,13 @@ namespace AElf.Contracts.FinanceContract
                 LiquidationIncentive = "1.1",
                 MaxAssets = 5
             });
+           await  CreateToken();
         }
 
        
         private async Task SupportMarket()
         {
-            //support ELF and WRITE
+            //support ELF and TEST and DAI
             await FinanceContractStub.SupportMarket.SendAsync(new SupportMarketInput()
             {
                 Symbol = "ELF",
@@ -633,11 +750,34 @@ namespace AElf.Contracts.FinanceContract
             });
             await FinanceContractStub.SupportMarket.SendAsync(new SupportMarketInput()
             {
-                BaseRatePerBlock = "0.0000000001",
-                InitialExchangeRate = "1.1",
-                MultiplierPerBlock = "0.000000001",
-                ReserveFactor = "0.001",
-                Symbol = "WRITE"
+                ReserveFactor = "0.1",
+                InitialExchangeRate = "0.02",
+                MultiplierPerBlock = "0.00000000158549",
+                BaseRatePerBlock = "0.000000000317098",
+                Symbol = "TEST"
+            });
+            await FinanceContractStub.SupportMarket.SendAsync(new SupportMarketInput()
+            {
+                ReserveFactor = "0.1",
+                InitialExchangeRate = "0.02",
+                MultiplierPerBlock = "0.00000000158549",
+                BaseRatePerBlock = "0.000000000317098",
+                Symbol = "DAI"
+            });
+            await FinanceContractStub.SetUnderlyingPrice.SendAsync(new SetUnderlyingPriceInput()
+            {
+                Price = "1",
+                Symbol = "ELF"
+            });
+            await FinanceContractStub.SetUnderlyingPrice.SendAsync(new SetUnderlyingPriceInput()
+            {
+                Price = "1",
+                Symbol = "TEST"
+            });
+            await FinanceContractStub.SetUnderlyingPrice.SendAsync(new SetUnderlyingPriceInput()
+            {
+                Price = "1",
+                Symbol = "DAI"
             });
             await TokenContractStub.Transfer.SendAsync(new TransferInput()
             {
@@ -648,36 +788,75 @@ namespace AElf.Contracts.FinanceContract
             });
             await TokenContractStub.Transfer.SendAsync(new TransferInput()
             {
-                Amount = 100000,
+                Amount = 100000000000,
                 Symbol = "ELF",
                 Memo = "Recharge",
                 To = UserLilyAddress
             });
-            //authorize  Tom and Lily to transfer ELF and DAi to FinanceContract
+            await TokenContractStub.Transfer.SendAsync(new TransferInput()
+            {
+                Amount = 100000000000,
+                Symbol = "TEST",
+                Memo = "Recharge",
+                To = UserTomAddress
+            });
+            await TokenContractStub.Transfer.SendAsync(new TransferInput()
+            {
+                Amount = 100000000000,
+                Symbol = "TEST",
+                Memo = "Recharge",
+                To = UserLilyAddress
+            });
+            await TokenContractStub.Transfer.SendAsync(new TransferInput()
+            {
+                Amount = 100000000000,
+                Symbol = "DAI",
+                Memo = "Recharge",
+                To = UserTomAddress
+            });
+            //authorize  Tom and Lily and admin to transfer ELF and TEST and DAI to FinanceContract
             await UserTomTokenContractStub.Approve.SendAsync(new ApproveInput()
             {
                 Amount = 100000000000,
                 Spender = FinanceContractAddress,
                 Symbol = "ELF"
             });
+            await UserTomTokenContractStub.Approve.SendAsync(new ApproveInput()
+            {
+                Amount = 100000000000,
+                Spender = FinanceContractAddress,
+                Symbol = "DAI"
+            });
             await TokenContractStub.Approve.SendAsync(new ApproveInput()
             {
-                Amount = 100000,
+                Amount = 100000000000,
                 Spender = FinanceContractAddress,
                 Symbol = "ELF"
             });
             await UserLilyTokenContractStub.Approve.SendAsync(new ApproveInput()
             {
-                Amount = 100000,
+                Amount = 100000000000,
                 Spender = FinanceContractAddress,
                 Symbol = "ELF"
             });
-            // await UserLilyTokenContractStub.Approve.SendAsync(new ApproveInput()
-            // {
-            //     Amount = 100000,
-            //     Spender = FinanceContractAddress,
-            //     Symbol = "READ"
-            // });
+            await UserTomTokenContractStub.Approve.SendAsync(new ApproveInput()
+            {
+                Amount = 100000000000,
+                Spender = FinanceContractAddress,
+                Symbol = "TEST"
+            });
+            await TokenContractStub.Approve.SendAsync(new ApproveInput()
+            {
+                Amount = 100000000000,
+                Spender = FinanceContractAddress,
+                Symbol = "TEST"
+            });
+            await UserLilyTokenContractStub.Approve.SendAsync(new ApproveInput()
+            {
+                Amount = 100000000000,
+                Spender = FinanceContractAddress,
+                Symbol = "TEST"
+            });
         }
 
         private async Task EnterMarket()
@@ -719,6 +898,62 @@ namespace AElf.Contracts.FinanceContract
                 Price = price,
                 Symbol = symbol
             });
+        }
+
+        private async Task CreateToken()
+        {
+            //TEST
+            var result = await TokenContractStub.Create.SendAsync(new CreateInput
+            {
+                Issuer = AdminAddress,
+                Symbol = "TEST",
+                Decimals = 8,
+                IsBurnable = true,
+                TokenName = "TEST symbol",
+                TotalSupply = 100000000_00000000
+            });
+
+            result.TransactionResult.Status.ShouldBe(TransactionResultStatus.Mined);
+
+            var issueResult = await TokenContractStub.Issue.SendAsync(new IssueInput
+            {
+                Amount = 100000000000000,
+                Symbol ="TEST",
+                To = AdminAddress
+            });
+            issueResult.TransactionResult.Status.ShouldBe(TransactionResultStatus.Mined);
+            var balance =await TokenContractStub.GetBalance.SendAsync(new GetBalanceInput()
+            {
+                Owner = AdminAddress,
+                Symbol = "TEST"
+            });
+            balance.Output.Balance.ShouldBe(100000000000000);
+            //DAI
+            var result2 = await TokenContractStub.Create.SendAsync(new CreateInput
+            {
+                Issuer = AdminAddress,
+                Symbol = "DAI",
+                Decimals = 8,
+                IsBurnable = true,
+                TokenName = "DAI symbol",
+                TotalSupply = 100000000_00000000
+            });
+
+            result2.TransactionResult.Status.ShouldBe(TransactionResultStatus.Mined);
+
+            var issueResult2 = await TokenContractStub.Issue.SendAsync(new IssueInput
+            {
+                Amount = 100000000000000,
+                Symbol ="DAI",
+                To = AdminAddress
+            });
+            issueResult2.TransactionResult.Status.ShouldBe(TransactionResultStatus.Mined);
+            var balance2 =await TokenContractStub.GetBalance.SendAsync(new GetBalanceInput()
+            {
+                Owner = AdminAddress,
+                Symbol = "DAI"
+            });
+            balance2.Output.Balance.ShouldBe(100000000000000);
         }
     }
 }

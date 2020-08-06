@@ -105,8 +105,8 @@ namespace AElf.Contracts.FinanceContract
             var totalBorrowsNew = State.TotalBorrows[input.Symbol].Add(input.Amount);
             DoTransferOut(Context.Sender, input.Amount, input.Symbol);
             //We write the previously calculated values into storage 
-            var  BorrowSnapshot= State.AccountBorrows[input.Symbol][Context.Sender];
-            if (BorrowSnapshot == null)
+            var  borrowSnapshot= State.AccountBorrows[input.Symbol][Context.Sender];
+            if (borrowSnapshot == null)
             {
                 State.AccountBorrows[input.Symbol][Context.Sender]=  new BorrowSnapshot();
             }
@@ -144,7 +144,7 @@ namespace AElf.Contracts.FinanceContract
             AccrueInterest(input.CollateralSymbol);
             //Checks if the liquidation should be allowed to occur
             Assert(State.Markets[input.BorrowSymbol].IsListed&& State.Markets[input.CollateralSymbol].IsListed,"MARKET_NOT_LISTED");
-            var shortfall = GetHypotheticalAccountLiquidityInternal(input.Borrower, "ctoken", 0, 0);
+            var shortfall = GetHypotheticalAccountLiquidityInternal(input.Borrower, input.BorrowSymbol, 0, 0);
             Assert(shortfall>0,"INSUFFICIENT_SHORTFALL");
             var borrowBalance = State.AccountBorrows[input.BorrowSymbol][input.Borrower].Principal;
             var maxClose = decimal.Parse(State.CloseFactor.Value) * borrowBalance;
@@ -262,7 +262,6 @@ namespace AElf.Contracts.FinanceContract
             State.BorrowIndex[input.Symbol] = InitialBorrowIndex;
             State.MintGuardianPaused[input.Symbol] = false;
             State.BorrowGuardianPaused[input.Symbol] = false;
-            State.Prices["ELF"] = DefaultPrice;
             State.TotalBorrows[input.Symbol] = 0;
             State.TotalSupply[input.Symbol] = 0;
             State.TotalReserves[input.Symbol] = 0;
@@ -339,12 +338,7 @@ namespace AElf.Contracts.FinanceContract
             var result = GetAccountSnapshot(Context.Sender, input.Value);
             Assert(result.BorrowBalance == 0, "NONZERO_BORROW_BALANCE");
             Assert(State.Markets[input.Value].IsListed, "Market is not listed");
-            var isMembership= State.Markets[input.Value].AccountMembership.ContainsKey(Context.Sender.ToString());
-            if (!isMembership)
-            {
-                return new Empty();
-            }
-            if (!State.Markets[input.Value].AccountMembership[Context.Sender.ToString()])
+            if(!State.Markets[input.Value].AccountMembership.TryGetValue(Context.Sender.ToString(), out var isExist) || !isExist)
             {
                 return new Empty();
             }
