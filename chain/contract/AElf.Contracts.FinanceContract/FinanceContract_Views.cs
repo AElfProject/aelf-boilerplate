@@ -220,7 +220,7 @@ namespace AElf.Contracts.FinanceContract
             }; 
         }
 
-        public override Int64Value GetAccrualBlockNumbers(StringValue input)
+        public override Int64Value GetAccrualBlockNumber(StringValue input)
         {
             return new Int64Value()
             {

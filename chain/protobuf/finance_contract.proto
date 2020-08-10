@@ -159,7 +159,7 @@ service FinanceContract {
     rpc GetTotalReserves(google.protobuf.StringValue) returns(google.protobuf.Int64Value){
             option (aelf.is_view) = true;
     }
-    rpc GetAccrualBlockNumbers(google.protobuf.StringValue) returns(google.protobuf.Int64Value){
+    rpc GetAccrualBlockNumber(google.protobuf.StringValue) returns(google.protobuf.Int64Value){
                                           option (aelf.is_view) = true;
     }
 }

@@ -319,8 +319,7 @@ namespace AElf.Contracts.FinanceContract
                 return;
             }
             var market = State.Markets[symbol];
-            Assert(market!=null,"Market is not listed");
-            Assert(market.IsListed,"Market is not listed");
+            Assert(market!=null&&market.IsListed,"Market is not listed");
             /*
                * Calculate the interest accumulated into borrows and reserves and the new index:
                *  simpleInterestFactor = borrowRate * blockDelta
