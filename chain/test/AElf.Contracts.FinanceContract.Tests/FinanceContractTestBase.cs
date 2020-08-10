@@ -24,6 +24,8 @@ namespace AElf.Contracts.FinanceContract
     public class FinanceContractTestBase : ContractTestBase<FinanceContractTestModule>
     {
         internal readonly Address FinanceContractAddress;
+        internal readonly IBlockchainService blockChainService;
+       
        
         private Address tokenContractAddress => GetAddress(TokenSmartContractAddressNameProvider.StringName);
 
@@ -53,6 +55,7 @@ namespace AElf.Contracts.FinanceContract
             FinanceContractAddress = AsyncHelper.RunSync(() => DeployContractAsync(
                 KernelConstants.DefaultRunnerCategory,
                 File.ReadAllBytes(typeof(FinanceContract).Assembly.Location), SampleAccount.Accounts[0].KeyPair));
+            blockChainService =  Application.ServiceProvider.GetRequiredService<IBlockchainService>();
         }
 
         private async Task<Address> DeployContractAsync(int category, byte[] code, ECKeyPair keyPair)

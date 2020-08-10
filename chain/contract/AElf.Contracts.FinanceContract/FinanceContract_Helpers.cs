@@ -70,14 +70,14 @@ namespace AElf.Contracts.FinanceContract
             var totalCash = GetCashPrior(token);
             var totalBorrow = State.TotalBorrows[token];
             var totalReserves = State.TotalReserves[token];
-            var denominator = totalCash.Add(totalBorrow).Sub(totalReserves);
+            var denominator = Convert.ToDecimal(totalCash.Add(totalBorrow).Sub(totalReserves));
             if (denominator == 0)
             {
                 return 0;
             }
 
             // utilizationRate = totalBorrows/(totalCash + totalBorrows - totalReserves)
-            var utilizationRate = Convert.ToDecimal(totalBorrow) / denominator;
+            var utilizationRate = totalBorrow/ denominator;
             return utilizationRate;
         }
 
@@ -318,7 +318,9 @@ namespace AElf.Contracts.FinanceContract
             {
                 return;
             }
-
+            var market = State.Markets[symbol];
+            Assert(market!=null,"Market is not listed");
+            Assert(market.IsListed,"Market is not listed");
             /*
                * Calculate the interest accumulated into borrows and reserves and the new index:
                *  simpleInterestFactor = borrowRate * blockDelta

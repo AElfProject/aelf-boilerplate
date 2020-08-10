@@ -219,5 +219,13 @@ namespace AElf.Contracts.FinanceContract
                 Value = State.TotalReserves[input.Value]
             }; 
         }
+
+        public override Int64Value GetAccrualBlockNumbers(StringValue input)
+        {
+            return new Int64Value()
+            {
+                Value = State.AccrualBlockNumbers[input.Value]
+            };
+        }
     }
 }
