@@ -733,7 +733,7 @@ namespace AElf.Contracts.FinanceContract
             borrowRate.Output.Value.ShouldBe(borrowRateExpect.ToInvariantString());
             //simpleInterestFactor = borrowRate * blockDelta
             //blockDelta=   chainBestChainHeight- accrualBlockNumber;
-            var accrualBlockNumber = await FinanceContractStub.GetAccrualBlockNumbers.SendAsync(new StringValue()
+            var accrualBlockNumber = await FinanceContractStub.GetAccrualBlockNumber.SendAsync(new StringValue()
             {
                 Value = "ELF"
             });
