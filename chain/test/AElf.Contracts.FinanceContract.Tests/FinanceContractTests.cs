@@ -36,22 +36,37 @@ namespace AElf.Contracts.FinanceContract
         public async Task InitializeTest()
         {
             //Invalid CloseFactor
-            var closeFactorException = await FinanceContractStub.Initialize.SendWithExceptionAsync(new InitializeInput()
+            var closeFactorMinException = await FinanceContractStub.Initialize.SendWithExceptionAsync(new InitializeInput()
             {
                 CloseFactor = "0.01",
                 LiquidationIncentive = "1.1",
                 MaxAssets = 5
             });
-            closeFactorException.TransactionResult.Error.ShouldContain("Invalid CloseFactor");
+            closeFactorMinException.TransactionResult.Error.ShouldContain("Invalid CloseFactor");
+            var closeFactorMaxException = await FinanceContractStub.Initialize.SendWithExceptionAsync(new InitializeInput()
+            {
+                CloseFactor = "1.0",
+                LiquidationIncentive = "1.1",
+                MaxAssets = 5
+            });
+            closeFactorMaxException.TransactionResult.Error.ShouldContain("Invalid CloseFactor");
             //Invalid LiquidationIncentive
-            var liquidationIncentiveException = await FinanceContractStub.Initialize.SendWithExceptionAsync(
+            var liquidationIncentiveMinException = await FinanceContractStub.Initialize.SendWithExceptionAsync(
+                new InitializeInput()
+                {
+                    CloseFactor = "0.1",
+                    LiquidationIncentive = "0.5",
+                    MaxAssets = 5
+                });
+            liquidationIncentiveMinException.TransactionResult.Error.ShouldContain("Invalid LiquidationIncentive");
+            var liquidationIncentiveMaxException = await FinanceContractStub.Initialize.SendWithExceptionAsync(
                 new InitializeInput()
                 {
                     CloseFactor = "0.1",
                     LiquidationIncentive = "2.0",
                     MaxAssets = 5
                 });
-            liquidationIncentiveException.TransactionResult.Error.ShouldContain("Invalid LiquidationIncentive");
+            liquidationIncentiveMaxException.TransactionResult.Error.ShouldContain("Invalid LiquidationIncentive");
             //MaxAssets must greater than 0
             var maxAssetsException = await FinanceContractStub.Initialize.SendWithExceptionAsync(new InitializeInput()
             {
@@ -107,6 +122,15 @@ namespace AElf.Contracts.FinanceContract
                 Symbol = "ELF"
             });
             reserveFactorException.TransactionResult.Error.ShouldContain("Invalid ReserveFactor");
+            var reserveFactorNegativeException =await FinanceContractStub.SupportMarket.SendWithExceptionAsync(new SupportMarketInput()
+            {
+                BaseRatePerBlock = "0.0001",
+                InitialExchangeRate = "1.1",
+                MultiplierPerBlock = "0.0001",
+                ReserveFactor = "-1",
+                Symbol = "ELF"
+            });
+            reserveFactorNegativeException.TransactionResult.Error.ShouldContain("Invalid ReserveFactor");
             //Invalid InitialExchangeRate
             var initialExchangeRateException =await FinanceContractStub.SupportMarket.SendWithExceptionAsync(new SupportMarketInput()
             {
@@ -580,12 +604,18 @@ namespace AElf.Contracts.FinanceContract
                 });
             unauthorizedCloseFactorException.TransactionResult.Error.ShouldContain("UNAUTHORIZED");
             //SetCloseFactor -INVALID_CLOSE_FACTOR
-            var factorException = await FinanceContractStub.SetCloseFactor.SendWithExceptionAsync(
+            var factorMinException = await FinanceContractStub.SetCloseFactor.SendWithExceptionAsync(
+                new StringValue()
+                {
+                    Value = "0.01"
+                });
+            factorMinException.TransactionResult.Error.ShouldContain("INVALID_CLOSE_FACTOR");
+            var factorMaxException = await FinanceContractStub.SetCloseFactor.SendWithExceptionAsync(
                 new StringValue()
                 {
                     Value = "1"
                 });
-            factorException.TransactionResult.Error.ShouldContain("INVALID_CLOSE_FACTOR");
+            factorMaxException.TransactionResult.Error.ShouldContain("INVALID_CLOSE_FACTOR");
             //SetCloseFactor -success
             await FinanceContractStub.SetCloseFactor.SendAsync(new StringValue()
             {
@@ -630,12 +660,18 @@ namespace AElf.Contracts.FinanceContract
                 });
             unauthorizedLiquidationIncentiveException.TransactionResult.Error.ShouldContain("UNAUTHORIZED");
             // SetLiquidationIncentive - INVALID_LIQUIDATION_INCENTIVE
-            var invalidException = await FinanceContractStub.SetLiquidationIncentive.SendWithExceptionAsync(
+            var invalidMinException = await FinanceContractStub.SetLiquidationIncentive.SendWithExceptionAsync(
                 new StringValue()
                 {
                     Value = "0.5"
                 });
-            invalidException.TransactionResult.Error.ShouldContain("INVALID_LIQUIDATION_INCENTIVE");
+            invalidMinException.TransactionResult.Error.ShouldContain("INVALID_LIQUIDATION_INCENTIVE");
+            var invalidMaxException = await FinanceContractStub.SetLiquidationIncentive.SendWithExceptionAsync(
+                new StringValue()
+                {
+                    Value = "2.0"
+                });
+            invalidMaxException.TransactionResult.Error.ShouldContain("INVALID_LIQUIDATION_INCENTIVE");
             await FinanceContractStub.SetLiquidationIncentive.SendAsync(new StringValue()
             {
                 Value = "1.1"
@@ -864,6 +900,14 @@ namespace AElf.Contracts.FinanceContract
             });
             liquidatorException.TransactionResult.Error.ShouldContain("LIQUIDATE_LIQUIDATOR_IS_BORROWER");
             //INVALID_CLOSE_AMOUNT_REQUESTED
+            var  invalidRepayZeroException= await UserLilyStub.LiquidateBorrow.SendWithExceptionAsync(new LiquidateBorrowInput()
+            {
+                Borrower = UserTomAddress,
+                BorrowSymbol = "TEST",
+                CollateralSymbol = "ELF",
+                RepayAmount = 0
+            });
+            invalidRepayZeroException.TransactionResult.Error.ShouldContain("INVALID_CLOSE_AMOUNT_REQUESTED");
             var  invalidRepayException= await UserLilyStub.LiquidateBorrow.SendWithExceptionAsync(new LiquidateBorrowInput()
             {
                 Borrower = UserTomAddress,
