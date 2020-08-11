@@ -60,14 +60,14 @@ namespace AElf.Contracts.FinanceContract
                 MaxAssets = 0
             });
             maxAssetsException.TransactionResult.Error.ShouldContain("MaxAssets must greater than 0");
-            // //only admin may initialize the market
-            // var adminException = await UserTomStub.Initialize.SendWithExceptionAsync(new InitializeInput()
-            // {
-            //     CloseFactor = "0.01",
-            //     LiquidationIncentive = "2.0",
-            //     MaxAssets = 5
-            // });
-            // adminException.TransactionResult.Error.ShouldContain("only admin may initialize the market");
+             //only admin may initialize the market
+             var adminException = await UserTomStub.Initialize.SendWithExceptionAsync(new InitializeInput()
+             {
+                 CloseFactor = "0.1",
+                 LiquidationIncentive = "1.1",
+                 MaxAssets = 5
+             });
+             adminException.TransactionResult.Error.ShouldContain("only admin may initialize the market");
             //Success
             await FinanceContractStub.Initialize.SendAsync(new InitializeInput()
             {
@@ -75,12 +75,12 @@ namespace AElf.Contracts.FinanceContract
                 LiquidationIncentive = "1.1",
                 MaxAssets = 5
             });
-            var closeFactor = await FinanceContractStub.GetCloseFactor.SendAsync(new Empty());
-            closeFactor.Output.Value.ShouldBe("0.1");
-            var liquidationIncentive = await FinanceContractStub.GetLiquidationIncentive.SendAsync(new Empty());
-            liquidationIncentive.Output.Value.ShouldBe("1.1");
-            var maxAssets = await FinanceContractStub.GetMaxAssets.SendAsync(new Empty());
-            maxAssets.Output.Value.ShouldBe(5);
+            var closeFactor = await FinanceContractStub.GetCloseFactor.CallAsync(new Empty());
+            closeFactor.Value.ShouldBe("0.1");
+            var liquidationIncentive = await FinanceContractStub.GetLiquidationIncentive.CallAsync(new Empty());
+            liquidationIncentive.Value.ShouldBe("1.1");
+            var maxAssets = await FinanceContractStub.GetMaxAssets.CallAsync(new Empty());
+            maxAssets.Value.ShouldBe(5);
         }
 
         [Fact]
@@ -204,13 +204,21 @@ namespace AElf.Contracts.FinanceContract
             {
                 Amount = 500, Symbol = "ELF"
             });
-            var snapshotOutputTom = await UserTomStub.GetAccountSnapshot.SendAsync(new Account()
+            var snapshotOutputTom = await UserTomStub.GetAccountSnapshot.CallAsync(new Account()
             {
                 Address = UserTomAddress,
                 Symbol = "ELF"
             });
-            var initialExchangeRate = "0.02";
-            snapshotOutputTom.Output.CTokenBalance.ShouldBe(decimal.ToInt64(500/decimal.Parse(initialExchangeRate)));
+            var token=await UserTomStub.GetUnderlyingBalance.CallAsync(new Account()
+            {
+                Address = UserTomAddress,
+                Symbol = "ELF"
+            });
+            var exchangeRate= await UserTomStub.GetExchangeRateStored.CallAsync(new StringValue()
+            {
+                Value = "ELF"
+            });
+            snapshotOutputTom.CTokenBalance.ShouldBe(decimal.ToInt64(token.Value/decimal.Parse(exchangeRate.Value)));
         }
 
         [Fact]
@@ -226,12 +234,12 @@ namespace AElf.Contracts.FinanceContract
                 Symbol = "ELF",
                 Amount = 10
             });
-            var borrowBalance = await UserTomStub.GetBorrowBalanceStored.SendAsync(new Account()
+            var borrowBalance = await UserTomStub.GetBorrowBalanceStored.CallAsync(new Account()
             {
                 Address = UserTomAddress,
                 Symbol = "ELF"
             });
-            borrowBalance.Output.Value.ShouldBe(10);
+            borrowBalance.Value.ShouldBe(10);
             //Market is not listed
             var listedException = await UserTomStub.Borrow.SendWithExceptionAsync(new BorrowInput()
             {
@@ -285,23 +293,23 @@ namespace AElf.Contracts.FinanceContract
             });
             listedException.TransactionResult.Error.ShouldContain("Market is not listed");
             //success
-            var borrowBalanceBefore = await UserTomStub.GetBorrowBalanceStored.SendAsync(new Account()
+            var borrowBalanceBefore = await UserTomStub.GetBorrowBalanceStored.CallAsync(new Account()
             {
                 Address = UserTomAddress,
                 Symbol = "ELF"
             });
-            borrowBalanceBefore.Output.Value.ShouldBe(10);
+            borrowBalanceBefore.Value.ShouldBe(10);
             await UserTomStub.RepayBorrow.SendAsync(new RepayBorrowInput()
             {
                 Amount = -1,
                 Symbol = "ELF"
             });
-            var borrowBalanceAfter = await UserTomStub.GetBorrowBalanceStored.SendAsync(new Account()
+            var borrowBalanceAfter = await UserTomStub.GetBorrowBalanceStored.CallAsync(new Account()
             {
                 Address = UserTomAddress,
                 Symbol = "ELF"
             });
-            borrowBalanceAfter.Output.Value.ShouldBe(0);
+            borrowBalanceAfter.Value.ShouldBe(0);
         }
 
         [Fact]
@@ -321,22 +329,22 @@ namespace AElf.Contracts.FinanceContract
             });
             listedException.TransactionResult.Error.ShouldContain("Market is not listed");
             //success
-            var borrowBalanceBefore = await UserTomStub.GetBorrowBalanceStored.SendAsync(new Account()
+            var borrowBalanceBefore = await UserTomStub.GetBorrowBalanceStored.CallAsync(new Account()
             {
                 Address = UserTomAddress,
                 Symbol = "ELF"
             });
-            borrowBalanceBefore.Output.Value.ShouldBe(10);
+            borrowBalanceBefore.Value.ShouldBe(10);
             await UserLilyStub.RepayBorrowBehalf.SendAsync(new RepayBorrowBehalfInput()
             {
                 Symbol = "ELF", Amount = -1, Borrower = UserTomAddress
             });
-            var borrowBalanceAfter = await UserTomStub.GetBorrowBalanceStored.SendAsync(new Account()
+            var borrowBalanceAfter = await UserTomStub.GetBorrowBalanceStored.CallAsync(new Account()
             {
                 Address = UserTomAddress,
                 Symbol = "ELF"
             });
-            borrowBalanceAfter.Output.Value.ShouldBe(0);
+            borrowBalanceAfter.Value.ShouldBe(0);
         }
 
         [Fact]
@@ -344,22 +352,22 @@ namespace AElf.Contracts.FinanceContract
         {
             await Initialize();
             await SupportMarket();
-            var totalReservesBefore = await FinanceContractStub.GetTotalReserves.SendAsync(new StringValue()
+            var totalReservesBefore = await FinanceContractStub.GetTotalReserves.CallAsync(new StringValue()
             {
                 Value = "ELF"
             });
-            totalReservesBefore.Output.Value.ShouldBe(0);
+            totalReservesBefore.Value.ShouldBe(0);
             //AddReserves method
             await FinanceContractStub.AddReserves.SendAsync(new AddReservesInput()
             {
                 Amount = 100,
                 Symbol = "ELF"
             });
-            var totalReservesAfter = await FinanceContractStub.GetTotalReserves.SendAsync(new StringValue()
+            var totalReservesAfter = await FinanceContractStub.GetTotalReserves.CallAsync(new StringValue()
             {
                 Value = "ELF"
             });
-            totalReservesAfter.Output.Value.ShouldBe(100);
+            totalReservesAfter.Value.ShouldBe(100);
             //reduce
             //TOKEN_INSUFFICIENT_CASH
             var cashException= await FinanceContractStub.ReduceReserves.SendWithExceptionAsync(new ReduceReservesInput()
@@ -380,11 +388,11 @@ namespace AElf.Contracts.FinanceContract
                 Amount = 50,
                 Symbol = "ELF"
             });
-             var totalReservesFinally = await FinanceContractStub.GetTotalReserves.SendAsync(new StringValue()
+             var totalReservesFinally = await FinanceContractStub.GetTotalReserves.CallAsync(new StringValue()
             {
                 Value = "ELF"
             });
-             totalReservesFinally.Output.Value.ShouldBe(50);
+             totalReservesFinally.Value.ShouldBe(50);
         }
 
         [Fact]
@@ -395,12 +403,16 @@ namespace AElf.Contracts.FinanceContract
             await Mint(500, "ELF");
             await Mint(500, "TEST");
             await EnterMarket();
-            var balanceBefore = await UserTomStub.GetBalance.SendAsync(new Account()
+            var balanceBefore = await UserTomStub.GetBalance.CallAsync(new Account()
             {
                 Address = UserTomAddress,
                 Symbol = "ELF"
             });
-            balanceBefore.Output.Value.ShouldBe(decimal.ToInt64(500/decimal.Parse("0.02")));
+            var exchangeRate = await UserLilyStub.GetExchangeRateStored.CallAsync(new StringValue()
+            {
+                Value = "ELF"
+            });
+            balanceBefore.Value.ShouldBe(decimal.ToInt64(500/decimal.Parse(exchangeRate.Value)));
             //Market is not listed
             var listedException = await UserTomStub.Redeem.SendWithExceptionAsync(new RedeemInput()
             {
@@ -412,28 +424,28 @@ namespace AElf.Contracts.FinanceContract
             var liquidityException = await UserTomStub.Redeem.SendWithExceptionAsync(new RedeemInput()
             {
                 Symbol = "ELF",
-                Amount = balanceBefore.Output.Value.Add(1000000)
+                Amount = balanceBefore.Value.Add(1000000)
             });
             liquidityException.TransactionResult.Error.ShouldContain("INSUFFICIENT_LIQUIDITY");
             //TOKEN_INSUFFICIENT_CASH
             var cashException = await UserTomStub.Redeem.SendWithExceptionAsync(new RedeemInput()
             {
                 Symbol = "ELF",
-                Amount = balanceBefore.Output.Value.Add(10000)
+                Amount = balanceBefore.Value.Add(10000)
             });
             cashException.TransactionResult.Error.ShouldContain("TOKEN_INSUFFICIENT_CASH");
             //success
             await UserTomStub.Redeem.SendAsync(new RedeemInput()
             {
-                Amount = balanceBefore.Output.Value,
+                Amount = balanceBefore.Value,
                 Symbol = "ELF"
             });
-            var balanceAfter = await UserTomStub.GetBalance.SendAsync(new Account()
+            var balanceAfter = await UserTomStub.GetBalance.CallAsync(new Account()
             {
                 Address = UserTomAddress,
                 Symbol = "ELF"
             });
-            balanceAfter.Output.Value.ShouldBe(0);
+            balanceAfter.Value.ShouldBe(0);
         }
          
         [Fact]
@@ -443,23 +455,23 @@ namespace AElf.Contracts.FinanceContract
             await SupportMarket();
             await Mint(500, "ELF");
             await EnterMarket();
-            var balanceBefore = await UserTomStub.GetUnderlyingBalance.SendAsync(new Account()
+            var balanceBefore = await UserTomStub.GetUnderlyingBalance.CallAsync(new Account()
             {
                 Address = UserTomAddress,
                 Symbol = "ELF"
             });
-            balanceBefore.Output.Value.ShouldBe(500);
+            balanceBefore.Value.ShouldBe(500);
             await UserTomStub.RedeemUnderlying.SendAsync(new RedeemUnderlyingInput()
             {
-                Amount = balanceBefore.Output.Value,
+                Amount = balanceBefore.Value,
                 Symbol = "ELF"
             });
-            var balanceAfter = await UserTomStub.GetUnderlyingBalance.SendAsync(new Account()
+            var balanceAfter = await UserTomStub.GetUnderlyingBalance.CallAsync(new Account()
             {
                 Address = UserTomAddress,
                 Symbol = "ELF"
             });
-            balanceAfter.Output.Value.ShouldBe(0);
+            balanceAfter.Value.ShouldBe(0);
         }
 
         [Fact]
@@ -471,8 +483,8 @@ namespace AElf.Contracts.FinanceContract
             unauthorizedException.TransactionResult.Error.ShouldContain("UNAUTHORIZED");
             //SUCCESS
             await FinanceContractStub.SetPendingAdmin.SendAsync(UserTomAddress);
-           var pendingAdmin= await FinanceContractStub.GetPendingAdmin.SendAsync(new Empty());
-           pendingAdmin.Output.ShouldBe(UserTomAddress);
+           var pendingAdmin= await FinanceContractStub.GetPendingAdmin.CallAsync(new Empty());
+           pendingAdmin.ShouldBe(UserTomAddress);
         }
 
         [Fact]
@@ -522,32 +534,32 @@ namespace AElf.Contracts.FinanceContract
             });
             exchangeRate.Value.ShouldBe("0.02");
             //
-            var borrowRate=   await UserTomStub.GetBorrowRatePerBlock.SendAsync(new StringValue()
+            var borrowRate=   await UserTomStub.GetBorrowRatePerBlock.CallAsync(new StringValue()
             {
                Value = "ELF"
             });
-            borrowRate.Output.Value.ShouldBe("0.000000000317098");
-            var supplyRate= await UserTomStub.GetSupplyRatePerBlock.SendAsync(new StringValue()
+            borrowRate.Value.ShouldBe("0.000000000317098");
+            var supplyRate= await UserTomStub.GetSupplyRatePerBlock.CallAsync(new StringValue()
             {
                 Value = "ELF"
             });
-            supplyRate.Output.Value.ShouldBe("0.");
-           var currentBorrowBalance= await UserTomStub.GetCurrentBorrowBalance.SendAsync(new Account()
+            supplyRate.Value.ShouldBe("0.");
+           var currentBorrowBalance= await UserTomStub.GetCurrentBorrowBalance.CallAsync(new Account()
             {
                 Symbol = "ELF",
                 Address = UserTomAddress
             });
-           currentBorrowBalance.Output.Value.ShouldBe(0);
-           var totalBorrows= await UserTomStub.GetTotalBorrows.SendAsync(new StringValue()
+           currentBorrowBalance.Value.ShouldBe(0);
+           var totalBorrows= await UserTomStub.GetTotalBorrows.CallAsync(new StringValue()
             {
                 Value = "ELF"
             });
-           totalBorrows.Output.Value.ShouldBe(0);
-            var currentExchangeRate=await UserTomStub.GetCurrentExchangeRate.SendAsync(new StringValue()
+           totalBorrows.Value.ShouldBe(0);
+            var currentExchangeRate=await UserTomStub.GetCurrentExchangeRate.CallAsync(new StringValue()
             {
                 Value = "ELF"
             });
-            decimal.Parse(currentExchangeRate.Output.Value).ShouldBeGreaterThan(0);
+            decimal.Parse(currentExchangeRate.Value).ShouldBeGreaterThan(0);
             var isMembership= await UserTomStub.CheckMembership.CallAsync(new Account()
             {
                 Address = UserTomAddress,
@@ -695,13 +707,16 @@ namespace AElf.Contracts.FinanceContract
 
         [Fact]
         public async Task AccrueInterestTest()
-        {   
+        {
+            const long mintAmount = 100000000000;
+            const long borrowAmount = 10000000000;
+            const long initTotalReserves = 0;
             await Initialize();
             await SupportMarket();
-            await Mint(100000000000, "ELF");
+            await Mint(mintAmount, "ELF");
             await EnterMarket();
-            await Borrow("ELF",10000000000);
-            var before= await FinanceContractStub.GetTotalBorrows.SendAsync(new StringValue()
+            await Borrow("ELF",borrowAmount);
+            var before = await FinanceContractStub.GetTotalBorrows.CallAsync(new StringValue()
             {
                Value = "ELF",
             });
@@ -714,42 +729,42 @@ namespace AElf.Contracts.FinanceContract
            
            
             //utilizationRate = totalBorrows/(totalCash + totalBorrows - totalReserves)
-            var cash= await FinanceContractStub.GetCash.SendAsync(new StringValue()
+            var cash= await FinanceContractStub.GetCash.CallAsync(new StringValue()
             {
                 Value = "ELF"
             });
-            var utilizationRate = (Convert.ToDecimal(10000000000) / (cash.Output.Value + 10000000000 - 0)); 
+           
+            var utilizationRate = (Convert.ToDecimal(borrowAmount) / (cash.Value + borrowAmount - initTotalReserves)); 
             //borrowRate=utilizationRate * multiplierPerBlock + baseRatePerBlock
-            var interestRate= FinanceContractStub.GetInterestRate.SendAsync(new StringValue()
+            var interestRate= FinanceContractStub.GetInterestRate.CallAsync(new StringValue()
             {
                 Value = "ELF"
             });
-            var borrowRate= await FinanceContractStub.GetBorrowRatePerBlock.SendAsync(new StringValue()
+            var borrowRate= await FinanceContractStub.GetBorrowRatePerBlock.CallAsync(new StringValue()
             {
                 Value = "ELF"
             });
-            var borrowRateExpect = decimal.Parse(interestRate.Result.Output.MultiplierPerBlock) * utilizationRate +
-                                   decimal.Parse(interestRate.Result.Output.BaseRatePerBlock);
-            borrowRate.Output.Value.ShouldBe(borrowRateExpect.ToInvariantString());
+            var borrowRateExpect = decimal.Parse(interestRate.Result.MultiplierPerBlock) * utilizationRate +
+                                   decimal.Parse(interestRate.Result.BaseRatePerBlock);
+            borrowRate.Value.ShouldBe(borrowRateExpect.ToInvariantString());
             //simpleInterestFactor = borrowRate * blockDelta
             //blockDelta=   chainBestChainHeight- accrualBlockNumber;
-            var accrualBlockNumber = await FinanceContractStub.GetAccrualBlockNumber.SendAsync(new StringValue()
+            var accrualBlockNumber = await FinanceContractStub.GetAccrualBlockNumber.CallAsync(new StringValue()
             {
                 Value = "ELF"
             });
             //GetTotalBorrows contain AccrueInterest
-            var after= await FinanceContractStub.GetTotalBorrows.SendAsync(new StringValue()
+            var after= await FinanceContractStub.GetTotalBorrows.CallAsync(new StringValue()
             {
                 Value = "ELF",
             });
             var chain=await blockChainService.GetChainAsync();
-            var chainBestChainHeight = chain.BestChainHeight;
-            var blockDelta = chainBestChainHeight - accrualBlockNumber.Output.Value;
-            var simpleInterestFactor = decimal.Parse(borrowRate.Output.Value) * blockDelta;
+            var chainBestChainHeight = chain.BestChainHeight+1;
+            var blockDelta = chainBestChainHeight - accrualBlockNumber.Value;
+            var simpleInterestFactor = decimal.Parse(borrowRate.Value) * blockDelta;
             //interestAccumulated = simpleInterestFactor * totalBorrows
-            var totalBorrows = 10000000000;
-            var interestAccumulated =decimal.ToInt64(simpleInterestFactor * totalBorrows) ;
-            after.Output.Value.ShouldBe(interestAccumulated+totalBorrows);
+            var interestAccumulated =decimal.ToInt64(simpleInterestFactor * borrowAmount) ;
+            after.Value.ShouldBe(interestAccumulated+borrowAmount);
         }
         [Fact]
         public async Task EnterAndExitMarketTest()
@@ -809,12 +824,12 @@ namespace AElf.Contracts.FinanceContract
                 Symbol = "TEST",
                 Amount = 500000
             });
-            var balance = await UserTomStub.GetBorrowBalanceStored.SendAsync(new Account()
+            var balance = await UserTomStub.GetBorrowBalanceStored.CallAsync(new Account()
             {
                 Address = UserTomAddress,
                 Symbol = "TEST"
             });
-            balance.Output.Value.ShouldBe(500000);
+            balance.Value.ShouldBe(500000);
             //shortfall<=0 INSUFFICIENT_SHORTFALL Exception
             var shortfallException = await UserLilyStub.LiquidateBorrow.SendWithExceptionAsync(
                 new LiquidateBorrowInput()
@@ -882,23 +897,35 @@ namespace AElf.Contracts.FinanceContract
                 Symbol = "ELF"
             });
             lilyBalanceBefore.Result.Value.ShouldBe(0);
-            var seizeTokens=  await UserLilyStub.LiquidateCalculateSeizeTokens.SendAsync(new LiquidateCalculateSeizeTokensInput()
-            {
-                BorrowSymbol = "TEST",
-                CollateralSymbol = "ELF",
-                RepayAmount = "10000"
-            });
+            const string actualRepayAmount = "10000";
+            var seizeTokens = await UserLilyStub.LiquidateCalculateSeizeTokens.CallAsync(
+                new LiquidateCalculateSeizeTokensInput()
+                {
+                    BorrowSymbol = "TEST",
+                    CollateralSymbol = "ELF",
+                    RepayAmount = actualRepayAmount
+                });
             //  seizeAmount = actualRepayAmount * liquidationIncentive * priceBorrowed / priceCollateral
             //  seizeTokens = seizeAmount / exchangeRate
-            var exchangeRate= await UserLilyStub.GetExchangeRateStored.SendAsync(new StringValue()
+            var exchangeRate = await UserLilyStub.GetExchangeRateStored.CallAsync(new StringValue()
             {
                 Value = "ELF"
             });
-            var  seizeAmount=10000 * decimal.Parse("1.1") * 3/ 1;
-            var seizeTokensExpect = decimal.ToInt64(seizeAmount / decimal.Parse(exchangeRate.Output.Value));
-            
-            seizeTokens.Output.Value.ShouldBe(seizeTokensExpect);
-            
+            var liquidationIncentive = await UserTomStub.GetLiquidationIncentive.CallAsync(new Empty());
+            var priceBorrowed = await UserTomStub.GetUnderlyingPrice.CallAsync(new StringValue()
+            {
+                Value = "TEST"
+            });
+            var priceCollateral = await UserTomStub.GetUnderlyingPrice.CallAsync(new StringValue()
+            {
+                Value = "ELF"
+            });
+            var seizeAmount = decimal.Parse(actualRepayAmount) * decimal.Parse(liquidationIncentive.Value) *
+                decimal.Parse(priceBorrowed.Value) / decimal.Parse(priceCollateral.Value);
+            var seizeTokensExpect = decimal.ToInt64(seizeAmount / decimal.Parse(exchangeRate.Value));
+
+            seizeTokens.Value.ShouldBe(seizeTokensExpect);
+
             await UserLilyStub.LiquidateBorrow.SendAsync(new LiquidateBorrowInput()
             {
                 Borrower = UserTomAddress,
@@ -906,12 +933,12 @@ namespace AElf.Contracts.FinanceContract
                 CollateralSymbol = "ELF",
                 RepayAmount = 10000
             });
-           var lilyBalanceAfter= UserLilyStub.GetBalance.CallAsync(new Account()
+            var lilyBalanceAfter = UserLilyStub.GetBalance.CallAsync(new Account()
             {
                 Address = UserLilyAddress,
                 Symbol = "ELF"
             });
-           lilyBalanceAfter.Result.Value.ShouldBe(seizeTokens.Output.Value);
+            lilyBalanceAfter.Result.Value.ShouldBe(seizeTokens.Value);
         }
         
         private async Task Initialize()

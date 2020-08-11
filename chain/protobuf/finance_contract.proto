@@ -446,7 +446,7 @@ message CollateralFactorChanged{
     option (aelf.is_event) = true;
     string old_collateral_factor = 1;
     string new_collateral_factor = 2;
-    string symbol=4;
+    string symbol=3;
 }
 
 message LiquidationIncentiveChanged{
