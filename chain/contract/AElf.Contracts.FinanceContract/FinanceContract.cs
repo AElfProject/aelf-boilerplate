@@ -146,7 +146,11 @@ namespace AElf.Contracts.FinanceContract
             Assert(State.Markets[input.BorrowSymbol].IsListed&& State.Markets[input.CollateralSymbol].IsListed,"MARKET_NOT_LISTED");
             var shortfall = GetHypotheticalAccountLiquidityInternal(input.Borrower, input.BorrowSymbol, 0, 0);
             Assert(shortfall>0,"INSUFFICIENT_SHORTFALL");
-            var borrowBalance = State.AccountBorrows[input.BorrowSymbol][input.Borrower].Principal;
+            var borrowBalance = BorrowBalanceStoredInternal(new Account()
+            {
+                Address = input.Borrower,
+                Symbol = input.BorrowSymbol
+            });
             var maxClose = decimal.Parse(State.CloseFactor.Value) * borrowBalance;
             Assert(input.RepayAmount <= maxClose, "TOO_MUCH_REPAY");
             var accrualBorrowSymbolBlockNumberPrior = State.AccrualBlockNumbers[input.BorrowSymbol];
