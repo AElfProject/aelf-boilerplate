@@ -273,7 +273,8 @@ namespace AElf.Contracts.FinanceContract
                 Symbol = input.Symbol,
                 BaseRatePerBlock = input.BaseRatePerBlock,
                 MultiplierPerBlock = input.MultiplierPerBlock,
-                ReserveFactor = input.ReserveFactor
+                ReserveFactor = input.ReserveFactor,
+                CollateralFactor=DefaultCollateralFactor
             });
             return new Empty();
         }
