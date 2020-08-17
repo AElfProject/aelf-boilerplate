@@ -42,7 +42,7 @@ service FinanceContract {
     }
     rpc ReduceReserves (ReduceReservesInput) returns (google.protobuf.Empty) {
     }
-    rpc EnterMarkets (EnterMarketsInput) returns (EnterMarketsOutput) {
+    rpc EnterMarket (EnterMarketInput) returns (google.protobuf.Empty) {
     }
     rpc ExitMarket(google.protobuf.StringValue) returns (google.protobuf.Empty) {
     }
@@ -239,17 +239,8 @@ message GetAccountSnapshotOutput{
     string exchange_rate = 3;
 }
 
-message EnterMarketsInput{
-    repeated string symbols = 1;
-}
-
-message EnterMarketsOutput{
-    repeated EnterMarketResult results = 1;
-}
-
-message EnterMarketResult{
-    string symbol = 1;
-    bool success = 2;
+message EnterMarketInput{
+     string symbol = 1;
 }
 
 message LiquidateCalculateSeizeTokensInput{

@@ -71,9 +71,11 @@ namespace AElf.Contracts.FinanceContract
 
         public override StringValue GetUnderlyingPrice(StringValue input)
         {
+            var price = State.Prices[input.Value] ?? "0";
+            var priceOut = (decimal.Parse(price) * GetPow("10",State.DecimalState[input.Value])).ToInvariantString();
             return new StringValue()
             {
-                Value = State.Prices[input.Value]
+                Value = priceOut
             };
         }
 
@@ -197,9 +199,12 @@ namespace AElf.Contracts.FinanceContract
 
         public override BoolValue CheckMembership(Account input)
         {
+            var isMembership =
+                (State.Markets[input.Symbol].AccountMembership
+                    .TryGetValue(input.Address.ToString(), out var isExist) && isExist);
             return new BoolValue()
             {
-                Value = State.Markets[input.Symbol].AccountMembership[input.Address.ToString()]
+                Value =isMembership
             };
         }
 

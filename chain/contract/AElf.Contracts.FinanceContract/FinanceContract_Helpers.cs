@@ -113,7 +113,7 @@ namespace AElf.Contracts.FinanceContract
         private void AddToMarketInternal(string symbol, Address borrower)
         {
             var market = State.Markets[symbol];
-            Assert(market.IsListed, "MARKET_NOT_LISTED");
+            Assert(market !=null && market.IsListed, "Market is not listed");
             market.AccountMembership.TryGetValue(borrower.ToString(), out var isMembership);
             if (isMembership)
             {
@@ -123,9 +123,8 @@ namespace AElf.Contracts.FinanceContract
             if (asset == null)
             {
                 State.AccountAssets[borrower]=new AssetList();
-               
             }
-            Assert(State.AccountAssets[borrower].Assets.Count < State.MaxAssets.Value, "TOO_MANY_ASSETS");
+            Assert(State.AccountAssets[borrower].Assets.Count < State.MaxAssets.Value, "Too Many Assets");
             market.AccountMembership[borrower.ToString()] = true;
             State.AccountAssets[borrower].Assets.Add(symbol);
             Context.Fire(new MarketEntered()
@@ -150,7 +149,7 @@ namespace AElf.Contracts.FinanceContract
         /// Determine what the account liquidity would be if the given amounts were redeemed/borrowed
         /// </summary>
         /// <returns></returns>
-        private long GetHypotheticalAccountLiquidityInternal(Address address, string cToken, long redeemTokens,
+        private decimal GetHypotheticalAccountLiquidityInternal(Address address, string cToken, long redeemTokens,
             long borrowAmount)
         {
             var assets = State.AccountAssets[address];
@@ -179,7 +178,7 @@ namespace AElf.Contracts.FinanceContract
                 }
             }
 
-            return decimal.ToInt64(sumBorrowPlusEffects - sumCollateral);
+            return sumBorrowPlusEffects - sumCollateral;
         }
 
         /// <summary>
@@ -189,15 +188,14 @@ namespace AElf.Contracts.FinanceContract
         /// <returns></returns>
         private decimal GetUnderlyingPrice(string cToken)
         {
-            return decimal.Parse(State.Prices[cToken]);
+            return decimal.Parse(State.Prices[cToken]??"0");
         }
 
         private long RepayBorrowFresh(Address payer, Address borrower, long repayAmount, string symbol)
         {
-            Assert(State.Markets[symbol].IsListed, "Market is not listed");
             var accrualBlockNumberPrior = State.AccrualBlockNumbers[symbol];
             Assert(accrualBlockNumberPrior == Context.CurrentHeight,
-                "market's block number should equals current block number");
+                "Market's block number should equals current block number");
             // var borrowerIndex = State.AccountBorrows[symbol][borrower].InterestIndex;
             var account = new Account()
             {
@@ -209,13 +207,13 @@ namespace AElf.Contracts.FinanceContract
             {
                 repayAmount = accountBorrows;
             }
-
             var actualRepayAmount = repayAmount;
-            DoTransferIn(payer, repayAmount, symbol);
             //accountBorrowsNew = accountBorrows - actualRepayAmount
             // totalBorrowsNew = totalBorrows - actualRepayAmount
             var accountBorrowsNew = accountBorrows.Sub(actualRepayAmount);
+            Assert(accountBorrowsNew>=0,"Insufficient Balance Of Token");
             var totalBorrowsNew = State.TotalBorrows[symbol].Sub(actualRepayAmount);
+            DoTransferIn(payer, repayAmount, symbol);
             State.AccountBorrows[symbol][borrower].Principal = accountBorrowsNew;
             State.AccountBorrows[symbol][borrower].InterestIndex = State.BorrowIndex[symbol];
             State.TotalBorrows[symbol] = totalBorrowsNew;
@@ -233,9 +231,8 @@ namespace AElf.Contracts.FinanceContract
 
         private void SeizeInternal(Address liquidator, Address borrower, long seizeTokens, string symbol)
         {
-            Assert(!State.SeizeGuardianPaused.Value, "seize is paused");
-            Assert(State.Markets[symbol].IsListed, "Market is not listed");
-            Assert(borrower != liquidator, "LIQUIDATE_SEIZE_LIQUIDATOR_IS_BORROWER");
+            Assert(!State.SeizeGuardianPaused.Value, "Seize is paused");
+            Assert(borrower != liquidator, "Liquidator is borrower");
             var borrowerTokensNew = State.AccountTokens[symbol][borrower].Sub(seizeTokens);
             var liquidatorTokensNew = State.AccountTokens[symbol][liquidator].Add(seizeTokens);
             State.AccountTokens[symbol][borrower] = borrowerTokensNew;
@@ -281,11 +278,12 @@ namespace AElf.Contracts.FinanceContract
 
         private void Redeem(Address address, string symbol, long redeemTokens, long redeemAmount)
         {
-            Assert(State.Markets[symbol].IsListed, "Market is not listed");
-            if (State.Markets[symbol].AccountMembership[address.ToString()])
+            MarketVerify(symbol);
+            if (State.Markets[symbol].AccountMembership
+                .TryGetValue(address.ToString(), out var isExist) && isExist)
             {
                 var shortfall = GetHypotheticalAccountLiquidityInternal(address, symbol, redeemTokens, 0);
-                Assert(shortfall <= 0, "INSUFFICIENT_LIQUIDITY");
+                Assert(shortfall <= 0, "Insufficient Liquidity");
             }
 
             var accrualBlockNumberPrior = State.AccrualBlockNumbers[symbol];
@@ -295,7 +293,8 @@ namespace AElf.Contracts.FinanceContract
             //accountTokensNew = accountTokens[redeemer] - redeemTokens
             var totalSupplyNew = State.TotalSupply[symbol].Sub(redeemTokens);
             var accountTokensNew = State.AccountTokens[symbol][Context.Sender].Sub(redeemTokens);
-            Assert(GetCashPrior(symbol) >= redeemAmount, "TOKEN_INSUFFICIENT_CASH");
+            Assert(GetCashPrior(symbol) >= redeemAmount, "Insufficient Token Cash");
+            Assert(accountTokensNew>=0,"Insufficient Token Balance");
             DoTransferOut(address, redeemAmount, symbol);
             //We write previously calculated values into storage
             State.TotalSupply[symbol] = totalSupplyNew;
@@ -311,6 +310,7 @@ namespace AElf.Contracts.FinanceContract
 
         private void AccrueInterest(string symbol)
         {
+            MarketVerify(symbol);
             /* Remember the initial block number */
             var currentBlockNumber = Context.CurrentHeight;
             var accrualBlockNumberPrior = State.AccrualBlockNumbers[symbol];
@@ -318,8 +318,6 @@ namespace AElf.Contracts.FinanceContract
             {
                 return;
             }
-            var market = State.Markets[symbol];
-            Assert(market!=null&&market.IsListed,"Market is not listed");
             /*
                * Calculate the interest accumulated into borrows and reserves and the new index:
                *  simpleInterestFactor = borrowRate * blockDelta
@@ -363,7 +361,7 @@ namespace AElf.Contracts.FinanceContract
         {
             var priceBorrow = decimal.Parse(State.Prices[borrowSymbol]);
             var priceCollateral = decimal.Parse(State.Prices[collateralSymbol]);
-            Assert(priceBorrow != 0 && priceCollateral != 0, "PRICE_ERROR");
+            Assert(priceBorrow != 0 && priceCollateral != 0, "Error Price");
             var exchangeRate = ExchangeRateStoredInternal(collateralSymbol);
             //Get the exchange rate and calculate the number of collateral tokens to seize:
             // *  seizeAmount = actualRepayAmount * liquidationIncentive * priceBorrowed / priceCollateral
@@ -373,6 +371,36 @@ namespace AElf.Contracts.FinanceContract
                 priceBorrow / priceCollateral;
             var seizeTokens = decimal.ToInt64(seizeAmount / exchangeRate);
             return seizeTokens;
+        }
+        /// <summary>
+        /// Verify the token must on the chain
+        /// </summary>
+        /// <param name="symbol">symbol</param>
+        /// <returns></returns>
+        private void TokenVerify(string symbol)
+        {
+             var result=  State.TokenContract.GetTokenInfo.Call(Context.Sender, new GetTokenInfoInput()
+            {
+                Symbol = symbol
+            });
+             Assert(result.Symbol != "","Invalid Symbol");
+             //if valid    set the decimal state
+             State.DecimalState[symbol] = result.Decimals;
+        }
+        private void MarketVerify(string symbol)
+        {
+            var market = State.Markets[symbol];
+            Assert(market!=null&& market.IsListed,"Market is not listed");
+        }
+        private decimal GetPow(string s,int n)
+        {
+            var x = decimal.Parse(s);
+            var y = decimal.Parse("1");
+            for (int i = 0; i < n; i++)
+            {
+                y = y * x;
+            }
+            return y;
         }
     }
 }

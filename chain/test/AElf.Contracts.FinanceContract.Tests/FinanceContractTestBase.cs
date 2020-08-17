@@ -25,8 +25,6 @@ namespace AElf.Contracts.FinanceContract
     {
         internal readonly Address FinanceContractAddress;
         internal readonly IBlockchainService blockChainService;
-       
-       
         private Address tokenContractAddress => GetAddress(TokenSmartContractAddressNameProvider.StringName);
 
         internal FinanceContractContainer.FinanceContractStub GetFinanceContractStub(ECKeyPair senderKeyPair)

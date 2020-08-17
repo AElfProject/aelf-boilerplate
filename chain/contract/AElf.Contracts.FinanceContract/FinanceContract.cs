@@ -16,21 +16,21 @@ namespace AElf.Contracts.FinanceContract
     {
         public override Empty Initialize(InitializeInput input)
         {
-            // var address=Context.GetZeroSmartContractAddress();
+            Assert(State.TokenContract.Value == null, "Already initialized.");
             State.GenesisContract.Value = Context.GetZeroSmartContractAddress();
+            State.Admin.Value =
+                State.GenesisContract.GetContractInfo.Call(Context.Self).Author;
+            Assert(Context.Sender == State.Admin.Value, "Only Admin may initialize the market");
             State.TokenContract.Value =
                 Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
             var newCloseFactor = decimal.Parse(input.CloseFactor);
             var newLiquidationIncentive = decimal.Parse(input.LiquidationIncentive);
             Assert(newCloseFactor>decimal.Parse(MinCloseFactor)&& newCloseFactor<decimal.Parse(MaxCloseFactor),"Invalid CloseFactor");
-            Assert(newLiquidationIncentive>decimal.Parse(MinLiquidationIncentive)&& newLiquidationIncentive<decimal.Parse(MaxLiquidationIncentive),"Invalid LiquidationIncentive");
+            Assert(newLiquidationIncentive>=decimal.Parse(MinLiquidationIncentive)&& newLiquidationIncentive<=decimal.Parse(MaxLiquidationIncentive),"Invalid LiquidationIncentive");
             Assert(input.MaxAssets>0,"MaxAssets must greater than 0");
             State.CloseFactor.Value = input.CloseFactor;
             State.LiquidationIncentive.Value = input.LiquidationIncentive;
             State.MaxAssets.Value = input.MaxAssets;
-            State.Admin.Value =
-                State.GenesisContract.GetContractInfo.Call(Context.Self).Author;
-            Assert(Context.Sender == State.Admin.Value, "only admin may initialize the market");
             State.SeizeGuardianPaused.Value = false;
             return new Empty();
         }
@@ -54,7 +54,7 @@ namespace AElf.Contracts.FinanceContract
             Assert(State.Markets[mintInput.Symbol].IsListed, "Market is not listed");
             var accrualBlockNumberPrior = State.AccrualBlockNumbers[mintInput.Symbol];
             Assert(accrualBlockNumberPrior == Context.CurrentHeight,
-                "market's block number should equals current block number");
+                "Market's block number should equals current block number");
             var exchangeRate = ExchangeRateStoredInternal(mintInput.Symbol);
             var actualMintAmount = mintInput.Amount;
             DoTransferIn(Context.Sender, mintInput.Amount, mintInput.Symbol);
@@ -80,20 +80,19 @@ namespace AElf.Contracts.FinanceContract
         public override Empty Borrow(BorrowInput input)
         {
             AccrueInterest(input.Symbol);
-            Assert(!State.BorrowGuardianPaused[input.Symbol], "borrow is paused");
-            Assert(State.Markets[input.Symbol].IsListed, "Market is not listed");
+            Assert(!State.BorrowGuardianPaused[input.Symbol], "Borrow is paused");
+          //  Assert(State.Markets[input.Symbol].IsListed, "Market is not listed");
             if(!State.Markets[input.Symbol].AccountMembership.TryGetValue(Context.Sender.ToString(), out var isExist) || !isExist)
             {
                 AddToMarketInternal(input.Symbol, Context.Sender);
             }
-
-            Assert(UnderlyingPriceVerify(input.Symbol), "PRICE_ERROR");
+            Assert(UnderlyingPriceVerify(input.Symbol), "Error price");
             var shortfall = GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Symbol, 0, input.Amount);
-            Assert(shortfall <= 0, "INSUFFICIENT_LIQUIDITY");
+            Assert(shortfall <= 0, "Insufficient liquidity");
             var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
             Assert(accrualBlockNumberPrior == Context.CurrentHeight,
-                "market's block number should equals current block number");
-            Assert(GetCashPrior(input.Symbol) >= input.Amount, "BORROW_CASH_NOT_AVAILABLE");
+                "Market's block number should equals current block number");
+            Assert(GetCashPrior(input.Symbol) >= input.Amount, "Borrow cash not available");
             /*
           * We calculate the new borrower and total borrow balances, failing on overflow:
           *  accountBorrowsNew = accountBorrows + borrowAmount
@@ -145,28 +144,28 @@ namespace AElf.Contracts.FinanceContract
             //Checks if the liquidation should be allowed to occur
             Assert(State.Markets[input.BorrowSymbol].IsListed&& State.Markets[input.CollateralSymbol].IsListed,"MARKET_NOT_LISTED");
             var shortfall = GetHypotheticalAccountLiquidityInternal(input.Borrower, input.BorrowSymbol, 0, 0);
-            Assert(shortfall>0,"INSUFFICIENT_SHORTFALL");
+            Assert(shortfall>0,"Insufficient shortfall");
             var borrowBalance = BorrowBalanceStoredInternal(new Account()
             {
                 Address = input.Borrower,
                 Symbol = input.BorrowSymbol
             });
             var maxClose = decimal.Parse(State.CloseFactor.Value) * borrowBalance;
-            Assert(input.RepayAmount <= maxClose, "TOO_MUCH_REPAY");
+            Assert(input.RepayAmount <= maxClose, "Too much repay");
             var accrualBorrowSymbolBlockNumberPrior = State.AccrualBlockNumbers[input.BorrowSymbol];
             Assert(accrualBorrowSymbolBlockNumberPrior == Context.CurrentHeight,
-                "market's block number should equals current block number");
+                "Market's block number should equals current block number");
             var accrualCollateralSymbolBlockNumberPrior = State.AccrualBlockNumbers[input.CollateralSymbol];
             Assert(accrualCollateralSymbolBlockNumberPrior == Context.CurrentHeight,
-                "market's block number should equals current block number");
-            Assert(input.Borrower != Context.Sender, "LIQUIDATE_LIQUIDATOR_IS_BORROWER");
-            Assert(input.RepayAmount!=0&& input.RepayAmount!=-1,"INVALID_CLOSE_AMOUNT_REQUESTED");
+                "Market's block number should equals current block number");
+            Assert(input.Borrower != Context.Sender, "Liquidator is borrower");
+            Assert(input.RepayAmount!=0&& input.RepayAmount!=-1,"Invalid close amount request");
             var actualRepayAmount =
                 RepayBorrowFresh(Context.Sender, input.Borrower, input.RepayAmount, input.BorrowSymbol);
             var seizeTokens =
                 LiquidateCalculateSeizeTokens(input.BorrowSymbol, input.CollateralSymbol, actualRepayAmount);
             Assert(State.AccountTokens[input.CollateralSymbol][input.Borrower] > seizeTokens,
-                "LIQUIDATE_SEIZE_TOO_MUCH");
+                "Liquidate size too much");
             SeizeInternal(Context.Sender, input.Borrower, seizeTokens, input.CollateralSymbol);
             Context.Fire(new LiquidateBorrow()
             {
@@ -186,11 +185,11 @@ namespace AElf.Contracts.FinanceContract
             //  Assert(Context.Sender==State.Admin.Value,"only admin can add Reserves");
             var accrualBorrowSymbolBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
             Assert(accrualBorrowSymbolBlockNumberPrior == Context.CurrentHeight,
-                "market's block number should equals current block number");
+                "Market's block number should equals current block number");
             var actualAddAmount = input.Amount;
             DoTransferIn(Context.Sender, input.Amount, input.Symbol);
             var totalReservesNew = State.TotalReserves[input.Symbol].Add(actualAddAmount);
-            Assert(totalReservesNew >= State.TotalReserves[input.Symbol], "add reserves unexpected overflow");
+            Assert(totalReservesNew >= State.TotalReserves[input.Symbol], "Add reserves unexpected overflow");
             State.TotalReserves[input.Symbol] = totalReservesNew;
             Context.Fire(new ReservesAdded()
             {
@@ -208,13 +207,13 @@ namespace AElf.Contracts.FinanceContract
             //  Assert(Context.Sender==State.Admin.Value,"only admin can add Reserves");
             var accrualBorrowSymbolBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
             Assert(accrualBorrowSymbolBlockNumberPrior == Context.CurrentHeight,
-                "market's block number should equals current block number");
-            Assert(Context.Sender == State.Admin.Value, "UNAUTHORIZED");
-            Assert(GetCashPrior(input.Symbol) >= input.Amount, "TOKEN_INSUFFICIENT_CASH");
+                "Market's block number should equals current block number");
+            Assert(Context.Sender == State.Admin.Value, "Unauthorized");
+            Assert(GetCashPrior(input.Symbol) >= input.Amount, "Token insufficient cash");
             var totalReserves = State.TotalReserves[input.Symbol];
-            Assert(totalReserves > input.Amount, "RESERVES_VALIDATION");
+            Assert(totalReserves > input.Amount, "Invalid reserves");//RESERVES_VALIDATION
             var totalReservesNew = totalReserves.Sub(input.Amount);
-            Assert(totalReservesNew <= totalReserves, "reduce reserves unexpected underflow");
+            Assert(totalReservesNew <= totalReserves, "Reduce reserves unexpected underflow");
             State.TotalReserves[input.Symbol] = totalReservesNew;
             DoTransferOut(State.Admin.Value, input.Amount, input.Symbol);
             Context.Fire(new ReservesReduced()
@@ -230,23 +229,24 @@ namespace AElf.Contracts.FinanceContract
         //MarketListed
         public override Empty SupportMarket(SupportMarketInput input)
         {
-            Assert(Context.Sender == State.Admin.Value, "UNAUTHORIZED");
+            Assert(Context.Sender == State.Admin.Value, "Unauthorized");
             var market = State.Markets[input.Symbol];
             if (market != null)
             {
-                Assert(!market.IsListed, "SUPPORT_MARKET_EXISTS");
+                Assert(!market.IsListed, "Support market exists");//
             }
-
-            // check to make sure its really a CToken
+            // check to make sure its really a Token
+            TokenVerify(input.Symbol);
             State.Markets[input.Symbol] = new Market()
             {
                 IsListed = true,
                 CollateralFactor = DefaultCollateralFactor,
             };
-            Assert(decimal.Parse(input.ReserveFactor)>=0&& decimal.Parse(input.ReserveFactor)<decimal.Parse(MaxReserveFactor),"Invalid ReserveFactor");
+            Assert(decimal.Parse(input.ReserveFactor)>=0&& decimal.Parse(input.ReserveFactor)<=decimal.Parse(MaxReserveFactor),"Invalid ReserveFactor");
             Assert(decimal.Parse(input.InitialExchangeRate)>0,"Invalid InitialExchangeRate");
             Assert(decimal.Parse(input.MultiplierPerBlock)>=0,"Invalid MultiplierPerBlock");
             Assert(decimal.Parse(input.BaseRatePerBlock)>=0,"Invalid BaseRatePerBlock");
+            Assert(decimal.Parse(input.MultiplierPerBlock)+decimal.Parse(input.BaseRatePerBlock)<decimal.Parse(MaxBorrowRate),"Invalid interestRate model");
             State.ReserveFactor[input.Symbol] = input.ReserveFactor;
             State.InitialExchangeRate[input.Symbol] = input.InitialExchangeRate;
             State.MultiplierPerBlock[input.Symbol] = input.MultiplierPerBlock;
@@ -255,10 +255,9 @@ namespace AElf.Contracts.FinanceContract
             var symbolList = new SymbolList();
             if (list != null)
             {
-                Assert(!State.AllMarkets.Value.Symbols.Contains(input.Symbol), "market already added");
+               // Assert(!State.AllMarkets.Value.Symbols.Contains(input.Symbol), "market already added");
                 symbolList = State.AllMarkets.Value;
             }
-
             symbolList.Symbols.Add(input.Symbol);
             State.AllMarkets.Value = symbolList;
             // Initialize block number and borrow index
@@ -309,50 +308,28 @@ namespace AElf.Contracts.FinanceContract
             return new Empty();
         }
 
-        public override EnterMarketsOutput EnterMarkets(EnterMarketsInput input)
+        public override Empty EnterMarket(EnterMarketInput input)
         {
-            var len = input.Symbols.Count;
-            var enterMarketsOutput = new EnterMarketsOutput();
-            for (int i = 0; i < len; i++)
-            {
-                var isSuccess = true;
-                try
-                {
-                    AddToMarketInternal(input.Symbols[i], Context.Sender);
-                }
-                catch (Exception e)
-                {
-                    isSuccess = false;
-                }
-                finally
-                {
-                    enterMarketsOutput.Results.Add(new EnterMarketResult()
-                    {
-                        Symbol = input.Symbols[i],
-                        Success = isSuccess
-                    });
-                }
-            }
-
-            return enterMarketsOutput;
+            AddToMarketInternal(input.Symbol, Context.Sender);
+            return new Empty();
         }
 
         public override Empty ExitMarket(StringValue input)
         {
+            MarketVerify(input.Value);
             var result = GetAccountSnapshot(Context.Sender, input.Value);
-            Assert(result.BorrowBalance == 0, "NONZERO_BORROW_BALANCE");
-            Assert(State.Markets[input.Value].IsListed, "Market is not listed");
+            Assert(result.BorrowBalance == 0, "Nonzero borrow balance");
             if(!State.Markets[input.Value].AccountMembership.TryGetValue(Context.Sender.ToString(), out var isExist) || !isExist)
             {
                 return new Empty();
             }
             var shortfall =
                 GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Value, result.CTokenBalance, 0);
-            Assert(shortfall <= 0, "INSUFFICIENT_LIQUIDITY");
+            Assert(shortfall <= 0, "Insufficient liquidity");//INSUFFICIENT_LIQUIDITY
             State.Markets[input.Value].AccountMembership[Context.Sender.ToString()] = false;
             //Delete cToken from the account’s list of assets
             var userAssetList = State.AccountAssets[Context.Sender];
-            Assert(userAssetList.Assets.Contains(input.Value),"input token is not in the assets");
+            //  Assert(userAssetList.Assets.Contains(input.Value),"input token is not in the assets");
             userAssetList.Assets.Remove(input.Value);
             Context.Fire(new MarketExited()
             {
@@ -365,7 +342,7 @@ namespace AElf.Contracts.FinanceContract
 
         public override Empty AcceptAdmin(Empty input)
         {
-            Assert(Context.Sender == State.PendingAdmin.Value, "UNAUTHORIZED");
+            Assert(Context.Sender == State.PendingAdmin.Value, "Unauthorized");
             //Store admin with value pendingAdmin
             var oldAdmin = State.Admin.Value;
             var oldPenDingAdmin = State.PendingAdmin.Value;
@@ -386,7 +363,7 @@ namespace AElf.Contracts.FinanceContract
 
         public override Empty SetPendingAdmin(Address input)
         {
-            Assert(Context.Sender == State.Admin.Value, "UNAUTHORIZED");
+            Assert(Context.Sender == State.Admin.Value, "Unauthorized");
             // Store pendingAdmin with value newPendingAdmin
             State.PendingAdmin.Value = input;
             var oldPenDingAdmin = new Address();
@@ -400,10 +377,10 @@ namespace AElf.Contracts.FinanceContract
 
         public override BoolValue SetBorrowPaused(SetPausedInput input)
         {
-            Assert(State.Markets[input.Symbol].IsListed, "cannot pause a market that is not listed");
+            MarketVerify(input.Symbol);
             Assert(Context.Sender == State.PauseGuardian.Value || Context.Sender == State.Admin.Value,
-                "only pause guardian and admin can pause");
-            Assert(Context.Sender == State.Admin.Value || input.State, "only admin can unpause");
+                "Only pause guardian and admin can pause");
+            Assert(Context.Sender == State.Admin.Value || input.State, "Only admin can unpause");
             State.BorrowGuardianPaused[input.Symbol] = input.State;
             return new BoolValue()
             {
@@ -415,9 +392,9 @@ namespace AElf.Contracts.FinanceContract
         {
             var oldCloseFactor = State.CloseFactor.Value;
             var newCloseFactor = decimal.Parse(input.Value);
-            Assert(Context.Sender == State.Admin.Value, "UNAUTHORIZED");
+            Assert(Context.Sender == State.Admin.Value, "Unauthorized");
             Assert(newCloseFactor > decimal.Parse(MinCloseFactor) && newCloseFactor < decimal.Parse(MaxCloseFactor),
-                "INVALID_CLOSE_FACTOR");
+                "Invalid CloseFactor");//INVALID_CLOSE_FACTOR
             State.CloseFactor.Value = input.Value;
             Context.Fire(new CloseFactorChanged()
             {
@@ -429,9 +406,10 @@ namespace AElf.Contracts.FinanceContract
 
         public override BoolValue SetSeizePaused(SetPausedInput input)
         {
+            MarketVerify(input.Symbol);
             Assert(Context.Sender == State.PauseGuardian.Value || Context.Sender == State.Admin.Value,
-                "only pause guardian and admin can pause");
-            Assert(Context.Sender == State.Admin.Value || input.State, "only admin can unpause");
+                "Only pause guardian and admin can pause");
+            Assert(Context.Sender == State.Admin.Value || input.State, "Only admin can unpause");
             State.SeizeGuardianPaused.Value = input.State;
             return new BoolValue()
             {
@@ -441,15 +419,15 @@ namespace AElf.Contracts.FinanceContract
 
         public override Empty SetCollateralFactor(SetCollateralFactorInput input)
         {
-            Assert(Context.Sender == State.Admin.Value, "UNAUTHORIZED");
+            Assert(Context.Sender == State.Admin.Value, "Unauthorized");
+            MarketVerify(input.Symbol);
             var market = State.Markets[input.Symbol];
             var oldCollateralFactor = market.CollateralFactor;
-            Assert(market.IsListed, "MARKET_NOT_LISTED");
             var newCollateralFactor = decimal.Parse(input.CollateralFactor);
-            Assert(newCollateralFactor <= decimal.Parse(MaxCollateralFactor)&& newCollateralFactor>=0, "INVALID_CLOSE_FACTOR");
+            Assert(newCollateralFactor <= decimal.Parse(MaxCollateralFactor)&& newCollateralFactor>=0, "Invalid CloseFactor");
             if (newCollateralFactor > 0 && GetUnderlyingPrice(input.Symbol) == 0)
             {
-                throw new AssertionException("PRICE_ERROR");
+                throw new AssertionException("Error Price");
             }
             market.CollateralFactor = input.CollateralFactor;
             Context.Fire(new CollateralFactorChanged()
@@ -464,10 +442,13 @@ namespace AElf.Contracts.FinanceContract
         public override Empty SetInterestRate(SetInterestRateInput input)
         {
             AccrueInterest(input.Symbol);
-            Assert(Context.Sender == State.Admin.Value, "UNAUTHORIZED");
+            Assert(Context.Sender == State.Admin.Value, "Unauthorized");
             var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
             Assert(accrualBlockNumberPrior == Context.CurrentHeight,
-                "market's block number should equals current block number");
+                "Market's block number should equals current block number");
+            Assert(decimal.Parse(input.MultiplierPerBlock)>=0,"Invalid MultiplierPerBlock");
+            Assert(decimal.Parse(input.BaseRatePerBlock)>=0,"Invalid BaseRatePerBlock");
+            Assert(decimal.Parse(input.MultiplierPerBlock)+decimal.Parse(input.BaseRatePerBlock)<decimal.Parse(MaxBorrowRate),"Invalid interestRate model");
             State.MultiplierPerBlock[input.Symbol] = input.MultiplierPerBlock;
             State.BaseRatePerBlock[input.Symbol] = input.BaseRatePerBlock;
             Context.Fire(new InterestRateChanged()
@@ -481,12 +462,12 @@ namespace AElf.Contracts.FinanceContract
 
         public override Empty SetLiquidationIncentive(StringValue input)
         {
-            Assert(Context.Sender == State.Admin.Value, "UNAUTHORIZED");
+            Assert(Context.Sender == State.Admin.Value, "Unauthorized");
             var oldLiquidationIncentive = State.LiquidationIncentive.Value;
             var newLiquidationIncentive = decimal.Parse(input.Value);
             Assert(
                 newLiquidationIncentive <= decimal.Parse(MaxLiquidationIncentive) &&
-                newLiquidationIncentive >= decimal.Parse(MinLiquidationIncentive), "INVALID_LIQUIDATION_INCENTIVE");
+                newLiquidationIncentive >= decimal.Parse(MinLiquidationIncentive), "Invalid LiquidationIncentive");//INVALID_LIQUIDATION_INCENTIVE
             State.LiquidationIncentive.Value = input.Value;
             Context.Fire(new LiquidationIncentiveChanged()
             {
@@ -498,9 +479,9 @@ namespace AElf.Contracts.FinanceContract
 
         public override Empty SetMaxAssets(Int32Value input)
         {
-            Assert(Context.Sender == State.Admin.Value, "UNAUTHORIZED");
+            Assert(Context.Sender == State.Admin.Value, "Unauthorized");
             var oldMaxAssets = State.MaxAssets.Value;
-            Assert(input.Value > 0, "invalid input");
+            Assert(input.Value > 0, "Invalid MaxAssets");
             State.MaxAssets.Value = input.Value;
             Context.Fire(new MaxAssetsChanged()
             {
@@ -512,11 +493,10 @@ namespace AElf.Contracts.FinanceContract
 
         public override BoolValue SetMintPaused(SetPausedInput input)
         {
-            var market = State.Markets[input.Symbol];
-            Assert(market.IsListed, "MARKET_NOT_LISTED");
+            MarketVerify(input.Symbol);
             Assert(Context.Sender == State.PauseGuardian.Value || Context.Sender == State.Admin.Value,
-                "only pause guardian and admin can pause");
-            Assert(Context.Sender == State.Admin.Value || input.State, "only admin can unpause");
+                "Only pause guardian and admin can pause");
+            Assert(Context.Sender == State.Admin.Value || input.State, "Only admin can unpause");
             State.MintGuardianPaused[input.Symbol] = input.State;
             return new BoolValue()
             {
@@ -526,7 +506,7 @@ namespace AElf.Contracts.FinanceContract
 
         public override Empty SetPauseGuardian(Address input)
         {
-            Assert(Context.Sender == State.Admin.Value, "UNAUTHORIZED");
+            Assert(Context.Sender == State.Admin.Value, "Unauthorized");
             var oldPauseGuardian = State.PauseGuardian.Value;
             var newPauseGuardian = input;
             State.PauseGuardian.Value = newPauseGuardian;
@@ -541,13 +521,13 @@ namespace AElf.Contracts.FinanceContract
         public override Empty SetReserveFactor(SetReserveFactorInput input)
         {
             AccrueInterest(input.Symbol);
-            Assert(Context.Sender == State.Admin.Value, "UNAUTHORIZED");
+            Assert(Context.Sender == State.Admin.Value, "Unauthorized");
             var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
             Assert(accrualBlockNumberPrior == Context.CurrentHeight,
-                "market's block number should equals current block number");
+                "Market's block number should equals current block number");
             var oldReserveFactor = State.ReserveFactor[input.Symbol];
             var newReserveFactor = decimal.Parse(input.ReserveFactor);
-            Assert(newReserveFactor <= decimal.Parse(MaxReserveFactor)&&newReserveFactor>=0, "BAD_INPUT");
+            Assert(newReserveFactor <= decimal.Parse(MaxReserveFactor)&&newReserveFactor>=0, "Invalid ReserveFactor");
             State.ReserveFactor[input.Symbol] = input.ReserveFactor;
             Context.Fire(new ReserveFactorChanged()
             {
@@ -561,18 +541,20 @@ namespace AElf.Contracts.FinanceContract
         public override Empty SetUnderlyingPrice(SetUnderlyingPriceInput input)
         {
             AccrueInterest(input.Symbol);
-            Assert(Context.Sender == State.Admin.Value, "UNAUTHORIZED");
+            Assert(Context.Sender == State.Admin.Value, "Unauthorized");
             var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
             Assert(accrualBlockNumberPrior == Context.CurrentHeight,
-                "market's block number should equals current block number");
+                "Market's block number should equals current block number");
             var previousPrice = State.Prices[input.Symbol];
-            var priceNew = input.Price;
-            State.Prices[input.Symbol] = priceNew;
+
+            var priceNew = decimal.Parse(input.Price) * GetPow("0.1",State.DecimalState[input.Symbol]);
+            Assert(priceNew>=0,"Invalid Price");
+            State.Prices[input.Symbol] = priceNew.ToInvariantString();
             Context.Fire(new PricePosted()
             {
                 Symbol = input.Symbol,
                 PreviousPrice = previousPrice ?? "0",
-                NewPrice = priceNew
+                NewPrice = priceNew.ToInvariantString()
             });
             return new Empty();
         }
