@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "AElf.Contracts.AESwapContract";
+
+service AESwapContract {
+    option (aelf.csharp_state) = "AElf.Contracts.AESwapContract.AESwapContractState";
+
+    rpc CreatePair(CreatePairInput) returns (CreatePairOutput){
+    }
+    rpc GetPairs(google.protobuf.Empty)returns(GetPairsOutput){
+    }
+    rpc AddLiquidity (AddLiquidityInput) returns (AddLiquidityOutput) {
+    }
+    rpc RemoveLiquidity (RemoveLiquidityInput) returns (RemoveLiquidityOutput) {
+    }
+    rpc Swap(SwapInput) returns(SwapOutput){
+    }
+    // given some amount of an asset and pair reserves, returns an equivalent amount of the other asset  --for AddLiquidity
+    // rpc Quote(QuoteInput) returns(google.protobuf.Int64Value){
+    //}
+    // given an output amount of an asset and pair reserves, returns the maximum output amount of the other asset --for Swap
+    //rpc GetAmountIn(GetAmountInInput) returns(google.protobuf.Int64Value){
+    // }
+    // given an input amount of an asset and pair reserves, returns a required input amount of the other asset --for Swap
+    // rpc GetAmountOut(GetAmountOutInput) returns(google.protobuf.Int64Value){
+    //}
+    // fetches and sorts the reserves for a pair
+    rpc GetReserves(GetReservesInput)returns(GetReservesOutput){
+    }
+    rpc TransferLiquidityTokens(TransferLiquidityTokensInput) returns(google.protobuf.Empty){
+    }
+}
+message CreatePairInput{
+    string symbol_pair =1;
+}
+message CreatePairOutput{
+    aelf.Address pair_address=1;
+}
+message GetPairsOutput{
+    repeated string symbol_pair =1;
+}
+message AddLiquidityInput{
+    string symbol_pair =1;
+    int64 amount_a_desired =2;
+    int64 amount_b_desired =3;
+    int64 amount_a_min =4;
+    int64 amount_b_min =5;
+    google.protobuf.Timestamp deadline =6;
+}
+message AddLiquidityOutput{
+    string symbol_a=1;
+    string symbol_b =2;
+    int64 amount_a =3; 
+    int64 amount_b =4; 
+    int64 liquidity_token =5;
+   
+}
+message RemoveLiquidityInput{
+    string symbol_a =1;
+    string symbol_b =2;
+    int64 liquidity_token =3;
+    int64 amount_a_min =4;
+    int64 amount_b_min =5;
+    google.protobuf.Timestamp deadline =6;
+}
+ message RemoveLiquidityOutput{
+     int64 amount_a=1;
+     int64 amount_b =2;
+ }
+ message SwapInput{
+    int64 amount_in=1;
+    int64 amount_out_min=2;
+    string symbol_in=3;
+    string symbol_out =4;
+    google.protobuf.Timestamp deadline =5;
+ }
+
+ message SwapOutput{
+    int64 amount_out=1;
+    string symbol_out =2;
+ }
+message GetReservesInput{
+    repeated aelf.Address symbol_pair =1;
+}
+
+message GetReservesOutput{
+    repeated ReservePairResult results=1;
+}
+message ReservePairResult{
+    string symbol_a=1;
+    string symbol_b=2;
+    int64 reserve_a =3;
+    int64 reserve_b=4;
+    int64 block_timestamp_last=5;
+}
+message TransferLiquidityTokensInput{
+       aelf.Address to =1;
+       string symbol_a=2;
+       string  symbol_b=3;
+       int64 amount=4;
+   }
+message PairCreated{
+    option (aelf.is_event) = true;
+    string symbol_a = 1;
+    string symbol_b = 2;
+    aelf.Address pair = 3;
+   }
+message Mint{
+   option (aelf.is_event) = true;
+   aelf.Address sender = 1;
+   string symbol_a=2;
+   string  symbol_b=3;
+   int64 amount_a = 4;
+   int64 amount_b = 5;
+   int64 liquidity_token=6;
+   }
+message Burn{
+   option (aelf.is_event) = true;
+   aelf.Address sender = 1;
+   string symbol_a=2;
+   string symbol_b=3;
+   int64 amount_a = 4;
+   int64 amount_b = 5;
+   }
+message Swap{
+    option (aelf.is_event) = true;
+    aelf.Address sender = 1;
+    string symbol_a=2;
+    string symbol_b=3;
+    int64 amount_a_in = 4;
+    int64 amount_b_in = 5;
+    int64 amount_a_out = 6;
+    int64 amount_b_out = 7;
+   }
+
