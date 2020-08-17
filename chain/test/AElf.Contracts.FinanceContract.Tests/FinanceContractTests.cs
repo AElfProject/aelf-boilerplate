@@ -1092,6 +1092,21 @@ namespace AElf.Contracts.FinanceContract
                 Price = "1",
                 Symbol = "DAI"
             });
+            await FinanceContractStub.SetCollateralFactor.SendAsync(new SetCollateralFactorInput()
+            {
+                CollateralFactor = "0.75",
+                Symbol = "ELF"
+            });
+            await FinanceContractStub.SetCollateralFactor.SendAsync(new SetCollateralFactorInput()
+            {
+                CollateralFactor = "0.75",
+                Symbol = "TEST"
+            });
+            await FinanceContractStub.SetCollateralFactor.SendAsync(new SetCollateralFactorInput()
+            {
+                CollateralFactor = "0.75",
+                Symbol = "DAI"
+            });
             await TokenContractStub.Transfer.SendAsync(new TransferInput()
             {
                 Amount = 100000000000,

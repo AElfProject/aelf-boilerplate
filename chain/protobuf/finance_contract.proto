@@ -413,7 +413,6 @@ message MarketListed{
     string base_rate_per_block = 2;
     string multiplier_per_block = 3;
     string reserve_factor = 4;
-    string collateral_factor=5;
 };
 
 message MarketEntered{

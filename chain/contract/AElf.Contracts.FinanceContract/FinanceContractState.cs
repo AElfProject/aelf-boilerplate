@@ -138,6 +138,6 @@ namespace AElf.Contracts.FinanceContract
         /// </summary>
         public MappedState<string, string> MultiplierPerBlock { get; set; }
         
-        public MappedState<string, int> DecimalState { get; set; }
+        public MappedState<string, uint> Decimals { get; set; }
     }
 }

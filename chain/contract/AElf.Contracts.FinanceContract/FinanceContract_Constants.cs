@@ -1,3 +1,5 @@
+using System;
+
 namespace AElf.Contracts.FinanceContract
 {
     public partial class FinanceContract
@@ -35,8 +37,8 @@ namespace AElf.Contracts.FinanceContract
         public const string MaxLiquidationIncentive = "1.5"; // 1.5
 
         public const int CTokenDecimals = 18;
-
-        public const string DefaultPrice = "1";
+        
+        public const long ElfDecimal = 100000000;
 
         public const string InitialBorrowIndex = "1";
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using AElf.Contracts.MultiToken;
 using AElf.CSharp.Core;
 using AElf.Sdk.CSharp;
@@ -139,6 +140,8 @@ namespace AElf.Contracts.FinanceContract
         {
            var price = State.Prices[cToken];
             if (price == null)
+                return false;
+            if (price == "")
                 return false;
             if (decimal.Parse(price) <= 0)
                 return false;
@@ -377,30 +380,31 @@ namespace AElf.Contracts.FinanceContract
         /// </summary>
         /// <param name="symbol">symbol</param>
         /// <returns></returns>
-        private void TokenVerify(string symbol)
-        {
-             var result=  State.TokenContract.GetTokenInfo.Call(Context.Sender, new GetTokenInfoInput()
-            {
-                Symbol = symbol
-            });
-             Assert(result.Symbol != "","Invalid Symbol");
-             //if valid    set the decimal state
-             State.DecimalState[symbol] = result.Decimals;
-        }
+       
         private void MarketVerify(string symbol)
         {
             var market = State.Markets[symbol];
             Assert(market!=null&& market.IsListed,"Market is not listed");
         }
-        private decimal GetPow(string s,int n)
+        private static long Pow(int x, uint y)
         {
-            var x = decimal.Parse(s);
-            var y = decimal.Parse("1");
-            for (int i = 0; i < n; i++)
+            if (y == 1)
+                return x;
+            long a = 1;
+            if (y == 0)
+                return a;
+            var e = new BitArray(y.ToBytes(false));
+            var t = e.Count;
+            for (var i = t - 1; i >= 0; --i)
             {
-                y = y * x;
+                a *= a;
+                if (e[i])
+                {
+                    a *= x;
+                }
             }
-            return y;
+
+            return a;
         }
     }
 }

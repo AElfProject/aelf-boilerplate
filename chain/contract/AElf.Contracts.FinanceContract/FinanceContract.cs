@@ -236,11 +236,17 @@ namespace AElf.Contracts.FinanceContract
                 Assert(!market.IsListed, "Support market exists");//
             }
             // check to make sure its really a Token
-            TokenVerify(input.Symbol);
+            var tokenInfo=  State.TokenContract.GetTokenInfo.Call(Context.Sender, new GetTokenInfoInput()
+            {
+                Symbol = input.Symbol
+            });
+            Assert(tokenInfo.Symbol != "","Invalid Symbol");
+            //if valid    set the decimal state
+            State.Decimals[input.Symbol] = (uint)tokenInfo.Decimals;
+            
             State.Markets[input.Symbol] = new Market()
             {
-                IsListed = true,
-                CollateralFactor = DefaultCollateralFactor,
+                IsListed = true
             };
             Assert(decimal.Parse(input.ReserveFactor)>=0&& decimal.Parse(input.ReserveFactor)<=decimal.Parse(MaxReserveFactor),"Invalid ReserveFactor");
             Assert(decimal.Parse(input.InitialExchangeRate)>0,"Invalid InitialExchangeRate");
@@ -273,8 +279,7 @@ namespace AElf.Contracts.FinanceContract
                 Symbol = input.Symbol,
                 BaseRatePerBlock = input.BaseRatePerBlock,
                 MultiplierPerBlock = input.MultiplierPerBlock,
-                ReserveFactor = input.ReserveFactor,
-                CollateralFactor=DefaultCollateralFactor
+                ReserveFactor = input.ReserveFactor
             });
             return new Empty();
         }
@@ -548,7 +553,7 @@ namespace AElf.Contracts.FinanceContract
                 "Market's block number should equals current block number");
             var previousPrice = State.Prices[input.Symbol];
 
-            var priceNew = decimal.Parse(input.Price) * GetPow("0.1",State.DecimalState[input.Symbol]);
+            var priceNew = decimal.Parse(input.Price)*ElfDecimal/Pow(10,State.Decimals[input.Symbol]);
             Assert(priceNew>=0,"Invalid Price");
             State.Prices[input.Symbol] = priceNew.ToInvariantString();
             Context.Fire(new PricePosted()
