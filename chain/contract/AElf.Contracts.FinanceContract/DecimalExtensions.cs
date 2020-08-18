@@ -6,7 +6,8 @@ namespace AElf.Contracts.FinanceContract
     {
         public static string ToInvariantString(this decimal value)
         {
-            return value.ToString(CultureInfo.InvariantCulture).TrimEnd('0');
+            value /= 1.000000000000000000000000000000000m;
+            return value.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

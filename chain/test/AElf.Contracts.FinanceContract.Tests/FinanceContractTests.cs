@@ -20,16 +20,106 @@ namespace AElf.Contracts.FinanceContract
         {
             await Initialize();
             await SupportMarket();
-            await FinanceContractStub.SetUnderlyingPrice.SendAsync(new SetUnderlyingPriceInput()
+            //decimals == 8
             {
-                Symbol = "ELF",
-                Price = "1.5",
-            });
-            var price = await FinanceContractStub.GetUnderlyingPrice.CallAsync(new StringValue()
+                await FinanceContractStub.SetUnderlyingPrice.SendAsync(new SetUnderlyingPriceInput()
+                {
+                    Symbol = "ELF",
+                    Price = "1.5",
+                });
+                var price = await FinanceContractStub.GetUnderlyingPrice.CallAsync(new StringValue()
+                {
+                    Value = "ELF"
+                });
+                price.Value.ShouldBe("1.5");
+                
+                await FinanceContractStub.SetUnderlyingPrice.SendAsync(new SetUnderlyingPriceInput()
+                {
+                    Symbol = "ELF",
+                    Price = "10",
+                });
+                price = await FinanceContractStub.GetUnderlyingPrice.CallAsync(new StringValue()
+                {
+                    Value = "ELF"
+                });
+                price.Value.ShouldBe("10");
+            }
+
+            //decimals > 8
             {
-                Value = "ELF"
-            });
-            price.Value.ShouldBe("1.5");
+                await FinanceContractStub.SetUnderlyingPrice.SendAsync(new SetUnderlyingPriceInput()
+                {
+                    Symbol = "DAI",
+                    Price = "1.5",
+                });
+                var price = await FinanceContractStub.GetUnderlyingPrice.CallAsync(new StringValue()
+                {
+                    Value = "DAI"
+                });
+                price.Value.ShouldBe("1.5");
+            
+                await FinanceContractStub.SetUnderlyingPrice.SendAsync(new SetUnderlyingPriceInput()
+                {
+                    Symbol = "DAI",
+                    Price = "10",
+                });
+                price = await FinanceContractStub.GetUnderlyingPrice.CallAsync(new StringValue()
+                {
+                    Value = "DAI"
+                });
+                price.Value.ShouldBe("10");
+            }
+            
+            //decimals < 8
+            {
+                await TokenContractStub.Create.SendAsync(new CreateInput
+                {
+                    Issuer = AdminAddress,
+                    Symbol = "AEUSD",
+                    Decimals = 3,
+                    IsBurnable = true,
+                    TokenName = "AEUSD symbol",
+                    TotalSupply = 100000000_00000000
+                });
+
+                await TokenContractStub.Issue.SendAsync(new IssueInput
+                {
+                    Amount = 100000000000000,
+                    Symbol ="AEUSD",
+                    To = AdminAddress
+                });
+                
+                await FinanceContractStub.SupportMarket.SendAsync(new SupportMarketInput()
+                {
+                    ReserveFactor = "0.1",
+                    InitialExchangeRate = "0.02",
+                    MultiplierPerBlock = "0.00000000158549",
+                    BaseRatePerBlock = "0.000000000317098",
+                    Symbol = "AEUSD"
+                });
+                await FinanceContractStub.SetUnderlyingPrice.SendAsync(new SetUnderlyingPriceInput()
+                {
+                    Symbol = "AEUSD",
+                    Price = "1.5",
+                });
+                var price = await FinanceContractStub.GetUnderlyingPrice.CallAsync(new StringValue()
+                {
+                    Value = "AEUSD"
+                });
+                price.Value.ShouldBe("1.5");
+            
+                await FinanceContractStub.SetUnderlyingPrice.SendAsync(new SetUnderlyingPriceInput()
+                {
+                    Symbol = "AEUSD",
+                    Price = "10",
+                });
+                price = await FinanceContractStub.GetUnderlyingPrice.CallAsync(new StringValue()
+                {
+                    Value = "AEUSD"
+                });
+                price.Value.ShouldBe("10");
+            }
+            
         }
 
         [Fact]
@@ -598,7 +688,7 @@ namespace AElf.Contracts.FinanceContract
             {
                 Value = "ELF"
             });
-            supplyRate.Value.ShouldBe("0.");
+            supplyRate.Value.ShouldBe("0");
            var currentBorrowBalance= await UserTomStub.GetCurrentBorrowBalance.CallAsync(new Account()
             {
                 Symbol = "ELF",
