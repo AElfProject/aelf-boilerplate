@@ -27,18 +27,12 @@ namespace AElf.Contracts.FinanceContract
 
         // No collateralFactorMantissa may exceed this value
         public const string MaxCollateralFactor = "0.9"; // 0.9
-        
-        public const string DefaultCollateralFactor = "0.75"; // 0.9
 
         // liquidationIncentiveMantissa must be no less than this value
         public const string MinLiquidationIncentive = "1"; // 1.0
 
         // liquidationIncentiveMantissa must be no greater than this value
         public const string MaxLiquidationIncentive = "1.5"; // 1.5
-
-        public const int CTokenDecimals = 18;
-        
-        public const long ElfDecimal = 100000000;
 
         public const string InitialBorrowIndex = "1";
     }

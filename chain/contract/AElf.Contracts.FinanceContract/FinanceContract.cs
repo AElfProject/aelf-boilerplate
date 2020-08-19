@@ -553,7 +553,7 @@ namespace AElf.Contracts.FinanceContract
                 "Market's block number should equals current block number");
             var previousPrice = State.Prices[input.Symbol];
 
-            var priceNew = decimal.Parse(input.Price)*ElfDecimal/Pow(10,State.Decimals[input.Symbol]);
+            var priceNew = decimal.Parse(input.Price);
             Assert(priceNew>=0,"Invalid Price");
             State.Prices[input.Symbol] = priceNew.ToInvariantString();
             Context.Fire(new PricePosted()

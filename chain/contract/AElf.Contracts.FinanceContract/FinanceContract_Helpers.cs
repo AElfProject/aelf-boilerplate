@@ -386,25 +386,5 @@ namespace AElf.Contracts.FinanceContract
             var market = State.Markets[symbol];
             Assert(market!=null&& market.IsListed,"Market is not listed");
         }
-        private static long Pow(int x, uint y)
-        {
-            if (y == 1)
-                return x;
-            long a = 1;
-            if (y == 0)
-                return a;
-            var e = new BitArray(y.ToBytes(false));
-            var t = e.Count;
-            for (var i = t - 1; i >= 0; --i)
-            {
-                a *= a;
-                if (e[i])
-                {
-                    a *= x;
-                }
-            }
-
-            return a;
-        }
     }
 }

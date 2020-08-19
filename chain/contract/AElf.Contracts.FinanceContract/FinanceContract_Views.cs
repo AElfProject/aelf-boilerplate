@@ -72,7 +72,7 @@ namespace AElf.Contracts.FinanceContract
         public override StringValue GetUnderlyingPrice(StringValue input)
         {
             var price = State.Prices[input.Value] ?? "0";
-            var priceOut = (decimal.Parse(price) * Pow(10,State.Decimals[input.Value])/ElfDecimal).ToInvariantString();
+            var priceOut = decimal.Parse(price).ToInvariantString();
             return new StringValue()
             {
                 Value = priceOut
