@@ -21,7 +21,7 @@ namespace AElf.Contracts.AESwapContract
             var tokens = tokenPair.Split('-');
             Assert(TokenVerify(tokens[0]) && TokenVerify(tokens[1]), "Invalid Tokens");
             var sortedTokenPair = tokenPair;
-            if (tokens[0].GetHashCode() > tokens[1].GetHashCode())
+            if (string.Compare(tokens[0], tokens[1], StringComparison.InvariantCulture) > 1)
             {
                 sortedTokenPair = string.Join("-", tokens[1], tokens[0]);
             }
@@ -33,7 +33,7 @@ namespace AElf.Contracts.AESwapContract
         {
             Assert(tokenPair.Contains("-"), "Invalid TokenPair");
             var tokens = tokenPair.Split('-');
-            if (tokens[0].GetHashCode() > tokens[1].GetHashCode())
+            if (string.Compare(tokens[0], tokens[1], StringComparison.InvariantCulture) > 1)
             {
                 var index = tokens[0];
                 tokens[0] = tokens[1];
