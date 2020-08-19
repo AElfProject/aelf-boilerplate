@@ -11,6 +11,8 @@ option csharp_namespace = "AElf.Contracts.AESwapContract";
 service AESwapContract {
     option (aelf.csharp_state) = "AElf.Contracts.AESwapContract.AESwapContractState";
 
+    rpc Initialize(google.protobuf.Empty)returns(google.protobuf.Empty){
+    }
     rpc CreatePair(CreatePairInput) returns (CreatePairOutput){
     }
     rpc GetPairs(google.protobuf.Empty)returns(PairList){

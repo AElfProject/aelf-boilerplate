@@ -1,10 +1,19 @@
 using AElf.Sdk.CSharp;
 using AElf.Types;
+using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.AESwapContract
 {
     public partial class AESwapContract : AESwapContractContainer.AESwapContractBase
     {
+        public override Empty Initialize(Empty input)
+        {
+            Assert(State.TokenContract.Value == null, "Already initialized.");
+            State.TokenContract.Value =
+                Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
+            return new Empty();
+        }
+
         public override AddLiquidityOutput AddLiquidity(AddLiquidityInput input)
         {
             Assert(input.Deadline.Seconds > Context.CurrentBlockTime.Seconds, "Expired");
