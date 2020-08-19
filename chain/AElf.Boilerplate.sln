@@ -80,6 +80,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.ContractPa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.AESwapContract", "contract\AElf.Contracts.AESwapContract\AElf.Contracts.AESwapContract.csproj", "{FC080E2E-19DD-44F0-9AC8-5B13D7CE9527}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.AESwapContract.Tests", "test\AElf.Contracts.AESwapContract.Tests\AElf.Contracts.AESwapContract.Tests.csproj", "{DDB43FF3-B861-403B-8417-A51561256D88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -234,6 +236,10 @@ Global
 		{FC080E2E-19DD-44F0-9AC8-5B13D7CE9527}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC080E2E-19DD-44F0-9AC8-5B13D7CE9527}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC080E2E-19DD-44F0-9AC8-5B13D7CE9527}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDB43FF3-B861-403B-8417-A51561256D88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDB43FF3-B861-403B-8417-A51561256D88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDB43FF3-B861-403B-8417-A51561256D88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDB43FF3-B861-403B-8417-A51561256D88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -273,6 +279,7 @@ Global
 		{E74130E4-3AAF-44C9-9D5A-D1B2155FA4D7} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 		{136BA87F-62EB-491B-80CB-2A0DAD0D7FEC} = {21D85A91-5BB8-4912-8107-49435A461AAC}
 		{FC080E2E-19DD-44F0-9AC8-5B13D7CE9527} = {BB8D5781-446C-4B7A-A3BA-68206918B046}
+		{DDB43FF3-B861-403B-8417-A51561256D88} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7426B41-E959-40E4-9ED8-ED8D9C50F133}

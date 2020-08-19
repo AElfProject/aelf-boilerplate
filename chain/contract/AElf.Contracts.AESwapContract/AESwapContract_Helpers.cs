@@ -52,6 +52,7 @@ namespace AElf.Contracts.AESwapContract
 
         private bool TokenVerify(string token)
         {
+            var a = State.TokenContract.Value;
             var tokenInfo = State.TokenContract.GetTokenInfo.Call(new GetTokenInfoInput()
             {
                 Symbol = token
@@ -186,13 +187,34 @@ namespace AElf.Contracts.AESwapContract
             };
         }
 
-        private void Swap(string symbolIn, string symbolOut, long amount, Address to)
+        private void Swap(string symbolIn, string symbolOut, long amountOut, Address to)
         {
             var pairAddress = State.Pairs[symbolIn][symbolOut].Address;
+            var reserveSymbolIn = State.TotalReserves[pairAddress][symbolIn];
             var reserveSymbolOut = State.TotalReserves[pairAddress][symbolOut];
-            Assert(amount < reserveSymbolOut, "Insufficient reserve of out token");
+            Assert(amountOut < reserveSymbolOut, "Insufficient reserve of out token");
             var pairHash = State.Pairs[symbolIn][symbolOut].Hash;
-            TransferOut(pairHash, to, symbolOut, amount);
+            Assert(to != pairAddress, "Invalid account address");
+            TransferOut(pairHash, to, symbolOut, amountOut);
+            var balanceIn = GetBalance(symbolIn, pairAddress);
+            var balanceOut = GetBalance(symbolOut, pairAddress);
+            var amountIn = balanceIn.Div(reserveSymbolIn);
+            Assert(amountIn > 0, "Insufficient Input amount");
+            var balance0Adjusted = balanceIn.Mul(1000).Sub(amountIn.Mul(3));
+            var balance1Adjusted = balanceOut;
+            Assert(balance0Adjusted.Mul(balance1Adjusted) >= (reserveSymbolIn).Mul(reserveSymbolOut).Mul(1000),
+                "Error with K");
+            Update(balanceIn, balanceOut, reserveSymbolIn, reserveSymbolOut, symbolIn, symbolOut);
+            Context.Fire(new Swap()
+            {
+                SymbolA = symbolIn,
+                SymbolB = symbolOut,
+                AmountAIn = amountIn,
+                AmountAOut = 0,
+                AmountBIn = 0,
+                AmountBOut = amountOut,
+                Sender = Context.Sender
+            });
         }
 
         private void Update(long balanceA, long balanceB, long reserveA, long reserveB, string tokenA,
@@ -211,7 +233,7 @@ namespace AElf.Contracts.AESwapContract
             State.TotalReserves[pairAddress][tokenB] = balanceB;
             State.BlockTimestampLast[pairAddress] = blockTimestamp;
         }
-
+        
         private void TransferIn(Address from, Address to, string symbol, long amount)
         {
             State.TokenContract.TransferFrom.Send(
