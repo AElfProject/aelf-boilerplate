@@ -48,11 +48,12 @@ namespace AElf.Contracts.AESwapContract
             };
         }
 
+       
         public override CreatePairOutput CreatePair(CreatePairInput input)
         {
             var tokenPair = SortTokens(input.SymbolPair);
             Assert(tokenPair[0] != tokenPair[1], "Identical Tokens");
-            Assert(State.Pairs[tokenPair[0]][tokenPair[1]] != null, "Pair Exists");
+            Assert(State.Pairs[tokenPair[0]][tokenPair[1]] == null, "Pair Exists");
             var hash = HashHelper.ComputeFrom(GetPair(input.SymbolPair));
             State.Pairs[tokenPair[0]][tokenPair[1]].Hash = hash;
             State.Pairs[tokenPair[1]][tokenPair[0]].Hash = hash;
