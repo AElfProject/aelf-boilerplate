@@ -13,7 +13,7 @@ service AESwapContract {
 
     rpc CreatePair(CreatePairInput) returns (CreatePairOutput){
     }
-    rpc GetPairs(google.protobuf.Empty)returns(GetPairsOutput){
+    rpc GetPairs(google.protobuf.Empty)returns(PairList){
     }
     rpc AddLiquidity (AddLiquidityInput) returns (AddLiquidityOutput) {
     }
@@ -42,16 +42,17 @@ message CreatePairInput{
 message CreatePairOutput{
     aelf.Address pair_address=1;
 }
-message GetPairsOutput{
+message PairList{
     repeated string symbol_pair =1;
 }
 message AddLiquidityInput{
-    string symbol_pair =1;
-    int64 amount_a_desired =2;
-    int64 amount_b_desired =3;
-    int64 amount_a_min =4;
-    int64 amount_b_min =5;
-    google.protobuf.Timestamp deadline =6;
+    string token_a=1;
+    string token_b=2;
+    int64 amount_a_desired =3;
+    int64 amount_b_desired =4;
+    int64 amount_a_min =5;
+    int64 amount_b_min =6;
+    google.protobuf.Timestamp deadline =7;
 }
 message AddLiquidityOutput{
     string symbol_a=1;
@@ -86,25 +87,32 @@ message RemoveLiquidityInput{
     string symbol_out =2;
  }
 message GetReservesInput{
-    repeated aelf.Address symbol_pair =1;
+    repeated string symbol_pair =1;
 }
 
 message GetReservesOutput{
     repeated ReservePairResult results=1;
 }
 message ReservePairResult{
-    string symbol_a=1;
-    string symbol_b=2;
-    int64 reserve_a =3;
-    int64 reserve_b=4;
-    int64 block_timestamp_last=5;
+    string symbol_pair=1;
+    bool is_success =2;
+    string symbol_a=3;
+    string symbol_b=4;
+    int64 reserve_a =5;
+    int64 reserve_b=6;
+    int64 block_timestamp_last=7;
 }
 message TransferLiquidityTokensInput{
-       aelf.Address to =1;
-       string symbol_a=2;
-       string  symbol_b=3;
-       int64 amount=4;
+    aelf.Address to =1;
+    string symbol_a=2;
+    string  symbol_b=3;
+    int64 amount=4;
    }
+   
+message Pair{
+     aelf.Hash hash =1;
+     aelf.Address address=2;
+}
 message PairCreated{
     option (aelf.is_event) = true;
     string symbol_a = 1;

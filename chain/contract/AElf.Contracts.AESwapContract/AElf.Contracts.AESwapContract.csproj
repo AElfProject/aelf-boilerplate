@@ -4,6 +4,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IsContract>true</IsContract>
+        <OutputType>Library</OutputType>
     </PropertyGroup>
 
     <ItemGroup>
