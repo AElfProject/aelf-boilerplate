@@ -24,7 +24,7 @@ namespace AElf.Contracts.AESwapContract
             var to = State.Pairs[input.TokenA][input.TokenB].Address;
             TransferIn(Context.Sender, to, input.TokenA, amount[0]);
             TransferIn(Context.Sender, to, input.TokenB, amount[1]);
-            var liquidityToken = Mint(input.TokenA, input.TokenB, Context.Sender);
+            var liquidityToken = Mint(input.TokenA, input.TokenB, amount[0],amount[1],Context.Sender);
             return new AddLiquidityOutput()
             {
                 AmountA = amount[0],

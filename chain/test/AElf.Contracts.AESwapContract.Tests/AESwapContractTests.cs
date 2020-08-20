@@ -18,7 +18,7 @@ namespace AElf.Contract.AESwapContract.Tests
     public class AESwapContractTests:AESwapContractTestBase
     {
         [Fact]
-        public async Task SetUnderlyingPriceTest()
+        public async Task CompleteFlowTest()
         {
             await CreateAndGetToken();
             await AESwapContractStub.Initialize.SendAsync(new Empty());
@@ -26,6 +26,26 @@ namespace AElf.Contract.AESwapContract.Tests
             {
                 SymbolPair = "ELF-TEST"
             });
+             var pairList = await UserTomStub.GetPairs.CallAsync(new Empty());
+             pairList.SymbolPair.ShouldContain("ELF-TEST");
+
+             await UserTomStub.AddLiquidity.SendAsync(new AddLiquidityInput()
+             {
+                 AmountADesired = 100000000,
+                 AmountAMin = 100000000,
+                 AmountBDesired = 200000000,
+                 AmountBMin = 200000000,
+                 Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0,0,3))),
+                 TokenA = "ELF",
+                 TokenB = "TEST"
+             });
+            var reserves=  await UserTomStub.GetReserves.SendAsync(new GetReservesInput()
+             {
+                 SymbolPair = {"ELF-TEST"}
+             });
+            reserves.Output.Results[0].ReserveA.ShouldBe(100000000);
+            reserves.Output.Results[0].ReserveB.ShouldBe(200000000);
+
         }
         
         

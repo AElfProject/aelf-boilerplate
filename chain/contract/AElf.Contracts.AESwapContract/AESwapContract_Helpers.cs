@@ -122,14 +122,12 @@ namespace AElf.Contracts.AESwapContract
             };
         }
 
-        private long Mint(string tokenA, string tokenB, Address account)
+        private long Mint(string tokenA, string tokenB, long amountA,long amountB,Address account)
         {
             var pairAddress = State.Pairs[tokenA][tokenB].Address;
-            var balanceA = GetBalance(tokenA, pairAddress);
-            var balanceB = GetBalance(tokenB, pairAddress);
+            var balanceA = GetBalance(tokenA, pairAddress).Add(amountA);
+            var balanceB = GetBalance(tokenB, pairAddress).Add(amountB);
             var reserves = GetReserves(pairAddress, tokenA, tokenB);
-            var amountA = balanceA.Sub(reserves[0]);
-            var amountB = balanceB.Sub(reserves[1]);
             var totalSupply = State.TotalSupply[pairAddress];
             var liquidity = (totalSupply == 0)
                 ? Sqrt(amountA.Mul(amountB))
@@ -233,7 +231,7 @@ namespace AElf.Contracts.AESwapContract
             State.TotalReserves[pairAddress][tokenB] = balanceB;
             State.BlockTimestampLast[pairAddress] = blockTimestamp;
         }
-        
+
         private void TransferIn(Address from, Address to, string symbol, long amount)
         {
             State.TokenContract.TransferFrom.Send(
