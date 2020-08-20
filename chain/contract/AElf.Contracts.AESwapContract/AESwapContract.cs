@@ -1,3 +1,4 @@
+using AElf.CSharp.Core;
 using AElf.Sdk.CSharp;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
@@ -17,13 +18,13 @@ namespace AElf.Contracts.AESwapContract
         public override AddLiquidityOutput AddLiquidity(AddLiquidityInput input)
         {
             Assert(input.Deadline.Seconds >= Context.CurrentBlockTime.Seconds, "Expired");
-            Assert(TokenVerify(input.SymbolA) && TokenVerify(input.SymbolB), "Invalid Tokens");
+            Assert(input.AmountAMin>0 &&input.AmountBMin>0 && input.AmountADesired>0 && input.AmountBDesired>0 ,"Invalid Input");
             var amount = AddLiquidity(input.SymbolA, input.SymbolB, input.AmountADesired, input.AmountBDesired,
                 input.AmountAMin,
                 input.AmountBMin);
             var to = State.Pairs[input.SymbolA][input.SymbolB].Address;
             TransferIn(Context.Sender, to, input.SymbolA, amount[0]);
-            TransferIn(Context.Sender, to, input.SymbolA, amount[1]);
+            TransferIn(Context.Sender, to, input.SymbolB, amount[1]);
             var liquidityToken = Mint(input.SymbolA, input.SymbolB, amount[0], amount[1], Context.Sender);
             return new AddLiquidityOutput()
             {
@@ -38,13 +39,15 @@ namespace AElf.Contracts.AESwapContract
         public override RemoveLiquidityOutput RemoveLiquidity(RemoveLiquidityInput input)
         {
             Assert(input.Deadline.Seconds >= Context.CurrentBlockTime.Seconds, "Expired");
-            Assert(TokenVerify(input.SymbolA) && TokenVerify(input.SymbolB), "Invalid Tokens");
-            var amount = RemoveLiquidity(input.SymbolA, input.SymbolB, input.AmountAMin,
+            Assert(input.AmountAMin>0 &&input.AmountBMin>0 && input.LiquidityRemove>0 ,"Invalid Input");
+            var amount = RemoveLiquidity(input.SymbolA, input.SymbolB, input.LiquidityRemove,input.AmountAMin,
                 input.AmountBMin);
             return new RemoveLiquidityOutput()
             {
                 AmountA = amount[0],
-                AmountB = amount[1]
+                AmountB = amount[1],
+                SymbolA = input.SymbolA,
+                SymbolB = input.SymbolB
             };
         }
 
@@ -81,6 +84,8 @@ namespace AElf.Contracts.AESwapContract
 
         public override SwapOutput SwapExactTokenForToken(SwapExactTokenForTokenInput input)
         {
+            Assert(State.Pairs[input.SymbolIn][input.SymbolOut] != null, "Pair not Exists");
+            Assert(input.AmountIn>0 &&input.AmountOutMin>0 ,"Invalid Input");
             var pairAddress = State.Pairs[input.SymbolIn][input.SymbolOut].Address;
             var reserves = GetReserves(pairAddress, input.SymbolIn, input.SymbolOut);
             var amountOut = GetAmountOut(input.AmountIn, reserves[0], reserves[1]);
@@ -97,6 +102,8 @@ namespace AElf.Contracts.AESwapContract
 
         public override SwapOutput SwapTokenForExactToken(SwapTokenForExactTokenInput input)
         {
+            Assert(State.Pairs[input.SymbolIn][input.SymbolOut] != null, "Pair not Exists");
+            Assert(input.AmountOut>0 &&input.AmountInMax>0 ,"Invalid Input");
             var pairAddress = State.Pairs[input.SymbolIn][input.SymbolOut].Address;
             var reserves = GetReserves(pairAddress, input.SymbolIn, input.SymbolOut);
             var amountIn = GetAmountIn(input.AmountOut, reserves[0], reserves[1]);
@@ -108,6 +115,19 @@ namespace AElf.Contracts.AESwapContract
                 AmountOut = input.AmountOut,
                 SymbolOut = input.SymbolOut
             };
+        }
+
+        public override Empty TransferLiquidityTokens(TransferLiquidityTokensInput input)
+        {
+            Assert(State.Pairs[input.SymbolA][input.SymbolB] != null, "Pair not Exists");
+            Assert(input.Amount>0 ,"Invalid Input");
+            var liquidity = State.LiquidityTokens[State.Pairs[input.SymbolA][input.SymbolB].Address][Context.Sender];
+            Assert(liquidity > 0 && input.Amount <= liquidity, "Insufficient LiquidityToken");
+            var liquidityNew = liquidity.Sub(input.Amount);
+            State.LiquidityTokens[State.Pairs[input.SymbolA][input.SymbolB].Address][Context.Sender] = liquidityNew;
+            State.LiquidityTokens[State.Pairs[input.SymbolA][input.SymbolB].Address][input.To] += input.Amount;
+
+            return new Empty();
         }
     }
 }

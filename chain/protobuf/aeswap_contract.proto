@@ -3,6 +3,7 @@ syntax = "proto3";
 import "aelf/core.proto";
 import "aelf/options.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
 import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "AElf.Contracts.AESwapContract";
@@ -43,7 +44,15 @@ service AESwapContract {
     rpc GetAccountAssets(google.protobuf.Empty)returns(PairList){
         option (aelf.is_view) = true;
     }
-    
+    rpc GetAmountIn(GetAmountInInput)returns(google.protobuf.Int64Value){
+        option (aelf.is_view) = true;
+    }
+    rpc GetAmountOut(GetAmountOutInput)returns(google.protobuf.Int64Value){
+        option (aelf.is_view) = true;
+    }
+    rpc Quote(QuoteInput)returns(google.protobuf.Int64Value){
+        option (aelf.is_view) = true;
+    }
 }
 message CreatePairInput{
     string symbol_pair =1;
@@ -76,11 +85,14 @@ message RemoveLiquidityInput{
     string symbol_b =2;
     int64 amount_a_min =3;
     int64 amount_b_min =4;
-    google.protobuf.Timestamp deadline =5;
+    int64 liquidity_remove=5;
+    google.protobuf.Timestamp deadline =6;
 }
  message RemoveLiquidityOutput{
      int64 amount_a=1;
      int64 amount_b =2;
+     string symbol_a=3;
+     string symbol_b=4;
  }
  message SwapExactTokenForTokenInput{
     int64 amount_in=1;
@@ -132,6 +144,21 @@ message LiquidityTokenBalanceResult{
  string symbol_pair=1;
  int64 balance =2;
 }
+message GetAmountInInput{
+   string symbol_in=1;
+   string symbol_out=2;
+   int64 amount_out=3;
+}
+message GetAmountOutInput{
+     string symbol_in=1;
+     string symbol_out=2;
+     int64 amount_in=3;
+}
+message QuoteInput{
+     string symbol_a=1;
+     string symbol_b=2;
+     int64 amount_a=3;
+}
 message TransferLiquidityTokensInput{
     aelf.Address to =1;
     string symbol_a=2;
@@ -170,9 +197,9 @@ message LiquidityRemoved{
 message Swap{
     option (aelf.is_event) = true;
     aelf.Address sender = 1;
-    string symbol_a=2;
-    string symbol_b=3;
-    int64 amount_a_in = 4;
-    int64 amount_b_out = 5;
+    string symbol_in=2;
+    string symbol_out=3;
+    int64 amount_in = 4;
+    int64 amount_out = 5;
    }
 
