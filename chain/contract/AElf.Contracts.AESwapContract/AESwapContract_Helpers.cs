@@ -29,6 +29,21 @@ namespace AElf.Contracts.AESwapContract
             return sortedTokenPair;
         }
 
+        private string GetPair(string tokenA, string tokenB)
+        {
+            // Assert(tokenPair.Contains("-"), "Invalid TokenPair");
+            var tokens = new[] {tokenA, tokenB};
+            Assert(TokenVerify(tokens[0]) && TokenVerify(tokens[1]), "Invalid Tokens");
+            var sortedTokenPair = string.Join("-", tokens[0], tokens[1]);
+            ;
+            if (string.Compare(tokens[0], tokens[1], StringComparison.InvariantCulture) > 1)
+            {
+                sortedTokenPair = string.Join("-", tokens[1], tokens[0]);
+            }
+
+            return sortedTokenPair;
+        }
+
         private string[] SortTokens(string tokenPair)
         {
             Assert(tokenPair.Contains("-"), "Invalid TokenPair");
@@ -99,13 +114,15 @@ namespace AElf.Contracts.AESwapContract
             };
         }
 
-        private long[] RemoveLiquidity(string tokenA, string tokenB, long liquidity,
+        private long[] RemoveLiquidity(string tokenA, string tokenB,
             long amountAMin, long amountBMin)
         {
             Assert(State.Pairs[tokenA][tokenB] != null, "Pair is not exist");
+            var Liquidity = State.LiquidityTokens[State.Pairs[tokenA][tokenB].Address][Context.Sender];
+            Assert(Liquidity!=null && Liquidity>0,"Insufficient LiquidityToken");
             var amount = Burn(Context.Sender, tokenA, tokenB);
-            Assert(amount[0] > amountAMin, "Insufficient tokenA");
-            Assert(amount[1] > amountBMin, "Insufficient tokenB");
+            Assert(amount[0] >= amountAMin, "Insufficient tokenA");
+            Assert(amount[1] >= amountBMin, "Insufficient tokenB");
             return new[]
             {
                 amount[0], amount[1]
@@ -122,7 +139,7 @@ namespace AElf.Contracts.AESwapContract
             };
         }
 
-        private long Mint(string tokenA, string tokenB, long amountA,long amountB,Address account)
+        private long Mint(string tokenA, string tokenB, long amountA, long amountB, Address account)
         {
             var pairAddress = State.Pairs[tokenA][tokenB].Address;
             var balanceA = GetBalance(tokenA, pairAddress).Add(amountA);
@@ -137,8 +154,10 @@ namespace AElf.Contracts.AESwapContract
             var oldLiquidityToken = State.LiquidityTokens[pairAddress][account];
             var newLiquidityToken = oldLiquidityToken.Add(liquidity);
             State.LiquidityTokens[pairAddress][account] = newLiquidityToken;
+            State.AccountAssets[account] = State.AccountAssets[account] ?? new PairList();
+            State.AccountAssets[account].SymbolPair.Add(GetPair(tokenA, tokenB));
             Update(balanceA, balanceB, reserves[0], reserves[1], tokenA, tokenB);
-            Context.Fire(new Mint()
+            Context.Fire(new LiquidityAdded()
             {
                 AmountA = amountA,
                 AmountB = amountB,
@@ -161,17 +180,21 @@ namespace AElf.Contracts.AESwapContract
             var amountA = liquidity.Mul(balanceA).Div(totalSupply);
             var amountB = liquidity.Mul(balanceB).Div(totalSupply);
             Assert(amountA > 0 && amountB > 0, "Insufficient Liquidity burned");
-            State.TotalSupply[pairAddress].Div(liquidity);
+            var oldTotalSupply = totalSupply;
+            var newTotalSupply = oldTotalSupply.Sub(liquidity);
+            Assert(newTotalSupply >= 0, "Insufficient TotalSupply");
+            State.TotalSupply[pairAddress] = newTotalSupply;
             var oldLiquidityToken = State.LiquidityTokens[pairAddress][to];
-            var newLiquidityToken = oldLiquidityToken.Div(liquidity);
-            Assert(newLiquidityToken > 0, "Insufficient Liquidity");
+            var newLiquidityToken = oldLiquidityToken.Sub(liquidity);
+            Assert(newLiquidityToken >= 0, "Insufficient Liquidity");
             State.LiquidityTokens[pairAddress][to] = newLiquidityToken;
             TransferOut(State.Pairs[tokenA][tokenB].Hash, to, tokenA, amountA);
             TransferOut(State.Pairs[tokenA][tokenB].Hash, to, tokenB, amountB);
-            balanceA = GetBalance(tokenA, pairAddress);
-            balanceB = GetBalance(tokenB, pairAddress);
-            Update(balanceA, balanceB, reserves[0], reserves[1], tokenA, tokenB);
-            Context.Fire(new Burn()
+             var balanceANew = GetBalance(tokenA, pairAddress).Sub(amountA);
+             var balanceBNew = GetBalance(tokenB, pairAddress).Sub(amountB);
+             State.AccountAssets[Context.Sender].SymbolPair.Remove(GetPair(tokenA,tokenB));
+            Update(balanceANew, balanceBNew, reserves[0], reserves[1], tokenA, tokenB);
+            Context.Fire(new LiquidityRemoved()
             {
                 AmountA = amountA,
                 AmountB = amountB,
@@ -185,7 +208,7 @@ namespace AElf.Contracts.AESwapContract
             };
         }
 
-        private void Swap(string symbolIn, string symbolOut, long amountOut, Address to)
+        private void Swap(string symbolIn, string symbolOut, long amountIn, long amountOut, Address to)
         {
             var pairAddress = State.Pairs[symbolIn][symbolOut].Address;
             var reserveSymbolIn = State.TotalReserves[pairAddress][symbolIn];
@@ -194,9 +217,8 @@ namespace AElf.Contracts.AESwapContract
             var pairHash = State.Pairs[symbolIn][symbolOut].Hash;
             Assert(to != pairAddress, "Invalid account address");
             TransferOut(pairHash, to, symbolOut, amountOut);
-            var balanceIn = GetBalance(symbolIn, pairAddress);
-            var balanceOut = GetBalance(symbolOut, pairAddress);
-            var amountIn = balanceIn.Div(reserveSymbolIn);
+            var balanceIn = GetBalance(symbolIn, pairAddress).Add(amountIn);
+            var balanceOut = GetBalance(symbolOut, pairAddress).Sub(amountOut);
             Assert(amountIn > 0, "Insufficient Input amount");
             var balance0Adjusted = balanceIn.Mul(1000).Sub(amountIn.Mul(3));
             var balance1Adjusted = balanceOut;
@@ -208,8 +230,6 @@ namespace AElf.Contracts.AESwapContract
                 SymbolA = symbolIn,
                 SymbolB = symbolOut,
                 AmountAIn = amountIn,
-                AmountAOut = 0,
-                AmountBIn = 0,
                 AmountBOut = amountOut,
                 Sender = Context.Sender
             });

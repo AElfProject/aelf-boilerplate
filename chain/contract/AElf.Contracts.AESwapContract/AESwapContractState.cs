@@ -26,5 +26,7 @@ namespace AElf.Contracts.AESwapContract
         /// LiquidityToken balances for each account in different  Pair
         /// </summary>
         public MappedState<Address, Address, long> LiquidityTokens { get; set; }
+        
+        public MappedState<Address, PairList> AccountAssets { get; set; }
     }
 }

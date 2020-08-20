@@ -3,7 +3,6 @@ syntax = "proto3";
 import "aelf/core.proto";
 import "aelf/options.proto";
 import "google/protobuf/empty.proto";
-import "google/protobuf/wrappers.proto";
 import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "AElf.Contracts.AESwapContract";
@@ -20,7 +19,9 @@ service AESwapContract {
     }
     rpc RemoveLiquidity (RemoveLiquidityInput) returns (RemoveLiquidityOutput) {
     }
-    rpc Swap(SwapInput) returns(SwapOutput){
+    rpc SwapExactTokenForToken(SwapExactTokenForTokenInput) returns(SwapOutput){
+    }
+    rpc SwapTokenForExactToken(SwapTokenForExactTokenInput) returns(SwapOutput){
     }
     rpc TransferLiquidityTokens(TransferLiquidityTokensInput) returns(google.protobuf.Empty){
     }
@@ -29,11 +30,20 @@ service AESwapContract {
     rpc GetPairs(google.protobuf.Empty)returns(PairList){
         option (aelf.is_view) = true;
     }
-
     // fetches and sorts the reserves for a pair
     rpc GetReserves(GetReservesInput)returns(GetReservesOutput){
         option (aelf.is_view) = true;
     }
+    rpc GetTotalSupply(PairList)returns(GetTotalSupplyOutput){
+        option (aelf.is_view) = true;
+    }
+    rpc GetLiquidityTokenBalance(PairList)returns(GetLiquidityTokenBalanceOutput){
+        option (aelf.is_view) = true;
+    }
+    rpc GetAccountAssets(google.protobuf.Empty)returns(PairList){
+        option (aelf.is_view) = true;
+    }
+    
 }
 message CreatePairInput{
     string symbol_pair =1;
@@ -45,8 +55,8 @@ message PairList{
     repeated string symbol_pair =1;
 }
 message AddLiquidityInput{
-    string token_a=1;
-    string token_b=2;
+    string symbol_a=1;
+    string symbol_b=2;
     int64 amount_a_desired =3;
     int64 amount_b_desired =4;
     int64 amount_a_min =5;
@@ -64,22 +74,28 @@ message AddLiquidityOutput{
 message RemoveLiquidityInput{
     string symbol_a =1;
     string symbol_b =2;
-    int64 liquidity_token =3;
-    int64 amount_a_min =4;
-    int64 amount_b_min =5;
-    google.protobuf.Timestamp deadline =6;
+    int64 amount_a_min =3;
+    int64 amount_b_min =4;
+    google.protobuf.Timestamp deadline =5;
 }
  message RemoveLiquidityOutput{
      int64 amount_a=1;
      int64 amount_b =2;
  }
- message SwapInput{
+ message SwapExactTokenForTokenInput{
     int64 amount_in=1;
     int64 amount_out_min=2;
     string symbol_in=3;
     string symbol_out =4;
     google.protobuf.Timestamp deadline =5;
  }
+ message SwapTokenForExactTokenInput{
+     int64 amount_out=1;
+     int64 amount_in_max=2;
+     string symbol_in=3;
+     string symbol_out =4;
+     google.protobuf.Timestamp deadline =5;
+  }
 
  message SwapOutput{
     int64 amount_out=1;
@@ -101,6 +117,21 @@ message ReservePairResult{
     int64 reserve_b=6;
     int64 block_timestamp_last=7;
 }
+
+message GetTotalSupplyOutput{
+ repeated TotalSupplyResult results=1;
+}
+message TotalSupplyResult{
+ string symbol_pair=1;
+  int64 total_supply =2;
+}
+message GetLiquidityTokenBalanceOutput{
+ repeated LiquidityTokenBalanceResult results=1;
+}
+message LiquidityTokenBalanceResult{
+ string symbol_pair=1;
+ int64 balance =2;
+}
 message TransferLiquidityTokensInput{
     aelf.Address to =1;
     string symbol_a=2;
@@ -118,7 +149,7 @@ message PairCreated{
     string symbol_b = 2;
     aelf.Address pair = 3;
    }
-message Mint{
+message LiquidityAdded{
    option (aelf.is_event) = true;
    aelf.Address sender = 1;
    string symbol_a=2;
@@ -127,13 +158,14 @@ message Mint{
    int64 amount_b = 5;
    int64 liquidity_token=6;
    }
-message Burn{
+message LiquidityRemoved{
    option (aelf.is_event) = true;
    aelf.Address sender = 1;
    string symbol_a=2;
    string symbol_b=3;
    int64 amount_a = 4;
    int64 amount_b = 5;
+   int64 liquidity_token=6;
    }
 message Swap{
     option (aelf.is_event) = true;
@@ -141,8 +173,6 @@ message Swap{
     string symbol_a=2;
     string symbol_b=3;
     int64 amount_a_in = 4;
-    int64 amount_b_in = 5;
-    int64 amount_a_out = 6;
-    int64 amount_b_out = 7;
+    int64 amount_b_out = 5;
    }
 

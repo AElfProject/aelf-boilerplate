@@ -36,8 +36,8 @@ namespace AElf.Contract.AESwapContract.Tests
                  AmountBDesired = 200000000,
                  AmountBMin = 200000000,
                  Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0,0,3))),
-                 TokenA = "ELF",
-                 TokenB = "TEST"
+                 SymbolA = "ELF",
+                 SymbolB = "TEST"
              });
             var reserves=  await UserTomStub.GetReserves.SendAsync(new GetReservesInput()
              {
@@ -45,6 +45,13 @@ namespace AElf.Contract.AESwapContract.Tests
              });
             reserves.Output.Results[0].ReserveA.ShouldBe(100000000);
             reserves.Output.Results[0].ReserveB.ShouldBe(200000000);
+            
+            var assets = await UserTomStub.GetAccountAssets.CallAsync(new Empty());
+            assets.SymbolPair.ShouldContain("ELF-TEST");
+            
+            
+           
+            
 
         }
         

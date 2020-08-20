@@ -16,30 +16,30 @@ namespace AElf.Contracts.AESwapContract
 
         public override AddLiquidityOutput AddLiquidity(AddLiquidityInput input)
         {
-            Assert(input.Deadline.Seconds > Context.CurrentBlockTime.Seconds, "Expired");
-            Assert(TokenVerify(input.TokenA) && TokenVerify(input.TokenB), "Invalid Tokens");
-            var amount = AddLiquidity(input.TokenA, input.TokenB, input.AmountADesired, input.AmountBDesired,
+            Assert(input.Deadline.Seconds >= Context.CurrentBlockTime.Seconds, "Expired");
+            Assert(TokenVerify(input.SymbolA) && TokenVerify(input.SymbolB), "Invalid Tokens");
+            var amount = AddLiquidity(input.SymbolA, input.SymbolB, input.AmountADesired, input.AmountBDesired,
                 input.AmountAMin,
                 input.AmountBMin);
-            var to = State.Pairs[input.TokenA][input.TokenB].Address;
-            TransferIn(Context.Sender, to, input.TokenA, amount[0]);
-            TransferIn(Context.Sender, to, input.TokenB, amount[1]);
-            var liquidityToken = Mint(input.TokenA, input.TokenB, amount[0],amount[1],Context.Sender);
+            var to = State.Pairs[input.SymbolA][input.SymbolB].Address;
+            TransferIn(Context.Sender, to, input.SymbolA, amount[0]);
+            TransferIn(Context.Sender, to, input.SymbolA, amount[1]);
+            var liquidityToken = Mint(input.SymbolA, input.SymbolB, amount[0], amount[1], Context.Sender);
             return new AddLiquidityOutput()
             {
                 AmountA = amount[0],
                 AmountB = amount[1],
                 LiquidityToken = liquidityToken,
-                SymbolA = input.TokenA,
-                SymbolB = input.TokenB
+                SymbolA = input.SymbolA,
+                SymbolB = input.SymbolB
             };
         }
 
         public override RemoveLiquidityOutput RemoveLiquidity(RemoveLiquidityInput input)
         {
-            Assert(input.Deadline.Seconds > Context.CurrentBlockTime.Seconds, "Expired");
+            Assert(input.Deadline.Seconds >= Context.CurrentBlockTime.Seconds, "Expired");
             Assert(TokenVerify(input.SymbolA) && TokenVerify(input.SymbolB), "Invalid Tokens");
-            var amount = RemoveLiquidity(input.SymbolA, input.SymbolB, input.LiquidityToken, input.AmountAMin,
+            var amount = RemoveLiquidity(input.SymbolA, input.SymbolB, input.AmountAMin,
                 input.AmountBMin);
             return new RemoveLiquidityOutput()
             {
@@ -48,7 +48,7 @@ namespace AElf.Contracts.AESwapContract
             };
         }
 
-       
+
         public override CreatePairOutput CreatePair(CreatePairInput input)
         {
             var tokenPair = SortTokens(input.SymbolPair);
@@ -79,9 +79,35 @@ namespace AElf.Contracts.AESwapContract
             };
         }
 
-        public override SwapOutput Swap(SwapInput input)
+        public override SwapOutput SwapExactTokenForToken(SwapExactTokenForTokenInput input)
         {
-            return base.Swap(input);
+            var pairAddress = State.Pairs[input.SymbolIn][input.SymbolOut].Address;
+            var reserves = GetReserves(pairAddress, input.SymbolIn, input.SymbolOut);
+            var amountOut = GetAmountOut(input.AmountIn, reserves[0], reserves[1]);
+            Assert(amountOut >= input.AmountOutMin, "Insufficient Output amount");
+            TransferIn(Context.Sender, pairAddress, input.SymbolIn, input.AmountIn);
+            Swap(input.SymbolIn, input.SymbolOut, input.AmountIn, amountOut, Context.Sender);
+            return new SwapOutput()
+            {
+                AmountOut = amountOut,
+                SymbolOut = input.SymbolOut
+            };
+        }
+
+
+        public override SwapOutput SwapTokenForExactToken(SwapTokenForExactTokenInput input)
+        {
+            var pairAddress = State.Pairs[input.SymbolIn][input.SymbolOut].Address;
+            var reserves = GetReserves(pairAddress, input.SymbolIn, input.SymbolOut);
+            var amountIn = GetAmountIn(input.AmountOut, reserves[0], reserves[1]);
+            Assert(amountIn <= input.AmountInMax, "Insufficient Input amount");
+            TransferIn(Context.Sender, pairAddress, input.SymbolIn, amountIn);
+            Swap(input.SymbolIn, input.SymbolOut, amountIn, input.AmountOut, Context.Sender);
+            return new SwapOutput()
+            {
+                AmountOut = input.AmountOut,
+                SymbolOut = input.SymbolOut
+            };
         }
     }
 }
