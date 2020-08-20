@@ -11,11 +11,10 @@ option csharp_namespace = "AElf.Contracts.AESwapContract";
 service AESwapContract {
     option (aelf.csharp_state) = "AElf.Contracts.AESwapContract.AESwapContractState";
 
+    //Actions
     rpc Initialize(google.protobuf.Empty)returns(google.protobuf.Empty){
     }
     rpc CreatePair(CreatePairInput) returns (CreatePairOutput){
-    }
-    rpc GetPairs(google.protobuf.Empty)returns(PairList){
     }
     rpc AddLiquidity (AddLiquidityInput) returns (AddLiquidityOutput) {
     }
@@ -23,19 +22,17 @@ service AESwapContract {
     }
     rpc Swap(SwapInput) returns(SwapOutput){
     }
-    // given some amount of an asset and pair reserves, returns an equivalent amount of the other asset  --for AddLiquidity
-    // rpc Quote(QuoteInput) returns(google.protobuf.Int64Value){
-    //}
-    // given an output amount of an asset and pair reserves, returns the maximum output amount of the other asset --for Swap
-    //rpc GetAmountIn(GetAmountInInput) returns(google.protobuf.Int64Value){
-    // }
-    // given an input amount of an asset and pair reserves, returns a required input amount of the other asset --for Swap
-    // rpc GetAmountOut(GetAmountOutInput) returns(google.protobuf.Int64Value){
-    //}
+    rpc TransferLiquidityTokens(TransferLiquidityTokensInput) returns(google.protobuf.Empty){
+    }
+
+    //Views
+    rpc GetPairs(google.protobuf.Empty)returns(PairList){
+        option (aelf.is_view) = true;
+    }
+
     // fetches and sorts the reserves for a pair
     rpc GetReserves(GetReservesInput)returns(GetReservesOutput){
-    }
-    rpc TransferLiquidityTokens(TransferLiquidityTokensInput) returns(google.protobuf.Empty){
+        option (aelf.is_view) = true;
     }
 }
 message CreatePairInput{
