@@ -34,8 +34,7 @@ namespace AElf.Contract.AESwapContract.Tests
             var pairList = await UserTomStub.GetPairs.CallAsync(new Empty());
             // var pairList = await UserTomStub.GetPairs.CallAsync(new Empty());
             pairList.SymbolPair.ShouldContain("ELF-TEST");
-            pairList.SymbolPair.ShouldContain("ELF-DAI");
-
+            pairList.SymbolPair.ShouldContain("DAI-ELF");
             await UserTomStub.AddLiquidity.SendAsync(new AddLiquidityInput()
             {
                 AmountADesired = 100000000,
@@ -56,6 +55,10 @@ namespace AElf.Contract.AESwapContract.Tests
                 SymbolA = "ELF",
                 SymbolB = "DAI"
             });
+            var myPairList = await UserTomStub.GetAccountAssets.CallAsync(new Empty());
+            myPairList.SymbolPair.ShouldContain("ELF-TEST");
+            myPairList.SymbolPair.ShouldContain("DAI-ELF");
+            
             var reserves = await UserTomStub.GetReserves.SendAsync(new GetReservesInput()
             {
                 SymbolPair = {"ELF-TEST", "ELF-DAI"}
@@ -104,20 +107,20 @@ namespace AElf.Contract.AESwapContract.Tests
             });
             balanceAfter.Results[0].Balance.ShouldBe(0);
 
-            var amountOut = 200000000;
-            // var amountIn= UserTomStub.GetAmountIn.CallAsync(new GetAmountInInput()
-            // {
-            //     SymbolIn = "ELF",
-            //     SymbolOut = "DAI",
-            //     AmountOut = amountOut
-            // });
-            // var reserveElf = reserves.Output.Results[1].ReserveA;
-            // var reserveDai = reserves.Output.Results[1].ReserveB;
-            // var numerator = reserveElf.Mul(amountOut).Mul(1000);
-            // var denominator = reserveDai.Sub(amountOut).Mul(997);
-            // var amountInExpect = (numerator / denominator).Add(1);
-            //
-            // amountIn.Result.Value.ShouldBe(amountInExpect);
+            var amountOut = 150000000;
+            var amountIn = await UserTomStub.GetAmountIn.CallAsync(new GetAmountInInput()
+            {
+                SymbolIn = "ELF",
+                SymbolOut = "DAI",
+                AmountOut = amountOut
+            });
+            var reserveElf = Convert.ToDecimal(reserves.Output.Results[1].ReserveB);
+            var reserveDai = reserves.Output.Results[1].ReserveA;
+            var numerator = reserveElf * amountOut * 1000;
+            var denominator = (reserveDai - amountOut) * 997;
+            var amountInExpect = decimal.ToInt64(numerator / denominator) + 1;
+
+            amountIn.Value.ShouldBe(amountInExpect);
             
         }
 

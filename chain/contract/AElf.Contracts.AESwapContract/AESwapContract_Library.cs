@@ -1,3 +1,4 @@
+using System;
 using AElf.CSharp.Core;
 
 namespace AElf.Contracts.AESwapContract
@@ -22,10 +23,12 @@ namespace AElf.Contracts.AESwapContract
         private long GetAmountIn(long amountOut, long reserveIn, long reserveOut)
         {
             Assert(amountOut > 0, "Insufficient Output amount");
-            Assert(reserveIn > 0 && reserveOut > 0, "Insufficient reserves");
-            var numerator = reserveIn.Mul(amountOut).Mul(1000);
-            var denominator = reserveOut.Sub(amountOut).Mul(997);
-            var amountIn = (numerator / denominator).Add(1);
+            Assert(reserveIn > 0 && reserveOut > 0 && reserveOut > amountOut, "Insufficient reserves");
+            var reserveInDecimal = Convert.ToDecimal(reserveIn);
+            var reserveOutDecimal = Convert.ToDecimal(reserveOut);
+            var numerator = reserveInDecimal * amountOut * 1000;
+            var denominator = (reserveOutDecimal - amountOut) * 997;
+            var amountIn = decimal.ToInt64(numerator / denominator) + 1;
             return amountIn;
         }
 
@@ -33,10 +36,12 @@ namespace AElf.Contracts.AESwapContract
         {
             Assert(amountIn > 0, "Insufficient Output amount");
             Assert(reserveIn > 0 && reserveOut > 0, "Insufficient reserves");
+            var reserveInDecimal = Convert.ToDecimal(reserveIn);
+            var reserveOutDecimal = Convert.ToDecimal(reserveOut);
             var amountInWithFee = amountIn.Mul(997);
-            var numerator = amountInWithFee.Mul(reserveOut);
-            var denominator = reserveIn.Mul(1000).Add(amountInWithFee);
-            var amountOut = numerator / denominator;
+            var numerator = amountInWithFee * reserveOutDecimal;
+            var denominator = (reserveInDecimal * 1000) + amountInWithFee;
+            var amountOut = decimal.ToInt64(numerator / denominator);
             return amountOut;
         }
     }

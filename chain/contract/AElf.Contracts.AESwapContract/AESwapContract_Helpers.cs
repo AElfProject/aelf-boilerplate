@@ -21,7 +21,7 @@ namespace AElf.Contracts.AESwapContract
             var tokens = tokenPair.Split('-');
             Assert(TokenVerify(tokens[0]) && TokenVerify(tokens[1]), "Invalid Tokens");
             var sortedTokenPair = tokenPair;
-            if (string.Compare(tokens[0], tokens[1], StringComparison.InvariantCulture) > 1)
+            if (string.Compare(tokens[0], tokens[1], StringComparison.InvariantCulture) >= 1)
             {
                 sortedTokenPair = string.Join("-", tokens[1], tokens[0]);
             }
@@ -47,7 +47,7 @@ namespace AElf.Contracts.AESwapContract
         {
             Assert(tokenPair.Contains("-"), "Invalid TokenPair");
             var tokens = tokenPair.Split('-');
-            if (string.Compare(tokens[0], tokens[1], StringComparison.InvariantCulture) > 1)
+            if (string.Compare(tokens[0], tokens[1], StringComparison.InvariantCulture) >= 1)
             {
                 var index = tokens[0];
                 tokens[0] = tokens[1];
@@ -148,12 +148,15 @@ namespace AElf.Contracts.AESwapContract
                 ? Sqrt(amountA.Mul(amountB))
                 : Math.Min(amountA.Mul(totalSupply) / reserves[0], amountB.Mul(totalSupply) / reserves[1]);
             Assert(liquidity > 0, "Insufficient liquidity Minted");
-            State.TotalSupply[pairAddress] += liquidity;
+            State.TotalSupply[pairAddress] =  State.TotalSupply[pairAddress].Add(liquidity);
             var oldLiquidityToken = State.LiquidityTokens[pairAddress][account];
             var newLiquidityToken = oldLiquidityToken.Add(liquidity);
             State.LiquidityTokens[pairAddress][account] = newLiquidityToken;
             State.AccountAssets[account] = State.AccountAssets[account] ?? new PairList();
-            State.AccountAssets[account].SymbolPair.Add(GetPair(tokenA, tokenB));
+            if (!State.AccountAssets[account].SymbolPair.Contains(GetPair(tokenA, tokenB)))
+            {
+                State.AccountAssets[account].SymbolPair.Add(GetPair(tokenA, tokenB));
+            }
             Update(balanceA, balanceB, reserves[0], reserves[1], tokenA, tokenB);
             Context.Fire(new LiquidityAdded()
             {
@@ -221,9 +224,10 @@ namespace AElf.Contracts.AESwapContract
             var balanceIn = GetBalance(symbolIn, pairAddress).Add(amountIn);
             var balanceOut = GetBalance(symbolOut, pairAddress).Sub(amountOut);
             Assert(amountIn > 0, "Insufficient Input amount");
-            var balance0Adjusted = balanceIn.Mul(1000).Sub(amountIn.Mul(3));
+            var balance0Adjusted = Convert.ToDecimal(balanceIn.Mul(1000).Sub(amountIn.Mul(3)));
             var balance1Adjusted = balanceOut;
-            Assert(balance0Adjusted.Mul(balance1Adjusted) >= (reserveSymbolIn).Mul(reserveSymbolOut).Mul(1000),
+            var reserveSymbolInDecimal = Convert.ToDecimal(reserveSymbolIn);
+            Assert(balance0Adjusted * balance1Adjusted >= reserveSymbolInDecimal * reserveSymbolOut * 1000,
                 "Error with K");
             Update(balanceIn, balanceOut, reserveSymbolIn, reserveSymbolOut, symbolIn, symbolOut);
             Context.Fire(new Swap()
@@ -244,8 +248,8 @@ namespace AElf.Contracts.AESwapContract
             var timeElapsed = blockTimestamp - State.BlockTimestampLast[pairAddress];
             if (timeElapsed > 0 && reserveA != 0 && reserveB != 0)
             {
-                State.PriceCumulativeLast[pairAddress][tokenA] += reserveB.Div(reserveA).Mul(timeElapsed);
-                State.PriceCumulativeLast[pairAddress][tokenB] += reserveA.Div(reserveB).Mul(timeElapsed);
+                State.PriceCumulativeLast[pairAddress][tokenA] = State.PriceCumulativeLast[pairAddress][tokenA].Add(reserveB.Div(reserveA).Mul(timeElapsed));
+                State.PriceCumulativeLast[pairAddress][tokenB] = State.PriceCumulativeLast[pairAddress][tokenB].Add(reserveA.Div(reserveB).Mul(timeElapsed));
             }
 
             State.TotalReserves[pairAddress][tokenA] = balanceA;

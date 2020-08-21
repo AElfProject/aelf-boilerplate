@@ -67,7 +67,7 @@ namespace AElf.Contracts.AESwapContract
             State.Pairs[tokenPair[1]][tokenPair[0]] = pair;
             //add to PairList
             var pairList = State.AllPairs.Value ?? new PairList();
-            pairList.SymbolPair.Add(input.SymbolPair);
+            pairList.SymbolPair.Add(GetPair(input.SymbolPair));
             State.AllPairs.Value = pairList;
 
             PairInitial(address, tokenPair[0], tokenPair[1]);
