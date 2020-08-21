@@ -15,7 +15,7 @@ using Xunit;
 
 namespace AElf.Contract.AESwapContract.Tests
 {
-    public class AESwapContractTests:AESwapContractTestBase
+    public class AESwapContractTests : AESwapContractTestBase
     {
         [Fact]
         public async Task CompleteFlowTest()
@@ -26,36 +26,102 @@ namespace AElf.Contract.AESwapContract.Tests
             {
                 SymbolPair = "ELF-TEST"
             });
-             var pairList = await UserTomStub.GetPairs.CallAsync(new Empty());
-             pairList.SymbolPair.ShouldContain("ELF-TEST");
 
-             await UserTomStub.AddLiquidity.SendAsync(new AddLiquidityInput()
-             {
-                 AmountADesired = 100000000,
-                 AmountAMin = 100000000,
-                 AmountBDesired = 200000000,
-                 AmountBMin = 200000000,
-                 Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0,0,3))),
-                 SymbolA = "ELF",
-                 SymbolB = "TEST"
-             });
-            var reserves=  await UserTomStub.GetReserves.SendAsync(new GetReservesInput()
-             {
-                 SymbolPair = {"ELF-TEST"}
-             });
-            reserves.Output.Results[0].ReserveA.ShouldBe(100000000);
-            reserves.Output.Results[0].ReserveB.ShouldBe(200000000);
-            
+            await UserTomStub.CreatePair.SendAsync(new CreatePairInput()
+            {
+                SymbolPair = "ELF-DAI"
+            });
+            var pairList = await UserTomStub.GetPairs.CallAsync(new Empty());
+            // var pairList = await UserTomStub.GetPairs.CallAsync(new Empty());
+            pairList.SymbolPair.ShouldContain("ELF-TEST");
+            pairList.SymbolPair.ShouldContain("ELF-DAI");
+
+            await UserTomStub.AddLiquidity.SendAsync(new AddLiquidityInput()
+            {
+                AmountADesired = 100000000,
+                AmountAMin = 100000000,
+                AmountBDesired = 200000000,
+                AmountBMin = 200000000,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "TEST"
+            });
+            await UserTomStub.AddLiquidity.SendAsync(new AddLiquidityInput()
+            {
+                AmountADesired = 100000000,
+                AmountAMin = 100000000,
+                AmountBDesired = 200000000,
+                AmountBMin = 200000000,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "DAI"
+            });
+            var reserves = await UserTomStub.GetReserves.SendAsync(new GetReservesInput()
+            {
+                SymbolPair = {"ELF-TEST", "ELF-DAI"}
+            });
+            var reserveA = reserves.Output.Results[0].ReserveA;
+            var reserveB = reserves.Output.Results[0].ReserveB;
+            reserveA.ShouldBe(100000000);
+            reserveB.ShouldBe(200000000);
+
             var assets = await UserTomStub.GetAccountAssets.CallAsync(new Empty());
             assets.SymbolPair.ShouldContain("ELF-TEST");
-            
-            
-           
-            
 
+            var balance = await UserTomStub.GetLiquidityTokenBalance.CallAsync(new PairList()
+            {
+                SymbolPair = {"ELF-TEST"}
+            });
+            //token=math.sqrt(reserveA*reserveB)
+            balance.Results[0].SymbolPair.ShouldBe("ELF-TEST");
+            var balanceExpect = (long) Math.Sqrt(reserveA * reserveB);
+            balance.Results[0].Balance.ShouldBe(balanceExpect);
+
+            var totalSupply = UserTomStub.GetTotalSupply.CallAsync(new PairList()
+            {
+                SymbolPair = {"ELF-TEST"}
+            });
+            totalSupply.Result.Results[0].SymbolPair.ShouldBe("ELF-TEST");
+            totalSupply.Result.Results[0].TotalSupply.ShouldBe(balanceExpect);
+
+            var result = await UserTomStub.RemoveLiquidity.SendAsync(new RemoveLiquidityInput()
+            {
+                LiquidityRemove = balanceExpect,
+                AmountAMin = 100000000,
+                AmountBMin = 200000000,
+                SymbolA = "ELF",
+                SymbolB = "TEST",
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3)))
+            });
+            result.Output.SymbolA.ShouldBe("ELF");
+            result.Output.SymbolB.ShouldBe("TEST");
+            result.Output.AmountA.ShouldBe(100000000);
+            result.Output.AmountB.ShouldBe(200000000);
+
+            var balanceAfter = await UserTomStub.GetLiquidityTokenBalance.CallAsync(new PairList()
+            {
+                SymbolPair = {"ELF-TEST"}
+            });
+            balanceAfter.Results[0].Balance.ShouldBe(0);
+
+            var amountOut = 200000000;
+            // var amountIn= UserTomStub.GetAmountIn.CallAsync(new GetAmountInInput()
+            // {
+            //     SymbolIn = "ELF",
+            //     SymbolOut = "DAI",
+            //     AmountOut = amountOut
+            // });
+            // var reserveElf = reserves.Output.Results[1].ReserveA;
+            // var reserveDai = reserves.Output.Results[1].ReserveB;
+            // var numerator = reserveElf.Mul(amountOut).Mul(1000);
+            // var denominator = reserveDai.Sub(amountOut).Mul(997);
+            // var amountInExpect = (numerator / denominator).Add(1);
+            //
+            // amountIn.Result.Value.ShouldBe(amountInExpect);
+            
         }
-        
-        
+
+
         private async Task CreateAndGetToken()
         {
             //TEST
@@ -74,11 +140,11 @@ namespace AElf.Contract.AESwapContract.Tests
             var issueResult = await TokenContractStub.Issue.SendAsync(new IssueInput
             {
                 Amount = 100000000000000,
-                Symbol ="TEST",
+                Symbol = "TEST",
                 To = AdminAddress
             });
             issueResult.TransactionResult.Status.ShouldBe(TransactionResultStatus.Mined);
-            var balance =await TokenContractStub.GetBalance.SendAsync(new GetBalanceInput()
+            var balance = await TokenContractStub.GetBalance.SendAsync(new GetBalanceInput()
             {
                 Owner = AdminAddress,
                 Symbol = "TEST"
@@ -100,11 +166,11 @@ namespace AElf.Contract.AESwapContract.Tests
             var issueResult2 = await TokenContractStub.Issue.SendAsync(new IssueInput
             {
                 Amount = 100000000000000,
-                Symbol ="DAI",
+                Symbol = "DAI",
                 To = AdminAddress
             });
             issueResult2.TransactionResult.Status.ShouldBe(TransactionResultStatus.Mined);
-            var balance2 =await TokenContractStub.GetBalance.SendAsync(new GetBalanceInput()
+            var balance2 = await TokenContractStub.GetBalance.SendAsync(new GetBalanceInput()
             {
                 Owner = AdminAddress,
                 Symbol = "DAI"

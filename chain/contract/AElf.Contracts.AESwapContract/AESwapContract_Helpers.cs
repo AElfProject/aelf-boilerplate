@@ -35,7 +35,7 @@ namespace AElf.Contracts.AESwapContract
             var tokens = new[] {tokenA, tokenB};
             Assert(TokenVerify(tokens[0]) && TokenVerify(tokens[1]), "Invalid Tokens");
             var sortedTokenPair = string.Join("-", tokens[0], tokens[1]);
-            if (string.Compare(tokens[0], tokens[1], StringComparison.InvariantCulture) > 1)
+            if (string.Compare(tokens[0], tokens[1], StringComparison.InvariantCulture) >= 1)
             {
                 sortedTokenPair = string.Join("-", tokens[1], tokens[0]);
             }
@@ -112,13 +112,13 @@ namespace AElf.Contracts.AESwapContract
             };
         }
 
-        private long[] RemoveLiquidity(string tokenA, string tokenB,long liquidityRemoveAmount,
+        private long[] RemoveLiquidity(string tokenA, string tokenB, long liquidityRemoveAmount,
             long amountAMin, long amountBMin)
         {
             Assert(State.Pairs[tokenA][tokenB] != null, "Pair is not exist");
             var liquidity = State.LiquidityTokens[State.Pairs[tokenA][tokenB].Address][Context.Sender];
-            Assert(liquidity > 0 && liquidityRemoveAmount<= liquidity, "Insufficient LiquidityToken");
-            var amount = Burn(Context.Sender, tokenA, tokenB,liquidityRemoveAmount);
+            Assert(liquidity > 0 && liquidityRemoveAmount <= liquidity, "Insufficient LiquidityToken");
+            var amount = Burn(Context.Sender, tokenA, tokenB, liquidityRemoveAmount);
             Assert(amount[0] >= amountAMin, "Insufficient tokenA");
             Assert(amount[1] >= amountBMin, "Insufficient tokenB");
             return new[]
@@ -148,7 +148,7 @@ namespace AElf.Contracts.AESwapContract
                 ? Sqrt(amountA.Mul(amountB))
                 : Math.Min(amountA.Mul(totalSupply) / reserves[0], amountB.Mul(totalSupply) / reserves[1]);
             Assert(liquidity > 0, "Insufficient liquidity Minted");
-            State.TotalSupply[pairAddress].Add(liquidity);
+            State.TotalSupply[pairAddress] += liquidity;
             var oldLiquidityToken = State.LiquidityTokens[pairAddress][account];
             var newLiquidityToken = oldLiquidityToken.Add(liquidity);
             State.LiquidityTokens[pairAddress][account] = newLiquidityToken;
@@ -167,7 +167,7 @@ namespace AElf.Contracts.AESwapContract
             return liquidity;
         }
 
-        private long[] Burn(Address to, string tokenA, string tokenB,long liquidityRemoveAmount)
+        private long[] Burn(Address to, string tokenA, string tokenB, long liquidityRemoveAmount)
         {
             var pairAddress = State.Pairs[tokenA][tokenB].Address;
             var balanceA = GetBalance(tokenA, pairAddress);
@@ -193,6 +193,7 @@ namespace AElf.Contracts.AESwapContract
             {
                 State.AccountAssets[Context.Sender].SymbolPair.Remove(GetPair(tokenA, tokenB));
             }
+
             Update(balanceANew, balanceBNew, reserves[0], reserves[1], tokenA, tokenB);
             Context.Fire(new LiquidityRemoved()
             {

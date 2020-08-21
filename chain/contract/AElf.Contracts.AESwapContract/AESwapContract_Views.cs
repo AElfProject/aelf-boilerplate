@@ -15,23 +15,23 @@ namespace AElf.Contracts.AESwapContract
         public override GetReservesOutput GetReserves(GetReservesInput input)
         {
             var length = input.SymbolPair.Count;
-            var result = new ReservePairResult();
             var results = new GetReservesOutput();
             for (var i = 0; i < length; i++)
             {
                 var tokens = SortTokens(input.SymbolPair[i]);
-                Assert(State.Pairs[tokens[0]][tokens[0]] != null, "Pair not existed");
+                Assert(State.Pairs[tokens[0]][tokens[1]] != null, "Pair not existed");
                 var pairAddress = State.Pairs[tokens[0]][tokens[1]].Address;
                 var reserves = GetReserves(pairAddress, tokens[0], tokens[1]);
-                result.SymbolPair = input.SymbolPair[i];
-                result.IsSuccess = true;
-                result.ReserveA = reserves[0];
-                result.ReserveB = reserves[1];
-                result.SymbolA = tokens[0];
-                result.SymbolB = tokens[1];
-                result.BlockTimestampLast = State.BlockTimestampLast[pairAddress];
-
-                results.Results.Add(result);
+                results.Results.Add(new ReservePairResult()
+                {
+                    SymbolPair = input.SymbolPair[i],
+                    IsSuccess = true,
+                    SymbolA = tokens[0],
+                    SymbolB = tokens[1],
+                    ReserveA = reserves[0],
+                    ReserveB = reserves[1],
+                    BlockTimestampLast = State.BlockTimestampLast[pairAddress]
+                });
             }
 
             return results;
@@ -46,16 +46,17 @@ namespace AElf.Contracts.AESwapContract
         public override GetTotalSupplyOutput GetTotalSupply(PairList input)
         {
             var length = input.SymbolPair.Count;
-            var result = new TotalSupplyResult();
             var results = new GetTotalSupplyOutput();
             for (var i = 0; i < length; i++)
             {
                 var tokens = SortTokens(input.SymbolPair[i]);
-                Assert(State.Pairs[tokens[0]][tokens[0]] != null, "Pair not existed");
+                Assert(State.Pairs[tokens[0]][tokens[1]] != null, "Pair not existed");
                 var pairAddress = State.Pairs[tokens[0]][tokens[1]].Address;
-                result.TotalSupply = State.TotalSupply[pairAddress];
-                result.SymbolPair = input.SymbolPair[i];
-                results.Results.Add(result);
+                results.Results.Add(new TotalSupplyResult()
+                {
+                    SymbolPair = input.SymbolPair[i],
+                    TotalSupply = State.TotalSupply[pairAddress]
+                });
             }
 
             return results;
@@ -69,11 +70,13 @@ namespace AElf.Contracts.AESwapContract
             for (var i = 0; i < length; i++)
             {
                 var tokens = SortTokens(input.SymbolPair[i]);
-                Assert(State.Pairs[tokens[0]][tokens[0]] != null, "Pair not existed");
+                Assert(State.Pairs[tokens[0]][tokens[1]] != null, "Pair not existed");
                 var pairAddress = State.Pairs[tokens[0]][tokens[1]].Address;
-                result.Balance = State.LiquidityTokens[pairAddress][Context.Sender];
-                result.SymbolPair = input.SymbolPair[i];
-                results.Results.Add(result);
+                results.Results.Add(new LiquidityTokenBalanceResult()
+                {
+                    SymbolPair = input.SymbolPair[i],
+                    Balance = State.LiquidityTokens[pairAddress][Context.Sender]
+                });
             }
 
             return results;

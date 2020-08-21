@@ -18,7 +18,8 @@ namespace AElf.Contracts.AESwapContract
         public override AddLiquidityOutput AddLiquidity(AddLiquidityInput input)
         {
             Assert(input.Deadline.Seconds >= Context.CurrentBlockTime.Seconds, "Expired");
-            Assert(input.AmountAMin>0 &&input.AmountBMin>0 && input.AmountADesired>0 && input.AmountBDesired>0 ,"Invalid Input");
+            Assert(input.AmountAMin > 0 && input.AmountBMin > 0 && input.AmountADesired > 0 && input.AmountBDesired > 0,
+                "Invalid Input");
             var amount = AddLiquidity(input.SymbolA, input.SymbolB, input.AmountADesired, input.AmountBDesired,
                 input.AmountAMin,
                 input.AmountBMin);
@@ -39,8 +40,8 @@ namespace AElf.Contracts.AESwapContract
         public override RemoveLiquidityOutput RemoveLiquidity(RemoveLiquidityInput input)
         {
             Assert(input.Deadline.Seconds >= Context.CurrentBlockTime.Seconds, "Expired");
-            Assert(input.AmountAMin>0 &&input.AmountBMin>0 && input.LiquidityRemove>0 ,"Invalid Input");
-            var amount = RemoveLiquidity(input.SymbolA, input.SymbolB, input.LiquidityRemove,input.AmountAMin,
+            Assert(input.AmountAMin > 0 && input.AmountBMin > 0 && input.LiquidityRemove > 0, "Invalid Input");
+            var amount = RemoveLiquidity(input.SymbolA, input.SymbolB, input.LiquidityRemove, input.AmountAMin,
                 input.AmountBMin);
             return new RemoveLiquidityOutput()
             {
@@ -85,7 +86,7 @@ namespace AElf.Contracts.AESwapContract
         public override SwapOutput SwapExactTokenForToken(SwapExactTokenForTokenInput input)
         {
             Assert(State.Pairs[input.SymbolIn][input.SymbolOut] != null, "Pair not Exists");
-            Assert(input.AmountIn>0 &&input.AmountOutMin>0 ,"Invalid Input");
+            Assert(input.AmountIn > 0 && input.AmountOutMin > 0, "Invalid Input");
             var pairAddress = State.Pairs[input.SymbolIn][input.SymbolOut].Address;
             var reserves = GetReserves(pairAddress, input.SymbolIn, input.SymbolOut);
             var amountOut = GetAmountOut(input.AmountIn, reserves[0], reserves[1]);
@@ -103,7 +104,7 @@ namespace AElf.Contracts.AESwapContract
         public override SwapOutput SwapTokenForExactToken(SwapTokenForExactTokenInput input)
         {
             Assert(State.Pairs[input.SymbolIn][input.SymbolOut] != null, "Pair not Exists");
-            Assert(input.AmountOut>0 &&input.AmountInMax>0 ,"Invalid Input");
+            Assert(input.AmountOut > 0 && input.AmountInMax > 0, "Invalid Input");
             var pairAddress = State.Pairs[input.SymbolIn][input.SymbolOut].Address;
             var reserves = GetReserves(pairAddress, input.SymbolIn, input.SymbolOut);
             var amountIn = GetAmountIn(input.AmountOut, reserves[0], reserves[1]);
@@ -120,7 +121,7 @@ namespace AElf.Contracts.AESwapContract
         public override Empty TransferLiquidityTokens(TransferLiquidityTokensInput input)
         {
             Assert(State.Pairs[input.SymbolA][input.SymbolB] != null, "Pair not Exists");
-            Assert(input.Amount>0 ,"Invalid Input");
+            Assert(input.Amount > 0, "Invalid Input");
             var liquidity = State.LiquidityTokens[State.Pairs[input.SymbolA][input.SymbolB].Address][Context.Sender];
             Assert(liquidity > 0 && input.Amount <= liquidity, "Insufficient LiquidityToken");
             var liquidityNew = liquidity.Sub(input.Amount);
