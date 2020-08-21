@@ -7,16 +7,10 @@ using AElf.Kernel.SmartContract.Application;
 using AElf.Types;
 using Google.Protobuf;
 using System.Linq;
-using AElf.Boilerplate.TestBase;
-using AElf.Contracts.AESwapContract;
 using AElf.Contracts.MultiToken;
 using AElf.ContractTestBase.ContractTestKit;
-using AElf.Cryptography.ECDSA;
-using AElf.Kernel;
 using AElf.Kernel.Blockchain.Application;
-using AElf.Kernel.SmartContract.Application;
 using AElf.Kernel.Token;
-using AElf.Types;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Threading;
 

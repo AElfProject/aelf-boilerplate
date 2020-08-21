@@ -59,7 +59,8 @@ namespace AElf.Contracts.AESwapContract
             Assert(tokenPair[0] != tokenPair[1], "Identical Tokens");
             Assert(State.Pairs[tokenPair[0]][tokenPair[1]] == null, "Pair Exists");
             var pair = new Pair();
-            var hash = HashHelper.ComputeFrom(GetPair(input.SymbolPair));
+            var realPairString = GetPair(input.SymbolPair);
+            var hash = HashHelper.ComputeFrom(realPairString);
             pair.Hash = hash;
             var address = Context.ConvertVirtualAddressToContractAddress(hash);
             pair.Address = address;
@@ -67,7 +68,7 @@ namespace AElf.Contracts.AESwapContract
             State.Pairs[tokenPair[1]][tokenPair[0]] = pair;
             //add to PairList
             var pairList = State.AllPairs.Value ?? new PairList();
-            pairList.SymbolPair.Add(GetPair(input.SymbolPair));
+            pairList.SymbolPair.Add(realPairString);
             State.AllPairs.Value = pairList;
 
             PairInitial(address, tokenPair[0], tokenPair[1]);

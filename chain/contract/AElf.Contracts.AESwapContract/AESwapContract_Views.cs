@@ -25,7 +25,6 @@ namespace AElf.Contracts.AESwapContract
                 results.Results.Add(new ReservePairResult()
                 {
                     SymbolPair = input.SymbolPair[i],
-                    IsSuccess = true,
                     SymbolA = tokens[0],
                     SymbolB = tokens[1],
                     ReserveA = reserves[0],
@@ -108,7 +107,6 @@ namespace AElf.Contracts.AESwapContract
 
         public override Int64Value GetAmountOut(GetAmountOutInput input)
         {
-            var pair = GetPair(input.SymbolIn, input.SymbolOut);
             Assert(State.Pairs[input.SymbolIn][input.SymbolOut] != null, "Pair not existed");
             var pairAddress = State.Pairs[input.SymbolIn][input.SymbolOut];
             var reserves = GetReserves(pairAddress.Address, input.SymbolIn, input.SymbolOut);

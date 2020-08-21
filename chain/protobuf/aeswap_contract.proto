@@ -122,12 +122,11 @@ message GetReservesOutput{
 }
 message ReservePairResult{
     string symbol_pair=1;
-    bool is_success =2;
-    string symbol_a=3;
-    string symbol_b=4;
-    int64 reserve_a =5;
-    int64 reserve_b=6;
-    int64 block_timestamp_last=7;
+    string symbol_a=2;
+    string symbol_b=3;
+    int64 reserve_a =4;
+    int64 reserve_b=5;
+    int64 block_timestamp_last=6;
 }
 
 message GetTotalSupplyOutput{

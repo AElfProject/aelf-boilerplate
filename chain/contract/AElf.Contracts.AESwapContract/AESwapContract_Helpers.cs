@@ -145,18 +145,31 @@ namespace AElf.Contracts.AESwapContract
             var reserves = GetReserves(pairAddress, tokenA, tokenB);
             var totalSupply = State.TotalSupply[pairAddress];
             var liquidity = (totalSupply == 0)
-                ? Sqrt(amountA.Mul(amountB))
+                ? Sqrt(amountA.Mul(amountB)) - 1
                 : Math.Min(amountA.Mul(totalSupply) / reserves[0], amountB.Mul(totalSupply) / reserves[1]);
             Assert(liquidity > 0, "Insufficient liquidity Minted");
-            State.TotalSupply[pairAddress] =  State.TotalSupply[pairAddress].Add(liquidity);
+            if (totalSupply == 0)
+            {
+                State.LiquidityTokens[pairAddress][Context.GetZeroSmartContractAddress()] =
+                    State.LiquidityTokens[pairAddress][Context.GetZeroSmartContractAddress()].Add(1);
+                State.TotalSupply[pairAddress] = State.TotalSupply[pairAddress].Add(liquidity).Add(1);
+            }
+            else
+            {
+                State.TotalSupply[pairAddress] = State.TotalSupply[pairAddress].Add(liquidity);
+            }
+
             var oldLiquidityToken = State.LiquidityTokens[pairAddress][account];
             var newLiquidityToken = oldLiquidityToken.Add(liquidity);
             State.LiquidityTokens[pairAddress][account] = newLiquidityToken;
+
             State.AccountAssets[account] = State.AccountAssets[account] ?? new PairList();
-            if (!State.AccountAssets[account].SymbolPair.Contains(GetPair(tokenA, tokenB)))
+            var pairString = GetPair(tokenA, tokenB);
+            if (!State.AccountAssets[account].SymbolPair.Contains(pairString))
             {
-                State.AccountAssets[account].SymbolPair.Add(GetPair(tokenA, tokenB));
+                State.AccountAssets[account].SymbolPair.Add(pairString);
             }
+
             Update(balanceA, balanceB, reserves[0], reserves[1], tokenA, tokenB);
             Context.Fire(new LiquidityAdded()
             {
@@ -248,8 +261,10 @@ namespace AElf.Contracts.AESwapContract
             var timeElapsed = blockTimestamp - State.BlockTimestampLast[pairAddress];
             if (timeElapsed > 0 && reserveA != 0 && reserveB != 0)
             {
-                State.PriceCumulativeLast[pairAddress][tokenA] = State.PriceCumulativeLast[pairAddress][tokenA].Add(reserveB.Div(reserveA).Mul(timeElapsed));
-                State.PriceCumulativeLast[pairAddress][tokenB] = State.PriceCumulativeLast[pairAddress][tokenB].Add(reserveA.Div(reserveB).Mul(timeElapsed));
+                State.PriceCumulativeLast[pairAddress][tokenA] = State.PriceCumulativeLast[pairAddress][tokenA]
+                    .Add(reserveB.Div(reserveA).Mul(timeElapsed));
+                State.PriceCumulativeLast[pairAddress][tokenB] = State.PriceCumulativeLast[pairAddress][tokenB]
+                    .Add(reserveA.Div(reserveB).Mul(timeElapsed));
             }
 
             State.TotalReserves[pairAddress][tokenA] = balanceA;
