@@ -16,7 +16,8 @@ namespace AElf.Contracts.AESwapContract
         {
             Assert(amountA > 0, "Insufficient Amount");
             Assert(reserveA > 0 && reserveB > 0, "Insufficient Reserves");
-            var amountB = amountA.Mul(reserveB).Div(reserveA);
+            var amountADecimal = Convert.ToDecimal(amountA);
+            var amountB = decimal.ToInt64(amountADecimal * reserveB / reserveA);
             return amountB;
         }
 

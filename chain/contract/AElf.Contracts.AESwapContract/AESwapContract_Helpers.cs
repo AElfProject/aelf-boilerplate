@@ -146,7 +146,8 @@ namespace AElf.Contracts.AESwapContract
             var totalSupply = State.TotalSupply[pairAddress];
             var liquidity = (totalSupply == 0)
                 ? Sqrt(amountA.Mul(amountB)) - 1
-                : Math.Min(amountA.Mul(totalSupply) / reserves[0], amountB.Mul(totalSupply) / reserves[1]);
+                : Math.Min(decimal.ToInt64(Convert.ToDecimal(amountA) * totalSupply / reserves[0]),
+                    decimal.ToInt64(Convert.ToDecimal(amountB) * totalSupply / reserves[1]));
             Assert(liquidity > 0, "Insufficient liquidity Minted");
             if (totalSupply == 0)
             {
@@ -190,8 +191,9 @@ namespace AElf.Contracts.AESwapContract
             var balanceB = GetBalance(tokenB, pairAddress);
             var reserves = GetReserves(pairAddress, tokenA, tokenB);
             var totalSupply = State.TotalSupply[pairAddress];
-            var amountA = liquidityRemoveAmount.Mul(balanceA).Div(totalSupply);
-            var amountB = liquidityRemoveAmount.Mul(balanceB).Div(totalSupply);
+            var liquidityRemoveAmountDecimal = Convert.ToDecimal(liquidityRemoveAmount);
+            var amountA = decimal.ToInt64(liquidityRemoveAmountDecimal * balanceA / totalSupply);
+            var amountB = decimal.ToInt64(liquidityRemoveAmountDecimal * balanceB / totalSupply);
             Assert(amountA > 0 && amountB > 0, "Insufficient Liquidity burned");
             var oldTotalSupply = totalSupply;
             var newTotalSupply = oldTotalSupply.Sub(liquidityRemoveAmount);
