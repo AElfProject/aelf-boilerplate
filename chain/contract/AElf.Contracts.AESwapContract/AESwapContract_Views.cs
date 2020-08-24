@@ -64,7 +64,6 @@ namespace AElf.Contracts.AESwapContract
         public override GetLiquidityTokenBalanceOutput GetLiquidityTokenBalance(PairList input)
         {
             var length = input.SymbolPair.Count;
-            var result = new LiquidityTokenBalanceResult();
             var results = new GetLiquidityTokenBalanceOutput();
             for (var i = 0; i < length; i++)
             {
