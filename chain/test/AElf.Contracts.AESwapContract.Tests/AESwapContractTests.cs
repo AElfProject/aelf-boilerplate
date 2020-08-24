@@ -217,6 +217,263 @@ namespace AElf.Contract.AESwapContract.Tests
             amountBMinInputException.TransactionResult.Error.ShouldContain("Invalid Input");
         }
 
+        [Fact]
+        public async Task RemoveLiquidityTest()
+        {
+            await Initialize();
+            //Expired 
+            var expiredException = await UserTomStub.RemoveLiquidity.SendWithExceptionAsync(new RemoveLiquidityInput()
+            {
+                AmountAMin = 100000000,
+                AmountBMin = 100000000,
+                LiquidityRemove = 200000000,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, -1))),
+                SymbolA = "ELF",
+                SymbolB = "TEST"
+            });
+            expiredException.TransactionResult.Error.ShouldContain("Expired");
+            //Invalid Input
+            // Assert(input.AmountAMin > 0 && input.AmountBMin > 0 && input.LiquidityRemove > 0, "Invalid Input");
+            var amountAMinInvalidException= await UserTomStub.RemoveLiquidity.SendWithExceptionAsync(new RemoveLiquidityInput()
+            {
+                AmountAMin = 0,
+                AmountBMin = 100000000,
+                LiquidityRemove = 200000000,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "TEST"
+            });
+            amountAMinInvalidException.TransactionResult.Error.ShouldContain("Invalid Input");
+            var AmountBMinInvalidException= await UserTomStub.RemoveLiquidity.SendWithExceptionAsync(new RemoveLiquidityInput()
+            {
+                AmountAMin = 100000000,
+                AmountBMin = 0,
+                LiquidityRemove = 200000000,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "TEST"
+            });
+            AmountBMinInvalidException.TransactionResult.Error.ShouldContain("Invalid Input");
+            var LiquidityRemoveInvalidException= await UserTomStub.RemoveLiquidity.SendWithExceptionAsync(new RemoveLiquidityInput()
+            {
+                AmountAMin = 100000000,
+                AmountBMin = 100000000,
+                LiquidityRemove = 0,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "TEST"
+            });
+            LiquidityRemoveInvalidException.TransactionResult.Error.ShouldContain("Invalid Input");
+            // Pair is not exist
+            var pairException= await UserTomStub.RemoveLiquidity.SendWithExceptionAsync(new RemoveLiquidityInput()
+            {
+                AmountAMin = 100000000,
+                AmountBMin = 100000000,
+                LiquidityRemove = 200000000,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "INVALID"
+            });
+            pairException.TransactionResult.Error.ShouldContain("Pair is not exist");
+            //Insufficient LiquidityToken
+            var zeroLiquidityException= await UserTomStub.RemoveLiquidity.SendWithExceptionAsync(new RemoveLiquidityInput()
+            {
+                AmountAMin = 100000000,
+                AmountBMin = 100000000,
+                LiquidityRemove = 200000000,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "TEST"
+            });
+            zeroLiquidityException.TransactionResult.Error.ShouldContain("Insufficient LiquidityToken");
+            
+            await UserTomStub.AddLiquidity.SendAsync(new AddLiquidityInput()
+            {
+                AmountADesired = 100000000,
+                AmountAMin = 100000000,
+                AmountBDesired = 200000000,
+                AmountBMin = 200000000,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "TEST"
+            });
+            var balance = await UserTomStub.GetLiquidityTokenBalance.CallAsync(new PairList()
+            {
+                SymbolPair = {"ELF-TEST"}
+            });
+            var insufficientLiquidityException= await UserTomStub.RemoveLiquidity.SendWithExceptionAsync(new RemoveLiquidityInput()
+            {
+                AmountAMin = 100000000,
+                AmountBMin = 100000000,
+                LiquidityRemove = balance.Results[0].Balance.Add(1),
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "TEST"
+            });
+            insufficientLiquidityException.TransactionResult.Error.ShouldContain("Insufficient LiquidityToken");
+            //Insufficient tokenA
+            var insufficientTokenAException= await UserTomStub.RemoveLiquidity.SendWithExceptionAsync(new RemoveLiquidityInput()
+            {
+                AmountAMin = 100000000,
+                AmountBMin = 100000000,
+                LiquidityRemove = balance.Results[0].Balance,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "TEST"
+            });
+            insufficientTokenAException.TransactionResult.Error.ShouldContain("Insufficient tokenA");
+            //Insufficient tokenB
+            var insufficientTokenBException= await UserTomStub.RemoveLiquidity.SendWithExceptionAsync(new RemoveLiquidityInput()
+            {
+                AmountAMin = 90000000,
+                AmountBMin = 200000000,
+                LiquidityRemove = balance.Results[0].Balance,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "TEST"
+            });
+            insufficientTokenBException.TransactionResult.Error.ShouldContain("Insufficient tokenB");
+            //success
+            await UserTomStub.RemoveLiquidity.SendAsync(new RemoveLiquidityInput()
+            {
+                AmountAMin = 90000000,
+                AmountBMin = 100000000,
+                LiquidityRemove = balance.Results[0].Balance,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "TEST"
+            });
+             var  liquidityBalance = await UserTomStub.GetLiquidityTokenBalance.CallAsync(new PairList()
+            {
+                SymbolPair = {"ELF-TEST"}
+            });
+             liquidityBalance.Results[0].Balance.ShouldBe(0);
+        }
+
+        [Fact]
+        public async Task SwapTest()
+        {
+            await Initialize();
+            //Expired
+            var expiredException= await UserTomStub.SwapExactTokenForToken.SendWithExceptionAsync(new SwapExactTokenForTokenInput()
+            {
+                SymbolIn = "ELF",
+                SymbolOut = "TEST",
+                AmountIn = 100000000,
+                AmountOutMin = 100000000,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, -1))),
+            });
+            expiredException.TransactionResult.Error.ShouldContain("Expired");
+            //Pair not Exists
+            var pairException= await UserTomStub.SwapExactTokenForToken.SendWithExceptionAsync(new SwapExactTokenForTokenInput()
+            {
+                SymbolIn = "ELF",
+                SymbolOut = "INVALID",
+                AmountIn = 100000000,
+                AmountOutMin = 100000000,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+            });
+            pairException.TransactionResult.Error.ShouldContain("Pair not Exists");
+            //Invalid Input
+            var amountInException= await UserTomStub.SwapExactTokenForToken.SendWithExceptionAsync(new SwapExactTokenForTokenInput()
+            {
+                SymbolIn = "ELF",
+                SymbolOut = "TEST",
+                AmountIn = -1,
+                AmountOutMin = 100000000,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+            });
+            amountInException.TransactionResult.Error.ShouldContain("Invalid Input");
+            var amountOutMinException= await UserTomStub.SwapExactTokenForToken.SendWithExceptionAsync(new SwapExactTokenForTokenInput()
+            {
+                SymbolIn = "ELF",
+                SymbolOut = "TEST",
+                AmountIn = 100000000,
+                AmountOutMin = -1,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+            });
+            amountOutMinException.TransactionResult.Error.ShouldContain("Invalid Input");
+            //Insufficient reserves
+            var reservesException= await UserTomStub.SwapExactTokenForToken.SendWithExceptionAsync(new SwapExactTokenForTokenInput()
+            {
+                SymbolIn = "ELF",
+                SymbolOut = "TEST",
+                AmountIn = 100000000,
+                AmountOutMin = 100000000,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3)))
+            });
+            reservesException.TransactionResult.Error.ShouldContain("Insufficient reserves");
+            
+            
+          
+           await UserTomStub.AddLiquidity.SendAsync(new AddLiquidityInput()
+           {
+               AmountADesired = 100000000,
+               AmountAMin = 100000000,
+               AmountBDesired = 200000000,
+               AmountBMin = 200000000,
+               Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+               SymbolA = "ELF",
+               SymbolB = "TEST"
+           });
+          var reserveBefore= await UserTomStub.GetReserves.CallAsync(new GetReservesInput()
+           {
+               SymbolPair = {"ELF-TEST"}
+           });
+          var elfBalanceBefore = await UserTomTokenContractStub.GetBalance.CallAsync(new GetBalanceInput()
+          {
+              Owner = UserTomAddress,
+              Symbol = "ELF"
+          });
+          var testBalanceBefore = await UserTomTokenContractStub.GetBalance.CallAsync(new GetBalanceInput()
+          {
+              Owner = UserTomAddress,
+              Symbol = "TEST"
+          });
+          var amountIn = 100000000;
+          var amountInWithFee = Convert.ToDecimal(amountIn) * 997;
+          var numerator = amountInWithFee * Convert.ToDecimal(reserveBefore.Results[0].ReserveB);
+          var denominator = Convert.ToDecimal(reserveBefore.Results[0].ReserveA * 1000) + amountInWithFee;
+          var amountOut = decimal.ToInt64(numerator / denominator);
+          //Insufficient Output amount
+         var outputException= await UserTomStub.SwapExactTokenForToken.SendWithExceptionAsync(new SwapExactTokenForTokenInput()
+          {
+              SymbolIn = "ELF",
+              SymbolOut = "TEST",
+              AmountIn = amountIn,
+              AmountOutMin = amountOut.Sub(-1),
+              Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3)))
+          });
+         outputException.TransactionResult.Error.ShouldContain("Insufficient Output amount");
+         //success
+         await UserTomStub.SwapExactTokenForToken.SendAsync(new SwapExactTokenForTokenInput()
+         {
+             SymbolIn = "ELF",
+             SymbolOut = "TEST",
+             AmountIn = amountIn,
+             AmountOutMin = amountOut,
+             Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3)))
+         });
+         var reserveAfter= await UserTomStub.GetReserves.CallAsync(new GetReservesInput()
+         {
+             SymbolPair = {"ELF-TEST"}
+         });
+         reserveAfter.Results[0].ReserveA.ShouldBe(reserveBefore.Results[0].ReserveA.Add(amountIn));
+         reserveAfter.Results[0].ReserveB.ShouldBe(reserveBefore.Results[0].ReserveB.Sub(amountOut));
+         var elfBalanceAfter= await UserTomTokenContractStub.GetBalance.CallAsync(new GetBalanceInput()
+         {
+             Owner = UserTomAddress,
+             Symbol = "ELF"
+         });
+         var testBalanceAfter = await UserTomTokenContractStub.GetBalance.CallAsync(new GetBalanceInput()
+         {
+             Owner = UserTomAddress,
+             Symbol = "TEST"
+         });
+         elfBalanceAfter.Balance.ShouldBe(elfBalanceBefore.Balance.Sub(amountIn));
+         testBalanceAfter.Balance.ShouldBe(testBalanceBefore.Balance.Add(amountOut));
+         
+        }
         private async Task CreateAndGetToken()
         {
             //TEST

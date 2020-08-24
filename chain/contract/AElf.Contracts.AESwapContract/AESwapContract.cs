@@ -86,6 +86,7 @@ namespace AElf.Contracts.AESwapContract
 
         public override SwapOutput SwapExactTokenForToken(SwapExactTokenForTokenInput input)
         {
+            Assert(input.Deadline.Seconds >= Context.CurrentBlockTime.Seconds, "Expired");
             Assert(State.Pairs[input.SymbolIn][input.SymbolOut] != null, "Pair not Exists");
             Assert(input.AmountIn > 0 && input.AmountOutMin > 0, "Invalid Input");
             var pairAddress = State.Pairs[input.SymbolIn][input.SymbolOut].Address;
@@ -104,6 +105,7 @@ namespace AElf.Contracts.AESwapContract
 
         public override SwapOutput SwapTokenForExactToken(SwapTokenForExactTokenInput input)
         {
+            Assert(input.Deadline.Seconds >= Context.CurrentBlockTime.Seconds, "Expired");
             Assert(State.Pairs[input.SymbolIn][input.SymbolOut] != null, "Pair not Exists");
             Assert(input.AmountOut > 0 && input.AmountInMax > 0, "Invalid Input");
             var pairAddress = State.Pairs[input.SymbolIn][input.SymbolOut].Address;
