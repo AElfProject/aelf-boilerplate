@@ -219,7 +219,8 @@ namespace AElf.Contracts.AESwapContract
                 AmountB = amountB,
                 Sender = Context.Sender,
                 SymbolA = tokenA,
-                SymbolB = tokenB
+                SymbolB = tokenB,
+                LiquidityToken = liquidityRemoveAmount
             });
             return new[]
             {

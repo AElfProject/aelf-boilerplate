@@ -314,6 +314,7 @@ namespace AElf.Contract.AESwapContract.Tests
             testBalanceAfter.Balance.ShouldBe(testBalanceBefore.Balance.Sub(amountBDesired));
 
             #endregion
+
             Thread.Sleep(3000);
 
             #region AddLiquidity at second time
@@ -356,7 +357,7 @@ namespace AElf.Contract.AESwapContract.Tests
             //success
             await UserTomStub.AddLiquidity.SendAsync(new AddLiquidityInput()
             {
-                AmountADesired = amountADesiredSecond,
+                AmountADesired = amountADesiredSecond.Add(floatAmount),
                 AmountAMin = amountADesiredSecond,
                 AmountBDesired = amountBDesiredSecond,
                 AmountBMin = amountBDesiredSecond,
@@ -407,6 +408,30 @@ namespace AElf.Contract.AESwapContract.Tests
 
             elfBalanceAfterSecond.Balance.ShouldBe(elfBalanceAfter.Balance.Sub(amountASecond));
             testBalanceAfterSecond.Balance.ShouldBe(testBalanceAfter.Balance.Sub(amountBSecond));
+            //third time  to cover AddLiquidity 
+            await UserTomStub.AddLiquidity.SendAsync(new AddLiquidityInput()
+            {
+                AmountADesired = amountADesiredSecond,
+                AmountAMin = amountADesiredSecond,
+                AmountBDesired = amountBDesiredSecond.Add(floatAmount),
+                AmountBMin = amountBDesiredSecond,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "TEST"
+            });
+            var elfBalanceAfterThird = await TokenContractStub.GetBalance.CallAsync(new GetBalanceInput()
+            {
+                Owner = UserTomAddress,
+                Symbol = "ELF"
+            });
+            var testBalanceAfterThird = await TokenContractStub.GetBalance.CallAsync(new GetBalanceInput()
+            {
+                Owner = UserTomAddress,
+                Symbol = "TEST"
+            });
+
+            elfBalanceAfterThird.Balance.ShouldBe(elfBalanceAfterSecond.Balance.Sub(amountADesiredSecond));
+            testBalanceAfterThird.Balance.ShouldBe(testBalanceAfterSecond.Balance.Sub(amountBDesiredSecond));
 
             #endregion
         }
@@ -850,13 +875,13 @@ namespace AElf.Contract.AESwapContract.Tests
         }
 
         [Fact]
-        public async  Task InitializeTest()
+        public async Task InitializeTest()
         {
             await CreateAndGetToken();
             await AESwapContractStub.Initialize.SendAsync(new Empty());
             //Already initialized
-           var initializedException= await AESwapContractStub.Initialize.SendWithExceptionAsync(new Empty());
-           initializedException.TransactionResult.Error.ShouldContain("Already initialized");
+            var initializedException = await AESwapContractStub.Initialize.SendWithExceptionAsync(new Empty());
+            initializedException.TransactionResult.Error.ShouldContain("Already initialized");
         }
 
         [Fact]
@@ -947,7 +972,7 @@ namespace AElf.Contract.AESwapContract.Tests
             {
                 SymbolPair = {"ELF-TEST"}
             });
-            var liquidityExpect = (long) Math.Sqrt(amountADesired * amountBDesired)-1;
+            var liquidityExpect = (long) Math.Sqrt(amountADesired * amountBDesired) - 1;
             liquidity.Results[0].Balance.ShouldBe(liquidityExpect);
         }
 
@@ -1110,7 +1135,93 @@ namespace AElf.Contract.AESwapContract.Tests
             });
             amountOut.Value.ShouldBe(amountOutExpect);
         }
-        
+
+        [Fact]
+        public async Task TransferLiquidityTokensTest()
+        {
+            const long amount = 100000000;
+            const long errorInput = 0;
+            const long amountADesired = 100000000;
+            const long amountBDesired = 200000000;
+            await Initialize();
+            //Pair not existed
+            var pairException = await UserTomStub.TransferLiquidityTokens.SendWithExceptionAsync(
+                new TransferLiquidityTokensInput()
+                {
+                    SymbolA = "ELF",
+                    SymbolB = "INVALID",
+                    Amount = amount,
+                    To = UserLilyAddress
+                });
+            pairException.TransactionResult.Error.ShouldContain("Pair not existed");
+            //Invalid Input
+            var inputException = await UserTomStub.TransferLiquidityTokens.SendWithExceptionAsync(
+                new TransferLiquidityTokensInput()
+                {
+                    SymbolA = "ELF",
+                    SymbolB = "TEST",
+                    Amount = errorInput,
+                    To = UserLilyAddress
+                });
+            inputException.TransactionResult.Error.ShouldContain("Invalid Input");
+            //Insufficient LiquidityToken
+            var noneLiquidityTokenException = await UserTomStub.TransferLiquidityTokens.SendWithExceptionAsync(
+                new TransferLiquidityTokensInput()
+                {
+                    SymbolA = "ELF",
+                    SymbolB = "TEST",
+                    Amount = amount,
+                    To = UserLilyAddress
+                });
+            noneLiquidityTokenException.TransactionResult.Error.ShouldContain("Insufficient LiquidityToken");
+            await UserTomStub.AddLiquidity.SendAsync(new AddLiquidityInput()
+            {
+                AmountADesired = amountADesired,
+                AmountAMin = amountADesired,
+                AmountBDesired = amountBDesired,
+                AmountBMin = amountBDesired,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "TEST"
+            });
+            var balanceTomBefore = await UserTomStub.GetLiquidityTokenBalance.CallAsync(new PairList()
+            {
+                SymbolPair = {"ELF-TEST"}
+            });
+            var balanceLilyBefore = await UserLilyStub.GetLiquidityTokenBalance.CallAsync(new PairList()
+            {
+                SymbolPair = {"ELF-TEST"}
+            });
+            var insufficientLiquidityTokenException = await UserTomStub.TransferLiquidityTokens.SendWithExceptionAsync(
+                new TransferLiquidityTokensInput()
+                {
+                    SymbolA = "ELF",
+                    SymbolB = "TEST",
+                    Amount = balanceTomBefore.Results[0].Balance.Add(1),
+                    To = UserLilyAddress
+                });
+            insufficientLiquidityTokenException.TransactionResult.Error.ShouldContain("Insufficient LiquidityToken");
+            //success
+            var amountTransfer = balanceTomBefore.Results[0].Balance;
+            await UserTomStub.TransferLiquidityTokens.SendAsync(new TransferLiquidityTokensInput()
+            {
+                SymbolA = "ELF",
+                SymbolB = "TEST",
+                Amount = amountTransfer,
+                To = UserLilyAddress
+            });
+            var balanceTomAfter = await UserTomStub.GetLiquidityTokenBalance.CallAsync(new PairList()
+            {
+                SymbolPair = {"ELF-TEST"}
+            });
+            var balanceLilyAfter = await UserLilyStub.GetLiquidityTokenBalance.CallAsync(new PairList()
+            {
+                SymbolPair = {"ELF-TEST"}
+            });
+            balanceLilyAfter.Results[0].Balance.ShouldBe(balanceLilyBefore.Results[0].Balance.Add(amountTransfer));
+            balanceTomAfter.Results[0].Balance.ShouldBe(balanceTomBefore.Results[0].Balance.Sub(amountTransfer));
+        }
+
         private async Task CreateAndGetToken()
         {
             //TEST

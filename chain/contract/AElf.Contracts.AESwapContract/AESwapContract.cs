@@ -123,13 +123,27 @@ namespace AElf.Contracts.AESwapContract
 
         public override Empty TransferLiquidityTokens(TransferLiquidityTokensInput input)
         {
-            Assert(State.Pairs[input.SymbolA][input.SymbolB] != null, "Pair not Exists");
+            Assert(State.Pairs[input.SymbolA][input.SymbolB] != null, "Pair not existed");
             Assert(input.Amount > 0, "Invalid Input");
             var liquidity = State.LiquidityTokens[State.Pairs[input.SymbolA][input.SymbolB].Address][Context.Sender];
             Assert(liquidity > 0 && input.Amount <= liquidity, "Insufficient LiquidityToken");
             var liquidityNew = liquidity.Sub(input.Amount);
             State.LiquidityTokens[State.Pairs[input.SymbolA][input.SymbolB].Address][Context.Sender] = liquidityNew;
-            State.LiquidityTokens[State.Pairs[input.SymbolA][input.SymbolB].Address][input.To] += input.Amount;
+            var liquidityToBefore = State.LiquidityTokens[State.Pairs[input.SymbolA][input.SymbolB].Address][input.To];
+            State.AccountAssets[input.To] = State.AccountAssets[input.To] ?? new PairList();
+            var pairString = GetPair(input.SymbolA, input.SymbolB);
+            if (!State.AccountAssets[input.To].SymbolPair.Contains(pairString))
+            {
+                State.AccountAssets[input.To].SymbolPair.Add(pairString);
+            }
+
+            if (liquidityNew == 0)
+            {
+                State.AccountAssets[Context.Sender].SymbolPair.Remove(pairString);
+            }
+
+            State.LiquidityTokens[State.Pairs[input.SymbolA][input.SymbolB].Address][input.To] =
+                liquidityToBefore.Add(input.Amount);
 
             return new Empty();
         }
