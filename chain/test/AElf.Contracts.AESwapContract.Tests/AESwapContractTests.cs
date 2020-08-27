@@ -5,7 +5,9 @@ using Xunit;
 using System;
 using System.Threading;
 using AElf.Contracts.MultiToken;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.CSharp.Core;
+using AElf.CSharp.Core.Extension;
 using AElf.Types;
 using Shouldly;
 
@@ -1222,6 +1224,95 @@ namespace AElf.Contract.AESwapContract.Tests
             balanceTomAfter.Results[0].Balance.ShouldBe(balanceTomBefore.Results[0].Balance.Sub(amountTransfer));
         }
 
+        [Fact]
+        public async Task FeeTest()
+        {
+            const long amountIn = 100000000;
+            await Initialize();
+            await UserTomStub.AddLiquidity.SendAsync(new AddLiquidityInput()
+            {
+                AmountADesired = 100000000,
+                AmountAMin = 100000000,
+                AmountBDesired = 200000000,
+                AmountBMin = 200000000,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, 3))),
+                SymbolA = "ELF",
+                SymbolB = "TEST"
+            });
+
+            var reserveBefore = await UserTomStub.GetReserves.CallAsync(new GetReservesInput()
+            {
+                SymbolPair = {"ELF-TEST"}
+            });
+            var elfBalanceBefore = await UserTomTokenContractStub.GetBalance.CallAsync(new GetBalanceInput()
+            {
+                Owner = UserTomAddress,
+                Symbol = "ELF"
+            });
+            var testBalanceBefore = await UserTomTokenContractStub.GetBalance.CallAsync(new GetBalanceInput()
+            {
+                Owner = UserTomAddress,
+                Symbol = "TEST"
+            });
+            var elfContractBalanceBefore = await UserTomTokenContractStub.GetBalance.CallAsync(new GetBalanceInput()
+            {
+                Owner = AESwapContractAddress,
+                Symbol = "ELF"
+            });
+
+            var amountInWithFee = Convert.ToDecimal(amountIn) * 997;
+            var numerator = amountInWithFee * Convert.ToDecimal(reserveBefore.Results[0].ReserveB);
+            var denominator = Convert.ToDecimal(reserveBefore.Results[0].ReserveA * 1000) + amountInWithFee;
+            var amountOutExpect = decimal.ToInt64(numerator / denominator);
+            var blockTimeProvider = GetRequiredService<IBlockTimeProvider>();
+            blockTimeProvider.SetBlockTime(Timestamp.FromDateTime(DateTime.UtcNow).AddDays(365));
+
+            var time1 = blockTimeProvider.GetBlockTime();
+            await UserTomStub.SwapExactTokenForToken.SendAsync(new SwapExactTokenForTokenInput()
+            {
+                SymbolIn = "ELF",
+                SymbolOut = "TEST",
+                AmountIn = amountIn,
+                AmountOutMin = amountOutExpect,
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.AddDays(366))
+            });
+            var reserveAfter = await UserTomStub.GetReserves.CallAsync(new GetReservesInput()
+            {
+                SymbolPair = {"ELF-TEST"}
+            });
+            var swapFee = decimal.ToInt64(amountIn / 10000);
+            reserveAfter.Results[0].ReserveA.ShouldBe(reserveBefore.Results[0].ReserveA.Add(amountIn).Sub(swapFee));
+            reserveAfter.Results[0].ReserveB.ShouldBe(reserveBefore.Results[0].ReserveB.Sub(amountOutExpect));
+            var elfBalanceAfter = await UserTomTokenContractStub.GetBalance.CallAsync(new GetBalanceInput()
+            {
+                Owner = UserTomAddress,
+                Symbol = "ELF"
+            });
+            var testBalanceAfter = await UserTomTokenContractStub.GetBalance.CallAsync(new GetBalanceInput()
+            {
+                Owner = UserTomAddress,
+                Symbol = "TEST"
+            });
+            var elfContractBalanceAfter = await UserTomTokenContractStub.GetBalance.CallAsync(new GetBalanceInput()
+            {
+                Owner = AESwapContractAddress,
+                Symbol = "ELF"
+            });
+
+            elfBalanceAfter.Balance.ShouldBe(elfBalanceBefore.Balance.Sub(amountIn));
+            testBalanceAfter.Balance.ShouldBe(testBalanceBefore.Balance.Add(amountOutExpect));
+            elfContractBalanceAfter.Balance.ShouldBe(elfContractBalanceBefore.Balance.Add(swapFee));
+        }
+
+        [Fact]
+        public async Task SqrtTest()
+        {
+            const decimal zero = 0;
+            const decimal number = Decimal.MaxValue;
+            Sqrt(zero).ShouldBe(zero);
+            Convert.ToInt64(Math.Sqrt(Convert.ToDouble(number))).ShouldBe(decimal.ToInt64(Sqrt(number)));
+        }
+
         private async Task CreateAndGetToken()
         {
             //TEST
@@ -1369,6 +1460,30 @@ namespace AElf.Contract.AESwapContract.Tests
             {
                 SymbolPair = "ELF-DAI"
             });
+        }
+
+        private static decimal Sqrt(decimal n)
+        {
+            if (n == 0)
+                return 0;
+            decimal left = 1, right = n, mid = decimal.Truncate(left + right / 2);
+            while (left != right && mid != left)
+            {
+                if (mid == decimal.Truncate(n / mid))
+                    return mid;
+                if (mid < decimal.Truncate(n / mid))
+                {
+                    left = mid;
+                    mid = decimal.Truncate((left + right) / 2);
+                }
+                else
+                {
+                    right = mid;
+                    mid = decimal.Truncate((left + right) / 2);
+                }
+            }
+
+            return left;
         }
     }
 }

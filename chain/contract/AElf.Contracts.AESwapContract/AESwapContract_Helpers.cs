@@ -145,7 +145,7 @@ namespace AElf.Contracts.AESwapContract
             var reserves = GetReserves(pairAddress, tokenA, tokenB);
             var totalSupply = State.TotalSupply[pairAddress];
             var liquidity = (totalSupply == 0)
-                ? Sqrt(amountA.Mul(amountB)) - 1
+                ? decimal.ToInt64(Sqrt(amountA.Mul(amountB)) - 1)
                 : Math.Min(decimal.ToInt64(Convert.ToDecimal(amountA) * totalSupply / reserves[0]),
                     decimal.ToInt64(Convert.ToDecimal(amountB) * totalSupply / reserves[1]));
             Assert(liquidity > 0, "Insufficient liquidity Minted");
@@ -237,6 +237,13 @@ namespace AElf.Contracts.AESwapContract
             var pairHash = State.Pairs[symbolIn][symbolOut].Hash;
             Assert(to != pairAddress, "Invalid account address");
             TransferOut(pairHash, to, symbolOut, amountOut);
+            var feeRate = GetFeeRate();
+            var swapFee = decimal.ToInt64(feeRate * amountIn);
+            if (swapFee > 0)
+            {
+                TransferOut(pairHash, Context.Self, symbolIn, swapFee);
+            }
+
             var balanceIn = GetBalance(symbolIn, pairAddress).Add(amountIn);
             var balanceOut = GetBalance(symbolOut, pairAddress).Sub(amountOut);
             Assert(amountIn > 0, "Insufficient Input amount");
@@ -245,6 +252,7 @@ namespace AElf.Contracts.AESwapContract
             var reserveSymbolInDecimal = Convert.ToDecimal(reserveSymbolIn);
             Assert(balance0Adjusted * balance1Adjusted >= reserveSymbolInDecimal * reserveSymbolOut * 1000,
                 "Error with K");
+            balanceIn = balanceIn.Sub(swapFee);
             Update(balanceIn, balanceOut, reserveSymbolIn, reserveSymbolOut, symbolIn, symbolOut);
             Context.Fire(new Swap()
             {
@@ -252,7 +260,8 @@ namespace AElf.Contracts.AESwapContract
                 SymbolOut = symbolOut,
                 AmountIn = amountIn,
                 AmountOut = amountOut,
-                Sender = Context.Sender
+                Sender = Context.Sender,
+                Fee = swapFee
             });
         }
 
@@ -264,15 +273,39 @@ namespace AElf.Contracts.AESwapContract
             var timeElapsed = blockTimestamp - State.BlockTimestampLast[pairAddress];
             if (timeElapsed > 0 && reserveA != 0 && reserveB != 0)
             {
+                var priceCumulativeA = decimal.ToInt64(Convert.ToDecimal(reserveB) / reserveA * timeElapsed);
+                var priceCumulativeB = decimal.ToInt64(Convert.ToDecimal(reserveA) / reserveB * timeElapsed);
                 State.PriceCumulativeLast[pairAddress][tokenA] = State.PriceCumulativeLast[pairAddress][tokenA]
-                    .Add(reserveB.Div(reserveA).Mul(timeElapsed));
+                    .Add(priceCumulativeA);
                 State.PriceCumulativeLast[pairAddress][tokenB] = State.PriceCumulativeLast[pairAddress][tokenB]
-                    .Add(reserveA.Div(reserveB).Mul(timeElapsed));
+                    .Add(priceCumulativeB);
             }
 
             State.TotalReserves[pairAddress][tokenA] = balanceA;
             State.TotalReserves[pairAddress][tokenB] = balanceB;
             State.BlockTimestampLast[pairAddress] = blockTimestamp;
+            Context.Fire(new Sync()
+            {
+                ReserveA = reserveA,
+                ReserveB = reserveB,
+                SymbolA = tokenA,
+                SymbolB = tokenB
+            });
+        }
+
+        private void Skim(string symbolA, string symbolB, Address to)
+        {
+            var pairAddress = State.Pairs[symbolA][symbolB].Address;
+            var hash = State.Pairs[symbolA][symbolB].Hash;
+            var balanceA = GetBalance(symbolA, pairAddress);
+            var balanceB = GetBalance(symbolB, pairAddress);
+            var reserveSymbolA = State.TotalReserves[pairAddress][symbolA];
+            var reserveSymbolB = State.TotalReserves[pairAddress][symbolB];
+            var amountATransfer = balanceA.Sub(reserveSymbolA);
+            var amountBTransfer = balanceB.Sub(reserveSymbolB);
+            Assert(amountATransfer >= 0 && amountATransfer >= 0, "Error Skim");
+            TransferOut(hash, to, symbolA, amountATransfer);
+            TransferOut(hash, to, symbolB, amountBTransfer);
         }
 
         private void TransferIn(Address from, Address to, string symbol, long amount)
@@ -309,28 +342,38 @@ namespace AElf.Contracts.AESwapContract
             return balance.Balance;
         }
 
-        private static long Sqrt(long n)
+        private static decimal Sqrt(decimal n)
         {
             if (n == 0)
                 return 0;
-            long left = 1, right = n, mid = (left + right) / 2;
+            decimal left = 1, right = n, mid = decimal.Truncate(left + right / 2);
             while (left != right && mid != left)
             {
-                if (mid == n / mid)
+                if (mid == decimal.Truncate(n / mid))
                     return mid;
-                if (mid < n / mid)
+                if (mid < decimal.Truncate(n / mid))
                 {
                     left = mid;
-                    mid = (left + right) / 2;
+                    mid = decimal.Truncate((left + right) / 2);
                 }
                 else
                 {
                     right = mid;
-                    mid = (left + right) / 2;
+                    mid = decimal.Truncate((left + right) / 2);
                 }
             }
 
             return left;
+        }
+
+        private decimal GetFeeRate()
+        {
+            Assert(Context.CurrentBlockTime.Seconds > State.InitialTimestamp.Value.Seconds, "Error BlockTime");
+            var yearSinceInitial = Context.CurrentBlockTime.Seconds.Sub(State.InitialTimestamp.Value.Seconds)
+                .Div(SecondPerYear);
+            var yearForRate = yearSinceInitial > 5 ? 5 : yearSinceInitial;
+            var rate = Convert.ToDecimal(FeeRatePerYear) * yearForRate / 10000;
+            return rate;
         }
     }
 }

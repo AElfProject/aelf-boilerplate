@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using AElf.Boilerplate.TestBase;
 using AElf.ContractTestBase;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.Kernel.SmartContract;
 using AElf.Kernel.SmartContract.Application;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +16,8 @@ namespace AElf.Contracts.AESwapContract
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            Configure<ContractOptions>(o=>o.ContractDeploymentAuthorityRequired=false); ;
+            Configure<ContractOptions>(o=>o.ContractDeploymentAuthorityRequired=false); 
+            context.Services.AddSingleton<IBlockTimeProvider, BlockTimeProvider>();
         }
     }
 }
