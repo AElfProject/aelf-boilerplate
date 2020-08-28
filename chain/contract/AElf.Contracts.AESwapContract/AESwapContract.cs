@@ -149,30 +149,5 @@ namespace AElf.Contracts.AESwapContract
 
             return new Empty();
         }
-
-        public override Empty Skim(SkimInput input)
-        {
-            Assert(State.Pairs[input.SymbolA][input.SymbolB] != null, "Pair not existed");
-            Skim(input.SymbolA, input.SymbolB, input.To);
-            return new Empty();
-        }
-
-        public override Empty Sync(PairList input)
-        {
-            var length = input.SymbolPair.Count;
-            for (var i = 0; i < length; i++)
-            {
-                var tokens = SortTokens(input.SymbolPair[i]);
-                Assert(State.Pairs[tokens[0]][tokens[1]] != null, "Pair not existed");
-                var pairAddress = State.Pairs[tokens[0]][tokens[1]].Address;
-                var balanceA = GetBalance(tokens[0], pairAddress);
-                var balanceB = GetBalance(tokens[1], pairAddress);
-                var reserveA = State.TotalReserves[pairAddress][tokens[0]];
-                var reserveB = State.TotalReserves[pairAddress][tokens[1]];
-                Update(balanceA, balanceB, reserveA, reserveB, tokens[0], tokens[1]);
-            }
-
-            return new Empty();
-        }
     }
 }

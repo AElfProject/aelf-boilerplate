@@ -26,10 +26,6 @@ service AESwapContract {
     }
     rpc TransferLiquidityTokens(TransferLiquidityTokensInput) returns(google.protobuf.Empty){
     }
-    rpc Skim(SkimInput)returns(google.protobuf.Empty){
-    }
-    rpc Sync(PairList)returns(google.protobuf.Empty){
-    }
     //Views
     rpc GetPairs(google.protobuf.Empty)returns(PairList){
         option (aelf.is_view) = true;
@@ -167,11 +163,6 @@ message TransferLiquidityTokensInput{
     string  symbol_b=3;
     int64 amount=4;
    }
-message SkimInput{
-    aelf.Address to  =1;
-    string symbol_a  =2;
-    string  symbol_b =3;
-}   
 message Pair{
      aelf.Hash hash =1;
      aelf.Address address=2;
@@ -207,7 +198,8 @@ message Swap{
     string symbol_out=3;
     int64 amount_in = 4;
     int64 amount_out = 5;
-    int64 fee=6;
+    int64 total_fee=6; 
+    int64 bonus_fee=7;
    }
 
 message Sync{

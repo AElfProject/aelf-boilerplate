@@ -184,7 +184,7 @@ namespace AElf.Contract.AESwapContract.Tests
                 AmountAMin = amountADesired,
                 AmountBDesired = amountBDesired,
                 AmountBMin = amountBDesired,
-                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, -1))),
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(-1, 0, -1))),
                 SymbolA = "ELF",
                 SymbolB = "TEST"
             });
@@ -457,7 +457,7 @@ namespace AElf.Contract.AESwapContract.Tests
                 AmountAMin = amountADesired,
                 AmountBMin = amountBDesired,
                 LiquidityRemove = liquidityRemove,
-                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, -1))),
+                Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(-1, 0, -1))),
                 SymbolA = "ELF",
                 SymbolB = "TEST"
             });
@@ -670,7 +670,7 @@ namespace AElf.Contract.AESwapContract.Tests
                     SymbolOut = "TEST",
                     AmountIn = amountIn,
                     AmountOutMin = amountOut,
-                    Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(0, 0, -1))),
+                    Deadline = Timestamp.FromDateTime(DateTime.UtcNow.Add(new TimeSpan(-1, 0, -1))),
                 });
             expiredException.TransactionResult.Error.ShouldContain("Expired");
 
@@ -766,7 +766,6 @@ namespace AElf.Contract.AESwapContract.Tests
             #endregion
 
             #region SwapExactTokenForToken
-
             await UserTomStub.SwapExactTokenForToken.SendAsync(new SwapExactTokenForTokenInput()
             {
                 SymbolIn = "ELF",
@@ -1280,6 +1279,9 @@ namespace AElf.Contract.AESwapContract.Tests
             {
                 SymbolPair = {"ELF-TEST"}
             });
+            
+            //swapRate=(currentBlockTime-initialBlockTime)/secondPerYear * 1/10000    maxValue:5/10000
+            //swapFee=amountIn * swapRate
             var swapFee = decimal.ToInt64(amountIn / 10000);
             reserveAfter.Results[0].ReserveA.ShouldBe(reserveBefore.Results[0].ReserveA.Add(amountIn).Sub(swapFee));
             reserveAfter.Results[0].ReserveB.ShouldBe(reserveBefore.Results[0].ReserveB.Sub(amountOutExpect));
