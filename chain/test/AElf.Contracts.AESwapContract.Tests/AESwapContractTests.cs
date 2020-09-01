@@ -1150,8 +1150,7 @@ namespace AElf.Contract.AESwapContract.Tests
             var pairException = await UserTomStub.TransferLiquidityTokens.SendWithExceptionAsync(
                 new TransferLiquidityTokensInput()
                 {
-                    SymbolA = "ELF",
-                    SymbolB = "INVALID",
+                    SymbolPair = "ELF-INVALID",
                     Amount = amount,
                     To = UserLilyAddress
                 });
@@ -1160,8 +1159,7 @@ namespace AElf.Contract.AESwapContract.Tests
             var inputException = await UserTomStub.TransferLiquidityTokens.SendWithExceptionAsync(
                 new TransferLiquidityTokensInput()
                 {
-                    SymbolA = "ELF",
-                    SymbolB = "TEST",
+                    SymbolPair = "ELF-TEST",
                     Amount = errorInput,
                     To = UserLilyAddress
                 });
@@ -1170,8 +1168,7 @@ namespace AElf.Contract.AESwapContract.Tests
             var noneLiquidityTokenException = await UserTomStub.TransferLiquidityTokens.SendWithExceptionAsync(
                 new TransferLiquidityTokensInput()
                 {
-                    SymbolA = "ELF",
-                    SymbolB = "TEST",
+                    SymbolPair = "ELF-TEST",
                     Amount = amount,
                     To = UserLilyAddress
                 });
@@ -1197,8 +1194,7 @@ namespace AElf.Contract.AESwapContract.Tests
             var insufficientLiquidityTokenException = await UserTomStub.TransferLiquidityTokens.SendWithExceptionAsync(
                 new TransferLiquidityTokensInput()
                 {
-                    SymbolA = "ELF",
-                    SymbolB = "TEST",
+                    SymbolPair = "ELF-TEST",
                     Amount = balanceTomBefore.Results[0].Balance.Add(1),
                     To = UserLilyAddress
                 });
@@ -1207,8 +1203,7 @@ namespace AElf.Contract.AESwapContract.Tests
             var amountTransfer = balanceTomBefore.Results[0].Balance;
             await UserTomStub.TransferLiquidityTokens.SendAsync(new TransferLiquidityTokensInput()
             {
-                SymbolA = "ELF",
-                SymbolB = "TEST",
+                SymbolPair = "ELF-TEST",
                 Amount = amountTransfer,
                 To = UserLilyAddress
             });

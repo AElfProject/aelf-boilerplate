@@ -42,12 +42,17 @@ namespace AElf.Contracts.AESwapContract
             return true;
         }
 
+        private void SymbolPairVerify(string symbolPair)
+        {
+            var pairList = State.AllPairs.Value ?? new PairList();
+            Assert(pairList.SymbolPair.Contains(symbolPair), "Pair not exists");
+        }
+        
         private long[] AddLiquidity(string tokenA, string tokenB, long amountADesired, long amountBDesired,
             long amountAMin, long amountBMin)
         {
             var pair = GetPair(tokenA, tokenB);
-            var pairList = State.AllPairs.Value ?? new PairList();
-            Assert(pairList.SymbolPair.Contains(pair), "Pair not exists");
+            SymbolPairVerify(pair);
             long amountA;
             long amountB;
             var reserves = GetReserves(State.Pairs[tokenA][tokenB].Address, tokenA, tokenB);
@@ -85,8 +90,7 @@ namespace AElf.Contracts.AESwapContract
             long amountAMin, long amountBMin)
         {
             var pair = GetPair(tokenA, tokenB);
-            var pairList = State.AllPairs.Value ?? new PairList();
-            Assert(pairList.SymbolPair.Contains(pair), "Pair not exists");
+            SymbolPairVerify(pair);
             var liquidity = State.LiquidityTokens[State.Pairs[tokenA][tokenB].Address][Context.Sender];
             Assert(liquidity > 0 && liquidityRemoveAmount <= liquidity, "Insufficient LiquidityToken");
             var amount = Burn(Context.Sender, tokenA, tokenB, liquidityRemoveAmount);

@@ -125,28 +125,26 @@ namespace AElf.Contracts.AESwapContract
 
         public override Empty TransferLiquidityTokens(TransferLiquidityTokensInput input)
         {
-            var pair = GetPair(input.SymbolA, input.SymbolB);
-            var pairList = State.AllPairs.Value ?? new PairList();
-            Assert(pairList.SymbolPair.Contains(pair), "Pair not Exists");
+            var tokens = GetTokens(input.SymbolPair);
+            SymbolPairVerify(input.SymbolPair);
             Assert(input.Amount > 0, "Invalid Input");
-            var liquidity = State.LiquidityTokens[State.Pairs[input.SymbolA][input.SymbolB].Address][Context.Sender];
+            var liquidity = State.LiquidityTokens[State.Pairs[tokens[0]][tokens[1]].Address][Context.Sender];
             Assert(liquidity > 0 && input.Amount <= liquidity, "Insufficient LiquidityToken");
             var liquidityNew = liquidity.Sub(input.Amount);
-            State.LiquidityTokens[State.Pairs[input.SymbolA][input.SymbolB].Address][Context.Sender] = liquidityNew;
-            var liquidityToBefore = State.LiquidityTokens[State.Pairs[input.SymbolA][input.SymbolB].Address][input.To];
+            State.LiquidityTokens[State.Pairs[tokens[0]][tokens[1]].Address][Context.Sender] = liquidityNew;
+            var liquidityToBefore = State.LiquidityTokens[State.Pairs[tokens[0]][tokens[1]].Address][input.To];
             State.AccountAssets[input.To] = State.AccountAssets[input.To] ?? new PairList();
-            var pairString = GetPair(input.SymbolA, input.SymbolB);
-            if (!State.AccountAssets[input.To].SymbolPair.Contains(pairString))
+            if (!State.AccountAssets[input.To].SymbolPair.Contains(input.SymbolPair))
             {
-                State.AccountAssets[input.To].SymbolPair.Add(pairString);
+                State.AccountAssets[input.To].SymbolPair.Add(input.SymbolPair);
             }
 
             if (liquidityNew == 0)
             {
-                State.AccountAssets[Context.Sender].SymbolPair.Remove(pairString);
+                State.AccountAssets[Context.Sender].SymbolPair.Remove(input.SymbolPair);
             }
 
-            State.LiquidityTokens[State.Pairs[input.SymbolA][input.SymbolB].Address][input.To] =
+            State.LiquidityTokens[State.Pairs[tokens[0]][tokens[1]].Address][input.To] =
                 liquidityToBefore.Add(input.Amount);
 
             return new Empty();

@@ -159,9 +159,8 @@ message QuoteInput{
 }
 message TransferLiquidityTokensInput{
     aelf.Address to =1;
-    string symbol_a=2;
-    string  symbol_b=3;
-    int64 amount=4;
+    string symbol_pair=2;
+    int64 amount=3;
    }
 message Pair{
      aelf.Hash hash =1;

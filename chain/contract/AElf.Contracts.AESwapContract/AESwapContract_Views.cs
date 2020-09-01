@@ -19,8 +19,7 @@ namespace AElf.Contracts.AESwapContract
             for (var i = 0; i < length; i++)
             {
                 var tokens = GetTokens(input.SymbolPair[i]);
-                var pairList = State.AllPairs.Value ?? new PairList();
-                Assert(pairList.SymbolPair.Contains(input.SymbolPair[i]), "Pair not exists");
+                SymbolPairVerify(input.SymbolPair[i]);
                 var pairAddress = State.Pairs[tokens[0]][tokens[1]].Address;
                 var reserves = GetReserves(pairAddress, tokens[0], tokens[1]);
                 results.Results.Add(new ReservePairResult()
@@ -50,7 +49,7 @@ namespace AElf.Contracts.AESwapContract
             for (var i = 0; i < length; i++)
             {
                 var tokens = GetTokens(input.SymbolPair[i]);
-                Assert(State.Pairs[tokens[0]][tokens[1]] != null, "Pair not exists");
+                SymbolPairVerify(input.SymbolPair[i]);
                 var pairAddress = State.Pairs[tokens[0]][tokens[1]].Address;
                 results.Results.Add(new TotalSupplyResult()
                 {
@@ -69,7 +68,7 @@ namespace AElf.Contracts.AESwapContract
             for (var i = 0; i < length; i++)
             {
                 var tokens = GetTokens(input.SymbolPair[i]);
-                Assert(State.Pairs[tokens[0]][tokens[1]] != null, "Pair not exists");
+                SymbolPairVerify(input.SymbolPair[i]);
                 var pairAddress = State.Pairs[tokens[0]][tokens[1]].Address;
                 results.Results.Add(new LiquidityTokenBalanceResult()
                 {
