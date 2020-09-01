@@ -18,8 +18,9 @@ namespace AElf.Contracts.AESwapContract
             var results = new GetReservesOutput();
             for (var i = 0; i < length; i++)
             {
-                var tokens = SortTokens(input.SymbolPair[i]);
-                Assert(State.Pairs[tokens[0]][tokens[1]] != null, "Pair not existed");
+                var tokens = GetTokens(input.SymbolPair[i]);
+                var pairList = State.AllPairs.Value ?? new PairList();
+                Assert(pairList.SymbolPair.Contains(input.SymbolPair[i]), "Pair not exists");
                 var pairAddress = State.Pairs[tokens[0]][tokens[1]].Address;
                 var reserves = GetReserves(pairAddress, tokens[0], tokens[1]);
                 results.Results.Add(new ReservePairResult()
@@ -48,8 +49,8 @@ namespace AElf.Contracts.AESwapContract
             var results = new GetTotalSupplyOutput();
             for (var i = 0; i < length; i++)
             {
-                var tokens = SortTokens(input.SymbolPair[i]);
-                Assert(State.Pairs[tokens[0]][tokens[1]] != null, "Pair not existed");
+                var tokens = GetTokens(input.SymbolPair[i]);
+                Assert(State.Pairs[tokens[0]][tokens[1]] != null, "Pair not exists");
                 var pairAddress = State.Pairs[tokens[0]][tokens[1]].Address;
                 results.Results.Add(new TotalSupplyResult()
                 {
@@ -67,8 +68,8 @@ namespace AElf.Contracts.AESwapContract
             var results = new GetLiquidityTokenBalanceOutput();
             for (var i = 0; i < length; i++)
             {
-                var tokens = SortTokens(input.SymbolPair[i]);
-                Assert(State.Pairs[tokens[0]][tokens[1]] != null, "Pair not existed");
+                var tokens = GetTokens(input.SymbolPair[i]);
+                Assert(State.Pairs[tokens[0]][tokens[1]] != null, "Pair not exists");
                 var pairAddress = State.Pairs[tokens[0]][tokens[1]].Address;
                 results.Results.Add(new LiquidityTokenBalanceResult()
                 {
@@ -82,7 +83,7 @@ namespace AElf.Contracts.AESwapContract
 
         public override Int64Value Quote(QuoteInput input)
         {
-            Assert(State.Pairs[input.SymbolA][input.SymbolB] != null, "Pair not existed");
+            Assert(State.Pairs[input.SymbolA][input.SymbolB] != null, "Pair not exists");
             var pairAddress = State.Pairs[input.SymbolA][input.SymbolB];
             var reserves = GetReserves(pairAddress.Address, input.SymbolA, input.SymbolB);
             var amountB = Quote(input.AmountA, reserves[0], reserves[1]);
@@ -94,7 +95,7 @@ namespace AElf.Contracts.AESwapContract
 
         public override Int64Value GetAmountIn(GetAmountInInput input)
         {
-            Assert(State.Pairs[input.SymbolIn][input.SymbolOut] != null, "Pair not existed");
+            Assert(State.Pairs[input.SymbolIn][input.SymbolOut] != null, "Pair not exists");
             var pairAddress = State.Pairs[input.SymbolIn][input.SymbolOut];
             var reserves = GetReserves(pairAddress.Address, input.SymbolIn, input.SymbolOut);
             var amountIn = GetAmountIn(input.AmountOut, reserves[0], reserves[1]);
@@ -106,7 +107,7 @@ namespace AElf.Contracts.AESwapContract
 
         public override Int64Value GetAmountOut(GetAmountOutInput input)
         {
-            Assert(State.Pairs[input.SymbolIn][input.SymbolOut] != null, "Pair not existed");
+            Assert(State.Pairs[input.SymbolIn][input.SymbolOut] != null, "Pair not exists");
             var pairAddress = State.Pairs[input.SymbolIn][input.SymbolOut];
             var reserves = GetReserves(pairAddress.Address, input.SymbolIn, input.SymbolOut);
             var amountOut = GetAmountOut(input.AmountIn, reserves[0], reserves[1]);

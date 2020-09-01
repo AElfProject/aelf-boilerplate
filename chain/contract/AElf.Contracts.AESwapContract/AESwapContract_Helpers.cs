@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using AElf.Contracts.MultiToken;
 using AElf.CSharp.Core;
 using AElf.Sdk.CSharp;
@@ -10,49 +9,17 @@ namespace AElf.Contracts.AESwapContract
 {
     public partial class AESwapContract
     {
-        /// <summary>
-        /// get the only tokenPair
-        /// </summary>
-        /// <param name="tokenPair"></param>
-        /// <returns></returns>
-        private string GetPair(string tokenPair)
+        private static string GetPair(string tokenA, string tokenB)
         {
-            Assert(tokenPair.Contains("-"), "Invalid TokenPair");
-            var tokens = tokenPair.Split('-');
-            Assert(TokenVerify(tokens[0]) && TokenVerify(tokens[1]), "Invalid Tokens");
-            var sortedTokenPair = tokenPair;
-            if (string.Compare(tokens[0], tokens[1], StringComparison.InvariantCulture) >= 1)
-            {
-                sortedTokenPair = string.Join("-", tokens[1], tokens[0]);
-            }
-
-            return sortedTokenPair;
-        }
-
-        private string GetPair(string tokenA, string tokenB)
-        {
-            // Assert(tokenPair.Contains("-"), "Invalid TokenPair");
             var tokens = new[] {tokenA, tokenB};
-            Assert(TokenVerify(tokens[0]) && TokenVerify(tokens[1]), "Invalid Tokens");
-            var sortedTokenPair = string.Join("-", tokens[0], tokens[1]);
-            if (string.Compare(tokens[0], tokens[1], StringComparison.InvariantCulture) >= 1)
-            {
-                sortedTokenPair = string.Join("-", tokens[1], tokens[0]);
-            }
-
-            return sortedTokenPair;
+            var tokenPair = string.Join("-", tokens[0], tokens[1]);
+            return tokenPair;
         }
 
-        private string[] SortTokens(string tokenPair)
+        private string[] GetTokens(string tokenPair)
         {
             Assert(tokenPair.Contains("-"), "Invalid TokenPair");
             var tokens = tokenPair.Split('-');
-            if (string.Compare(tokens[0], tokens[1], StringComparison.InvariantCulture) >= 1)
-            {
-                var index = tokens[0];
-                tokens[0] = tokens[1];
-                tokens[1] = index;
-            }
 
             return tokens;
         }
@@ -78,7 +45,9 @@ namespace AElf.Contracts.AESwapContract
         private long[] AddLiquidity(string tokenA, string tokenB, long amountADesired, long amountBDesired,
             long amountAMin, long amountBMin)
         {
-            Assert(State.Pairs[tokenA][tokenB] != null, "Pair is not exist");
+            var pair = GetPair(tokenA, tokenB);
+            var pairList = State.AllPairs.Value ?? new PairList();
+            Assert(pairList.SymbolPair.Contains(pair), "Pair not exists");
             long amountA;
             long amountB;
             var reserves = GetReserves(State.Pairs[tokenA][tokenB].Address, tokenA, tokenB);
@@ -115,7 +84,9 @@ namespace AElf.Contracts.AESwapContract
         private long[] RemoveLiquidity(string tokenA, string tokenB, long liquidityRemoveAmount,
             long amountAMin, long amountBMin)
         {
-            Assert(State.Pairs[tokenA][tokenB] != null, "Pair is not exist");
+            var pair = GetPair(tokenA, tokenB);
+            var pairList = State.AllPairs.Value ?? new PairList();
+            Assert(pairList.SymbolPair.Contains(pair), "Pair not exists");
             var liquidity = State.LiquidityTokens[State.Pairs[tokenA][tokenB].Address][Context.Sender];
             Assert(liquidity > 0 && liquidityRemoveAmount <= liquidity, "Insufficient LiquidityToken");
             var amount = Burn(Context.Sender, tokenA, tokenB, liquidityRemoveAmount);

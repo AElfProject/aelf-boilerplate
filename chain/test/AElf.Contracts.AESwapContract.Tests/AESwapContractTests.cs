@@ -31,7 +31,7 @@ namespace AElf.Contract.AESwapContract.Tests
             });
             var pairList = await UserTomStub.GetPairs.CallAsync(new Empty());
             pairList.SymbolPair.ShouldContain("ELF-TEST");
-            pairList.SymbolPair.ShouldContain("DAI-ELF");
+            pairList.SymbolPair.ShouldContain("ELF-DAI");
 
             #region AddLiquidity
 
@@ -57,7 +57,7 @@ namespace AElf.Contract.AESwapContract.Tests
             });
             var myPairList = await UserTomStub.GetAccountAssets.CallAsync(new Empty());
             myPairList.SymbolPair.ShouldContain("ELF-TEST");
-            myPairList.SymbolPair.ShouldContain("DAI-ELF");
+            myPairList.SymbolPair.ShouldContain("ELF-DAI");
 
             var reserves = await UserTomStub.GetReserves.SendAsync(new GetReservesInput()
             {
@@ -125,8 +125,8 @@ namespace AElf.Contract.AESwapContract.Tests
                 SymbolOut = "DAI",
                 AmountOut = amountOut
             });
-            var reserveElf = Convert.ToDecimal(reserves.Output.Results[1].ReserveB);
-            var reserveDai = reserves.Output.Results[1].ReserveA;
+            var reserveElf = Convert.ToDecimal(reserves.Output.Results[1].ReserveA);
+            var reserveDai = reserves.Output.Results[1].ReserveB;
             var numerator = reserveElf * amountOut * 1000;
             var denominator = (reserveDai - amountOut) * 997;
             var amountInExpect = decimal.ToInt64(numerator / denominator) + 1;
@@ -500,7 +500,7 @@ namespace AElf.Contract.AESwapContract.Tests
                 });
             liquidityRemoveInvalidException.TransactionResult.Error.ShouldContain("Invalid Input");
 
-            // Pair is not exist
+            // Pair not exists
             var pairException = await UserTomStub.RemoveLiquidity.SendWithExceptionAsync(new RemoveLiquidityInput()
             {
                 AmountAMin = amountADesired,
@@ -510,7 +510,7 @@ namespace AElf.Contract.AESwapContract.Tests
                 SymbolA = "ELF",
                 SymbolB = "INVALID"
             });
-            pairException.TransactionResult.Error.ShouldContain("Pair is not exist");
+            pairException.TransactionResult.Error.ShouldContain("Pair not exists");
 
             //Insufficient LiquidityToken
             var zeroLiquidityException = await UserTomStub.RemoveLiquidity.SendWithExceptionAsync(
@@ -766,6 +766,7 @@ namespace AElf.Contract.AESwapContract.Tests
             #endregion
 
             #region SwapExactTokenForToken
+
             await UserTomStub.SwapExactTokenForToken.SendAsync(new SwapExactTokenForTokenInput()
             {
                 SymbolIn = "ELF",
@@ -865,12 +866,12 @@ namespace AElf.Contract.AESwapContract.Tests
                 SymbolPair = "ELF-TEST"
             });
 
-            //Pair Exists
+            //Pair Existed
             var existsException = await UserTomStub.CreatePair.SendWithExceptionAsync(new CreatePairInput()
             {
                 SymbolPair = "ELF-TEST"
             });
-            existsException.TransactionResult.Error.ShouldContain("Pair Exists");
+            existsException.TransactionResult.Error.ShouldContain("Pair Existed");
             var pairList = await UserTomStub.GetPairs.CallAsync(new Empty());
             pairList.SymbolPair.ShouldContain("ELF-TEST");
         }
@@ -896,7 +897,7 @@ namespace AElf.Contract.AESwapContract.Tests
             {
                 SymbolPair = {"ELF-INVALID"}
             });
-            pairException.Value.ShouldContain("Pair not existed");
+            pairException.Value.ShouldContain("Pair not exists");
             await UserTomStub.AddLiquidity.SendAsync(new AddLiquidityInput()
             {
                 AmountADesired = amountADesired,
@@ -926,7 +927,7 @@ namespace AElf.Contract.AESwapContract.Tests
             {
                 SymbolPair = {"ELF-INVALID"}
             });
-            pairException.Value.ShouldContain("Pair not existed");
+            pairException.Value.ShouldContain("Pair not exists");
             //Success
             await UserTomStub.AddLiquidity.SendAsync(new AddLiquidityInput()
             {
@@ -952,12 +953,12 @@ namespace AElf.Contract.AESwapContract.Tests
             await Initialize();
             const long amountADesired = 100000000;
             const long amountBDesired = 200000000;
-            //Pair not existed
+            //Pair not exists
             var pairException = await UserTomStub.GetLiquidityTokenBalance.CallWithExceptionAsync(new PairList()
             {
                 SymbolPair = {"ELF-INVALID"}
             });
-            pairException.Value.ShouldContain("Pair not existed");
+            pairException.Value.ShouldContain("Pair not exists");
             //Success  
             await UserTomStub.AddLiquidity.SendAsync(new AddLiquidityInput()
             {
@@ -991,7 +992,7 @@ namespace AElf.Contract.AESwapContract.Tests
                 SymbolB = "INVALID",
                 AmountA = amountA
             });
-            pairException.Value.ShouldContain("Pair not existed");
+            pairException.Value.ShouldContain("Pair not exists");
             //Insufficient  amount
             var amountException = await UserTomStub.Quote.CallWithExceptionAsync(new QuoteInput()
             {
@@ -1044,7 +1045,7 @@ namespace AElf.Contract.AESwapContract.Tests
                 SymbolOut = "INVALID",
                 AmountOut = amountOut
             });
-            pairException.Value.ShouldContain("Pair not existed");
+            pairException.Value.ShouldContain("Pair not exists");
             //Insufficient Output amount
             var amountException = await UserTomStub.GetAmountIn.CallWithExceptionAsync(new GetAmountInInput()
             {
@@ -1097,7 +1098,7 @@ namespace AElf.Contract.AESwapContract.Tests
                 SymbolOut = "INVALID",
                 AmountIn = amountIn
             });
-            pairException.Value.ShouldContain("Pair not existed");
+            pairException.Value.ShouldContain("Pair not exists");
             //Insufficient Output amount
             var amountException = await UserTomStub.GetAmountOut.CallWithExceptionAsync(new GetAmountOutInput()
             {
@@ -1145,7 +1146,7 @@ namespace AElf.Contract.AESwapContract.Tests
             const long amountADesired = 100000000;
             const long amountBDesired = 200000000;
             await Initialize();
-            //Pair not existed
+            //Pair not exists
             var pairException = await UserTomStub.TransferLiquidityTokens.SendWithExceptionAsync(
                 new TransferLiquidityTokensInput()
                 {
@@ -1154,7 +1155,7 @@ namespace AElf.Contract.AESwapContract.Tests
                     Amount = amount,
                     To = UserLilyAddress
                 });
-            pairException.TransactionResult.Error.ShouldContain("Pair not existed");
+            pairException.TransactionResult.Error.ShouldContain("Pair not exists");
             //Invalid Input
             var inputException = await UserTomStub.TransferLiquidityTokens.SendWithExceptionAsync(
                 new TransferLiquidityTokensInput()
@@ -1266,7 +1267,6 @@ namespace AElf.Contract.AESwapContract.Tests
             var blockTimeProvider = GetRequiredService<IBlockTimeProvider>();
             blockTimeProvider.SetBlockTime(Timestamp.FromDateTime(DateTime.UtcNow).AddDays(365));
 
-            var time1 = blockTimeProvider.GetBlockTime();
             await UserTomStub.SwapExactTokenForToken.SendAsync(new SwapExactTokenForTokenInput()
             {
                 SymbolIn = "ELF",
@@ -1279,7 +1279,7 @@ namespace AElf.Contract.AESwapContract.Tests
             {
                 SymbolPair = {"ELF-TEST"}
             });
-            
+
             //swapRate=(currentBlockTime-initialBlockTime)/secondPerYear * 1/10000    maxValue:5/10000
             //swapFee=amountIn * swapRate
             var swapFee = decimal.ToInt64(amountIn / 10000);
@@ -1307,7 +1307,7 @@ namespace AElf.Contract.AESwapContract.Tests
         }
 
         [Fact]
-        public async Task SqrtTest()
+        public void SqrtTest()
         {
             const decimal zero = 0;
             const decimal number = Decimal.MaxValue;

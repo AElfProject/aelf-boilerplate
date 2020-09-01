@@ -57,12 +57,12 @@ namespace AElf.Contracts.AESwapContract
 
         public override CreatePairOutput CreatePair(CreatePairInput input)
         {
-            var tokenPair = SortTokens(input.SymbolPair);
+            var tokenPair = GetTokens(input.SymbolPair);
             Assert(tokenPair[0] != tokenPair[1], "Identical Tokens");
-            Assert(State.Pairs[tokenPair[0]][tokenPair[1]] == null, "Pair Exists");
+            Assert(State.Pairs[tokenPair[0]][tokenPair[1]] == null, "Pair Existed");
+            Assert(TokenVerify(tokenPair[0]) && TokenVerify(tokenPair[1]), "Invalid Tokens");
             var pair = new Pair();
-            var realPairString = GetPair(input.SymbolPair);
-            var hash = HashHelper.ComputeFrom(realPairString);
+            var hash = HashHelper.ComputeFrom(input.SymbolPair);
             pair.Hash = hash;
             var address = Context.ConvertVirtualAddressToContractAddress(hash);
             pair.Address = address;
@@ -70,7 +70,7 @@ namespace AElf.Contracts.AESwapContract
             State.Pairs[tokenPair[1]][tokenPair[0]] = pair;
             //add to PairList
             var pairList = State.AllPairs.Value ?? new PairList();
-            pairList.SymbolPair.Add(realPairString);
+            pairList.SymbolPair.Add(input.SymbolPair);
             State.AllPairs.Value = pairList;
 
             PairInitial(address, tokenPair[0], tokenPair[1]);
@@ -125,7 +125,9 @@ namespace AElf.Contracts.AESwapContract
 
         public override Empty TransferLiquidityTokens(TransferLiquidityTokensInput input)
         {
-            Assert(State.Pairs[input.SymbolA][input.SymbolB] != null, "Pair not existed");
+            var pair = GetPair(input.SymbolA, input.SymbolB);
+            var pairList = State.AllPairs.Value ?? new PairList();
+            Assert(pairList.SymbolPair.Contains(pair), "Pair not Exists");
             Assert(input.Amount > 0, "Invalid Input");
             var liquidity = State.LiquidityTokens[State.Pairs[input.SymbolA][input.SymbolB].Address][Context.Sender];
             Assert(liquidity > 0 && input.Amount <= liquidity, "Insufficient LiquidityToken");
