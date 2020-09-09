@@ -20,12 +20,17 @@ service BingoGameContract {
     }
     rpc Quit (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
+    rpc Roll (RollInput) returns (RollOutput) {
+    }
     
     // Views
     rpc GetAward (aelf.Hash) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
     rpc GetPlayerInformation (aelf.Address) returns (PlayerInformation) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetRollNumbers(GetRollNumbersInput) returns(GetRollNumbersOutput){
         option (aelf.is_view) = true;
     }
 }
@@ -43,4 +48,24 @@ message BoutInformation {
     bool is_complete = 4;
     aelf.Hash play_id = 5;
     int64 bingo_block_height = 6;
+}
+message RollInput{
+    int64 roll_result_count = 1;
+    repeated string roll_data_original = 2;  
+}
+message RollOutput{
+    repeated string roll_data_result = 1;
+    int64  block_height = 2;
+}
+message GetRollNumbersInput{
+    RollInput  roll_input = 1;
+    int64  block_height = 2;
+}
+message GetRollNumbersOutput{
+    repeated int64 roll_number = 1;
+}
+message Roll{
+    option (aelf.is_event) = true;
+    RollInput   input = 1;
+    RollOutput  output = 2;
 }

@@ -137,5 +137,79 @@ namespace AElf.Contracts.BingoGameContract
         {
             return State.PlayerInformation[input];
         }
+        
+        public override RollOutput Roll(RollInput input)
+        {
+            Assert(input.RollResultCount > 0, "Invalid Input");
+            var blockHeight = Context.CurrentHeight;
+            if (State.ConsensusContract.Value == null)
+            {
+                State.ConsensusContract.Value =
+                    Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
+            }
+
+            var randomHash = State.ConsensusContract.GetRandomHash.Call(new Int64Value
+            {
+                Value = blockHeight
+            });
+            if (randomHash == null)
+            {
+                throw new AssertionException("Can't Get RandomHash");
+            }
+
+            var output = new RollOutput()
+            {
+                BlockHeight = blockHeight
+            };
+
+            for (var i = 0; i < input.RollResultCount; i++)
+            {
+                var index = Context.ConvertHashToInt64(randomHash, 0, input.RollDataOriginal.Count);
+                var result = input.RollDataOriginal[(int) index];
+                var hashNew = HashHelper.ComputeFrom(result);
+                randomHash = HashHelper.ConcatAndCompute(hashNew, randomHash);
+                output.RollDataResult.Add(result);
+            }
+
+            Context.Fire(new Roll()
+            {
+                Input = input,
+                Output = output
+            });
+            return output;
+        }
+
+        public override GetRollNumbersOutput GetRollNumbers(GetRollNumbersInput input)
+        {
+            Assert(input.RollInput.RollResultCount > 0, "Invalid Input");
+
+            if (State.ConsensusContract.Value == null)
+            {
+                State.ConsensusContract.Value =
+                    Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
+            }
+
+            var randomHash = State.ConsensusContract.GetRandomHash.Call(new Int64Value
+            {
+                Value = input.BlockHeight
+            });
+            if (randomHash == null)
+            {
+                throw new AssertionException("Can't Get RandomHash");
+            }
+
+            var output = new GetRollNumbersOutput();
+
+            for (var i = 0; i < input.RollInput.RollResultCount; i++)
+            {
+                var index = Context.ConvertHashToInt64(randomHash, 0, input.RollInput.RollDataOriginal.Count);
+                var result = input.RollInput.RollDataOriginal[(int) index];
+                var hashNew = HashHelper.ComputeFrom(result);
+                randomHash = HashHelper.ConcatAndCompute(hashNew, randomHash);
+                output.RollNumber.Add(index);
+            }
+
+            return output;
+        }
     }
 }

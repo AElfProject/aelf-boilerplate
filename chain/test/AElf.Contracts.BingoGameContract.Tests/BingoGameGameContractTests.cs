@@ -70,5 +70,19 @@ namespace AElf.Contracts.BingoGameContract
             var award = await stub.GetAward.CallAsync(playId);
             award.Value.ShouldNotBe(0);
         }
+
+        [Fact]
+        public async Task RollTest()
+        {
+            var keyPair = SampleAccount.Accounts.First().KeyPair;
+            var stub = GetBingoGameContractStub(keyPair);
+            var result = await stub.Roll.SendAsync(new RollInput()
+            {
+                RollResultCount = 2,
+                RollDataOriginal = {"111", "222", "333", "444", "555"}
+            });
+            
+            result.Output.RollDataResult.Count.ShouldBe(2);
+        }
     }
 }
