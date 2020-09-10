@@ -20,8 +20,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-preview3-18473" />
-        <PackageReference Include="AElf.Kernel.SmartContract.ExecutionPluginForCallThreshold" Version="1.0.0-preview3-18473" />
+        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-preview3-18515" />
+        <PackageReference Include="AElf.Kernel.SmartContract.ExecutionPluginForCallThreshold" Version="1.0.0-preview3-18515" />
     </ItemGroup>
 
     <ItemGroup>

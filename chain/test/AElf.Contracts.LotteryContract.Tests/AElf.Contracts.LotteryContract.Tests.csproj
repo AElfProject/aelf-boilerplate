@@ -50,8 +50,8 @@
         <ProjectReference Include="..\..\contract\AElf.Contracts.LotteryContract\AElf.Contracts.LotteryContract.csproj" />
         <ProjectReference Include="..\..\src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj" />
 
-        <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="1.0.0-preview3-18473" />
-        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-preview3-18473" />
-        <PackageReference Include="AElf.Contracts.Parliament" Version="1.0.0-preview3-18473" />
+        <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="1.0.0-preview3-18515" />
+        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-preview3-18515" />
+        <PackageReference Include="AElf.Contracts.Parliament" Version="1.0.0-preview3-18515" />
     </ItemGroup>
 </Project>
