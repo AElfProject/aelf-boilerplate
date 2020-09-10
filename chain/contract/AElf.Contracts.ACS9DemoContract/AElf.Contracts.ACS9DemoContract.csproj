@@ -21,6 +21,9 @@
     </ItemGroup>
     
     <ItemGroup>
+        <ContractMessage Include="..\..\protobuf\authority_info.proto">
+            <Link>Protobuf\Proto\authority_info.proto</Link>
+        </ContractMessage>
         <ContractBase Include="..\..\protobuf\acs9.proto">
             <Link>Protobuf\Proto\base\acs9.proto</Link>
         </ContractBase>

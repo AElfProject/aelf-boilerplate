@@ -1,4 +1,4 @@
-using Acs2;
+using AElf.Standards.ACS2;
 using AElf.CSharp.Core;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;

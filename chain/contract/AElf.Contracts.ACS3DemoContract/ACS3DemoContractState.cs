@@ -1,4 +1,4 @@
-using Acs3;
+using AElf.Standards.ACS3;
 using AElf.Contracts.MultiToken;
 using AElf.Sdk.CSharp.State;
 using AElf.Types;

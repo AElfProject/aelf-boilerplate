@@ -1,4 +1,4 @@
-using Acs6;
+using AElf.Standards.ACS6;
 using AElf.CSharp.Core;
 using AElf.Sdk.CSharp;
 using AElf.Types;

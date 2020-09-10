@@ -13,6 +13,9 @@
         <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     </PropertyGroup>
     <ItemGroup>
+        <ContractMessage Include="..\..\protobuf\authority_info.proto">
+            <Link>Protobuf\Proto\authority_info.proto</Link>
+        </ContractMessage>
         <!-- Reference the protobuf definition of the contract -->
         <ContractCode Include="..\..\protobuf\hello_world_contract.proto">
             <Link>Protobuf\Proto\hello_world_contract.proto</Link>
