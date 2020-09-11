@@ -61,8 +61,9 @@ message RollOutput{
     int64  block_height = 2;
 }
 message GetRollNumbersInput{
-    RollInput  roll_input = 1;
-    int64  block_height = 2;
+    int64 roll_result_count = 1;
+    RollData  roll_data_original = 2;
+    int64  block_height = 3;
 }
 message GetRollNumbersOutput{
     repeated int64 roll_number = 1;

@@ -140,7 +140,7 @@ namespace AElf.Contracts.BingoGameContract
 
         public override RollOutput Roll(RollInput input)
         {
-            Assert(input.RollResultCount > 0, "Invalid Input");
+            Assert(input.RollResultCount > 0 && input.RollResultCount <= input.RollDataOriginal.Data.Count, "Invalid Input");
             var blockHeight = Context.CurrentHeight;
             if (State.ConsensusContract.Value == null)
             {
@@ -185,7 +185,8 @@ namespace AElf.Contracts.BingoGameContract
 
         public override GetRollNumbersOutput GetRollNumbers(GetRollNumbersInput input)
         {
-            Assert(input.RollInput.RollResultCount > 0, "Invalid Input");
+            Assert(input.RollResultCount > 0 && input.RollResultCount <= input.RollDataOriginal.Data.Count,
+                "Invalid Input");
 
             if (State.ConsensusContract.Value == null)
             {
@@ -204,10 +205,10 @@ namespace AElf.Contracts.BingoGameContract
 
             var output = new GetRollNumbersOutput();
 
-            for (var i = 0; i < input.RollInput.RollResultCount; i++)
+            for (var i = 0; i < input.RollResultCount; i++)
             {
-                var index = Context.ConvertHashToInt64(randomHash, 0, input.RollInput.RollDataOriginal.Data.Count);
-                var result = input.RollInput.RollDataOriginal.Data[(int) index];
+                var index = Context.ConvertHashToInt64(randomHash, 0, input.RollDataOriginal.Data.Count);
+                var result = input.RollDataOriginal.Data[(int) index];
                 var hashNew = HashHelper.ComputeFrom(result);
                 randomHash = HashHelper.ConcatAndCompute(hashNew, randomHash);
                 output.RollNumber.Add(index);
