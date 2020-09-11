@@ -137,7 +137,7 @@ namespace AElf.Contracts.BingoGameContract
         {
             return State.PlayerInformation[input];
         }
-        
+
         public override RollOutput Roll(RollInput input)
         {
             Assert(input.RollResultCount > 0, "Invalid Input");
@@ -164,18 +164,22 @@ namespace AElf.Contracts.BingoGameContract
 
             for (var i = 0; i < input.RollResultCount; i++)
             {
-                var index = Context.ConvertHashToInt64(randomHash, 0, input.RollDataOriginal.Count);
-                var result = input.RollDataOriginal[(int) index];
+                var index = Context.ConvertHashToInt64(randomHash, 0, input.RollDataOriginal.Data.Count);
+                var result = input.RollDataOriginal.Data[(int) index];
                 var hashNew = HashHelper.ComputeFrom(result);
-                randomHash = HashHelper.ConcatAndCompute(hashNew, randomHash);
-                output.RollDataResult.Add(result);
+                randomHash = HashHelper.ConcatAndCompute(randomHash, hashNew);
+                // randomHash = HashHelper.XorAndCompute(randomHash, hashNew);
+                output.RollDataResult.Data.Add(result);
             }
 
-            Context.Fire(new Roll()
+            Context.Fire(new Roll
             {
-                Input = input,
-                Output = output
+                RollDataOriginal = input.RollDataOriginal,
+                RollDataResult = output.RollDataResult,
+                BlockHeight = blockHeight,
+                RollResultCount = input.RollResultCount
             });
+            
             return output;
         }
 
@@ -202,8 +206,8 @@ namespace AElf.Contracts.BingoGameContract
 
             for (var i = 0; i < input.RollInput.RollResultCount; i++)
             {
-                var index = Context.ConvertHashToInt64(randomHash, 0, input.RollInput.RollDataOriginal.Count);
-                var result = input.RollInput.RollDataOriginal[(int) index];
+                var index = Context.ConvertHashToInt64(randomHash, 0, input.RollInput.RollDataOriginal.Data.Count);
+                var result = input.RollInput.RollDataOriginal.Data[(int) index];
                 var hashNew = HashHelper.ComputeFrom(result);
                 randomHash = HashHelper.ConcatAndCompute(hashNew, randomHash);
                 output.RollNumber.Add(index);

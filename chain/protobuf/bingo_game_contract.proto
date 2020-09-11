@@ -51,10 +51,13 @@ message BoutInformation {
 }
 message RollInput{
     int64 roll_result_count = 1;
-    repeated string roll_data_original = 2;  
+    RollData  roll_data_original = 2;  
+}
+message RollData{
+  repeated string data = 1;  
 }
 message RollOutput{
-    repeated string roll_data_result = 1;
+    RollData  roll_data_result = 1;
     int64  block_height = 2;
 }
 message GetRollNumbersInput{
@@ -66,6 +69,8 @@ message GetRollNumbersOutput{
 }
 message Roll{
     option (aelf.is_event) = true;
-    RollInput   input = 1;
-    RollOutput  output = 2;
+    RollData   roll_data_original = 1;
+    RollData   roll_data_result = 2;
+    int64 roll_result_count = 3;
+    int64  block_height = 4;
 }
