@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Acs5;
+using AElf.Standards.ACS5;
 using AElf.ContractTestKit;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
