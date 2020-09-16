@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AElf.Standards.ACS10;
 using AElf.Contracts.MultiToken;
-using AElf.ContractTestKit;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.Contracts.TokenHolder;
 using AElf.Kernel.Blockchain.Application;
 using AElf.Types;

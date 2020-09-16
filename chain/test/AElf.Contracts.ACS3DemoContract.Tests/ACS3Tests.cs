@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AElf.Standards.ACS3;
 using AElf.Contracts.MultiToken;
-using AElf.ContractTestKit;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.CSharp.Core.Extension;
 using AElf.Kernel.Token;
 using Google.Protobuf;

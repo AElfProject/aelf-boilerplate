@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AElf.Contracts.MultiToken;
-using AElf.ContractTestKit;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.Kernel.Infrastructure;
 using AElf.Kernel.Token;
 using AElf.Types;

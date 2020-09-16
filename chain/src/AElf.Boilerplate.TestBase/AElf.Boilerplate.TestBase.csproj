@@ -23,7 +23,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.ContractTestKit" Version="1.0.0-preview3-18521" />
         <PackageReference Include="AElf.ContractTestBase" Version="1.0.0-preview3-18521" />
     </ItemGroup>
 
