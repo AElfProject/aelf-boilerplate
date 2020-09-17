@@ -22,10 +22,12 @@ namespace AElf.Contracts.FinanceContract
             {
                 return 0;
             }
+
             if (borrowSnapshot.Principal == 0)
             {
                 return 0;
             }
+
             //Calculate new borrow balance using the interest index:
             //recentBorrowBalance = borrower.borrowBalance * market.borrowIndex / borrower.borrowIndex
             var borrowIndex = State.BorrowIndex[input.Symbol];
@@ -33,10 +35,10 @@ namespace AElf.Contracts.FinanceContract
             {
                 return 0;
             }
+
             var result = decimal.Parse(borrowIndex) * borrowSnapshot.Principal /
                          decimal.Parse(borrowSnapshot.InterestIndex);
             return Convert.ToInt64(result);
-        
         }
 
         private decimal ExchangeRateStoredInternal(string input)
@@ -78,7 +80,7 @@ namespace AElf.Contracts.FinanceContract
             }
 
             // utilizationRate = totalBorrows/(totalCash + totalBorrows - totalReserves)
-            var utilizationRate = totalBorrow/ denominator;
+            var utilizationRate = totalBorrow / denominator;
             return utilizationRate;
         }
 
@@ -114,17 +116,19 @@ namespace AElf.Contracts.FinanceContract
         private void AddToMarketInternal(string symbol, Address borrower)
         {
             var market = State.Markets[symbol];
-            Assert(market !=null && market.IsListed, "Market is not listed");
+            Assert(market != null && market.IsListed, "Market is not listed");
             market.AccountMembership.TryGetValue(borrower.ToString(), out var isMembership);
             if (isMembership)
             {
                 return;
             }
+
             var asset = State.AccountAssets[borrower];
             if (asset == null)
             {
-                State.AccountAssets[borrower]=new AssetList();
+                State.AccountAssets[borrower] = new AssetList();
             }
+
             Assert(State.AccountAssets[borrower].Assets.Count < State.MaxAssets.Value, "Too Many Assets");
             market.AccountMembership[borrower.ToString()] = true;
             State.AccountAssets[borrower].Assets.Add(symbol);
@@ -138,7 +142,7 @@ namespace AElf.Contracts.FinanceContract
         //hook    to verify the cToken price not be zero
         private bool UnderlyingPriceVerify(string cToken)
         {
-           var price = State.Prices[cToken];
+            var price = State.Prices[cToken];
             if (price == null)
                 return false;
             if (price == "")
@@ -191,7 +195,7 @@ namespace AElf.Contracts.FinanceContract
         /// <returns></returns>
         private decimal GetUnderlyingPrice(string cToken)
         {
-            return decimal.Parse(State.Prices[cToken]??"0");
+            return decimal.Parse(State.Prices[cToken] ?? "0");
         }
 
         private long RepayBorrowFresh(Address payer, Address borrower, long repayAmount, string symbol)
@@ -210,11 +214,12 @@ namespace AElf.Contracts.FinanceContract
             {
                 repayAmount = accountBorrows;
             }
+
             var actualRepayAmount = repayAmount;
             //accountBorrowsNew = accountBorrows - actualRepayAmount
             // totalBorrowsNew = totalBorrows - actualRepayAmount
             var accountBorrowsNew = accountBorrows.Sub(actualRepayAmount);
-            Assert(accountBorrowsNew>=0,"Insufficient Balance Of Token");
+            Assert(accountBorrowsNew >= 0, "Insufficient Balance Of Token");
             var totalBorrowsNew = State.TotalBorrows[symbol].Sub(actualRepayAmount);
             DoTransferIn(payer, repayAmount, symbol);
             State.AccountBorrows[symbol][borrower].Principal = accountBorrowsNew;
@@ -297,7 +302,7 @@ namespace AElf.Contracts.FinanceContract
             var totalSupplyNew = State.TotalSupply[symbol].Sub(redeemTokens);
             var accountTokensNew = State.AccountTokens[symbol][Context.Sender].Sub(redeemTokens);
             Assert(GetCashPrior(symbol) >= redeemAmount, "Insufficient Token Cash");
-            Assert(accountTokensNew>=0,"Insufficient Token Balance");
+            Assert(accountTokensNew >= 0, "Insufficient Token Balance");
             DoTransferOut(address, redeemAmount, symbol);
             //We write previously calculated values into storage
             State.TotalSupply[symbol] = totalSupplyNew;
@@ -321,6 +326,7 @@ namespace AElf.Contracts.FinanceContract
             {
                 return;
             }
+
             /*
                * Calculate the interest accumulated into borrows and reserves and the new index:
                *  simpleInterestFactor = borrowRate * blockDelta
@@ -375,16 +381,16 @@ namespace AElf.Contracts.FinanceContract
             var seizeTokens = decimal.ToInt64(seizeAmount / exchangeRate);
             return seizeTokens;
         }
+
         /// <summary>
         /// Verify the token must on the chain
         /// </summary>
         /// <param name="symbol">symbol</param>
         /// <returns></returns>
-       
         private void MarketVerify(string symbol)
         {
             var market = State.Markets[symbol];
-            Assert(market!=null&& market.IsListed,"Market is not listed");
+            Assert(market != null && market.IsListed, "Market is not listed");
         }
     }
 }

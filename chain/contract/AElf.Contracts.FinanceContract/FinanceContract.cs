@@ -25,9 +25,12 @@ namespace AElf.Contracts.FinanceContract
                 Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
             var newCloseFactor = decimal.Parse(input.CloseFactor);
             var newLiquidationIncentive = decimal.Parse(input.LiquidationIncentive);
-            Assert(newCloseFactor>decimal.Parse(MinCloseFactor)&& newCloseFactor<decimal.Parse(MaxCloseFactor),"Invalid CloseFactor");
-            Assert(newLiquidationIncentive>=decimal.Parse(MinLiquidationIncentive)&& newLiquidationIncentive<=decimal.Parse(MaxLiquidationIncentive),"Invalid LiquidationIncentive");
-            Assert(input.MaxAssets>0,"MaxAssets must greater than 0");
+            Assert(newCloseFactor > decimal.Parse(MinCloseFactor) && newCloseFactor < decimal.Parse(MaxCloseFactor),
+                "Invalid CloseFactor");
+            Assert(
+                newLiquidationIncentive >= decimal.Parse(MinLiquidationIncentive) &&
+                newLiquidationIncentive <= decimal.Parse(MaxLiquidationIncentive), "Invalid LiquidationIncentive");
+            Assert(input.MaxAssets > 0, "MaxAssets must greater than 0");
             State.CloseFactor.Value = input.CloseFactor;
             State.LiquidationIncentive.Value = input.LiquidationIncentive;
             State.MaxAssets.Value = input.MaxAssets;
@@ -81,11 +84,13 @@ namespace AElf.Contracts.FinanceContract
         {
             AccrueInterest(input.Symbol);
             Assert(!State.BorrowGuardianPaused[input.Symbol], "Borrow is paused");
-          //  Assert(State.Markets[input.Symbol].IsListed, "Market is not listed");
-            if(!State.Markets[input.Symbol].AccountMembership.TryGetValue(Context.Sender.ToString(), out var isExist) || !isExist)
+            //  Assert(State.Markets[input.Symbol].IsListed, "Market is not listed");
+            if (!State.Markets[input.Symbol].AccountMembership
+                .TryGetValue(Context.Sender.ToString(), out var isExist) || !isExist)
             {
                 AddToMarketInternal(input.Symbol, Context.Sender);
             }
+
             Assert(UnderlyingPriceVerify(input.Symbol), "Error price");
             var shortfall = GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Symbol, 0, input.Amount);
             Assert(shortfall <= 0, "Insufficient liquidity");
@@ -104,12 +109,13 @@ namespace AElf.Contracts.FinanceContract
             var totalBorrowsNew = State.TotalBorrows[input.Symbol].Add(input.Amount);
             DoTransferOut(Context.Sender, input.Amount, input.Symbol);
             //We write the previously calculated values into storage 
-            var  borrowSnapshot= State.AccountBorrows[input.Symbol][Context.Sender];
+            var borrowSnapshot = State.AccountBorrows[input.Symbol][Context.Sender];
             if (borrowSnapshot == null)
             {
-                State.AccountBorrows[input.Symbol][Context.Sender]=  new BorrowSnapshot();
+                State.AccountBorrows[input.Symbol][Context.Sender] = new BorrowSnapshot();
             }
-            State.AccountBorrows[input.Symbol][Context.Sender].Principal=accountBorrowsNew;
+
+            State.AccountBorrows[input.Symbol][Context.Sender].Principal = accountBorrowsNew;
             State.AccountBorrows[input.Symbol][Context.Sender].InterestIndex = State.BorrowIndex[input.Symbol];
             State.TotalBorrows[input.Symbol] = totalBorrowsNew;
             Context.Fire(new Borrow()
@@ -142,9 +148,10 @@ namespace AElf.Contracts.FinanceContract
             AccrueInterest(input.BorrowSymbol);
             AccrueInterest(input.CollateralSymbol);
             //Checks if the liquidation should be allowed to occur
-            Assert(State.Markets[input.BorrowSymbol].IsListed&& State.Markets[input.CollateralSymbol].IsListed,"MARKET_NOT_LISTED");
+            Assert(State.Markets[input.BorrowSymbol].IsListed && State.Markets[input.CollateralSymbol].IsListed,
+                "MARKET_NOT_LISTED");
             var shortfall = GetHypotheticalAccountLiquidityInternal(input.Borrower, input.BorrowSymbol, 0, 0);
-            Assert(shortfall>0,"Insufficient shortfall");
+            Assert(shortfall > 0, "Insufficient shortfall");
             var borrowBalance = BorrowBalanceStoredInternal(new Account()
             {
                 Address = input.Borrower,
@@ -159,7 +166,7 @@ namespace AElf.Contracts.FinanceContract
             Assert(accrualCollateralSymbolBlockNumberPrior == Context.CurrentHeight,
                 "Market's block number should equals current block number");
             Assert(input.Borrower != Context.Sender, "Liquidator is borrower");
-            Assert(input.RepayAmount!=0&& input.RepayAmount!=-1,"Invalid close amount request");
+            Assert(input.RepayAmount != 0 && input.RepayAmount != -1, "Invalid close amount request");
             var actualRepayAmount =
                 RepayBorrowFresh(Context.Sender, input.Borrower, input.RepayAmount, input.BorrowSymbol);
             var seizeTokens =
@@ -211,7 +218,7 @@ namespace AElf.Contracts.FinanceContract
             Assert(Context.Sender == State.Admin.Value, "Unauthorized");
             Assert(GetCashPrior(input.Symbol) >= input.Amount, "Token insufficient cash");
             var totalReserves = State.TotalReserves[input.Symbol];
-            Assert(totalReserves > input.Amount, "Invalid reserves");//RESERVES_VALIDATION
+            Assert(totalReserves > input.Amount, "Invalid reserves"); //RESERVES_VALIDATION
             var totalReservesNew = totalReserves.Sub(input.Amount);
             Assert(totalReservesNew <= totalReserves, "Reduce reserves unexpected underflow");
             State.TotalReserves[input.Symbol] = totalReservesNew;
@@ -233,26 +240,31 @@ namespace AElf.Contracts.FinanceContract
             var market = State.Markets[input.Symbol];
             if (market != null)
             {
-                Assert(!market.IsListed, "Support market exists");//
+                Assert(!market.IsListed, "Support market exists"); //
             }
+
             // check to make sure its really a Token
-            var tokenInfo=  State.TokenContract.GetTokenInfo.Call(Context.Sender, new GetTokenInfoInput()
+            var tokenInfo = State.TokenContract.GetTokenInfo.Call(Context.Sender, new GetTokenInfoInput()
             {
                 Symbol = input.Symbol
             });
-            Assert(tokenInfo.Symbol != "","Invalid Symbol");
+            Assert(tokenInfo.Symbol != "", "Invalid Symbol");
             //if valid    set the decimal state
-            State.Decimals[input.Symbol] = (uint)tokenInfo.Decimals;
-            
+            State.Decimals[input.Symbol] = (uint) tokenInfo.Decimals;
+
             State.Markets[input.Symbol] = new Market()
             {
                 IsListed = true
             };
-            Assert(decimal.Parse(input.ReserveFactor)>=0&& decimal.Parse(input.ReserveFactor)<=decimal.Parse(MaxReserveFactor),"Invalid ReserveFactor");
-            Assert(decimal.Parse(input.InitialExchangeRate)>0,"Invalid InitialExchangeRate");
-            Assert(decimal.Parse(input.MultiplierPerBlock)>=0,"Invalid MultiplierPerBlock");
-            Assert(decimal.Parse(input.BaseRatePerBlock)>=0,"Invalid BaseRatePerBlock");
-            Assert(decimal.Parse(input.MultiplierPerBlock)+decimal.Parse(input.BaseRatePerBlock)<decimal.Parse(MaxBorrowRate),"Invalid interestRate model");
+            Assert(
+                decimal.Parse(input.ReserveFactor) >= 0 &&
+                decimal.Parse(input.ReserveFactor) <= decimal.Parse(MaxReserveFactor), "Invalid ReserveFactor");
+            Assert(decimal.Parse(input.InitialExchangeRate) > 0, "Invalid InitialExchangeRate");
+            Assert(decimal.Parse(input.MultiplierPerBlock) >= 0, "Invalid MultiplierPerBlock");
+            Assert(decimal.Parse(input.BaseRatePerBlock) >= 0, "Invalid BaseRatePerBlock");
+            Assert(
+                decimal.Parse(input.MultiplierPerBlock) + decimal.Parse(input.BaseRatePerBlock) <
+                decimal.Parse(MaxBorrowRate), "Invalid interestRate model");
             State.ReserveFactor[input.Symbol] = input.ReserveFactor;
             State.InitialExchangeRate[input.Symbol] = input.InitialExchangeRate;
             State.MultiplierPerBlock[input.Symbol] = input.MultiplierPerBlock;
@@ -261,9 +273,10 @@ namespace AElf.Contracts.FinanceContract
             var symbolList = new SymbolList();
             if (list != null)
             {
-               // Assert(!State.AllMarkets.Value.Symbols.Contains(input.Symbol), "market already added");
+                // Assert(!State.AllMarkets.Value.Symbols.Contains(input.Symbol), "market already added");
                 symbolList = State.AllMarkets.Value;
             }
+
             symbolList.Symbols.Add(input.Symbol);
             State.AllMarkets.Value = symbolList;
             // Initialize block number and borrow index
@@ -325,13 +338,15 @@ namespace AElf.Contracts.FinanceContract
             MarketVerify(input.Value);
             var result = GetAccountSnapshot(Context.Sender, input.Value);
             Assert(result.BorrowBalance == 0, "Nonzero borrow balance");
-            if(!State.Markets[input.Value].AccountMembership.TryGetValue(Context.Sender.ToString(), out var isExist) || !isExist)
+            if (!State.Markets[input.Value].AccountMembership.TryGetValue(Context.Sender.ToString(), out var isExist) ||
+                !isExist)
             {
                 return new Empty();
             }
+
             var shortfall =
                 GetHypotheticalAccountLiquidityInternal(Context.Sender, input.Value, result.CTokenBalance, 0);
-            Assert(shortfall <= 0, "Insufficient liquidity");//INSUFFICIENT_LIQUIDITY
+            Assert(shortfall <= 0, "Insufficient liquidity"); //INSUFFICIENT_LIQUIDITY
             State.Markets[input.Value].AccountMembership[Context.Sender.ToString()] = false;
             //Delete cToken from the account’s list of assets
             var userAssetList = State.AccountAssets[Context.Sender];
@@ -400,7 +415,7 @@ namespace AElf.Contracts.FinanceContract
             var newCloseFactor = decimal.Parse(input.Value);
             Assert(Context.Sender == State.Admin.Value, "Unauthorized");
             Assert(newCloseFactor > decimal.Parse(MinCloseFactor) && newCloseFactor < decimal.Parse(MaxCloseFactor),
-                "Invalid CloseFactor");//INVALID_CLOSE_FACTOR
+                "Invalid CloseFactor"); //INVALID_CLOSE_FACTOR
             State.CloseFactor.Value = input.Value;
             Context.Fire(new CloseFactorChanged()
             {
@@ -430,11 +445,13 @@ namespace AElf.Contracts.FinanceContract
             var market = State.Markets[input.Symbol];
             var oldCollateralFactor = market.CollateralFactor;
             var newCollateralFactor = decimal.Parse(input.CollateralFactor);
-            Assert(newCollateralFactor <= decimal.Parse(MaxCollateralFactor)&& newCollateralFactor>=0, "Invalid CloseFactor");
+            Assert(newCollateralFactor <= decimal.Parse(MaxCollateralFactor) && newCollateralFactor >= 0,
+                "Invalid CloseFactor");
             if (newCollateralFactor > 0 && GetUnderlyingPrice(input.Symbol) == 0)
             {
                 throw new AssertionException("Error Price");
             }
+
             market.CollateralFactor = input.CollateralFactor;
             Context.Fire(new CollateralFactorChanged()
             {
@@ -452,9 +469,11 @@ namespace AElf.Contracts.FinanceContract
             var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
             Assert(accrualBlockNumberPrior == Context.CurrentHeight,
                 "Market's block number should equals current block number");
-            Assert(decimal.Parse(input.MultiplierPerBlock)>=0,"Invalid MultiplierPerBlock");
-            Assert(decimal.Parse(input.BaseRatePerBlock)>=0,"Invalid BaseRatePerBlock");
-            Assert(decimal.Parse(input.MultiplierPerBlock)+decimal.Parse(input.BaseRatePerBlock)<decimal.Parse(MaxBorrowRate),"Invalid interestRate model");
+            Assert(decimal.Parse(input.MultiplierPerBlock) >= 0, "Invalid MultiplierPerBlock");
+            Assert(decimal.Parse(input.BaseRatePerBlock) >= 0, "Invalid BaseRatePerBlock");
+            Assert(
+                decimal.Parse(input.MultiplierPerBlock) + decimal.Parse(input.BaseRatePerBlock) <
+                decimal.Parse(MaxBorrowRate), "Invalid interestRate model");
             State.MultiplierPerBlock[input.Symbol] = input.MultiplierPerBlock;
             State.BaseRatePerBlock[input.Symbol] = input.BaseRatePerBlock;
             Context.Fire(new InterestRateChanged()
@@ -473,7 +492,8 @@ namespace AElf.Contracts.FinanceContract
             var newLiquidationIncentive = decimal.Parse(input.Value);
             Assert(
                 newLiquidationIncentive <= decimal.Parse(MaxLiquidationIncentive) &&
-                newLiquidationIncentive >= decimal.Parse(MinLiquidationIncentive), "Invalid LiquidationIncentive");//INVALID_LIQUIDATION_INCENTIVE
+                newLiquidationIncentive >= decimal.Parse(MinLiquidationIncentive),
+                "Invalid LiquidationIncentive"); //INVALID_LIQUIDATION_INCENTIVE
             State.LiquidationIncentive.Value = input.Value;
             Context.Fire(new LiquidationIncentiveChanged()
             {
@@ -533,7 +553,8 @@ namespace AElf.Contracts.FinanceContract
                 "Market's block number should equals current block number");
             var oldReserveFactor = State.ReserveFactor[input.Symbol];
             var newReserveFactor = decimal.Parse(input.ReserveFactor);
-            Assert(newReserveFactor <= decimal.Parse(MaxReserveFactor)&&newReserveFactor>=0, "Invalid ReserveFactor");
+            Assert(newReserveFactor <= decimal.Parse(MaxReserveFactor) && newReserveFactor >= 0,
+                "Invalid ReserveFactor");
             State.ReserveFactor[input.Symbol] = input.ReserveFactor;
             Context.Fire(new ReserveFactorChanged()
             {
@@ -554,7 +575,7 @@ namespace AElf.Contracts.FinanceContract
             var previousPrice = State.Prices[input.Symbol];
 
             var priceNew = decimal.Parse(input.Price);
-            Assert(priceNew>=0,"Invalid Price");
+            Assert(priceNew >= 0, "Invalid Price");
             State.Prices[input.Symbol] = priceNew.ToInvariantString();
             Context.Fire(new PricePosted()
             {

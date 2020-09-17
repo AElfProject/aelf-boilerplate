@@ -103,7 +103,7 @@ namespace AElf.Contracts.FinanceContract
                 Value = decimal.ToInt64(underlyingBalance)
             };
             return balance;
-        } 
+        }
 
         public override GetAccountSnapshotOutput GetAccountSnapshot(Account input)
         {
@@ -204,7 +204,7 @@ namespace AElf.Contracts.FinanceContract
                     .TryGetValue(input.Address.ToString(), out var isExist) && isExist);
             return new BoolValue()
             {
-                Value =isMembership
+                Value = isMembership
             };
         }
 
@@ -222,7 +222,7 @@ namespace AElf.Contracts.FinanceContract
             return new Int64Value()
             {
                 Value = State.TotalReserves[input.Value]
-            }; 
+            };
         }
 
         public override Int64Value GetAccrualBlockNumber(StringValue input)

@@ -137,7 +137,7 @@ namespace AElf.Contracts.FinanceContract
         /// The multiplier of utilization rate that gives the slope of the interest rate
         /// </summary>
         public MappedState<string, string> MultiplierPerBlock { get; set; }
-        
+
         public MappedState<string, uint> Decimals { get; set; }
     }
 }
