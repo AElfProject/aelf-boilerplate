@@ -1,3 +1,4 @@
+using System;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
 
@@ -5,9 +6,9 @@ namespace AElf.Contracts.FinanceContract
 {
     public partial class FinanceContract
     {
-        public override StringValue GetReserveFactor(StringValue input)
+        public override Int32Value GetReserveFactor(StringValue input)
         {
-            return new StringValue()
+            return new Int32Value()
             {
                 Value = State.ReserveFactor[input.Value]
             };
@@ -23,17 +24,17 @@ namespace AElf.Contracts.FinanceContract
             return State.Admin.Value;
         }
 
-        public override StringValue GetCloseFactor(Empty input)
+        public override Int32Value GetCloseFactor(Empty input)
         {
-            return new StringValue()
+            return new Int32Value()
             {
                 Value = State.CloseFactor.Value
             };
         }
 
-        public override StringValue GetCollateralFactor(StringValue input)
+        public override Int32Value GetCollateralFactor(StringValue input)
         {
-            return new StringValue()
+            return new Int32Value()
             {
                 Value = State.Markets[input.Value].CollateralFactor
             };
@@ -47,9 +48,9 @@ namespace AElf.Contracts.FinanceContract
             };
         }
 
-        public override StringValue GetLiquidationIncentive(Empty input)
+        public override Int32Value GetLiquidationIncentive(Empty input)
         {
-            return new StringValue()
+            return new Int32Value()
             {
                 Value = State.LiquidationIncentive.Value
             };
@@ -69,13 +70,11 @@ namespace AElf.Contracts.FinanceContract
             };
         }
 
-        public override StringValue GetUnderlyingPrice(StringValue input)
+        public override Int32Value GetUnderlyingPrice(StringValue input)
         {
-            var price = State.Prices[input.Value] ?? "0";
-            var priceOut = decimal.Parse(price).ToInvariantString();
-            return new StringValue()
+            return new Int32Value()
             {
-                Value = priceOut
+                Value = State.Prices[input.Value]
             };
         }
 
@@ -97,7 +96,7 @@ namespace AElf.Contracts.FinanceContract
         {
             AccrueInterest(input.Symbol);
             var rate = ExchangeRateStoredInternal(input.Symbol);
-            var underlyingBalance = rate * State.AccountTokens[input.Symbol][input.Address];
+            var underlyingBalance = rate.ToDecimal() * State.AccountTokens[input.Symbol][input.Address];
             var balance = new Int64Value()
             {
                 Value = decimal.ToInt64(underlyingBalance)
@@ -114,29 +113,28 @@ namespace AElf.Contracts.FinanceContract
             {
                 BorrowBalance = borrowBalance,
                 CTokenBalance = cTokenBalance,
-                ExchangeRate = exchangeRate.ToInvariantString()
+                ExchangeRate = exchangeRate
             };
         }
 
-        public override StringValue GetBorrowRatePerBlock(StringValue input)
+        public override Int64Value GetBorrowRatePerBlock(StringValue input)
         {
-            var borrowRate = GetBorrowRatePerBlock(input.Value);
-            return new StringValue()
+            return new Int64Value()
             {
-                Value = borrowRate.ToInvariantString()
+                Value = GetBorrowRatePerBlock(input.Value)
             };
         }
 
-        public override StringValue GetSupplyRatePerBlock(StringValue input)
+        public override Int64Value GetSupplyRatePerBlock(StringValue input)
         {
-            var reserveFactor = decimal.Parse(State.ReserveFactor[input.Value]);
+            var reserveFactor = Convert.ToDecimal(State.ReserveFactor[input.Value]) / ExpandScale;
             var borrowRate = GetBorrowRatePerBlock(input.Value);
             var rateToPool = borrowRate - borrowRate * reserveFactor;
             var utilizationRate = GetUtilizationRate(input.Value);
-            var supplyRate = utilizationRate * rateToPool;
-            return new StringValue()
+            var supplyRate = Convert.ToInt64(utilizationRate * rateToPool);
+            return new Int64Value()
             {
-                Value = supplyRate.ToInvariantString()
+                Value = supplyRate
             };
         }
 
@@ -166,20 +164,20 @@ namespace AElf.Contracts.FinanceContract
             };
         }
 
-        public override StringValue GetCurrentExchangeRate(StringValue input)
+        public override Int64Value GetCurrentExchangeRate(StringValue input)
         {
             AccrueInterest(input.Value);
-            return new StringValue()
+            return new Int64Value()
             {
-                Value = ExchangeRateStoredInternal(input.Value).ToInvariantString()
+                Value = ExchangeRateStoredInternal(input.Value)
             };
         }
 
-        public override StringValue GetExchangeRateStored(StringValue input)
+        public override Int64Value GetExchangeRateStored(StringValue input)
         {
-            return new StringValue()
+            return new Int64Value()
             {
-                Value = ExchangeRateStoredInternal(input.Value).ToInvariantString()
+                Value = ExchangeRateStoredInternal(input.Value)
             };
         }
 

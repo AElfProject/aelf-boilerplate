@@ -46,13 +46,13 @@ service FinanceContract {
     }
     rpc ExitMarket(google.protobuf.StringValue) returns (google.protobuf.Empty) {
     }
-    rpc SetCloseFactor(google.protobuf.StringValue) returns (google.protobuf.Empty) {
+    rpc SetCloseFactor(google.protobuf.Int32Value) returns (google.protobuf.Empty) {
     }
     rpc SetCollateralFactor(SetCollateralFactorInput) returns (google.protobuf.Empty) {
     }
     rpc SetMaxAssets(google.protobuf.Int32Value) returns (google.protobuf.Empty) {
     }
-    rpc SetLiquidationIncentive(google.protobuf.StringValue) returns (google.protobuf.Empty) {
+    rpc SetLiquidationIncentive(google.protobuf.Int32Value) returns (google.protobuf.Empty) {
     }
     rpc SupportMarket(SupportMarketInput) returns (google.protobuf.Empty) {
     }
@@ -86,10 +86,10 @@ service FinanceContract {
     rpc GetAccountSnapshot (Account) returns (GetAccountSnapshotOutput) {
         option (aelf.is_view) = true;
     }
-    rpc GetBorrowRatePerBlock (google.protobuf.StringValue) returns (google.protobuf.StringValue) {
+    rpc GetBorrowRatePerBlock (google.protobuf.StringValue) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
-    rpc GetSupplyRatePerBlock (google.protobuf.StringValue) returns (google.protobuf.StringValue) {
+    rpc GetSupplyRatePerBlock (google.protobuf.StringValue) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
     rpc GetTotalBorrows (google.protobuf.StringValue) returns (google.protobuf.Int64Value) {
@@ -101,10 +101,10 @@ service FinanceContract {
     rpc GetBorrowBalanceStored (Account) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
-    rpc GetCurrentExchangeRate (google.protobuf.StringValue) returns (google.protobuf.StringValue) {
+    rpc GetCurrentExchangeRate (google.protobuf.StringValue) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
-    rpc GetExchangeRateStored (google.protobuf.StringValue) returns (google.protobuf.StringValue) {
+    rpc GetExchangeRateStored (google.protobuf.StringValue) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
     rpc GetCash (google.protobuf.StringValue) returns (google.protobuf.Int64Value) {
@@ -119,7 +119,7 @@ service FinanceContract {
     rpc LiquidateCalculateSeizeTokens(LiquidateCalculateSeizeTokensInput) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
-    rpc GetReserveFactor (google.protobuf.StringValue) returns (google.protobuf.StringValue){
+    rpc GetReserveFactor (google.protobuf.StringValue) returns (google.protobuf.Int32Value){
         option (aelf.is_view) = true;
     }
     rpc GetPendingAdmin (google.protobuf.Empty) returns (aelf.Address){
@@ -128,16 +128,16 @@ service FinanceContract {
     rpc GetAdmin (google.protobuf.Empty) returns (aelf.Address){
         option (aelf.is_view) = true;
     }
-    rpc GetCloseFactor (google.protobuf.Empty) returns (google.protobuf.StringValue) {
+    rpc GetCloseFactor (google.protobuf.Empty) returns (google.protobuf.Int32Value) {
         option (aelf.is_view) = true;
     }
-    rpc GetCollateralFactor(google.protobuf.StringValue) returns (google.protobuf.StringValue) {
+    rpc GetCollateralFactor(google.protobuf.StringValue) returns (google.protobuf.Int32Value) {
         option (aelf.is_view) = true;
     }
     rpc GetMaxAssets (google.protobuf.Empty) returns (google.protobuf.Int32Value) {
         option (aelf.is_view) = true;
     }
-    rpc GetLiquidationIncentive (google.protobuf.Empty) returns (google.protobuf.StringValue) {
+    rpc GetLiquidationIncentive (google.protobuf.Empty) returns (google.protobuf.Int32Value) {
         option (aelf.is_view) = true;
     }
     rpc GetPauseGuardian (google.protobuf.Empty) returns (aelf.Address) {
@@ -148,7 +148,7 @@ service FinanceContract {
     }
 
     /** price **/
-    rpc GetUnderlyingPrice(google.protobuf.StringValue) returns (google.protobuf.StringValue) {
+    rpc GetUnderlyingPrice(google.protobuf.StringValue) returns (google.protobuf.Int32Value) {
         option (aelf.is_view) = true;
     }
     
@@ -165,8 +165,8 @@ service FinanceContract {
 }
 
 message InitializeInput{
-    string close_factor = 1;
-    string liquidationIncentive = 2;
+    int32 close_factor = 1;
+    int32 liquidationIncentive = 2;
     int32 max_assets = 3;
 }
 
@@ -220,12 +220,12 @@ message AddReservesInput{
 
 message SetReserveFactorInput{
     string symbol = 1;
-    string reserve_factor = 2;
+    int32 reserve_factor = 2;
 }
 
 message SetCollateralFactorInput{
     string symbol = 1;
-    string collateral_factor = 2;
+    int32 collateral_factor = 2;
 }
 
 message ReduceReservesInput{
@@ -236,7 +236,7 @@ message ReduceReservesInput{
 message GetAccountSnapshotOutput{
     int64 c_token_balance = 1;
     int64 borrow_balance = 2;
-    string exchange_rate = 3;
+    int64 exchange_rate = 3;
 }
 
 message EnterMarketInput{
@@ -246,7 +246,7 @@ message EnterMarketInput{
 message LiquidateCalculateSeizeTokensInput{
     string borrow_symbol = 1;
     string collateral_symbol = 2;
-    string repay_amount = 3;
+    int64 repay_amount = 3;
 }
 
 message SetPausedInput {
@@ -256,33 +256,33 @@ message SetPausedInput {
 
 message SetUnderlyingPriceInput{
     string symbol = 1;
-    string price =2;
+    int32 price =2;
 }
 
 message SetInterestRateInput{
     string symbol = 1;
-    string base_rate_per_block = 2;
-    string multiplier_per_block = 3;
+    int64 base_rate_per_block = 2;
+    int64 multiplier_per_block = 3;
 }
 
 message GetInterestRateOutput{
-    string base_rate_per_block = 2;
-    string multiplier_per_block = 3;
+    int64 base_rate_per_block = 2;
+    int64 multiplier_per_block = 3;
 }
 
 message SupportMarketInput{
     string symbol = 1;
-    string initial_exchange_rate = 2;
-    string base_rate_per_block = 3;
-    string multiplier_per_block = 4;
-    string reserve_factor = 5;
+    int64 initial_exchange_rate = 2;
+    int64 base_rate_per_block = 3;
+    int64 multiplier_per_block = 4;
+    int32 reserve_factor = 5;
 }
 
 message BorrowSnapshot {
     //Total balance (with accrued interest), after applying the most recent balance-changing action
     int64 principal = 1;
     //Global borrowIndex as of the most recent balance-changing action
-    string interest_index = 2;
+    int64 interest_index = 2;
 }
 
 message Market {
@@ -294,7 +294,7 @@ message Market {
      *  For instance, 0.9 to allow borrowing 90% of collateral value.
      *  Must be between 0 and 1.
      */
-    string collateral_factor = 2;
+    int32 collateral_factor = 2;
 
     // Per-market mapping of "accounts in this asset"
     map<string,bool> account_membership = 3;
@@ -313,10 +313,10 @@ message AccrueInterest {
     string symbol = 1;
     int64 cash = 2;
     int64 interestAccumulated = 3;
-    string borrowIndex = 4;
+    int64 borrowIndex = 4;
     int64 total_borrows = 5;
-    string borrow_rate_per_block = 6;
-    string supply_rate_per_block = 7;
+    int64 borrow_rate_per_block = 6;
+    int64 supply_rate_per_block = 7;
 }
 
 message Mint{
@@ -379,8 +379,8 @@ message AdminChanged{
 
 message ReserveFactorChanged{
     option (aelf.is_event) = true;
-    string old_reserve_factor = 1;
-    string new_reserve_factor = 2;
+    int32 old_reserve_factor = 1;
+    int32 new_reserve_factor = 2;
     string symbol=3;
 }
 
@@ -403,16 +403,16 @@ message ReservesReduced{
 message PricePosted{
     option (aelf.is_event) = true;
     string symbol = 1;
-    string new_price = 2;
-    string previousPrice = 3;
+    int32 new_price = 2;
+    int32 previousPrice = 3;
 }
 
 message MarketListed{
     option (aelf.is_event) = true;
     string symbol = 1;
-    string base_rate_per_block = 2;
-    string multiplier_per_block = 3;
-    string reserve_factor = 4;
+    int64 base_rate_per_block = 2;
+    int64 multiplier_per_block = 3;
+    int32 reserve_factor = 4;
 };
 
 message MarketEntered{
@@ -429,21 +429,21 @@ message MarketExited{
 
 message CloseFactorChanged{
     option (aelf.is_event) = true;
-    string old_close_factor = 1;
-    string new_close_factor = 2;
+    int32 old_close_factor = 1;
+    int32 new_close_factor = 2;
 }
 
 message CollateralFactorChanged{
     option (aelf.is_event) = true;
-    string old_collateral_factor = 1;
-    string new_collateral_factor = 2;
+    int32 old_collateral_factor = 1;
+    int32 new_collateral_factor = 2;
     string symbol=3;
 }
 
 message LiquidationIncentiveChanged{
     option (aelf.is_event) = true;
-    string old_liquidation_incentive = 1;
-    string new_liquidation_incentive = 2;
+    int32 old_liquidation_incentive = 1;
+    int32 new_liquidation_incentive = 2;
 }
 
 message MaxAssetsChanged{
@@ -461,6 +461,6 @@ message PauseGuardianChanged{
 message InterestRateChanged{
     option (aelf.is_event) = true;
     string symbol = 1;
-    string base_rate_per_block = 2;
-    string multiplier_per_block = 3;
+    int64 base_rate_per_block = 2;
+    int64 multiplier_per_block = 3;
 }

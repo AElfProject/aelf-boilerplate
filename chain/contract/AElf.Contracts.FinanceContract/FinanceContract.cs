@@ -23,13 +23,11 @@ namespace AElf.Contracts.FinanceContract
             Assert(Context.Sender == State.Admin.Value, "Only Admin may initialize the market");
             State.TokenContract.Value =
                 Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
-            var newCloseFactor = decimal.Parse(input.CloseFactor);
-            var newLiquidationIncentive = decimal.Parse(input.LiquidationIncentive);
-            Assert(newCloseFactor > decimal.Parse(MinCloseFactor) && newCloseFactor < decimal.Parse(MaxCloseFactor),
+            Assert( input.CloseFactor > MinCloseFactor &&  input.CloseFactor < MaxCloseFactor,
                 "Invalid CloseFactor");
             Assert(
-                newLiquidationIncentive >= decimal.Parse(MinLiquidationIncentive) &&
-                newLiquidationIncentive <= decimal.Parse(MaxLiquidationIncentive), "Invalid LiquidationIncentive");
+                input.LiquidationIncentive >= MinLiquidationIncentive &&
+                input.LiquidationIncentive <= MaxLiquidationIncentive, "Invalid LiquidationIncentive");
             Assert(input.MaxAssets > 0, "MaxAssets must greater than 0");
             State.CloseFactor.Value = input.CloseFactor;
             State.LiquidationIncentive.Value = input.LiquidationIncentive;
@@ -58,7 +56,7 @@ namespace AElf.Contracts.FinanceContract
             var accrualBlockNumberPrior = State.AccrualBlockNumbers[mintInput.Symbol];
             Assert(accrualBlockNumberPrior == Context.CurrentHeight,
                 "Market's block number should equals current block number");
-            var exchangeRate = ExchangeRateStoredInternal(mintInput.Symbol);
+            var exchangeRate = ExchangeRateStoredInternal(mintInput.Symbol).ToDecimal();
             var actualMintAmount = mintInput.Amount;
             DoTransferIn(Context.Sender, mintInput.Amount, mintInput.Symbol);
             //  mintTokens = actualMintAmount / exchangeRate
@@ -157,7 +155,7 @@ namespace AElf.Contracts.FinanceContract
                 Address = input.Borrower,
                 Symbol = input.BorrowSymbol
             });
-            var maxClose = decimal.Parse(State.CloseFactor.Value) * borrowBalance;
+            var maxClose = State.CloseFactor.Value.ToDecimal() * borrowBalance;
             Assert(input.RepayAmount <= maxClose, "Too much repay");
             var accrualBorrowSymbolBlockNumberPrior = State.AccrualBlockNumbers[input.BorrowSymbol];
             Assert(accrualBorrowSymbolBlockNumberPrior == Context.CurrentHeight,
@@ -257,14 +255,14 @@ namespace AElf.Contracts.FinanceContract
                 IsListed = true
             };
             Assert(
-                decimal.Parse(input.ReserveFactor) >= 0 &&
-                decimal.Parse(input.ReserveFactor) <= decimal.Parse(MaxReserveFactor), "Invalid ReserveFactor");
-            Assert(decimal.Parse(input.InitialExchangeRate) > 0, "Invalid InitialExchangeRate");
-            Assert(decimal.Parse(input.MultiplierPerBlock) >= 0, "Invalid MultiplierPerBlock");
-            Assert(decimal.Parse(input.BaseRatePerBlock) >= 0, "Invalid BaseRatePerBlock");
+                input.ReserveFactor >= 0 &&
+                input.ReserveFactor <= MaxReserveFactor, "Invalid ReserveFactor");
+            Assert(input.InitialExchangeRate > 0, "Invalid InitialExchangeRate");
+            Assert(input.MultiplierPerBlock >= 0, "Invalid MultiplierPerBlock");
+            Assert(input.BaseRatePerBlock >= 0, "Invalid BaseRatePerBlock");
             Assert(
-                decimal.Parse(input.MultiplierPerBlock) + decimal.Parse(input.BaseRatePerBlock) <
-                decimal.Parse(MaxBorrowRate), "Invalid interestRate model");
+                input.MultiplierPerBlock + input.BaseRatePerBlock <
+                MaxBorrowRate, "Invalid interestRate model");
             State.ReserveFactor[input.Symbol] = input.ReserveFactor;
             State.InitialExchangeRate[input.Symbol] = input.InitialExchangeRate;
             State.MultiplierPerBlock[input.Symbol] = input.MultiplierPerBlock;
@@ -306,7 +304,7 @@ namespace AElf.Contracts.FinanceContract
         public override Empty Redeem(RedeemInput input)
         {
             AccrueInterest(input.Symbol);
-            var exchangeRate = ExchangeRateStoredInternal(input.Symbol);
+            var exchangeRate = ExchangeRateStoredInternal(input.Symbol).ToDecimal();
             //redeemTokens = redeemTokensIn
             //redeemAmount = redeemTokensIn x exchangeRateCurrent
             var redeemTokens = input.Amount;
@@ -318,7 +316,7 @@ namespace AElf.Contracts.FinanceContract
         public override Empty RedeemUnderlying(RedeemUnderlyingInput input)
         {
             AccrueInterest(input.Symbol);
-            var exchangeRate = ExchangeRateStoredInternal(input.Symbol);
+            var exchangeRate = ExchangeRateStoredInternal(input.Symbol).ToDecimal();
             //  redeemTokens = redeemAmountIn / exchangeRate
             //  redeemAmount = redeemAmountIn
             var redeemTokens = decimal.ToInt64(input.Amount / exchangeRate);
@@ -350,7 +348,6 @@ namespace AElf.Contracts.FinanceContract
             State.Markets[input.Value].AccountMembership[Context.Sender.ToString()] = false;
             //Delete cToken from the account’s list of assets
             var userAssetList = State.AccountAssets[Context.Sender];
-            //  Assert(userAssetList.Assets.Contains(input.Value),"input token is not in the assets");
             userAssetList.Assets.Remove(input.Value);
             Context.Fire(new MarketExited()
             {
@@ -359,6 +356,7 @@ namespace AElf.Contracts.FinanceContract
             });
             return new Empty();
         }
+
         /*** Admin Functions ***/
 
         public override Empty AcceptAdmin(Empty input)
@@ -409,12 +407,12 @@ namespace AElf.Contracts.FinanceContract
             };
         }
 
-        public override Empty SetCloseFactor(StringValue input)
+        public override Empty SetCloseFactor(Int32Value input)
         {
             var oldCloseFactor = State.CloseFactor.Value;
-            var newCloseFactor = decimal.Parse(input.Value);
+            var newCloseFactor = input.Value;
             Assert(Context.Sender == State.Admin.Value, "Unauthorized");
-            Assert(newCloseFactor > decimal.Parse(MinCloseFactor) && newCloseFactor < decimal.Parse(MaxCloseFactor),
+            Assert(newCloseFactor > MinCloseFactor && newCloseFactor < MaxCloseFactor,
                 "Invalid CloseFactor"); //INVALID_CLOSE_FACTOR
             State.CloseFactor.Value = input.Value;
             Context.Fire(new CloseFactorChanged()
@@ -444,8 +442,8 @@ namespace AElf.Contracts.FinanceContract
             MarketVerify(input.Symbol);
             var market = State.Markets[input.Symbol];
             var oldCollateralFactor = market.CollateralFactor;
-            var newCollateralFactor = decimal.Parse(input.CollateralFactor);
-            Assert(newCollateralFactor <= decimal.Parse(MaxCollateralFactor) && newCollateralFactor >= 0,
+            var newCollateralFactor = input.CollateralFactor;
+            Assert(newCollateralFactor <= MaxCollateralFactor && newCollateralFactor >= 0,
                 "Invalid CloseFactor");
             if (newCollateralFactor > 0 && GetUnderlyingPrice(input.Symbol) == 0)
             {
@@ -469,11 +467,11 @@ namespace AElf.Contracts.FinanceContract
             var accrualBlockNumberPrior = State.AccrualBlockNumbers[input.Symbol];
             Assert(accrualBlockNumberPrior == Context.CurrentHeight,
                 "Market's block number should equals current block number");
-            Assert(decimal.Parse(input.MultiplierPerBlock) >= 0, "Invalid MultiplierPerBlock");
-            Assert(decimal.Parse(input.BaseRatePerBlock) >= 0, "Invalid BaseRatePerBlock");
+            Assert(input.MultiplierPerBlock >= 0, "Invalid MultiplierPerBlock");
+            Assert(input.BaseRatePerBlock >= 0, "Invalid BaseRatePerBlock");
             Assert(
-                decimal.Parse(input.MultiplierPerBlock) + decimal.Parse(input.BaseRatePerBlock) <
-                decimal.Parse(MaxBorrowRate), "Invalid interestRate model");
+                input.MultiplierPerBlock.Add(input.BaseRatePerBlock) <
+                MaxBorrowRate, "Invalid interestRate model");
             State.MultiplierPerBlock[input.Symbol] = input.MultiplierPerBlock;
             State.BaseRatePerBlock[input.Symbol] = input.BaseRatePerBlock;
             Context.Fire(new InterestRateChanged()
@@ -485,14 +483,14 @@ namespace AElf.Contracts.FinanceContract
             return new Empty();
         }
 
-        public override Empty SetLiquidationIncentive(StringValue input)
+        public override Empty SetLiquidationIncentive(Int32Value input)
         {
             Assert(Context.Sender == State.Admin.Value, "Unauthorized");
             var oldLiquidationIncentive = State.LiquidationIncentive.Value;
-            var newLiquidationIncentive = decimal.Parse(input.Value);
+            var newLiquidationIncentive = input.Value;
             Assert(
-                newLiquidationIncentive <= decimal.Parse(MaxLiquidationIncentive) &&
-                newLiquidationIncentive >= decimal.Parse(MinLiquidationIncentive),
+                newLiquidationIncentive <= MaxLiquidationIncentive &&
+                newLiquidationIncentive >= MinLiquidationIncentive,
                 "Invalid LiquidationIncentive"); //INVALID_LIQUIDATION_INCENTIVE
             State.LiquidationIncentive.Value = input.Value;
             Context.Fire(new LiquidationIncentiveChanged()
@@ -552,8 +550,8 @@ namespace AElf.Contracts.FinanceContract
             Assert(accrualBlockNumberPrior == Context.CurrentHeight,
                 "Market's block number should equals current block number");
             var oldReserveFactor = State.ReserveFactor[input.Symbol];
-            var newReserveFactor = decimal.Parse(input.ReserveFactor);
-            Assert(newReserveFactor <= decimal.Parse(MaxReserveFactor) && newReserveFactor >= 0,
+            var newReserveFactor = input.ReserveFactor;
+            Assert(newReserveFactor <= MaxReserveFactor && newReserveFactor >= 0,
                 "Invalid ReserveFactor");
             State.ReserveFactor[input.Symbol] = input.ReserveFactor;
             Context.Fire(new ReserveFactorChanged()
@@ -574,14 +572,14 @@ namespace AElf.Contracts.FinanceContract
                 "Market's block number should equals current block number");
             var previousPrice = State.Prices[input.Symbol];
 
-            var priceNew = decimal.Parse(input.Price);
+            var priceNew = input.Price;
             Assert(priceNew >= 0, "Invalid Price");
-            State.Prices[input.Symbol] = priceNew.ToInvariantString();
+            State.Prices[input.Symbol] = priceNew;
             Context.Fire(new PricePosted()
             {
                 Symbol = input.Symbol,
-                PreviousPrice = previousPrice ?? "0",
-                NewPrice = priceNew.ToInvariantString()
+                PreviousPrice = previousPrice,
+                NewPrice = priceNew
             });
             return new Empty();
         }
@@ -589,7 +587,7 @@ namespace AElf.Contracts.FinanceContract
         public override Int64Value LiquidateCalculateSeizeTokens(LiquidateCalculateSeizeTokensInput input)
         {
             var seizeTokens = LiquidateCalculateSeizeTokens(input.BorrowSymbol, input.CollateralSymbol,
-                decimal.Parse(input.RepayAmount));
+                input.RepayAmount);
             return new Int64Value()
             {
                 Value = seizeTokens

@@ -54,7 +54,7 @@ namespace AElf.Contracts.FinanceContract
         /// <summary>
         /// Accumulator of the total earned interest rate since the opening of the market
         /// </summary>
-        public MappedState<string, string> BorrowIndex { get; set; }
+        public MappedState<string, long> BorrowIndex { get; set; }
 
         /// <summary>
         /// Mapping of account addresses to outstanding borrow balances
@@ -65,12 +65,12 @@ namespace AElf.Contracts.FinanceContract
         /// Initial exchange rate used when minting the first CTokens (used when totalSupply = 0)
         /// </summary>
         /// <returns></returns>
-        public MappedState<string, string> InitialExchangeRate { get; set; }
+        public MappedState<string, long> InitialExchangeRate { get; set; }
 
         /// <summary>
         /// Fraction of interest currently set aside for reserves
         /// </summary>
-        public MappedState<string, string> ReserveFactor { get; set; }
+        public MappedState<string, int> ReserveFactor { get; set; }
 
         /// <summary>
         /// Token balances for each account(CToken)
@@ -92,13 +92,13 @@ namespace AElf.Contracts.FinanceContract
         /// Multiplier used to calculate the maximum repayAmount when liquidating a borrow
         /// </summary>
         /// <returns></returns>
-        public StringState CloseFactor { get; set; }
+        public Int32State CloseFactor { get; set; }
 
         /// <summary>
         /// Multiplier representing the discount on collateral that a liquidator receives
         /// </summary>
         /// <returns></returns>
-        public StringState LiquidationIncentive { get; set; }
+        public Int32State LiquidationIncentive { get; set; }
 
         /// <summary>
         /// Max number of assets a single account can participate in (borrow or use as collateral)
@@ -126,17 +126,17 @@ namespace AElf.Contracts.FinanceContract
 
         public MappedState<string, bool> BorrowGuardianPaused { get; set; }
 
-        public MappedState<string, string> Prices { get; set; }
+        public MappedState<string, int> Prices { get; set; }
 
         /// <summary>
         /// The base interest rate which is the y-intercept when utilization rate is 0
         /// </summary>
-        public MappedState<string, string> BaseRatePerBlock { get; set; }
+        public MappedState<string, long> BaseRatePerBlock { get; set; }
 
         /// <summary>
         /// The multiplier of utilization rate that gives the slope of the interest rate
         /// </summary>
-        public MappedState<string, string> MultiplierPerBlock { get; set; }
+        public MappedState<string, long> MultiplierPerBlock { get; set; }
 
         public MappedState<string, uint> Decimals { get; set; }
     }
