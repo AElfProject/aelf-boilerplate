@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>7.3</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ContractCode Include="..\..\protobuf\common_roll_contract.proto">
+            <Link>Protobuf\Proto\common_roll_contract.proto</Link>
+        </ContractCode>
+      <ContractReference Include="..\..\protobuf\aedpos_contract.proto">
+        <Link>Protobuf\Proto\aedpos_contract.proto</Link>
+      </ContractReference>
+    </ItemGroup>
+
+</Project>

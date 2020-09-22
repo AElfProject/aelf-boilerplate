@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "AElf.Contracts.CommonRollContract";
+
+service CommonRollContract {
+    option (aelf.csharp_state) = "AElf.Contracts.CommonRollContract.CommonRollContractState";
+   
+   //Actions
+   rpc CreateProject (CreateProjectInput) returns (aelf.Hash) {
+   }
+   rpc EditProject (EditProjectInput) returns (google.protobuf.Empty) {
+   }
+   rpc Roll (RollInput) returns (RollOutput){
+   }
+   rpc ResultConfirm(aelf.Hash) returns(google.protobuf.Empty) {
+   }
+   rpc ProjectRemove(aelf.Hash) returns(google.protobuf.Empty) {
+   }
+   rpc SetProjectClose(aelf.Hash) returns(google.protobuf.Empty) {
+   }
+   rpc SetProjectOpen(aelf.Hash) returns(google.protobuf.Empty) {
+   }
+   //Views
+   rpc GetProjectList(aelf.Hash) returns(GetProjectListOutput){
+   option (aelf.is_view) = true;
+   }
+   rpc GetProjectDetail(aelf.Hash) returns(GetProjectDetailOutput){
+   option (aelf.is_view) = true;
+   }
+   rpc GetRollResult(aelf.Hash) returns(GetRollResultOutput){
+   option (aelf.is_view) = true;
+   }
+}
+message CreateProjectInput{
+    string theme = 1;
+    string specification = 2;
+    RollData seed_data =3;
+    int32 seed_count=4;
+    string result_name=5;
+    int32 result_count=6;
+    google.protobuf.Timestamp roll_time=7;
+    bool is_one_time_roll=8;
+    bool is_manual_roll=9;
+}
+message EditProjectInput{
+    string theme = 1;
+    string specification = 2;
+    RollData seed_data =3;
+    int32 seed_count=4;
+    string result_name=5;
+    int32 result_count=6;
+    google.protobuf.Timestamp roll_time=7;
+    bool is_one_time_roll=8;
+    bool is_manual_roll=9;
+    aelf.Hash project_hash=10;
+}
+message RollData{
+    repeated PerData per_data =1;
+}
+message PerData{
+    int32 index =1;
+    string name =2;
+    int32 number=3;
+    bool state=4;
+}
+message RollInput{
+     aelf.Hash project_hash = 1;
+}
+message RollOutput{
+    RollData result_data=1;
+}
+message ProjectList{
+    repeated  aelf.Hash project_hash = 1;
+}
+message GetProjectListOutput{
+    repeated  ProjectOverview project_overview= 1;
+}
+message ProjectOverview{
+    aelf.Hash project_hash = 1;
+    string project_id=2;
+    string  theme = 3;
+    google.protobuf.Timestamp create_time =4;
+    bool  is_on=5;
+    bool  is_rolled= 6;
+    bool  is_confirmed=7;
+}
+message ProjectDetail{
+    string theme = 1;
+    string specification = 2;
+    RollData seed_data =3;
+    int32 seed_count=4;
+    string result_name=5;
+    int32 result_count=6;
+    google.protobuf.Timestamp roll_time=7;
+    bool is_one_time_roll=8;
+    bool is_manual_roll=9;
+}
+message GetProjectDetailOutput{
+    ProjectDetail project_Detail=1;
+}
+message GetRollResultOutput{
+    RollData result_data=1;
+}
+
+message ProjectCreated{
+    option (aelf.is_event) = true;
+    string theme = 1;
+    string specification = 2;
+    RollData seed_data =3;
+    int32 seed_count=4;
+    string result_name=5;
+    int32 result_count=6;
+    google.protobuf.Timestamp roll_time=7;
+    bool is_one_time_roll=8;
+    bool is_manual_roll=9;
+    aelf.Address address=10;
+    aelf.Hash hash=11;
+    google.protobuf.Timestamp create_time =12;
+}
+message ProjectEdited{
+    option (aelf.is_event) = true;
+    string theme = 1;
+    string specification = 2;
+    RollData seed_data =3;
+    int32 seed_count=4;
+    string result_name=5;
+    int32 result_count=6;
+    google.protobuf.Timestamp roll_time=7;
+    bool is_one_time_roll=8;
+    bool is_manual_roll=9;
+    aelf.Address address=10;
+    aelf.Hash project_hash=11;
+    google.protobuf.Timestamp edit_time =12;
+}
+message Roll{
+    option (aelf.is_event) = true;
+    aelf.Hash project_hash=1;
+    RollData seed_data =2;
+    int32 seed_count=3;
+    int32 result_count=4;
+    google.protobuf.Timestamp roll_time=5;
+}
+message ResultConfirmed{
+     option (aelf.is_event) = true;
+     aelf.Hash project_hash=1;
+     RollData result_data =2;
+}
+message ProjectRemoved{
+     option (aelf.is_event) = true;
+     aelf.Hash project_hash=1;
+}
+message ProjectClosed{
+     option (aelf.is_event) = true;
+     aelf.Hash project_hash=1;
+}
+message ProjectOpened{
+     option (aelf.is_event) = true;
+     aelf.Hash project_hash=1;
+}
