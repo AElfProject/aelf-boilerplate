@@ -26,7 +26,7 @@ service CommonRollContract {
    rpc SetProjectOpen(aelf.Hash) returns(google.protobuf.Empty) {
    }
    //Views
-   rpc GetProjectList(aelf.Hash) returns(GetProjectListOutput){
+   rpc GetProjectList(google.protobuf.Empty) returns(GetProjectListOutput){
    option (aelf.is_view) = true;
    }
    rpc GetProjectDetail(aelf.Hash) returns(GetProjectDetailOutput){

@@ -113,6 +113,8 @@ namespace AElf.Contracts.CommonRollContract
             {
                 Value = Context.CurrentHeight
             });
+
+            
             //unfinished
             return base.Roll(input);
         }
@@ -125,6 +127,71 @@ namespace AElf.Contracts.CommonRollContract
             return new GetProjectDetailOutput()
             {
                 ProjectDetail = State.UserProjectDetail[input]
+            };
+        }
+
+        public override Empty ProjectRemove(Hash input)
+        {
+            Assert(
+                State.UserProjectList[Context.Sender] != null &&
+                State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            State.UserProjectList[Context.Sender].ProjectHash.Remove(input);
+            State.UserProjectDetail[input] = null;
+            State.UserProjectOverview[input] = null;
+            return new Empty();
+        }
+
+        public override Empty ResultConfirm(Hash input)
+        {
+            Assert(
+                State.UserProjectList[Context.Sender] != null &&
+                State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            ConfirmRoll(input);
+            return new Empty();
+        }
+
+        public override GetProjectListOutput GetProjectList(Empty input)
+        {
+            var result = new GetProjectListOutput();
+            if (State.UserProjectList[Context.Sender].ProjectHash != null)
+            {
+                foreach (var hash in  State.UserProjectList[Context.Sender].ProjectHash)
+                {
+                    result.ProjectOverview.Add(State.UserProjectOverview[hash]);
+                }
+            }
+            return result;
+        }
+
+        public override Empty SetProjectClose(Hash input)
+        {
+            Assert(
+                State.UserProjectList[Context.Sender] != null &&
+                State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            State.UserProjectOverview[input].IsOn = false;
+            return new Empty();
+        }
+        
+        public override Empty SetProjectOpen(Hash input)
+        {
+            Assert(
+                State.UserProjectList[Context.Sender] != null &&
+                State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            State.UserProjectOverview[input].IsOn = true;
+            return new Empty();
+        }
+
+        public override GetRollResultOutput GetRollResult(Hash input)
+        {
+            Assert(
+                State.UserProjectList[Context.Sender] != null &&
+                State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            return new GetRollResultOutput()
+            {
+                ResultData = new RollData()
+                {
+                    PerData = {State.UserProjectDetail[input].SeedData.PerData.Where(m => m.State)}
+                }
             };
         }
     }
