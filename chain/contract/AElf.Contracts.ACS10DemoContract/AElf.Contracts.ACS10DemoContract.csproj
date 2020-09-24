@@ -19,7 +19,11 @@
             <Link>Protobuf\Proto\reference\token_holder_contract.proto</Link>
         </ContractReference>
     </ItemGroup>
-    
+    <ItemGroup>
+        <ContractMessage Include="..\..\protobuf\authority_info.proto">
+            <Link>Protobuf\Proto\authority_info.proto</Link>
+        </ContractMessage>
+    </ItemGroup>
     <ItemGroup>
         <ContractBase Include="..\..\protobuf\acs10.proto">
             <Link>Protobuf\Proto\base\acs10.proto</Link>

@@ -1,5 +1,5 @@
-using Acs1;
 using AElf.Sdk.CSharp;
+using AElf.Standards.ACS1;
 using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.ACS1DemoContract

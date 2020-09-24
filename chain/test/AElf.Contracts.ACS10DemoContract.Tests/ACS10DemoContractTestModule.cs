@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using AElf.Boilerplate.TestBase;
-using AElf.ContractTestKit;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.ContractTestBase;
 using AElf.Kernel.Consensus.AEDPoS;
 using AElf.Kernel.SmartContract.Application;
