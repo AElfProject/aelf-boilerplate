@@ -4,7 +4,12 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>7.3</LangVersion>
     </PropertyGroup>
-
+    
+    <ItemGroup>
+        <CommonMessage Include="..\..\protobuf\authority_info.proto">
+            <Link>Protobuf\Proto\authority_info.proto</Link>
+        </CommonMessage>
+    </ItemGroup>
     <ItemGroup>
         <ContractCode Include="..\..\protobuf\common_roll_contract.proto">
             <Link>Protobuf\Proto\common_roll_contract.proto</Link>
@@ -13,5 +18,5 @@
         <Link>Protobuf\Proto\aedpos_contract.proto</Link>
       </ContractReference>
     </ItemGroup>
-
+    
 </Project>

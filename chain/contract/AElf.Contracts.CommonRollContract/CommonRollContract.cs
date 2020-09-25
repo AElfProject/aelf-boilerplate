@@ -10,7 +10,7 @@ namespace AElf.Contracts.CommonRollContract
     {
         public override Hash CreateProject(CreateProjectInput input)
         {
-            Assert(input.ResultCount > 0 && input.SeedCount >= input.ResultCount, "Invalid Count Input");
+            DataVerify(input.SeedData, input.SeedCount, input.ResultCount);
             Assert(input.RollTime > Context.CurrentBlockTime, "Invalid RollTime");
 
             var projectHash = Context.TransactionId;
@@ -27,14 +27,9 @@ namespace AElf.Contracts.CommonRollContract
                 IsOn = true,
                 IsRolled = false,
                 IsConfirmed = false
-               
             };
 
-            var seedData = input.SeedData;
-            foreach (var perData in seedData.PerData)
-            {
-                perData.State = false;
-            }
+            var seedData = DataStateReset(input.SeedData);
 
             State.UserProjectDetail[projectHash] = new ProjectDetail()
             {
@@ -49,15 +44,29 @@ namespace AElf.Contracts.CommonRollContract
                 IsManualRoll = input.IsManualRoll
             };
 
+            Context.Fire(new ProjectCreated()
+            {
+                Address = Context.Sender,
+                CreateTime = Context.CurrentBlockTime,
+                Hash = projectHash,
+                IsManualRoll = input.IsManualRoll,
+                IsOneTimeRoll = input.IsOneTimeRoll,
+                ResultCount = input.ResultCount,
+                ResultName = input.ResultName,
+                RollTime = input.RollTime,
+                SeedCount = input.SeedCount,
+                SeedData = seedData
+            });
+
             return projectHash;
         }
 
         public override Empty EditProject(EditProjectInput input)
         {
-            Assert(
-                State.UserProjectList[Context.Sender] != null &&
-                State.UserProjectList[Context.Sender].ProjectHash.Contains(input.ProjectHash), "Project not exists");
-            Assert(input.ResultCount > 0 && input.SeedCount >= input.ResultCount, "Invalid Count Input");
+            Assert(input.ProjectHash != null &&
+                   State.UserProjectList[Context.Sender] != null &&
+                   State.UserProjectList[Context.Sender].ProjectHash.Contains(input.ProjectHash), "Project not exists");
+            DataVerify(input.SeedData, input.SeedCount, input.ResultCount);
             Assert(input.RollTime > Context.CurrentBlockTime, "Invalid RollTime");
 
             State.UserProjectOverview[input.ProjectHash] = new ProjectOverview()
@@ -70,11 +79,7 @@ namespace AElf.Contracts.CommonRollContract
                 IsConfirmed = false
             };
 
-            var seedData = input.SeedData;
-            foreach (var perData in seedData.PerData)
-            {
-                perData.State = false;
-            }
+            var seedData = DataStateReset(input.SeedData);
 
             State.UserProjectDetail[input.ProjectHash] = new ProjectDetail()
             {
@@ -88,42 +93,100 @@ namespace AElf.Contracts.CommonRollContract
                 IsOneTimeRoll = input.IsManualRoll,
                 IsManualRoll = input.IsManualRoll
             };
+
+            Context.Fire(new ProjectEdited()
+            {
+                Address = Context.Sender,
+                EditTime = Context.CurrentBlockTime,
+                ProjectHash = input.ProjectHash,
+                IsManualRoll = input.IsManualRoll,
+                IsOneTimeRoll = input.IsOneTimeRoll,
+                ResultCount = input.ResultCount,
+                ResultName = input.ResultName,
+                RollTime = input.RollTime,
+                SeedCount = input.SeedCount,
+                SeedData = seedData
+            });
+
             return new Empty();
         }
 
         public override RollOutput Roll(RollInput input)
         {
-            Assert(
-                State.UserProjectList[Context.Sender] != null &&
-                State.UserProjectList[Context.Sender].ProjectHash.Contains(input.ProjectHash), "Project not exists");
+            Assert(input.ProjectHash != null &&
+                   State.UserProjectList[Context.Sender] != null &&
+                   State.UserProjectList[Context.Sender].ProjectHash.Contains(input.ProjectHash), "Project not exists");
             Assert(State.UserProjectOverview[input.ProjectHash].IsOn, "Project is closed");
+            Assert(State.UserProjectDetail[input.ProjectHash].RollTime >= Context.CurrentBlockTime, "Invalid RollTime");
             Assert(State.UserProjectOverview[input.ProjectHash].IsConfirmed != true,
                 "Project's roll result is confirmed");
-            Assert(
-                State.UserProjectOverview[input.ProjectHash].IsRolled != true ||
-                State.UserProjectOverview[input.ProjectHash].IsRolled &&
-                !State.UserProjectDetail[input.ProjectHash].IsOneTimeRoll, "project has rolled");
             if (State.ConsensusContract.Value == null)
             {
                 State.ConsensusContract.Value =
                     Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
             }
 
+            var seedData = DataStateReset(State.UserProjectDetail[input.ProjectHash].SeedData);
+            State.UserProjectDetail[input.ProjectHash].SeedData = seedData;
+
             var randomHash = State.ConsensusContract.GetRandomHash.Call(new Int64Value
             {
                 Value = Context.CurrentHeight
             });
 
-            
-            //unfinished
-            return base.Roll(input);
+#if DEBUG
+            randomHash = HashHelper.ComputeFrom(Context.PreviousBlockHash);
+#endif
+
+            var index = Context.ConvertHashToInt64(randomHash, 0,
+                State.UserProjectDetail[input.ProjectHash].SeedCount);
+            for (var i = 0; i < State.UserProjectDetail[input.ProjectHash].ResultCount; i++)
+            {
+                //if item already be chosen , update the index until get a new item
+                while (State.UserProjectDetail[input.ProjectHash].SeedData.PerData[(int) index].State)
+                {
+                    var result = State.UserProjectDetail[input.ProjectHash].SeedData.PerData[(int) index].Number;
+                    var hashNew = HashHelper.ComputeFrom(result);
+                    randomHash = HashHelper.ConcatAndCompute(randomHash, hashNew);
+                    index = Context.ConvertHashToInt64(randomHash, 0,
+                        State.UserProjectDetail[input.ProjectHash].SeedCount);
+                }
+
+                State.UserProjectDetail[input.ProjectHash].SeedData.PerData[(int) index].State = true;
+            }
+
+            State.UserProjectOverview[input.ProjectHash].IsRolled = true;
+            if (State.UserProjectDetail[input.ProjectHash].IsOneTimeRoll)
+            {
+                ConfirmRoll(input.ProjectHash);
+                State.UserProjectOverview[input.ProjectHash].IsConfirmed = true;
+            }
+
+            var resultData = new RollData()
+            {
+                PerData = {State.UserProjectDetail[input.ProjectHash].SeedData.PerData.Where(m => m.State)}
+            };
+
+            Context.Fire(new Roll()
+            {
+                ProjectHash = input.ProjectHash,
+                ResultCount = State.UserProjectDetail[input.ProjectHash].ResultCount,
+                RollTime = Context.CurrentBlockTime,
+                SeedCount = State.UserProjectDetail[input.ProjectHash].SeedCount,
+                SeedData = seedData
+            });
+
+            return new RollOutput()
+            {
+                ResultData = resultData
+            };
         }
 
         public override GetProjectDetailOutput GetProjectDetail(Hash input)
         {
-            Assert(
-                State.UserProjectList[Context.Sender] != null &&
-                State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            Assert(input != null &&
+                   State.UserProjectList[Context.Sender] != null &&
+                   State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
             return new GetProjectDetailOutput()
             {
                 ProjectDetail = State.UserProjectDetail[input]
@@ -132,20 +195,26 @@ namespace AElf.Contracts.CommonRollContract
 
         public override Empty ProjectRemove(Hash input)
         {
-            Assert(
-                State.UserProjectList[Context.Sender] != null &&
-                State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            Assert(input != null &&
+                   State.UserProjectList[Context.Sender] != null &&
+                   State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
             State.UserProjectList[Context.Sender].ProjectHash.Remove(input);
             State.UserProjectDetail[input] = null;
             State.UserProjectOverview[input] = null;
+
+            Context.Fire(new ProjectRemoved()
+            {
+                ProjectHash = input
+            });
+
             return new Empty();
         }
 
         public override Empty ResultConfirm(Hash input)
         {
-            Assert(
-                State.UserProjectList[Context.Sender] != null &&
-                State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            Assert(input != null &&
+                   State.UserProjectList[Context.Sender] != null &&
+                   State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
             ConfirmRoll(input);
             return new Empty();
         }
@@ -155,29 +224,42 @@ namespace AElf.Contracts.CommonRollContract
             var result = new GetProjectListOutput();
             if (State.UserProjectList[Context.Sender].ProjectHash != null)
             {
-                foreach (var hash in  State.UserProjectList[Context.Sender].ProjectHash)
+                foreach (var hash in State.UserProjectList[Context.Sender].ProjectHash)
                 {
                     result.ProjectOverview.Add(State.UserProjectOverview[hash]);
                 }
             }
+
             return result;
         }
 
         public override Empty SetProjectClose(Hash input)
         {
-            Assert(
-                State.UserProjectList[Context.Sender] != null &&
-                State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            Assert(input != null &&
+                   State.UserProjectList[Context.Sender] != null &&
+                   State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
             State.UserProjectOverview[input].IsOn = false;
+
+            Context.Fire(new ProjectClosed()
+            {
+                ProjectHash = input
+            });
+
             return new Empty();
         }
-        
+
         public override Empty SetProjectOpen(Hash input)
         {
-            Assert(
-                State.UserProjectList[Context.Sender] != null &&
-                State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            Assert(input != null &&
+                   State.UserProjectList[Context.Sender] != null &&
+                   State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
             State.UserProjectOverview[input].IsOn = true;
+
+            Context.Fire(new ProjectOpened()
+            {
+                ProjectHash = input
+            });
+
             return new Empty();
         }
 

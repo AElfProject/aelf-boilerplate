@@ -11,8 +11,8 @@
         <NoWarn>0436</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="AElf.EconomicSystem" Version="1.0.0-preview3" />
-        <PackageReference Include="AElf.GovernmentSystem" Version="1.0.0-preview3" />
+        <PackageReference Include="AElf.EconomicSystem" Version="1.0.0-preview3-18521" />
+        <PackageReference Include="AElf.GovernmentSystem" Version="1.0.0-preview3-18521" />
         <PackageReference Include="coverlet.msbuild" Version="2.5.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
         <PackageReference Include="Shouldly" Version="3.0.2" />
@@ -21,8 +21,8 @@
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="AElf.ContractTestKit" Version="1.0.0-preview3" />
-        <PackageReference Include="AElf.ContractTestBase" Version="1.0.0-preview3" />
+        <PackageReference Include="AElf.ContractTestKit" Version="1.0.0-preview3-18521" />
+        <PackageReference Include="AElf.ContractTestBase" Version="1.0.0-preview3-18521" />
     </ItemGroup>
     <ItemGroup>
         <ContractStub Include="..\..\protobuf\common_roll_contract.proto">
@@ -35,5 +35,10 @@
     <ItemGroup>
       <ProjectReference Include="..\..\contract\AElf.Contracts.CommonRollContract\AElf.Contracts.CommonRollContract.csproj" />
       <ProjectReference Include="..\..\src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <CommonMessage Include="..\..\protobuf\authority_info.proto">
+            <Link>Protobuf\Proto\authority_info.proto</Link>
+        </CommonMessage>
     </ItemGroup>
 </Project>
