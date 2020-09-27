@@ -1,8 +1,6 @@
-using System;
 using System.Linq;
 using AElf.Sdk.CSharp;
 using AElf.Types;
-using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.CommonRollContract
 {
@@ -42,10 +40,20 @@ namespace AElf.Contracts.CommonRollContract
         }
 
         /// <summary>
+        /// to verify the project exist
+        /// </summary>
+        /// <param name="hash">project hash</param>
+        private void ProjectExistVerify(Hash hash)
+        {
+            Assert(hash != null &&
+                   State.UserProjectList[Context.Sender] != null &&
+                   State.UserProjectList[Context.Sender].ProjectHash.Contains(hash), "Project not exists");
+        }
+        /// <summary>
         /// set data state to false which present waiting to roll state
         /// </summary>
         /// <param name="seedData">rollData input</param>
-        /// <returns>Reseted rollData </returns>
+        /// <returns>Reset rollData </returns>
         private static RollData DataStateReset(RollData seedData)
         {
             foreach (var perData in seedData.PerData)

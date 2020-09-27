@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using AElf.CSharp.Core;
@@ -140,7 +139,7 @@ namespace AElf.Contracts.CommonRollContract.Tests
             result.TransactionResult.Status.ShouldBe(TransactionResultStatus.Mined);
 
             var projectList = await CommonRollContractStub.GetProjectList.CallAsync(new Empty());
-            projectList.ProjectOverview.ShouldContain(x => x.ProjectHash == hash);
+            projectList.ProjectOverviews.ShouldContain(x => x.ProjectHash == hash);
 
             var detail = await CommonRollContractStub.GetProjectDetail.CallAsync(hash);
             //verify the data state ---  should be all false
@@ -195,18 +194,18 @@ namespace AElf.Contracts.CommonRollContract.Tests
             });
             closedException.TransactionResult.Error.ShouldContain("Project is closed");
             //Invalid RollTime
-            
+
             //Project's roll result is confirmed
             var hash3 = await CreateProject(resultCount, seedCount, true,
                 Timestamp.FromDateTime(DateTime.UtcNow.AddDays(1)));
-             await CommonRollContractStub.Roll.SendAsync(new RollInput()
+            await CommonRollContractStub.Roll.SendAsync(new RollInput()
             {
                 ProjectHash = hash3
             });
-            var confirmedException= await CommonRollContractStub.Roll.SendWithExceptionAsync(new RollInput()
-             {
-                 ProjectHash = hash3
-             });
+            var confirmedException = await CommonRollContractStub.Roll.SendWithExceptionAsync(new RollInput()
+            {
+                ProjectHash = hash3
+            });
             confirmedException.TransactionResult.Error.ShouldContain("Project's roll result is confirmed");
             //success
             await CommonRollContractStub.SetProjectOpen.SendAsync(hash);
@@ -216,7 +215,7 @@ namespace AElf.Contracts.CommonRollContract.Tests
             });
             result.Output.ResultData.PerData.Count.ShouldBe(resultCount);
             result.Output.ResultData.PerData.Distinct().Count().ShouldBe(resultCount);
-            
+
             var result1 = await CommonRollContractStub.GetRollResult.CallAsync(hash);
             result1.ResultData.Equals(result.Output.ResultData).ShouldBe(true);
         }
@@ -334,13 +333,13 @@ namespace AElf.Contracts.CommonRollContract.Tests
             projectHash.TransactionResult.Status.ShouldBe(TransactionResultStatus.Mined);
 
             var projectList = await CommonRollContractStub.GetProjectList.CallAsync(new Empty());
-            projectList.ProjectOverview.ShouldContain(x => x.ProjectHash == projectHash.Output);
+            projectList.ProjectOverviews.ShouldContain(x => x.ProjectHash == projectHash.Output);
 
             var detail = await CommonRollContractStub.GetProjectDetail.CallAsync(new Hash()
             {
                 Value = projectHash.Output.Value
             });
-            //verify the data state ---  should be all false
+            //verify the data state ---  should be all false     false-- ready for roll     true-- winner after roll 
             var data = detail.ProjectDetail.SeedData;
             foreach (var perData in data.PerData)
             {
@@ -356,7 +355,102 @@ namespace AElf.Contracts.CommonRollContract.Tests
             detail.ProjectDetail.IsOneTimeRoll.ShouldBe(true);
             detail.ProjectDetail.RollTime.ShouldBe(timestamp);
         }
-        
+
+        [Fact]
+        public async Task SetProjectStateTest()
+        {
+            var hash = await CreateProject(2, 3, true, Timestamp.FromDateTime(DateTime.UtcNow.AddDays(1)));
+
+            var resultBefore = await CommonRollContractStub.GetProjectList.CallAsync(new Empty());
+            resultBefore.ProjectOverviews[0].IsOn.ShouldBe(true);
+
+            await CommonRollContractStub.SetProjectClose.SendAsync(hash);
+
+            var resultAfterClose = await CommonRollContractStub.GetProjectList.CallAsync(new Empty());
+            resultAfterClose.ProjectOverviews[0].IsOn.ShouldBe(false);
+
+            await CommonRollContractStub.SetProjectOpen.SendAsync(hash);
+
+            var resultAfterOpen = await CommonRollContractStub.GetProjectList.CallAsync(new Empty());
+            resultAfterOpen.ProjectOverviews[0].IsOn.ShouldBe(true);
+        }
+
+        [Fact]
+        public async Task ProjectRemoveTest()
+        {
+            var hash1 = await CreateProject(2, 3, true, Timestamp.FromDateTime(DateTime.UtcNow.AddDays(1)));
+            var hash2 = await CreateProject(3, 6, true, Timestamp.FromDateTime(DateTime.UtcNow.AddDays(1)));
+            var resultBeforeRemove = await CommonRollContractStub.GetProjectList.CallAsync(new Empty());
+            resultBeforeRemove.ProjectOverviews.Any(x => x.ProjectHash == hash1).ShouldBe(true);
+            resultBeforeRemove.ProjectOverviews.Any(x => x.ProjectHash == hash2).ShouldBe(true);
+
+            await CommonRollContractStub.ProjectRemove.SendAsync(hash1);
+
+            var resultAfterRemove = await CommonRollContractStub.GetProjectList.CallAsync(new Empty());
+            resultAfterRemove.ProjectOverviews.Any(x => x.ProjectHash == hash1).ShouldBe(false);
+            resultAfterRemove.ProjectOverviews.Any(x => x.ProjectHash == hash2).ShouldBe(true);
+        }
+
+        [Fact]
+        public async Task ResultConfirmTest()
+        {
+            var hash = await CreateProject(3, 10, false, Timestamp.FromDateTime(DateTime.UtcNow.AddDays(1)));
+
+            //Project has not rolled
+            var rolledException = await CommonRollContractStub.ResultConfirm.SendWithExceptionAsync(hash);
+            rolledException.TransactionResult.Error.ShouldContain("Project has not rolled");
+
+            await CommonRollContractStub.Roll.SendAsync(new RollInput()
+            {
+                ProjectHash = hash
+            });
+            var rollResultUnconfirmed = await CommonRollContractStub.Roll.SendAsync(new RollInput()
+            {
+                ProjectHash = hash
+            });
+
+            var projectListBefore = await CommonRollContractStub.GetProjectList.CallAsync(new Empty());
+            projectListBefore.ProjectOverviews[0].IsConfirmed.ShouldBe(false);
+
+            await CommonRollContractStub.ResultConfirm.SendAsync(hash);
+
+            var projectListAfter = await CommonRollContractStub.GetProjectList.CallAsync(new Empty());
+            projectListAfter.ProjectOverviews[0].IsConfirmed.ShouldBe(true);
+
+            var rollResultConfirmed = await CommonRollContractStub.GetRollResult.CallAsync(hash);
+            rollResultUnconfirmed.Output.ResultData.ShouldBe(rollResultConfirmed.ResultData);
+            //Project has already been confirmed
+            var confirmedException = await CommonRollContractStub.ResultConfirm.SendWithExceptionAsync(hash);
+            confirmedException.TransactionResult.Error.ShouldContain("Project has already been confirmed");
+        }
+
+        [Fact]
+        public async Task GetMethodTest()
+        {
+            var hash = await CreateProject(3, 10, true, Timestamp.FromDateTime(DateTime.UtcNow.AddDays(1)));
+            // Project not exists
+            var existsException = await CommonRollContractStub.GetRollResult.CallWithExceptionAsync(Hash.Empty);
+            existsException.Value.ShouldContain("Project not exists");
+            var existsException1 = await CommonRollContractStub.GetProjectDetail.CallWithExceptionAsync(Hash.Empty);
+            existsException1.Value.ShouldContain("Project not exists");
+
+            var result = await CommonRollContractStub.GetRollResult.CallAsync(hash);
+            result.ResultData.PerData.Count.ShouldBe(0);
+
+            await CommonRollContractStub.Roll.SendAsync(new RollInput()
+            {
+                ProjectHash = hash
+            });
+
+            var resultAfterRoll = await CommonRollContractStub.GetRollResult.CallAsync(hash);
+            resultAfterRoll.ResultData.PerData.Count.ShouldBe(3);
+            var detailAfterRoll = await CommonRollContractStub.GetProjectDetail.CallAsync(hash);
+            detailAfterRoll.ProjectDetail.SeedData.PerData.Where(x => x.State)
+                .ShouldBe(resultAfterRoll.ResultData.PerData);
+            var list = await CommonRollContractStub.GetProjectList.CallAsync(new Empty());
+            list.ProjectOverviews[0].IsConfirmed.ShouldBe(true);
+        }
+
         private async Task<Hash> CreateProject(int resultCount, int seedCount, bool isOneTimeRoll, Timestamp rollTime)
         {
             var result = await CommonRollContractStub.CreateProject.SendAsync(new CreateProjectInput()

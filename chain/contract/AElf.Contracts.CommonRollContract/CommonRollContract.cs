@@ -40,7 +40,7 @@ namespace AElf.Contracts.CommonRollContract
                 ResultName = input.ResultName,
                 ResultCount = input.ResultCount,
                 RollTime = input.RollTime,
-                IsOneTimeRoll = input.IsManualRoll,
+                IsOneTimeRoll = input.IsOneTimeRoll,
                 IsManualRoll = input.IsManualRoll
             };
 
@@ -63,9 +63,8 @@ namespace AElf.Contracts.CommonRollContract
 
         public override Empty EditProject(EditProjectInput input)
         {
-            Assert(input.ProjectHash != null &&
-                   State.UserProjectList[Context.Sender] != null &&
-                   State.UserProjectList[Context.Sender].ProjectHash.Contains(input.ProjectHash), "Project not exists");
+            ProjectExistVerify(input.ProjectHash);
+            Assert(State.UserProjectOverview[input.ProjectHash].IsOn, "Project is closed");
             DataVerify(input.SeedData, input.SeedCount, input.ResultCount);
             Assert(input.RollTime > Context.CurrentBlockTime, "Invalid RollTime");
 
@@ -113,9 +112,7 @@ namespace AElf.Contracts.CommonRollContract
 
         public override RollOutput Roll(RollInput input)
         {
-            Assert(input.ProjectHash != null &&
-                   State.UserProjectList[Context.Sender] != null &&
-                   State.UserProjectList[Context.Sender].ProjectHash.Contains(input.ProjectHash), "Project not exists");
+            ProjectExistVerify(input.ProjectHash);
             Assert(State.UserProjectOverview[input.ProjectHash].IsOn, "Project is closed");
             Assert(State.UserProjectDetail[input.ProjectHash].RollTime >= Context.CurrentBlockTime, "Invalid RollTime");
             Assert(State.UserProjectOverview[input.ProjectHash].IsConfirmed != true,
@@ -184,9 +181,7 @@ namespace AElf.Contracts.CommonRollContract
 
         public override GetProjectDetailOutput GetProjectDetail(Hash input)
         {
-            Assert(input != null &&
-                   State.UserProjectList[Context.Sender] != null &&
-                   State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            ProjectExistVerify(input);
             return new GetProjectDetailOutput()
             {
                 ProjectDetail = State.UserProjectDetail[input]
@@ -195,12 +190,12 @@ namespace AElf.Contracts.CommonRollContract
 
         public override Empty ProjectRemove(Hash input)
         {
-            Assert(input != null &&
-                   State.UserProjectList[Context.Sender] != null &&
-                   State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
-            State.UserProjectList[Context.Sender].ProjectHash.Remove(input);
-            State.UserProjectDetail[input] = null;
-            State.UserProjectOverview[input] = null;
+            ProjectExistVerify(input);
+            var projectList = State.UserProjectList[Context.Sender];
+            projectList.ProjectHash.Remove(input);
+            State.UserProjectList[Context.Sender] = projectList;
+            State.UserProjectDetail[input] = new ProjectDetail();
+            State.UserProjectOverview[input] = new ProjectOverview();
 
             Context.Fire(new ProjectRemoved()
             {
@@ -212,9 +207,8 @@ namespace AElf.Contracts.CommonRollContract
 
         public override Empty ResultConfirm(Hash input)
         {
-            Assert(input != null &&
-                   State.UserProjectList[Context.Sender] != null &&
-                   State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            ProjectExistVerify(input);
+            Assert(State.UserProjectOverview[input].IsOn, "Project is closed");
             ConfirmRoll(input);
             return new Empty();
         }
@@ -226,7 +220,7 @@ namespace AElf.Contracts.CommonRollContract
             {
                 foreach (var hash in State.UserProjectList[Context.Sender].ProjectHash)
                 {
-                    result.ProjectOverview.Add(State.UserProjectOverview[hash]);
+                    result.ProjectOverviews.Add(State.UserProjectOverview[hash]);
                 }
             }
 
@@ -235,9 +229,7 @@ namespace AElf.Contracts.CommonRollContract
 
         public override Empty SetProjectClose(Hash input)
         {
-            Assert(input != null &&
-                   State.UserProjectList[Context.Sender] != null &&
-                   State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            ProjectExistVerify(input);
             State.UserProjectOverview[input].IsOn = false;
 
             Context.Fire(new ProjectClosed()
@@ -250,9 +242,7 @@ namespace AElf.Contracts.CommonRollContract
 
         public override Empty SetProjectOpen(Hash input)
         {
-            Assert(input != null &&
-                   State.UserProjectList[Context.Sender] != null &&
-                   State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            ProjectExistVerify(input);
             State.UserProjectOverview[input].IsOn = true;
 
             Context.Fire(new ProjectOpened()
@@ -265,9 +255,7 @@ namespace AElf.Contracts.CommonRollContract
 
         public override GetRollResultOutput GetRollResult(Hash input)
         {
-            Assert(
-                State.UserProjectList[Context.Sender] != null &&
-                State.UserProjectList[Context.Sender].ProjectHash.Contains(input), "Project not exists");
+            ProjectExistVerify(input);
             return new GetRollResultOutput()
             {
                 ResultData = new RollData()

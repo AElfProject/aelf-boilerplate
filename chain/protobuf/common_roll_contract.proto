@@ -78,16 +78,15 @@ message ProjectList{
     repeated  aelf.Hash project_hash = 1;
 }
 message GetProjectListOutput{
-    repeated  ProjectOverview project_overview= 1;
+    repeated  ProjectOverview project_overviews= 1;
 }
 message ProjectOverview{
     aelf.Hash project_hash = 1;
-    string project_id=2;
-    string  theme = 3;
-    google.protobuf.Timestamp create_time =4;
-    bool  is_on=5;
-    bool  is_rolled= 6;
-    bool  is_confirmed=7;
+    string  theme = 2;
+    google.protobuf.Timestamp create_time =3;
+    bool  is_on=4;
+    bool  is_rolled= 5;
+    bool  is_confirmed=6;
 }
 message ProjectDetail{
     string theme = 1;
