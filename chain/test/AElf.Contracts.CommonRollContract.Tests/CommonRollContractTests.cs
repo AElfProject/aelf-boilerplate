@@ -427,6 +427,8 @@ namespace AElf.Contracts.CommonRollContract.Tests
         [Fact]
         public async Task GetMethodTest()
         {
+            var listBeforeCreate = await CommonRollContractStub.GetProjectList.CallAsync(new Empty());
+            listBeforeCreate.ProjectOverviews.Count.ShouldBe(0);
             var hash = await CreateProject(3, 10, true, Timestamp.FromDateTime(DateTime.UtcNow.AddDays(1)));
             // Project not exists
             var existsException = await CommonRollContractStub.GetRollResult.CallWithExceptionAsync(Hash.Empty);

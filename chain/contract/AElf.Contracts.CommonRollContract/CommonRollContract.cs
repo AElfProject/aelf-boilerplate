@@ -216,7 +216,7 @@ namespace AElf.Contracts.CommonRollContract
         public override GetProjectListOutput GetProjectList(Empty input)
         {
             var result = new GetProjectListOutput();
-            if (State.UserProjectList[Context.Sender].ProjectHash != null)
+            if (State.UserProjectList[Context.Sender]!=null)
             {
                 foreach (var hash in State.UserProjectList[Context.Sender].ProjectHash)
                 {
