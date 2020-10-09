@@ -76,13 +76,20 @@ namespace AElf.Contracts.BingoGameContract
         {
             var keyPair = SampleAccount.Accounts.First().KeyPair;
             var stub = GetBingoGameContractStub(keyPair);
-            var result = await stub.Roll.SendAsync(new RollInput()
-            {
-                RollResultCount = 2,
-                RollDataOriginal = {"111", "222", "333", "444", "555"}
-            });
             
-            result.Output.RollDataResult.Count.ShouldBe(2);
+            for (int i = 0; i < 10; i++)
+            {
+                var result = await stub.Roll.SendAsync(new RollInput()
+                {
+                    RollResultCount = 2,
+                    RollDataOriginal = new RollData()
+                    { 
+                        Data = { "111","222","333","444","555","666"}
+                    }
+                });
+                result.Output.RollDataResult.Data.Distinct().Count().ShouldBe(2);
+            }
+         
         }
     }
 }

@@ -156,19 +156,27 @@ namespace AElf.Contracts.BingoGameContract
             {
                 throw new AssertionException("Can't Get RandomHash");
             }
-
+#if DEBUG
+            randomHash = HashHelper.ComputeFrom(Context.PreviousBlockHash);
+#endif
             var output = new RollOutput()
             {
-                BlockHeight = blockHeight
+                BlockHeight = blockHeight,
+                RollDataResult = new RollData()
             };
 
+            var index = Context.ConvertHashToInt64(randomHash, 0, input.RollDataOriginal.Data.Count);
+            var result = input.RollDataOriginal.Data[(int) index];
             for (var i = 0; i < input.RollResultCount; i++)
             {
-                var index = Context.ConvertHashToInt64(randomHash, 0, input.RollDataOriginal.Data.Count);
-                var result = input.RollDataOriginal.Data[(int) index];
-                var hashNew = HashHelper.ComputeFrom(result);
-                randomHash = HashHelper.ConcatAndCompute(randomHash, hashNew);
-                // randomHash = HashHelper.XorAndCompute(randomHash, hashNew);
+                while (output.RollDataResult.Data.Contains(result))
+                {
+                    var hashNew = HashHelper.ComputeFrom(result);
+                    randomHash = HashHelper.ConcatAndCompute(hashNew, randomHash);
+                    index = Context.ConvertHashToInt64(randomHash, 0, input.RollDataOriginal.Data.Count);
+                    result = input.RollDataOriginal.Data[(int) index];
+                }
+
                 output.RollDataResult.Data.Add(result);
             }
 
@@ -203,17 +211,25 @@ namespace AElf.Contracts.BingoGameContract
                 throw new AssertionException("Can't Get RandomHash");
             }
 
-            var output = new GetRollNumbersOutput();
+            var output = new GetRollNumbersOutput()
+            {
+                RollNumber = { }
+            };
 
+            var index = Context.ConvertHashToInt64(randomHash, 0, input.RollDataOriginal.Data.Count);
+            var result = input.RollDataOriginal.Data[(int) index];
             for (var i = 0; i < input.RollResultCount; i++)
             {
-                var index = Context.ConvertHashToInt64(randomHash, 0, input.RollDataOriginal.Data.Count);
-                var result = input.RollDataOriginal.Data[(int) index];
-                var hashNew = HashHelper.ComputeFrom(result);
-                randomHash = HashHelper.ConcatAndCompute(hashNew, randomHash);
+                while (output.RollNumber.Contains(index))
+                {
+                    var hashNew = HashHelper.ComputeFrom(result);
+                    randomHash = HashHelper.ConcatAndCompute(hashNew, randomHash);
+                    index = Context.ConvertHashToInt64(randomHash, 0, input.RollDataOriginal.Data.Count);
+                    result = input.RollDataOriginal.Data[(int) index];
+                }
+
                 output.RollNumber.Add(index);
             }
-
             return output;
         }
     }
