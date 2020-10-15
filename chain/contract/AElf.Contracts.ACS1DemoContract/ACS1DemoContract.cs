@@ -1,5 +1,5 @@
-using Acs1;
 using AElf.Sdk.CSharp;
+using AElf.Standards.ACS1;
 using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.ACS1DemoContract
@@ -35,11 +35,7 @@ namespace AElf.Contracts.ACS1DemoContract
             Assert(Context.Sender == State.MethodFeeController.Value.OwnerAddress,
                 "Only Owner can change method fee controller.");
 
-            State.TransactionFees[input.MethodName] = new MethodFees
-            {
-                MethodName = input.MethodName,
-                Fees = {input.Fees}
-            };
+            State.TransactionFees[input.MethodName] = input;
 
             return new Empty();
         }

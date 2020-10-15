@@ -6,6 +6,7 @@ import "aelf/core.proto";
 import "aelf/options.proto";
 
 option (aelf.identity) = "acs2";
+option csharp_namespace = "AElf.Standards.ACS2";
 
 service ACS2Base {
     // Views
@@ -15,6 +16,7 @@ service ACS2Base {
 }
 
 message ResourceInfo {
-    repeated aelf.ScopedStatePath paths = 1;
-    bool non_parallelizable = 2;
+    repeated aelf.ScopedStatePath write_paths = 1;
+    repeated aelf.ScopedStatePath read_paths = 2;
+    bool non_parallelizable = 3;
 }

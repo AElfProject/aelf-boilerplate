@@ -1,7 +1,10 @@
 syntax = "proto3";
 
+package AEDPoS;
+
 import "aelf/options.proto";
 import "aelf/core.proto";
+import "authority_info.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
@@ -27,16 +30,9 @@ service AEDPoSContract {
     rpc UpdateTinyBlockInformation (TinyBlockInput) returns (google.protobuf.Empty) {
     }
     
-    rpc UpdateConsensusInformation (ConsensusInformation) returns (google.protobuf.Empty) {
-    }
-    
     rpc SetMaximumMinersCount (google.protobuf.Int32Value) returns (google.protobuf.Empty) {
     }
-
-    rpc GetMaximumBlocksCount (google.protobuf.Empty) returns (google.protobuf.Int32Value) {
-    }
-    
-    rpc ContributeToSideChainDividendsPool (ContributeToSideChainDividendsPoolInput) returns (google.protobuf.Empty) {
+    rpc ChangeMaximumMinersCountController (AuthorityInfo) returns (google.protobuf.Empty) {
     }
 
     // Views
@@ -64,7 +60,7 @@ service AEDPoSContract {
     rpc GetCurrentTermNumber (google.protobuf.Empty) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
-    rpc GetCurrentWelfareReward (google.protobuf.Empty) returns (google.protobuf.Int64Value) {
+    rpc GetCurrentTermMiningReward (google.protobuf.Empty) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
     rpc GetMinerList (GetMinerListInput) returns (MinerList) {
@@ -92,6 +88,24 @@ service AEDPoSContract {
         option (aelf.is_view) = true;
     }
     rpc GetRandomHash (google.protobuf.Int64Value) returns (aelf.Hash) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetMaximumBlocksCount (google.protobuf.Empty) returns (google.protobuf.Int32Value) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetMaximumMinersCount (google.protobuf.Empty) returns (google.protobuf.Int32Value) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetMaximumMinersCountController (google.protobuf.Empty) returns (AuthorityInfo) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetMainChainCurrentMinerList (google.protobuf.Empty) returns (MinerList) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetPreviousTermMinerPubkeyList (google.protobuf.Empty) returns (PubkeyList) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetCurrentMiningRewardPerBlock (google.protobuf.Empty) returns (google.protobuf.Int64Value) {
         option (aelf.is_view) = true;
     }
 }
@@ -247,11 +261,6 @@ message LatestPubkeyToTinyBlocksCount {
     int64 blocks_count = 2;
 }
 
-message ContributeToSideChainDividendsPoolInput {
-    string symbol = 1;
-    int64 amount = 2;
-}
-
 // Events
 message IrreversibleBlockFound {
     option (aelf.is_event) = true;
@@ -283,4 +292,9 @@ message MiningRewardGenerated {
     option (aelf.is_event) = true;
     int64 term_number = 1 [(aelf.is_indexed) = true];
     int64 amount = 2;
+}
+
+message MinerReplaced {
+    option (aelf.is_event) = true;
+    string new_miner_pubkey = 1;
 }

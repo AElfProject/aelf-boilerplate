@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using AElf.Boilerplate.TestBase;
 using AElf.ContractTestBase.ContractTestKit;
 using AElf.Kernel.SmartContract.Application;
 using AElf.Types;

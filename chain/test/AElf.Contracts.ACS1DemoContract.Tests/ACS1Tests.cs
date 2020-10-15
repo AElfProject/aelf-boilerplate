@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Acs1;
+using AElf.Standards.ACS1;
 using AElf.ContractTestBase.ContractTestKit;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
@@ -46,10 +46,26 @@ namespace AElf.Contracts.ACS1DemoContract
             });
             
             // Check Method Fee.
-            var methodFee = await acs1DemoContractStub.GetMethodFee.CallAsync(new StringValue {Value = nameof(acs1DemoContractStub.Foo)});
-            methodFee.MethodName.ShouldBe(nameof(acs1DemoContractStub.Foo));
-            methodFee.Fees.First().Symbol.ShouldBe("ELF");
-            methodFee.Fees.First().BasicFee.ShouldBe(1_00000000);
+            {
+                var methodFee = await acs1DemoContractStub.GetMethodFee.CallAsync(new StringValue {Value = nameof(acs1DemoContractStub.Foo)});
+                methodFee.MethodName.ShouldBe(nameof(acs1DemoContractStub.Foo));
+                methodFee.Fees.First().Symbol.ShouldBe("ELF");
+                methodFee.Fees.First().BasicFee.ShouldBe(1_00000000);
+            }
+            
+            // Free Method Fee
+            await acs1DemoContractStub.SetMethodFee.SendAsync(new MethodFees
+            {
+                MethodName = nameof(acs1DemoContractStub.Foo),
+                IsSizeFeeFree = true
+            });
+            
+            // Check Method Fee.
+            {
+                var methodFee = await acs1DemoContractStub.GetMethodFee.CallAsync(new StringValue {Value = nameof(acs1DemoContractStub.Foo)});
+                methodFee.MethodName.ShouldBe(nameof(acs1DemoContractStub.Foo));
+                methodFee.IsSizeFeeFree.ShouldBeTrue();
+            }
         }
     }
 }
