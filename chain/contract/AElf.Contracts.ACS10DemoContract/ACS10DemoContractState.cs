@@ -1,4 +1,4 @@
-using Acs10;
+using AElf.Standards.ACS10;
 using AElf.Contracts.MultiToken;
 using AElf.Contracts.TokenHolder;
 using AElf.Sdk.CSharp.State;

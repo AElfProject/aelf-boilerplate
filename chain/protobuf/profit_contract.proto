@@ -1,15 +1,16 @@
 syntax = "proto3";
 
-package profit;
+package Profit;
 
-import "acs1.proto";
 import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
 
 option csharp_namespace = "AElf.Contracts.Profit";
 
 service ProfitContract {
     option (aelf.csharp_state) = "AElf.Contracts.Profit.ProfitContractState";
-    option (aelf.base) = "acs1.proto";
 
     // Actions
     rpc CreateScheme (CreateSchemeInput) returns (aelf.Hash) {
@@ -204,4 +205,14 @@ message SchemeCreated {
     int64 profit_receiving_due_period_count = 3;
     bool is_release_all_balance_every_time_by_default = 4;
     aelf.Hash scheme_id = 5;
+}
+
+message ProfitsClaimed {
+    option (aelf.is_event) = true;
+    aelf.Address beneficiary = 1;
+    string symbol = 2;
+    int64 amount = 3;
+    int64 period = 4;
+    int64 claimer_shares = 5;
+    int64 total_shares = 6;
 }
