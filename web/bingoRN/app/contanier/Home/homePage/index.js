@@ -351,112 +351,120 @@ class MyHomePage extends React.Component {
     }
 
     playBingo = async () => {
-        if (this.playLock) {
-            return;
-        }
-        const reduxStoreData = this.props.ReduxStore;
-        const { contracts, address, betList } = reduxStoreData;
-        const { privateKey } = this.state
-        
-        if (Array.isArray(betList) && betList.length >= waitDrawLimit) {
-            this.tipMsg('You bet too fast, bet later');
-            return;
-        }
-
-        if (!address) {
-            if(privateKey == null){
-                this.tipMsg('Please login');
-            }else{
-                this.tipMsg('Wait game initialize');
+        try {
+            if (this.playLock) {
+                return;
             }
-            return;
+            const reduxStoreData = this.props.ReduxStore;
+            const { contracts, address, betList } = reduxStoreData;
+            const { privateKey } = this.state
+            
+            if (Array.isArray(betList) && betList.length >= waitDrawLimit) {
+                this.tipMsg('You bet too fast, bet later');
+                return;
+            }
+    
+            if (!address) {
+                if(privateKey == null){
+                    this.tipMsg('Please login');
+                }else{
+                    this.tipMsg('Wait game initialize');
+                }
+                return;
+            }
+    
+            const { balance, betCount, bingoGameAllowance, betType, jackpot } = this.state;
+    
+            if (Number(betCount) > Number(jackpot)) {
+                this.tipMsg('The bet amount cannot be greater than the prize pool amount');
+                return;
+            }
+            if (betType === 0) {
+                this.tipMsg('Please select bet type');
+                return;
+            }
+            if (betCount <= 0 || betCount != +betCount) {
+                this.tipMsg('Please input bet amount');
+                return;
+            }
+            if (betCount > balance) {
+                this.tipMsg('Insufficient balance');
+                return;
+            }
+            if (betCount > bingoGameAllowance) {
+                this.tipMsg('Insufficient allowance, please turn to homepage and pull refresh the page.');
+                return;
+            }
+            this.playLock = true;
+            const { bingoGameContract } = contracts;
+    
+            const transactionId = await bingoGameContract.Play({
+                buyAmount: betCount * tokenDecimalFormat,
+                buyType: betType,
+                tokenSymbol: tokenSymbol
+            });
+            await this.setLastBuyInStorage(transactionId.TransactionId);
+    
+            this.setState({
+                transactionId: transactionId.TransactionId,
+                showBingo: true,
+                bingoResult: null,
+                bingoOutputUnpacked: JSON.parse(defautState).bingoOutputUnpacked,
+                lastBetCount: betCount,
+                lastBetType: betType,
+                balance: balance - betCount,
+                betCount: '',
+                betType: 0,
+            }, () => {
+                this.tipMsg('Bet Success');
+            });
+            await sleep(2000);
+            await this.checkPlayBingoStatus(transactionId.TransactionId);
+            this.getBetList();
+            this.playLock = false;
+        } catch (error) {
+            console.log(error,'=====error'); 
         }
-
-        const { balance, betCount, bingoGameAllowance, betType, jackpot } = this.state;
-
-        if (Number(betCount) > Number(jackpot)) {
-            this.tipMsg('The bet amount cannot be greater than the prize pool amount');
-            return;
-        }
-        if (betType === 0) {
-            this.tipMsg('Please select bet type');
-            return;
-        }
-        if (betCount <= 0 || betCount != +betCount) {
-            this.tipMsg('Please input bet amount');
-            return;
-        }
-        if (betCount > balance) {
-            this.tipMsg('Insufficient balance');
-            return;
-        }
-        if (betCount > bingoGameAllowance) {
-            this.tipMsg('Insufficient allowance, please turn to homepage and pull refresh the page.');
-            return;
-        }
-        this.playLock = true;
-        const { bingoGameContract } = contracts;
-
-        const transactionId = await bingoGameContract.Play({
-            buyAmount: betCount * tokenDecimalFormat,
-            buyType: betType,
-            tokenSymbol: tokenSymbol
-        });
-        await this.setLastBuyInStorage(transactionId.TransactionId);
-
-        this.setState({
-            transactionId: transactionId.TransactionId,
-            showBingo: true,
-            bingoResult: null,
-            bingoOutputUnpacked: JSON.parse(defautState).bingoOutputUnpacked,
-            lastBetCount: betCount,
-            lastBetType: betType,
-            balance: balance - betCount,
-            betCount: '',
-            betType: 0,
-        }, () => {
-            this.tipMsg('Bet Success');
-        });
-        await sleep(2000);
-        await this.checkPlayBingoStatus(transactionId.TransactionId);
-        this.getBetList();
-        this.playLock = false;
     }
     async checkPlayBingoStatus(transactionId) {
-        const playTxResult = await aelfInstance.chain.getTxResult(transactionId);
-        if (this.checkPlayBingoStatusTimes >= 5) {
-            this.tipMsg('Can not find this play transaction in system');
-            return;
+        try {
+            const playTxResult = await aelfInstance.chain.getTxResult(transactionId);
+            if (this.checkPlayBingoStatusTimes >= 5) {
+                this.tipMsg('Can not find this play transaction in system');
+                return;
+            }
+    
+            if (playTxResult.Status === 'NotExisted') {
+                this.checkPlayBingoStatusTimes++;
+                setTimeout(() => {
+                    this.checkPlayBingoStatus(transactionId);
+                }, 2000);
+                return;
+            }
+    
+            this.checkPlayBingoStatusTimes = 0;
+    
+            if (playTxResult.Status === 'PENDING') {
+                setTimeout(() => {
+                    this.checkPlayBingoStatus(transactionId);
+                }, 1000);
+                return;
+            }
+            if (playTxResult.Status === 'FAILED') {
+                this.tipMsg('Play failed, please try again');
+                this.setState({
+                    transactionId: null,
+                    showBingo: false,
+                    bingoResult: null
+                });
+                return;
+            }
+            await this.getUserBalance();
+            await this.getBingoGameContractBalane();
+            await this.getApprovedNumber();
+        } catch (error) {
+            console.log(error, '=checkPlayBingoStatus');
         }
-
-        if (playTxResult.Status === 'NotExisted') {
-            this.checkPlayBingoStatusTimes++;
-            setTimeout(() => {
-                this.checkPlayBingoStatus(transactionId);
-            }, 2000);
-            return;
-        }
-
-        this.checkPlayBingoStatusTimes = 0;
-
-        if (playTxResult.Status === 'PENDING') {
-            setTimeout(() => {
-                this.checkPlayBingoStatus(transactionId);
-            }, 1000);
-            return;
-        }
-        if (playTxResult.Status === 'FAILED') {
-            this.tipMsg('Play failed, please try again');
-            this.setState({
-                transactionId: null,
-                showBingo: false,
-                bingoResult: null
-            });
-            return;
-        }
-        await this.getUserBalance();
-        await this.getBingoGameContractBalane();
-        await this.getApprovedNumber();
     }
 
     async bingoBingo() {
