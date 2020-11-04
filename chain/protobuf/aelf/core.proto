@@ -28,8 +28,9 @@ enum TransactionResultStatus {
     PENDING = 1;
     FAILED = 2;
     MINED = 3;
-    UNEXECUTABLE = 4;
-    CONFLICT = 5;
+    CONFLICT = 4;
+    PENDING_VALIDATION = 5;
+    NODE_VALIDATION_FAILED = 6;
 }
 
 message TransactionResult {
@@ -40,8 +41,6 @@ message TransactionResult {
     bytes return_value = 5;
     int64 block_number = 6;
     Hash block_hash = 7;
-    int32 index = 8;
-    Hash state_hash = 9;
     string error = 10;
 }
 
