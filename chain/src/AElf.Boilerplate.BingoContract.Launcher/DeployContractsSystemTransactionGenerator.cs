@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Acs0;
+using AElf.Standards.ACS0;
 using AElf.Boilerplate.SystemTransactionGenerator;
 using AElf.ContractDeployer;
 using AElf.Contracts.Genesis;
