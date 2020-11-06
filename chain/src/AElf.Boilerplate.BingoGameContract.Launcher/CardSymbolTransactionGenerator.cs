@@ -36,10 +36,18 @@ namespace AElf.Boilerplate.BingoGameContract.Launcher
                 IsBurnable = true,
                 TotalSupply = long.MaxValue
             }.ToByteString();
+            var transferInput = new TransferInput
+            {
+                Symbol = "ELF",
+                Amount = 1_0000_0000_00000000,
+                To = contractAddress
+            }.ToByteString();
             return new List<Transaction>
             {
                 await _transactionGeneratingService.GenerateTransactionAsync(TokenSmartContractAddressNameProvider.Name,
                     nameof(TokenContractContainer.TokenContractStub.Create), createInput),
+                await _transactionGeneratingService.GenerateTransactionAsync(TokenSmartContractAddressNameProvider.Name,
+                    nameof(TokenContractContainer.TokenContractStub.Transfer), transferInput),
             };
         }
     }
