@@ -11,6 +11,7 @@ namespace AElf.Contracts.BingoGameContract
     {
         public override Empty Register(Empty input)
         {
+            Initialize();
             Assert(State.PlayerInformation[Context.Sender] == null, $"User {Context.Sender} already registered.");
             var information = new PlayerInformation
             {
@@ -19,7 +20,29 @@ namespace AElf.Contracts.BingoGameContract
                 RegisterTime = Context.CurrentBlockTime
             };
             State.PlayerInformation[Context.Sender] = information;
+            State.TokenContract.Issue.Send(new IssueInput
+            {
+                Symbol = BingoGameContractConstants.CardSymbol,
+                Amount = BingoGameContractConstants.InitialCards,
+                To = Context.Sender,
+                Memo = "Initial Bingo Cards for player."
+            });
             return new Empty();
+        }
+
+        private void Initialize()
+        {
+            if (State.Initialized.Value)
+            {
+                return;
+            }
+
+            State.TokenContract.Value =
+                Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
+            State.ConsensusContract.Value =
+                Context.GetContractAddressByName(SmartContractConstants.ConsensusContractSystemName);
+
+            State.Initialized.Value = true;
         }
 
         public override Int64Value Play(Int64Value input)

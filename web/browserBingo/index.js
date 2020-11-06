@@ -183,7 +183,7 @@ function init() {
     // return contract's address which you query by contract's name
     .then(zeroC => Promise.all([
       zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.Token')),
-      zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.BingoGameContract'))
+      "2LUmicHyH4RXrMjG4beDwuDsiWJESyLkgkwPdGTR8kahRzq5XS"
     ]))
     // return contract's instance and you can call the methods on this instance
     .then(([tokenAddress, bingoAddress]) => Promise.all([
