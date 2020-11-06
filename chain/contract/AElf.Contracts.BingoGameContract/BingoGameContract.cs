@@ -63,7 +63,7 @@ namespace AElf.Contracts.BingoGameContract
                 From = Context.Sender,
                 To = Context.Self,
                 Amount = input.Value,
-                Symbol = Context.Variables.NativeSymbol,
+                Symbol = BingoGameContractConstants.CardSymbol,
                 Memo = "Enjoy!"
             });
 
@@ -129,7 +129,7 @@ namespace AElf.Contracts.BingoGameContract
             {
                 State.TokenContract.Transfer.Send(new TransferInput
                 {
-                    Symbol = Context.Variables.NativeSymbol,
+                    Symbol = BingoGameContractConstants.CardSymbol,
                     Amount = transferAmount,
                     To = Context.Sender,
                     Memo = "Thx for playing my game."
