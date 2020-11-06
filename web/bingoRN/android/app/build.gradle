@@ -219,7 +219,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     // add the Firebase SDK for Google Analytics
-    implementation 'com.google.firebase:firebase-analytics:17.4.0'
+    // implementation 'com.google.firebase:firebase-analytics'
     // add SDKs for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
 
