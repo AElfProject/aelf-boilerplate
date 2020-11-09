@@ -46,8 +46,9 @@ class WithdrawDetail extends React.Component {
         })
     }
     /* 复制账户地址 */
-    copyAddress() {
-        Clipboard.setString(this.state.accountAddress);
+    copyAddress(accountAddress) {
+        Clipboard.setString(accountAddress);
+        this.tipMsg('Copied');
     }
     render() {
         const { item } = this.state;
@@ -78,14 +79,14 @@ class WithdrawDetail extends React.Component {
                         <View style={{ flexDirection: "row", marginBottom: pTd(20) }}>
                             <TextM>From：</TextM>
                             <TextM style={{ width: pTd(450) }}>{item.address_to}</TextM>
-                            <TouchableOpacity onPress={() => this.copyAddress()}>
+                            <TouchableOpacity onPress={() => this.copyAddress(item.address_to)}>
                                 <Icon name="copy1" size={18} color="#000" />
                             </TouchableOpacity>
                         </View>
                         <View style={{ flexDirection: "row", marginBottom: pTd(20) }}>
                             <TextM>To：</TextM>
                             <TextM style={{ width: pTd(450) }}>{item.address_from}</TextM>
-                            <TouchableOpacity onPress={() => this.copyAddress()}>
+                            <TouchableOpacity onPress={() => this.copyAddress(item.address_from)}>
                                 <Icon name="copy1" size={18} color="#000" />
                             </TouchableOpacity>
                         </View>

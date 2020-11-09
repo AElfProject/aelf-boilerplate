@@ -1,19 +1,17 @@
 import React from "react"
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, StatusBar, ScrollView } from "react-native"
-import CameraRoll from "@react-native-community/cameraroll"
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Button } from "react-native-elements"
 import QRCode from 'react-native-qrcode-svg';
 import AsyncStorage from "@react-native-community/async-storage"
 import Storage from  "../../../constants/storage"
-import RNFS from "react-native-fs"
-import ViewShot from "react-native-view-shot";
 
 import navigationService from "../../../common/utils/navigationService";
 import CommonHeader from "../../../common/Components/CommonHeader/CommonHeader";
 
 import pTd from "../../../common/utils/unit";
 import { TextM, MutilText } from "../../../common/UI_Component/CommonText";
+import { screenshots } from "../../../common/utils/utils";
 
 /*
  * 备份二维码
@@ -60,22 +58,8 @@ class BackupQRcode extends React.Component {
     }
     /* 保存图片至相册 */
     async savePicture() {
-        const storeLocation = `${RNFS.DocumentDirectoryPath}`;
-        let pathName = new Date().getTime() + "QRcode.jpg"
-        let downloadDest = `${storeLocation}/${pathName}`;
 
-
-        const viewShotTmpUri = await this.refs.viewShot.capture();
-
-        const fileInfo = await RNFS.readFile(viewShotTmpUri, 'base64');
-
-        RNFS.writeFile(downloadDest, fileInfo, 'base64')
-          .then(() => {
-              return CameraRoll.saveToCameraRoll(`file://${downloadDest}`, 'photo')
-          })
-          .then(() => {
-              this.tipMsg("Success");
-          })
+        this.refs.viewShot && screenshots(this.refs.viewShot) 
     }
     render() {
         const { keyStore } = this.state;
@@ -91,10 +75,7 @@ class BackupQRcode extends React.Component {
                     </View>
                     <View style={[Gstyle.marginArg(0, pTd(80)), { justifyContent: "center", alignItems: "center" }]}>
                         <MutilText style={{ textAlign: "center" }}>Lost or QR code is the same as lost account. Your assets will not be recovered. Please keep your QR code account properly</MutilText>
-                        <ViewShot
-                          ref="viewShot" options={{ format: "jpg", quality: 0.9 }}
-                          style={{width: 200}}
-                        >
+                        <View ref="viewShot" style={styles.shotView}>
                             <QRCode
                                 value={ keyStore }
                                 getRef={(c) => (this.svg = c)}
@@ -105,7 +86,7 @@ class BackupQRcode extends React.Component {
                                 size={200}
                             />
                             <Text style={{marginTop: 2}}>Account: {keyStoreObject.nickName}</Text>
-                        </ViewShot>
+                        </View>
                     </View>
                     <View style={{ justifyContent: "center", alignItems: "center", marginTop: pTd(120) }}>
                         <Button
@@ -136,4 +117,9 @@ const styles = StyleSheet.create({
 
         marginBottom: pTd(30)
     },
+    shotView: {
+        padding:10,
+        backgroundColor: 'white',
+        alignItems: 'center'
+    }
 })

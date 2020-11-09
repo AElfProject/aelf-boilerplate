@@ -41,9 +41,8 @@ function Lottery() {
         const { bingoGameContract } = contracts || {};
         if (bingoGameContract && bingoGameContract.GetPlayerInformationCompleted) {
             const playerInformation = await bingoGameContract.GetPlayerInformationCompleted.call(address)
-            console.log('playerInformation', playerInformation);
             let { bouts } = playerInformation || {}
-            Array.isArray(bouts) && dispatch({
+            address == ReduxStore.address && Array.isArray(bouts) && dispatch({
                 type: 'SET_LOTTERY_LIST', data: { lotteryList: bouts.reverse() }
             })
         }
@@ -74,7 +73,7 @@ function Lottery() {
                 {
                     list.map((item, index) => (
                         <View key={index} style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                            <View  style={[styles.flexRow, { flex: 1 }]}>
+                            <View style={[styles.flexRow, { flex: 1 }]}>
                                 <TextM>{item.title}</TextM>
                                 {
                                     item.copy ?

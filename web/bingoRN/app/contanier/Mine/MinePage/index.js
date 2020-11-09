@@ -1,5 +1,5 @@
 import React from "react"
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView, TouchableWithoutFeedback } from "react-native"
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, TouchableWithoutFeedback, DeviceEventEmitter } from "react-native"
 import Clipboard from "@react-native-community/clipboard";
 import Icon from 'react-native-vector-icons/AntDesign';
 import { ListItem } from "react-native-elements"
@@ -123,7 +123,7 @@ class MyMinePage extends React.Component {
 
         let contracts = this.props.ReduxStore.contracts;
         const loggedIn = this.props.ReduxStore.is_login;
-        if (!contracts && loggedIn) {
+        if (!contracts && privateKey != null) {
             contracts = await appInit(privateKey);
         }
 
@@ -148,10 +148,15 @@ class MyMinePage extends React.Component {
     }
     async qcodeType(){
         //console.log(this.props.ReduxStore);
-        this.setState({
-            modalContentType:0,
-            modalVisible:true,
-        });
+        const { accountAddress, modalContentType, keyStore } = this.state;
+        if(keyStore){
+            this.setState({
+                modalContentType:0,
+                modalVisible:true,
+            });
+        }else{
+            this.tipMsg('please login')
+        }
     }
     async freshBalance(){
         //在这测试了下钱包
@@ -285,14 +290,15 @@ class MyMinePage extends React.Component {
     /* 退出 */
     async loginOut() {
         this.changeModalStatus(); //
+        this.props.onLogout();
         await AsyncStorage.removeItem(Storage.userToken)
         await AsyncStorage.removeItem(Storage.userPrivateKey)
         await AsyncStorage.removeItem(Storage.userKeyStore)
-
-        this.props.onLogout();
-
-        this.goRouter("HomePage")
-
+        await AsyncStorage.removeItem(Storage.transactionPsw)
+        await AsyncStorage.removeItem(Storage.openTouch)
+        await AsyncStorage.removeItem('lastBuy')
+        DeviceEventEmitter.emit("checkPrivateKey");
+        this.goRouter("HomePage") 
     }
     clickLoginOut(){
         this.setState({

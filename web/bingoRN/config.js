@@ -6,22 +6,26 @@ const keystoreOptions = {
     n: 2048, // 2048 4096 8192 16384
     r: 8,
     p: 1,
-    cipher: 'aes-128-ctr'
+    cipher: 'aes-128-ctr',
   },
   android: {
     dklen: 32,
     n: 2048, // 2048 4096 8192 16384
     r: 8,
     p: 1,
-    cipher: 'aes-128-ctr'
-  }
+    cipher: 'aes-128-ctr',
+  },
 };
 
 const explorerURL = 'https://explorer-test-side01.aelf.io';
-const walletURL = 'https://tdvv-wallet-test.aelf.io'
+const walletURL = 'https://tdvv-wallet-test.aelf.io';
+
+// const explorerURL = 'http://1.119.195.50:11107';
+// const walletURL = 'http://1.119.195.50:11109';
 
 module.exports.config = {
-  commonPrivateKey: 'b7a6b643f2a66848cb2229bf26c8330d5384e0eac325709a66f4baacc89d3108',
+  commonPrivateKey:
+    'b7a6b643f2a66848cb2229bf26c8330d5384e0eac325709a66f4baacc89d3108',
   customerAddress: '2hxkDg6Pd2d4yU1A16PTZVMMrEDYEPR8oQojMDwWdax5LsBaxX',
   customerTel: 'Just a dev show case, you can input a phone number here.',
   // You can change the params for keystore here
@@ -51,21 +55,27 @@ module.exports.config = {
     // bingoGameContract: '2nyC8hqq3pGnRu8gJzCsTaxXB6snfGxmL2viimKXgEfYWGtjEh',
     // appContract: '2nyC8hqq3pGnRu8gJzCsTaxXB6snfGxmL2viimKXgEfYWGtjEh',
     // aelf testnet
+
     bingoGameContract: '2wRDbyVF28VBQoSPgdSEFaL4x7CaXz8TCBujYhgWc9qTMxBE3n',
     appContract: '2wRDbyVF28VBQoSPgdSEFaL4x7CaXz8TCBujYhgWc9qTMxBE3n',
+
+    // bingoGameContract: 'zif9un2sHyRFwFfZbpmWM9bqHi5eeCc1fHyeQ7Bvn5b92Sx9N',
+    // appContract: 'zif9un2sHyRFwFfZbpmWM9bqHi5eeCc1fHyeQ7Bvn5b92Sx9N',
   },
   address: {
     prefix: 'ELF',
-    // suffix: 'AELF'
-    suffix: 'tDVV'
+    // suffix: 'AELF',
+    suffix: 'tDVV',
   },
   startPeriod: 0,
+
   tokenSymbol: 'AEUSD',
   tokenDecimal: 3,
   tokenDecimalFormat: 10 ** 3,
   feeTokenSymbol: 'AEUSD',
   feeTokenDecimal: 3,
   feeTokenDecimalFormat: 10 ** 3,
+
   // tokenSymbol: 'ELF',
   // tokenDecimal: 8,
   // tokenDecimalFormat: 10 ** 8,
@@ -75,5 +85,5 @@ module.exports.config = {
   // password check
   passwordReg: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{12,}$/,
   balanceRefreshInterval: 30000,
-  splashScreenShowTime: 3000
+  splashScreenShowTime: 3000,
 };

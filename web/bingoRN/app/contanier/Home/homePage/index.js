@@ -1,5 +1,5 @@
 import React from "react"
-import { View, Text, TouchableOpacity, RefreshControl, Linking, TextInput } from "react-native"
+import { View, Text, TouchableOpacity, RefreshControl, Linking, TextInput, DeviceEventEmitter } from "react-native"
 import { Button, Divider, Input, PricingCard, Card } from "react-native-elements"
 import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from "@react-native-community/async-storage"
@@ -46,7 +46,8 @@ const defautState = JSON.stringify({
         isWin: true,
         boutType: '',
         award: '',
-    }
+    },
+    privateKey:null
 });
 /*
  * 主页
@@ -61,12 +62,10 @@ class MyHomePage extends React.Component {
         this.drawInterval = null;
         this.txResultTime = {};
     }
-    componentWillMount(){
-        setTimeout(()=>{
-            SplashScreen.hide()
-        }, splashScreenShowTime);
+    checkPrivateKey = async () => {
+        const privateKey = await AsyncStorage.getItem(Storage.userPrivateKey)
+        this.setState({ privateKey })
     }
-
     componentWillUnmount() {
         for (let key in this.txResultTime) {
             const { timer } = this.txResultTime[key]
@@ -75,6 +74,7 @@ class MyHomePage extends React.Component {
         this.txResultTime = {}
         this.drawInterval && clearInterval(this.drawInterval)
         clearInterval(this.interval);
+        DeviceEventEmitter.removeAllListeners('checkPrivateKey')
     }
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
@@ -83,9 +83,9 @@ class MyHomePage extends React.Component {
         if (this.lastAddress !== address) {
             this.lastAddress = address;
             if (address) {
-                await this.getUserBalance();
-                await this.getBingoGameContractBalane();
-                await this.getApprovedNumber();
+                this.getUserBalance();
+                this.getBingoGameContractBalane();
+                this.getApprovedNumber();
             } else {
                 this.setState(JSON.parse(defautState));
             }
@@ -93,15 +93,45 @@ class MyHomePage extends React.Component {
     }
 
     async componentDidMount() {
+        setTimeout(()=>{
+            SplashScreen.hide()
+        }, splashScreenShowTime);
         this.initProvider();
         this.onRefresh();
         this.drawInterval = setInterval(()=>{
-            this.Draw();
+            try {
+                this.Draw();
+            } catch (error) {}
         }, waitTime);
         this.interval = setInterval((
         ) => {
+            this.checkLoginInfo();
             this.getUserBalance();
         }, 10000);
+        DeviceEventEmitter.addListener('checkPrivateKey',this.checkPrivateKey);
+        this.checkPrivateKey();
+    }
+    checkLoginInfo = async () => {
+        try {
+            const { address } = this.props.ReduxStore || {}
+            if (!address) {
+                const privateKey = await AsyncStorage.getItem(Storage.userPrivateKey);
+                if(privateKey){                    
+                    const contracts = await appInit(privateKey);
+                    const keystore = JSON.parse(await AsyncStorage.getItem(Storage.userKeyStore) || '{}');
+                    const address = keystore.address;
+                    this.props.onLoginSuccess({
+                        contracts,
+                        address,
+                        keystore
+                    });
+                    this.setState({ privateKey })
+                }
+            }
+        } catch (error) {
+            console.log('checkLoginInfo',error);
+            
+        }
     }
 
     async initProvider(){
@@ -148,15 +178,19 @@ class MyHomePage extends React.Component {
         return false;
     }
     async getUserBalance(contractsInput, addressInput) {
-        const balance = await this.getTokenBalance(contractsInput, addressInput);
-        if (!balance) {
-            return;
+        try {
+            const balance = await this.getTokenBalance(contractsInput, addressInput);
+            if (!balance) {
+                return;
+            }
+            let confirmBlance = balance.balance / tokenDecimalFormat
+            this.setState({
+                balance: isNumber(confirmBlance) ? confirmBlance : 0,
+                symbol: balance.symbol
+            });
+        } catch (error) {
+            
         }
-        let confirmBlance = balance.balance / tokenDecimalFormat
-        this.setState({
-            balance: isNumber(confirmBlance) ? confirmBlance : 0,
-            symbol: balance.symbol
-        });
     }
 
     async getApprovedNumber() {
@@ -265,9 +299,15 @@ class MyHomePage extends React.Component {
     }
 
     onBetButtonClick(value) {
-        this.setState({
-            betCount: value
-        });
+        let betCount = value;
+        if (typeof value === 'string') {
+            betCount = value;
+        } else if (typeof value === 'number') {
+            betCount = String(value);
+        } else {
+            betCount = '0';
+        }
+        this.onBetChange(betCount);
     }
 
     onBetTypeButtonClick(betType) {
@@ -310,108 +350,121 @@ class MyHomePage extends React.Component {
         }));
     }
 
-    async playBingo() {
-        if (this.playLock) {
-            return;
-        }
-        const reduxStoreData = this.props.ReduxStore;
-        const { contracts, address, betList } = reduxStoreData;
-
-        if (Array.isArray(betList) && betList.length >= waitDrawLimit) {
-            this.tipMsg('You bet too fast, bet later');
-            return;
-        }
-
-        if (!address) {
-            this.tipMsg('Please login');
-            return;
-        }
-
-        const { balance, betCount, bingoGameAllowance, betType, jackpot } = this.state;
-
-        if (Number(betCount) > Number(jackpot)) {
-            this.tipMsg('The bet amount cannot be greater than the prize pool amount');
-            return;
-        }
-        if (betType === 0) {
-            this.tipMsg('Please select bet type');
-            return;
-        }
-        if (betCount <= 0 || betCount != +betCount) {
-            this.tipMsg('Please input bet amount');
-            return;
-        }
-        if (betCount > balance) {
-            this.tipMsg('Insufficient balance');
-            return;
-        }
-        if (betCount > bingoGameAllowance) {
-            this.tipMsg('Insufficient allowance, please turn to homepage and pull refresh the page.');
-            return;
-        }
-        this.playLock = true;
-        const { bingoGameContract } = contracts;
-
-        const transactionId = await bingoGameContract.Play({
-            buyAmount: betCount * tokenDecimalFormat,
-            buyType: betType,
-            tokenSymbol: tokenSymbol
-        });
-        await this.setLastBuyInStorage(transactionId.TransactionId);
-
-        this.setState({
-            transactionId: transactionId.TransactionId,
-            showBingo: true,
-            bingoResult: null,
-            bingoOutputUnpacked: JSON.parse(defautState).bingoOutputUnpacked,
-            lastBetCount: betCount,
-            lastBetType: betType,
-            balance: balance - betCount,
-            betCount: '',
-            betType: 0,
-        }, () => {
-            this.tipMsg('Bet Success');
+    playBingo = async () => {
+        try {
+            if (this.playLock) {
+                return;
+            }
+            const reduxStoreData = this.props.ReduxStore;
+            const { contracts, address, betList } = reduxStoreData;
+            const { privateKey } = this.state
+            
+            if (Array.isArray(betList) && betList.length >= waitDrawLimit) {
+                this.tipMsg('You bet too fast, bet later');
+                return;
+            }
+    
+            if (!address) {
+                if(privateKey == null){
+                    this.tipMsg('Please login');
+                }else{
+                    this.tipMsg('Wait game initialize');
+                }
+                return;
+            }
+    
+            const { balance, betCount, bingoGameAllowance, betType, jackpot } = this.state;
+    
+            if (Number(betCount) > Number(jackpot)) {
+                this.tipMsg('The bet amount cannot be greater than the prize pool amount');
+                return;
+            }
+            if (betType === 0) {
+                this.tipMsg('Please select bet type');
+                return;
+            }
+            if (betCount <= 0 || betCount != +betCount) {
+                this.tipMsg('Please input bet amount');
+                return;
+            }
+            if (betCount > balance) {
+                this.tipMsg('Insufficient balance');
+                return;
+            }
+            if (betCount > bingoGameAllowance) {
+                this.tipMsg('Insufficient allowance, please turn to homepage and pull refresh the page.');
+                return;
+            }
+            this.playLock = true;
+            const { bingoGameContract } = contracts;
+    
+            const transactionId = await bingoGameContract.Play({
+                buyAmount: betCount * tokenDecimalFormat,
+                buyType: betType,
+                tokenSymbol: tokenSymbol
+            });
+            await this.setLastBuyInStorage(transactionId.TransactionId);
+    
+            this.setState({
+                transactionId: transactionId.TransactionId,
+                showBingo: true,
+                bingoResult: null,
+                bingoOutputUnpacked: JSON.parse(defautState).bingoOutputUnpacked,
+                lastBetCount: betCount,
+                lastBetType: betType,
+                balance: balance - betCount,
+                betCount: '',
+                betType: 0,
+            }, () => {
+                this.tipMsg('Bet Success');
+            });
+            await sleep(2000);
+            await this.checkPlayBingoStatus(transactionId.TransactionId);
             this.getBetList();
-        });
-        await sleep(2000);
-        await this.checkPlayBingoStatus(transactionId.TransactionId);
-        this.playLock = false;
+            this.playLock = false;
+        } catch (error) {
+            console.log(error,'=====error'); 
+        }
     }
     async checkPlayBingoStatus(transactionId) {
-        const playTxResult = await aelfInstance.chain.getTxResult(transactionId);
-        if (this.checkPlayBingoStatusTimes >= 5) {
-            this.tipMsg('Can not find this play transaction in system');
-            return;
+        try {
+            const playTxResult = await aelfInstance.chain.getTxResult(transactionId);
+            if (this.checkPlayBingoStatusTimes >= 5) {
+                this.tipMsg('Can not find this play transaction in system');
+                return;
+            }
+    
+            if (playTxResult.Status === 'NotExisted') {
+                this.checkPlayBingoStatusTimes++;
+                setTimeout(() => {
+                    this.checkPlayBingoStatus(transactionId);
+                }, 2000);
+                return;
+            }
+    
+            this.checkPlayBingoStatusTimes = 0;
+    
+            if (playTxResult.Status === 'PENDING') {
+                setTimeout(() => {
+                    this.checkPlayBingoStatus(transactionId);
+                }, 1000);
+                return;
+            }
+            if (playTxResult.Status === 'FAILED') {
+                this.tipMsg('Play failed, please try again');
+                this.setState({
+                    transactionId: null,
+                    showBingo: false,
+                    bingoResult: null
+                });
+                return;
+            }
+            await this.getUserBalance();
+            await this.getBingoGameContractBalane();
+            await this.getApprovedNumber();
+        } catch (error) {
+            console.log(error, '=checkPlayBingoStatus');
         }
-
-        if (playTxResult.Status === 'NotExisted') {
-            this.checkPlayBingoStatusTimes++;
-            setTimeout(() => {
-                this.checkPlayBingoStatus(transactionId);
-            }, 2000);
-            return;
-        }
-
-        this.checkPlayBingoStatusTimes = 0;
-
-        if (playTxResult.Status === 'PENDING') {
-            setTimeout(() => {
-                this.checkPlayBingoStatus(transactionId);
-            }, 1000);
-            return;
-        }
-        if (playTxResult.Status === 'FAILED') {
-            this.tipMsg('Play failed, please try again');
-            this.setState({
-                transactionId: null,
-                showBingo: false,
-                bingoResult: null
-            });
-            return;
-        }
-        await this.getUserBalance();
-        await this.getBingoGameContractBalane();
-        await this.getApprovedNumber();
     }
 
     async bingoBingo() {
@@ -493,7 +546,7 @@ class MyHomePage extends React.Component {
         if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
             const playerInformation = await bingoGameContract.GetPlayerInformation.call(address);
             let { bouts } = playerInformation || {}
-            Array.isArray(bouts) && this.props.onSetBetList({ betList: bouts.reverse() })
+            address == this.props.ReduxStore.address &&  Array.isArray(bouts) && this.props.onSetBetList({ betList: bouts.reverse() })
         }
     }
     getLotteryList = async () => {
@@ -502,7 +555,7 @@ class MyHomePage extends React.Component {
         if (bingoGameContract && bingoGameContract.GetPlayerInformationCompleted) {
             const playerInformation = await bingoGameContract.GetPlayerInformationCompleted.call(address);
             let { bouts } = playerInformation || {}
-            Array.isArray(bouts) && this.props.onSetLotteryList({ lotteryList: bouts.reverse() });
+            address == this.props.ReduxStore.address && Array.isArray(bouts) && this.props.onSetLotteryList({ lotteryList: bouts.reverse() });
         }
     }
     getTxResult = async (TransactionId) => {
@@ -518,9 +571,12 @@ class MyHomePage extends React.Component {
         if (number >= 3) return
         const txResult = await aelfInstance.chain.getTxResult(TransactionId);
         if (txResult.Status !== 'NotExisted') {
-            this.props.onSetNewBet({ newBet: true })
-            this.getBetList()
-            this.getLotteryList()
+            const { address, betList } = this.props.ReduxStore
+            if(address && Array.isArray(betList) && betList.length){
+                this.props.onSetNewBet({ newBet: true })
+                this.getBetList()
+                this.getLotteryList()
+            }
         } else {
             this.txResultTime = {
                 ...this.txResultTime,
@@ -539,7 +595,7 @@ class MyHomePage extends React.Component {
         if (bingoGameContract && bingoGameContract.GetPlayerInformation) {
             const playerInformation = await bingoGameContract.GetPlayerInformation.call(address);
             let oldBouts = playerInformation || {}.bouts
-            Array.isArray(oldBouts) && this.props.onSetBetList({ betList: oldBouts.reverse() })
+            this.props.ReduxStore.address == address && Array.isArray(oldBouts) && this.props.onSetBetList({ betList: oldBouts.reverse() })
             const { bouts } = playerInformation || {}
             if (!bouts || !bouts.length || !bingoGameContract || !bingoGameContract.Bingo) return
             const bingo = (value) => {
@@ -617,14 +673,19 @@ class MyHomePage extends React.Component {
         );
     }
 
-    renderLotteryCode(optionsInput) {
+    renderLotteryCode = (optionsInput) => {
+        const { privateKey } = this.state
+
         const {
             address, jackpot, tokenSymbol, bingoOutputUnpacked, bingoResult, showBingo, lastBetType,lastBetCount
         } = optionsInput;
-
         const jackpotButtonText = (() => {
             if (!address) {
-                return 'Please Login';
+                if (privateKey != null) {
+                    return 'Wait game initialize';
+                } else {
+                    return 'Please Login';
+                }
             }
             if(lastBetCount){
                 return `My Last bet: ${lastBetCount} ${tokenSymbol} ${lastBetType === 1 ? 'Small' : 'Big'}`;
@@ -648,8 +709,8 @@ class MyHomePage extends React.Component {
           button={{title: jackpotButtonText}}
         //   info={[lotteryInfo]}
           onButtonPress={() => {
-              if (!address) {
-                  this.goRouter("MinePage")
+              if (!address && privateKey == null) {
+                  this.goRouter("LoginPage")
               }
           }}
         />;
@@ -732,8 +793,8 @@ class MyHomePage extends React.Component {
                                 onChangeText={betCount => this.onBetChange(betCount)}
                                 value={betCount + ''}
                                 />
-                                <Button buttonStyle={styles.bingoButton} title={'half'} onPress={() => this.onBetButtonClick(Math.floor(balance) / 2)}/>
-                                <Button buttonStyle={styles.bingoButton} title={'all in'} onPress={() => this.onBetButtonClick(Math.floor(balance))}/>
+                                <Button buttonStyle={styles.bingoButton} title={'half'} onPress={() => this.onBetButtonClick(balance / 2)}/>
+                                <Button buttonStyle={styles.bingoButton} title={'all in'} onPress={() => this.onBetButtonClick(balance)}/>
                             </View>
                         </Card>
 

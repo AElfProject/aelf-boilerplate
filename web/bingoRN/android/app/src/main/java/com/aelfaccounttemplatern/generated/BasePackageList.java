@@ -9,8 +9,10 @@ public class BasePackageList {
     return Arrays.<Package>asList(
         new expo.modules.barcodescanner.BarCodeScannerPackage(),
         new expo.modules.constants.ConstantsPackage(),
+        new expo.modules.device.DevicePackage(),
         new expo.modules.filesystem.FileSystemPackage(),
         new expo.modules.imageloader.ImageLoaderPackage(),
+        new expo.modules.imagepicker.ImagePickerPackage(),
         new expo.modules.localauthentication.LocalAuthenticationPackage(),
         new expo.modules.permissions.PermissionsPackage()
     );

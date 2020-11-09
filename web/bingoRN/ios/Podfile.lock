@@ -10,6 +10,8 @@ PODS:
   - EXConstants (9.0.0):
     - UMConstantsInterface
     - UMCore
+  - EXDevice (2.2.1):
+    - UMCore
   - EXFileSystem (8.1.0):
     - UMCore
     - UMFileSystemInterface
@@ -17,6 +19,10 @@ PODS:
     - React-Core
     - UMCore
     - UMImageLoaderInterface
+  - EXImagePicker (8.1.0):
+    - UMCore
+    - UMFileSystemInterface
+    - UMPermissionsInterface
   - EXLocalAuthentication (9.0.0):
     - UMConstantsInterface
     - UMCore
@@ -289,21 +295,10 @@ PODS:
     - React
   - RNCMaskedView (0.1.10):
     - React
-  - RNDeviceInfo (2.3.2):
-    - React
   - RNFS (2.16.6):
     - React
   - RNGestureHandler (1.6.1):
     - React
-  - RNImageCropPicker (0.28.0):
-    - React-Core
-    - React-RCTImage
-    - RNImageCropPicker/QBImagePickerController (= 0.28.0)
-    - RSKImageCropper
-  - RNImageCropPicker/QBImagePickerController (0.28.0):
-    - React-Core
-    - React-RCTImage
-    - RSKImageCropper
   - RNReanimated (1.9.0):
     - React
   - RNScreens (2.8.0):
@@ -312,7 +307,6 @@ PODS:
     - React
   - RNVectorIcons (6.6.0):
     - React
-  - RSKImageCropper (2.2.3)
   - UMAppLoader (1.0.2)
   - UMBarCodeScannerInterface (5.1.0)
   - UMCameraInterface (5.1.0)
@@ -341,8 +335,10 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXBarCodeScanner (from `../node_modules/expo-barcode-scanner/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
+  - EXDevice (from `../node_modules/expo-device/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
+  - EXImagePicker (from `../node_modules/expo-image-picker/ios`)
   - EXLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
   - EXPermissions (from `../node_modules/expo-permissions/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -381,10 +377,8 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
-  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
-  - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -406,7 +400,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git:
-    - RSKImageCropper
     - ZXingObjC
   trunk:
     - boost-for-react-native
@@ -418,10 +411,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-barcode-scanner/ios"
   EXConstants:
     :path: "../node_modules/expo-constants/ios"
+  EXDevice:
+    :path: "../node_modules/expo-device/ios"
   EXFileSystem:
     :path: "../node_modules/expo-file-system/ios"
   EXImageLoader:
     :path: "../node_modules/expo-image-loader/ios"
+  EXImagePicker:
+    :path: "../node_modules/expo-image-picker/ios"
   EXLocalAuthentication:
     :path: "../node_modules/expo-local-authentication/ios"
   EXPermissions:
@@ -492,14 +489,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/clipboard"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
-  RNDeviceInfo:
-    :path: "../node_modules/react-native-device-info"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
-  RNImageCropPicker:
-    :path: "../node_modules/react-native-image-crop-picker"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -542,8 +535,10 @@ SPEC CHECKSUMS:
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   EXBarCodeScanner: 5e1d94192899873d2570a1c2c161df638bac52da
   EXConstants: 9f18e9ef229706394f41735d9c7f309d479b36c0
+  EXDevice: 841e1078d98529b176119fecfa524faf5e9d3379
   EXFileSystem: b82693d78de152efe10a77d4aac781f782e10916
   EXImageLoader: 5c9d1bf408443ac4d4f44463eaf3b0d03bc70425
+  EXImagePicker: 578529114ac96351296daccd493c419bbb347d33
   EXLocalAuthentication: 238cc8f7d647e7676fba045420266da80bf7c2b2
   EXPermissions: d2cafee9c72578ecc9ca121481e6c4a04a798861
   FBLazyVector: 4aab18c93cd9546e4bfed752b4084585eca8b245
@@ -579,15 +574,12 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: db711e29e5e0500d9bd21aa0c2e397efa45302b1
   RNCClipboard: a254f6e568bc713b7ef49646e216661369882030
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
-  RNDeviceInfo: bdc3e922b2ed0f086e9d9ab534e61bc316f08576
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
-  RNImageCropPicker: cf129d17e042ce3e96fb9ada967c28f21f977c82
   RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
   RNScreens: 62211832af51e0aebcf6e8c36bcf7dd65592f244
   RNSVG: 8ba35cbeb385a52fd960fd28db9d7d18b4c2974f
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
-  RSKImageCropper: a446db0e8444a036b34f3c43db01b2373baa4b2a
   UMAppLoader: ae5eaee9f3c8cc847c631a579fed20d217de5913
   UMBarCodeScannerInterface: aa3409ab9d108866e55c09ad0292e4a6c08a7775
   UMCameraInterface: 9d5da92c521e0af7815afbf77ea19bd0312b4928

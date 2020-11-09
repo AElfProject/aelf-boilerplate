@@ -8,14 +8,14 @@ import {
     PermissionsAndroid,
     default as Easing,
     ImageBackground,
-    TextInput, Platform, ActivityIndicator,
+    ActivityIndicator, DeviceEventEmitter,
 } from 'react-native';
 import { RNCamera } from 'react-native-camera'
 import AsyncStorage from "@react-native-community/async-storage"
 import Storage from  "../../../constants/storage"
 
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import ImagePicker from "react-native-image-crop-picker"
+import * as ImagePicker from 'expo-image-picker';
 // import Password from 'react-native-password-pay'
 import { Button, Overlay, Input } from "react-native-elements"
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -29,7 +29,7 @@ import Loading from '../../../common/UI_Component/Loading';
 
 import AElf from 'aelf-sdk';
 import connect from "../../../common/utils/myReduxConnect";
-const {appInit} = require('../../../common/utils/aelfProvider');
+import { appInit } from '../../../common/utils/aelfProvider'
 
 class MyAccountLogin extends Component {
     constructor(props) {
@@ -91,7 +91,7 @@ class MyAccountLogin extends Component {
     }
     rightElement() {
         return (
-            <TouchableOpacity onPress={() => this.usePhotoAlbum()}>
+            <TouchableOpacity style={styles.albumBox} onPress={() => this.usePhotoAlbum()}>
                 <TextM>Album</TextM>
             </TouchableOpacity>
         )
@@ -99,20 +99,28 @@ class MyAccountLogin extends Component {
     /* 调用相册 */
     async usePhotoAlbum() {
         try {
-            const images = await ImagePicker.openPicker({
-                multiple: false
-            });
-            console.log('images: ', images);
-            this.recoginze(images);
-        } catch {
+            const camera = await ImagePicker.requestCameraPermissionsAsync();
+            const cameraRoll = await ImagePicker.requestCameraRollPermissionsAsync();
+            if (camera.status !== 'granted' && cameraRoll.status !== 'granted') {
+                alert('Sorry, we need camera roll permissions to make this work!');
+            } else {
+                const images = await ImagePicker.launchImageLibraryAsync({
+                    allowMultipleSelection: false,
+                });
+                if (images.uri) {
+                    this.recoginze(images);
+                } else {
+                    alert("Image load failed.")
+                }
+            }
+        } catch (err) {
             alert("Image load failed.")
         }
     }
     /* 识别二维码图片 */
     recoginze = async (images) => {
-        // "file:///Users/xxxx/xxxxD879F1DD.jpg", must with the protocol
         try {
-            const imageData = await BarCodeScanner.scanFromURLAsync('file://' + images.path, [
+            const imageData = await BarCodeScanner.scanFromURLAsync(images.uri, [
                 BarCodeScanner.Constants.BarCodeType.qr,
             ]);
 
@@ -157,12 +165,14 @@ class MyAccountLogin extends Component {
     };
     /* 二维码扫描结果 */
     onBarCodeRead = (result) => {
-        const { data } = result; //只要拿到data就可以了
-        if (data) {
+        const { data } = result; //Determine whether to log in the QR code
+        if (data && typeof data === 'string' && data.includes('aelf')) {
             this.setState({
                 enterAccount: true,
                 keyStore: data
             })
+        } else {
+            this.tipMsg('Please use the login QR code')
         }
     };
     /* 扫描二维码 html */
@@ -212,47 +222,48 @@ class MyAccountLogin extends Component {
             loadingVisible : true,
         });
     }
+    loginSuccess = async (keyStoreTemp, privateKey) => {
+        try {
+            const contracts = await appInit(privateKey)
+            this.props.onLoginSuccess({
+                contracts,
+                address: keyStoreTemp.address,
+                keystore: keyStoreTemp
+            });
+        } catch (error) {
+            console.warn(error, "连接合约失败");
+        }
+    }
     /* 登陆 */
     async accountLogin() {
-
-        const { psw, originPsw,keyStore } = this.state;
+        const { psw, originPsw, keyStore } = this.state;
         const keyStoreTemp = JSON.parse(keyStore);
-        const checkResult = AElf.wallet.keyStore.checkPassword(keyStoreTemp, psw);
 
-        //登陆成功
-        if (checkResult) {
-            this.setState({
-                modalVisible: true,
-                tipStatus: true,
-                loadingVisible: false
-            });
-
+        try {
             const { mnemonic: ksMn, privateKey } = AElf.wallet.keyStore.unlockKeystore(keyStoreTemp, psw);
-            this.setToken(privateKey, keyStore);
-            try {
-                this.props.onLoginSuccess({
-                    contracts: await appInit(privateKey),
-                    address: keyStoreTemp.address,
-                    keystore: keyStoreTemp
+            if (!!privateKey) {
+                this.setState({
+                    modalVisible: true,
+                    tipStatus: true,
+                    loadingVisible: false
                 });
-            } catch (error) {
-                console.warn(error,"连接合约失败");
+                this.setToken(privateKey, keyStore);
+                this.loginSuccess(keyStoreTemp, privateKey);
+
+                setTimeout(() => {
+                    this.changeModalStatus();
+                }, 1000);
+                return true;
+            } else {
+                return false
             }
-
-
-            setTimeout(()=>{
-                this.changeModalStatus();
-            }, 1000);
-
-            return true;
-
-        }else {
+        } catch (error) {
             this.setState({
                 modalVisible: true,
                 tipStatus: false,
                 loadingVisible: false
             })
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.changeModalStatus();
             }, 1000);
             return false;
@@ -265,7 +276,7 @@ class MyAccountLogin extends Component {
         await AsyncStorage.setItem(Storage.userToken,"userToken");
         await AsyncStorage.setItem(Storage.userPrivateKey,pk);
         await AsyncStorage.setItem(Storage.userKeyStore, ks);
-
+        DeviceEventEmitter.emit("checkPrivateKey");
 
         // setTimeout(()=>{
         //     this.goRouter("HomePage",{keyStore:ks});
@@ -455,5 +466,11 @@ const styles = StyleSheet.create({
         ...Gstyle.radiusArg(pTd(10)),
         justifyContent: "center",
         alignItems: "center"
+    },
+    albumBox: {
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
