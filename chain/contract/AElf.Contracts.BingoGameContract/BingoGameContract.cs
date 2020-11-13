@@ -30,7 +30,7 @@ namespace AElf.Contracts.BingoGameContract
             State.TokenContract.Transfer.Send(new TransferInput
             {
                 Symbol = Context.Variables.NativeSymbol,
-                Amount = 10_0000_00000000,
+                Amount = 100_00000000,
                 To = Context.Sender,
                 Memo = "Pay tx fee."
             });
