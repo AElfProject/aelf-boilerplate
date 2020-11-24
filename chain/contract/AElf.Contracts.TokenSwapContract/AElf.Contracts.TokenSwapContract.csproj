@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
-        <IsContract>true</IsContract>
         <RootNamespace>AElf.Contracts.TokenSwapContract</RootNamespace>
     </PropertyGroup>
 
@@ -14,6 +13,12 @@
         <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     </PropertyGroup>
 
+    <ItemGroup>
+        <CommonMessage Include="..\..\protobuf\authority_info.proto">
+            <Link>Protobuf\Proto\authority_info.proto</Link>
+        </CommonMessage>
+    </ItemGroup>
+    
     <ItemGroup>
         <ContractBase Include="..\..\protobuf\acs1.proto">
             <Link>Protobuf\Proto\acs1.proto</Link>
@@ -31,6 +36,6 @@
     <ItemGroup>
         <ContractCode Include="..\..\protobuf\token_swap_contract.proto">
             <Link>Protobuf\Proto\token_swap_contract.proto</Link>
-        </ContractCode>
+        </ContractCode> 
     </ItemGroup>
 </Project>

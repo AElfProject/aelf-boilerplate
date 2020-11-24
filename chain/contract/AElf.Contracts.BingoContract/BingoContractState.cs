@@ -15,6 +15,7 @@ namespace AElf.Contracts.BingoContract
         internal AEDPoSContractContainer.AEDPoSContractReferenceState ConsensusContract { get; set; }
 
         public MappedState<Address, PlayerInformation> PlayerInformation { get; set; }
+        public MappedState<Address, PlayerInformation> PlayerInformationCompleted { get; set; }
 
         public SingletonState<long> LagHeight { get; set; }
     }

@@ -12,11 +12,12 @@ service BingoContract {
     option (aelf.csharp_state) = "AElf.Contracts.BingoContract.BingoContractState";
     
     // Actions
-    rpc Register (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    // Buy or Bet 
+    rpc Play (PlayInput) returns (google.protobuf.Int64Value) {
     }
-    rpc Play (google.protobuf.Int64Value) returns (google.protobuf.Int64Value) {
-    }
-    rpc Bingo (aelf.Hash) returns (google.protobuf.BoolValue) {
+    // Waiting few seconds, you can draw the prize.
+    // Play -> waiting seconds -> Bingo
+    rpc Bingo (aelf.Hash) returns (BingoOutput) {
     }
     rpc Quit (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
@@ -28,6 +29,22 @@ service BingoContract {
     rpc GetPlayerInformation (aelf.Address) returns (PlayerInformation) {
         option (aelf.is_view) = true;
     }
+    rpc GetPlayerInformationCompleted (aelf.Address) returns (PlayerInformation) {
+        option (aelf.is_view) = true;
+    }
+}
+
+message PlayInput {
+    int64 buy_amount = 1;
+    int64 buy_type = 2; // type = {1: small, 2: big}
+    string token_symbol = 3;
+}
+
+message BingoOutput {
+    int64 random = 1;
+    bool is_win = 2;
+    int64 bout_type = 3;
+    int64 award = 4;
 }
 
 message PlayerInformation {
@@ -43,4 +60,8 @@ message BoutInformation {
     bool is_complete = 4;
     aelf.Hash play_id = 5;
     int64 bingo_block_height = 6;
+    int64 bout_type = 7;
+    string token_symbol = 8;
+    int64 lottery_code = 9;
+    google.protobuf.Timestamp bet_time = 10;
 }

@@ -1,28 +1,34 @@
-using AElf.Contracts.TestKit;
-using AElf.Kernel.SmartContract;
+using System.Collections.Generic;
+using System.IO;
+using AElf.Boilerplate.TestBase;
+using AElf.ContractTestBase;
 using AElf.Kernel.SmartContract.Application;
-using AElf.Kernel.SmartContract.Infrastructure;
-using AElf.Runtime.CSharp;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
+using Volo.Abp;
 using Volo.Abp.Modularity;
 
 namespace AElf.Contracts.GreeterContract
 {
-    [DependsOn(typeof(ContractTestModule))]
-    public class GreeterContractTestModule : ContractTestModule
+    [DependsOn(typeof(MainChainDAppContractTestModule))]
+    public class GreeterContractTestModule : MainChainDAppContractTestModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            Configure<ContractOptions>(o => o.ContractDeploymentAuthorityRequired = false);
-            context.Services.RemoveAll<IPreExecutionPlugin>();
-            context.Services.AddSingleton<ISmartContractRunner, UnitTestCSharpSmartContractRunner>(provider =>
+            context.Services.AddSingleton<IContractInitializationProvider, GreeterContractInitializationProvider>();
+        }
+
+        public override void OnPreApplicationInitialization(ApplicationInitializationContext context)
+        {
+            var contractCodeProvider = context.ServiceProvider.GetService<IContractCodeProvider>();
+            var contractDllLocation = typeof(GreeterContract).Assembly.Location;
+            var contractCodes = new Dictionary<string, byte[]>(contractCodeProvider.Codes)
             {
-                var option = provider.GetService<IOptions<RunnerOptions>>();
-                return new UnitTestCSharpSmartContractRunner(
-                    option.Value.SdkDir);
-            });
+                {
+                    new GreeterContractInitializationProvider().ContractCodeName,
+                    File.ReadAllBytes(contractDllLocation)
+                }
+            };
+            contractCodeProvider.Codes = contractCodes;
         }
     }
 }

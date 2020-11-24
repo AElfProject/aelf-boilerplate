@@ -4,6 +4,7 @@ import "aelf/core.proto";
 import "aelf/options.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "AElf.Contracts.LotteryContract";
 
@@ -15,19 +16,27 @@ service LotteryContract {
     }
     rpc Buy(google.protobuf.Int64Value) returns (BoughtLotteriesInformation) {
     }
-    rpc Draw (DrawInput) returns (google.protobuf.Empty) {
+    rpc Draw (google.protobuf.Int64Value) returns (google.protobuf.Empty) {
     }
     rpc PrepareDraw (google.protobuf.Empty) returns (google.protobuf.Empty) {
 	}
     rpc TakeReward (TakeRewardInput) returns (google.protobuf.Empty) {
     }
-    
+
     // Management Actions
     rpc ResetMaximumBuyAmount (google.protobuf.Int64Value) returns (google.protobuf.Empty) {
     }
     rpc ResetPrice (google.protobuf.Int64Value) returns (google.protobuf.Empty) {
     }
     rpc ResetDrawingLag (google.protobuf.Int64Value) returns (google.protobuf.Empty) {
+    }
+    rpc AddRewardList (RewardList) returns (google.protobuf.Empty) {
+    }
+    rpc SetRewardListForOnePeriod (RewardsInfo) returns (google.protobuf.Empty) {
+    }
+    rpc Suspend (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    }
+    rpc Recover (google.protobuf.Empty) returns (google.protobuf.Empty) {
     }
 
     rpc GetRewardResult (google.protobuf.Int64Value) returns (GetRewardResultOutput) {
@@ -60,6 +69,21 @@ service LotteryContract {
 	rpc GetLottery (google.protobuf.Int64Value) returns (Lottery) {
         option (aelf.is_view) = true;
     }
+	rpc GetRewardList (google.protobuf.Empty) returns (RewardList) {
+        option (aelf.is_view) = true;
+    }
+	rpc GetRewardName (google.protobuf.StringValue) returns (google.protobuf.StringValue) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetBoughtLotteriesCount (aelf.Address) returns (google.protobuf.Int64Value) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetAllLotteriesCount (google.protobuf.Empty) returns (google.protobuf.Int64Value) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetNoRewardLotteriesCount (google.protobuf.Empty) returns (google.protobuf.Int64Value) {
+        option (aelf.is_view) = true;
+    }
 }
 
 message InitializeInput {
@@ -79,14 +103,10 @@ message TakeRewardInput {
     string registration_information = 2;
 }
 
-message DrawInput {
-    repeated int32 levels_count = 1;
-}
-
 message Lottery {
     int64 id = 1;
     aelf.Address owner = 2;
-    int64 level = 3;
+    string reward_name = 3;
     int64 block = 4;
     string registration_information = 5;
 }
@@ -96,6 +116,8 @@ message PeriodBody {
     aelf.Hash random_hash = 3;
     repeated int64 reward_ids = 4;
     int64 start_id = 5;
+    map<string, int32> rewards = 6;
+    google.protobuf.Timestamp supposed_draw_date = 7;
 }
 
 message LotteryList {
@@ -120,4 +142,18 @@ message GetBoughtLotteriesInput {
 
 message GetBoughtLotteriesOutput {
     repeated Lottery lotteries = 3;
+}
+
+message RewardList {
+    map<string, string> reward_map = 1;
+}
+
+message RewardsInfo {
+    int64 period = 1;
+    map<string, int32> rewards = 2;
+    google.protobuf.Timestamp supposed_draw_date = 3;
+}
+
+message StringList {
+    repeated string value = 1;
 }

@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using AElf.Contracts.Deployer;
-using AElf.Contracts.TestKit;
+using AElf.ContractDeployer;
 using AElf.ContractTestBase;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.Kernel.Consensus.AEDPoS;
 using AElf.Kernel.Miner.Application;
-using AElf.Kernel.SmartContractInitialization;
+using AElf.Kernel.SmartContract.Application;
 using AElf.OS.Node.Application;
 using AElf.Runtime.CSharp;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,7 +35,7 @@ namespace AElf.Boilerplate.TestBase
             Configure<ConsensusOptions>(options =>
             {
                 options.MiningInterval = 4000;
-                options.InitialMinerList = new List<string> {SampleECKeyPairs.KeyPairs[0].PublicKey.ToHex()};
+                options.InitialMinerList = new List<string> {SampleAccount.Accounts[0].KeyPair.PublicKey.ToHex()};
             });
             
             context.Services.RemoveAll<ISystemTransactionGenerator>();
@@ -69,7 +68,7 @@ namespace AElf.Boilerplate.TestBase
             Configure<ConsensusOptions>(options =>
             {
                 options.MiningInterval = 4000;
-                options.InitialMinerList = new List<string> {SampleECKeyPairs.KeyPairs[0].PublicKey.ToHex()};
+                options.InitialMinerList = new List<string> {SampleAccount.Accounts[0].KeyPair.PublicKey.ToHex()};
             });
 
             context.Services.RemoveAll<ISystemTransactionGenerator>();

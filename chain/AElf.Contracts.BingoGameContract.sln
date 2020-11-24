@@ -1,0 +1,86 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "contract", "contract", "{5C980166-C987-470D-AEE0-3858A170A903}"
+	ProjectSection(SolutionItems) = preProject
+		contract\Directory.Build.props = contract\Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{21D85A91-5BB8-4912-8107-49435A461AAC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{DBC47323-E6A2-42A2-A624-CE2EE6139567}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.CodeGenerator", "src\AElf.Boilerplate.CodeGenerator\AElf.Boilerplate.CodeGenerator.csproj", "{1E374BCA-7093-43A4-A419-23999B147B1A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.BingoGameContract.Launcher", "src\AElf.Boilerplate.BingoGameContract.Launcher\AElf.Boilerplate.BingoGameContract.Launcher.csproj", "{7691E8CC-C427-4361-AF9A-D769A92C2318}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Boilerplate.MainChain", "src\AElf.Boilerplate.MainChain\AElf.Boilerplate.MainChain.csproj", "{F5B9CE98-80B4-46F0-A040-1BE75C276411}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.TestBase", "src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj", "{F72731A8-5803-4362-834F-0C066E64D4CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.SystemTransactionGenerator", "src\AElf.Boilerplate.SystemTransactionGenerator\AElf.Boilerplate.SystemTransactionGenerator.csproj", "{217599C5-2CF0-411E-97B5-5657739CEE5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.BingoGameContract", "contract\AElf.Contracts.BingoGameContract\AElf.Contracts.BingoGameContract.csproj", "{19311D5A-8788-4463-A6EF-6AA4E9115232}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.BingoGameContract.Tests", "test\AElf.Contracts.BingoGameContract.Tests\AElf.Contracts.BingoGameContract.Tests.csproj", "{E2491309-869C-4422-A7B6-B895C30B7D5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.ContractPatcher", "src\AElf.Boilerplate.ContractPatcher\AElf.Boilerplate.ContractPatcher.csproj", "{DCC207EA-842A-4B54-858B-295CAA8947D5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7691E8CC-C427-4361-AF9A-D769A92C2318}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7691E8CC-C427-4361-AF9A-D769A92C2318}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7691E8CC-C427-4361-AF9A-D769A92C2318}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7691E8CC-C427-4361-AF9A-D769A92C2318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5B9CE98-80B4-46F0-A040-1BE75C276411}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5B9CE98-80B4-46F0-A040-1BE75C276411}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5B9CE98-80B4-46F0-A040-1BE75C276411}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5B9CE98-80B4-46F0-A040-1BE75C276411}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9484A7A9-CA57-4FF4-9FD8-27BFEF92EDBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9484A7A9-CA57-4FF4-9FD8-27BFEF92EDBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9484A7A9-CA57-4FF4-9FD8-27BFEF92EDBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9484A7A9-CA57-4FF4-9FD8-27BFEF92EDBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{217599C5-2CF0-411E-97B5-5657739CEE5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{217599C5-2CF0-411E-97B5-5657739CEE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{217599C5-2CF0-411E-97B5-5657739CEE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{217599C5-2CF0-411E-97B5-5657739CEE5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E374BCA-7093-43A4-A419-23999B147B1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E374BCA-7093-43A4-A419-23999B147B1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E374BCA-7093-43A4-A419-23999B147B1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E374BCA-7093-43A4-A419-23999B147B1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCC207EA-842A-4B54-858B-295CAA8947D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCC207EA-842A-4B54-858B-295CAA8947D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCC207EA-842A-4B54-858B-295CAA8947D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCC207EA-842A-4B54-858B-295CAA8947D5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7691E8CC-C427-4361-AF9A-D769A92C2318} = {21D85A91-5BB8-4912-8107-49435A461AAC}
+		{F5B9CE98-80B4-46F0-A040-1BE75C276411} = {21D85A91-5BB8-4912-8107-49435A461AAC}
+		{217599C5-2CF0-411E-97B5-5657739CEE5D} = {21D85A91-5BB8-4912-8107-49435A461AAC}
+		{1E374BCA-7093-43A4-A419-23999B147B1A} = {21D85A91-5BB8-4912-8107-49435A461AAC}
+		{F72731A8-5803-4362-834F-0C066E64D4CD} = {21D85A91-5BB8-4912-8107-49435A461AAC}
+		{DCC207EA-842A-4B54-858B-295CAA8947D5} = {21D85A91-5BB8-4912-8107-49435A461AAC}
+		{19311D5A-8788-4463-A6EF-6AA4E9115232} = {5C980166-C987-470D-AEE0-3858A170A903}
+		{E2491309-869C-4422-A7B6-B895C30B7D5D} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7426B41-E959-40E4-9ED8-ED8D9C50F133}
+	EndGlobalSection
+EndGlobal

@@ -1,15 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Acs0;
-using AElf.Boilerplate.TestBase;
 using AElf.Contracts.MultiToken;
-using AElf.Contracts.TestKit;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.Cryptography.ECDSA;
 using AElf.Kernel;
 using AElf.Kernel.Blockchain.Application;
 using AElf.Kernel.SmartContract.Application;
-using AElf.Kernel.Token;
 using AElf.Types;
 using Microsoft.Extensions.DependencyInjection;
 using Tokenswap;
@@ -19,73 +16,22 @@ namespace AElf.Contracts.TokenSwapContract
 {
     public class TokenSwapContractTestBase : ContractTestBase<TokenSwapContractTestModule>
     {
-        internal ACS0Container.ACS0Stub BasicContractZeroStub { get; set; }
-
-        protected Address TokenContractAddress => GetAddress(TokenSmartContractAddressNameProvider.StringName);
-
         internal TokenContractImplContainer.TokenContractImplStub TokenContractStub { get; set; }
-        protected ECKeyPair DefaultSenderKeyPair => SampleECKeyPairs.KeyPairs[0];
-        protected ECKeyPair NormalKeyPair => SampleECKeyPairs.KeyPairs[1];
+        protected ECKeyPair DefaultSenderKeyPair => SampleAccount.Accounts[0].KeyPair;
+        protected ECKeyPair NormalKeyPair => SampleAccount.Accounts[1].KeyPair;
         protected Address DefaultSenderAddress => Address.FromPublicKey(DefaultSenderKeyPair.PublicKey);
         protected Address TokenSwapContractAddress => GetAddress(TokenSwapContractNameProvider.StringName);
 
         private IReadOnlyDictionary<string, byte[]> _patchedCodes;
         internal TokenSwapContractContainer.TokenSwapContractStub TokenSwapContractStub { get; set; }
 
-        // private const string ContractPatchedDllDir = "../../../../patched/";
 
         public TokenSwapContractTestBase()
         {
-            // _patchedCodes = GetPatchedCodes(ContractPatchedDllDir);
-            var factory = Application.ServiceProvider.GetRequiredService<IContractTesterFactory>();
-            TokenContractStub = factory.Create<TokenContractImplContainer.TokenContractImplStub>(TokenContractAddress,
-                SampleECKeyPairs.KeyPairs.First());
-            TokenSwapContractStub =
-                factory.Create<TokenSwapContractContainer.TokenSwapContractStub>(TokenSwapContractAddress,
-                    SampleECKeyPairs.KeyPairs.First());
+            TokenContractStub = GetTokenContractStub(DefaultSenderKeyPair);
+            TokenSwapContractStub = GetTokenSwapContractStub(DefaultSenderKeyPair);
         }
 
-        // internal ACS0Container.ACS0Stub GetContractZeroTester(ECKeyPair keyPair)
-        // {
-        //     return GetTester<Acs0.ACS0Container.ACS0Stub>(ContractZeroAddress, keyPair);
-        // }
-
-        // protected void InitializePatchedContracts()
-        // {
-        //     BasicContractZeroStub = GetContractZeroTester(DefaultSenderKeyPair);
-        //
-        //     var tokenContractAddress = AsyncHelper.RunSync(async () =>
-        //         await DeploySystemSmartContract(
-        //             KernelConstants.CodeCoverageRunnerCategory,
-        //             _patchedCodes.Single(kv => kv.Key.EndsWith("MultiToken")).Value,
-        //             TokenSmartContractAddressNameProvider.Name,
-        //             DefaultSenderKeyPair));
-        //     TokenContractStub =
-        //         GetTester<TokenContractContainer.TokenContractStub>(tokenContractAddress, DefaultSenderKeyPair);
-        //
-        //     //deploy token swap contract
-        //     var tokenSwapContractCode = _patchedCodes.Single(kv => kv.Key.EndsWith("TokenSwapContract")).Value;
-        //     TokenSwapContractAddress = AsyncHelper.RunSync(async () =>
-        //         await DeployContractAsync(
-        //             KernelConstants.CodeCoverageRunnerCategory,
-        //             tokenSwapContractCode,
-        //             HashHelper.ComputeFrom("TokenSwapContract"),
-        //             DefaultSenderKeyPair));
-        //     TokenSwapContractStub = GetTester<TokenSwapContractContainer.TokenSwapContractStub>(
-        //         TokenSwapContractAddress,
-        //         DefaultSenderKeyPair);
-        //     CheckCode(tokenSwapContractCode);
-        // }
-
-
-        // protected void CheckCode(byte[] code)
-        // {
-        //     var auditor = new CSharpContractAuditor();
-        //     auditor.Audit(code, new RequiredAcs
-        //     {
-        //         AcsList = new List<string>()
-        //     });
-        // }
 
         private Address GetAddress(string contractStringName)
         {
@@ -202,6 +148,12 @@ namespace AElf.Contracts.TokenSwapContract
             return GetTester<TokenSwapContractContainer.TokenSwapContractStub>(TokenSwapContractAddress, ecKeyPair);
         }
 
+        
+        internal TokenContractImplContainer.TokenContractImplStub GetTokenContractStub(ECKeyPair senderKeyPair)
+        {
+            return GetTester<TokenContractImplContainer.TokenContractImplStub>(TokenContractAddress, senderKeyPair);
+        }
+        
         protected Hash GetHashTokenAmountData(decimal amount, int originTokenSizeInByte)
         {
             var preHolderSize = originTokenSizeInByte - 16;
@@ -238,7 +190,6 @@ namespace AElf.Contracts.TokenSwapContract
         protected string DefaultSymbol1 { get; set; } = "ELF";
         protected string DefaultSymbol2 { get; set; } = "ABC";
 
-        protected string TokenName1 { get; set; } = "ELF";
         protected string TokenName2 { get; set; } = "ABC";
 
         protected long TotalSupply { get; set; } = 100_000_000_000_000_000;

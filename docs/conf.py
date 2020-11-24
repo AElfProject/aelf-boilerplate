@@ -41,8 +41,14 @@ source_suffix = ['.rst', '.md']
 #     'sphinx.ext.mathjax',
 #     'recommonmark',
 # ]
-extensions = ['recommonmark', 'plantweb.directive'
-]
+extensions = ['recommonmark', 
+              'plantweb.directive',
+              'sphinx.ext.autodoc',
+              'sphinx.ext.napoleon',
+              'sphinx.ext.viewcode'
+            ]
+            
+latex_engine = 'xelatex'
 
 # source_parsers = {
 #     '.md': CommonMarkParser,
@@ -204,6 +210,7 @@ html_show_copyright = False
 #   'da', 'de', 'en', 'es', 'fi', 'fr', 'hu', 'it', 'ja'
 #   'nl', 'no', 'pt', 'ro', 'ru', 'sv', 'tr'
 html_search_language = 'en'
+locale_dirs = ['locale/'] 
 
 # A dictionary with options for the search language support, empty by default.
 # Now only 'ja' uses this config value

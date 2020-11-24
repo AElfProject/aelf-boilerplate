@@ -7,20 +7,25 @@ Welcome to Boilerplate doc's documentation!
 ===========================================   
 
 .. toctree::
-   :caption: Introduction
+   :caption: Getting started
 
-   Introduction <introduction>
-
-.. toctree::
-   :caption: Contract
-
-   boilerplate
-   system-contract
-
+   Usage <usage/index>
+   FAQ <faq>
 
 .. toctree::
-   :caption: Acs
+   :caption: AElf Boilerplate guide
 
-   acs
+   contract <contract_folder>
+   src <src_folder>
+   test <test_folder>
 
+.. toctree::
+   :caption: Development
 
+   system-contract <system-contract/index>
+   acs <acs/index>
+   demo <demo/index>
+   DApp <dapp/index>
+
+.. toctree::
+   :caption: Related projects

@@ -1,5 +1,5 @@
-using Acs1;
 using AElf.Sdk.CSharp.State;
+using AElf.Standards.ACS1;
 
 namespace AElf.Contracts.ACS1DemoContract
 {

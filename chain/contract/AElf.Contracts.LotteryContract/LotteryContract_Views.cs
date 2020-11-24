@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AElf.CSharp.Core;
+using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.LotteryContract
@@ -134,6 +135,35 @@ namespace AElf.Contracts.LotteryContract
         {
             var period = State.Periods[State.CurrentPeriod.Value];
             return period ?? new PeriodBody();
+        }
+
+        public override RewardList GetRewardList(Empty input)
+        {
+            return new RewardList
+            {
+                RewardMap = {State.RewardCodeList.Value.Value.ToDictionary(c => c, c => State.RewardMap[c])}
+            };
+        }
+
+        public override StringValue GetRewardName(StringValue input)
+        {
+            return new StringValue {Value = State.RewardMap[input.Value]};
+        }
+
+        public override Int64Value GetBoughtLotteriesCount(Address input)
+        {
+            return new Int64Value {Value = State.BoughtLotteriesCount[input]};
+        }
+
+        public override Int64Value GetAllLotteriesCount(Empty input)
+        {
+            return new Int64Value {Value = State.SelfIncreasingIdForLottery.Value.Sub(1)};
+        }
+
+        public override Int64Value GetNoRewardLotteriesCount(Empty input)
+        {
+            return new Int64Value
+                {Value = State.SelfIncreasingIdForLottery.Value.Sub(1).Sub(State.AllRewardsCount.Value)};
         }
     }
 }

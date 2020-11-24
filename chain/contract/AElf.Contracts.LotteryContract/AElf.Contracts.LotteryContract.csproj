@@ -4,29 +4,33 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IsContract>true</IsContract>
     </PropertyGroup>
-
     <ItemGroup>
-      <ContractBase Include="..\..\protobuf\acs1.proto">
-        <Link>Protobuf\Proto\reference\acs1.proto</Link>
-      </ContractBase>
+        <ContractMessage Include="..\..\protobuf\authority_info.proto">
+            <Link>Protobuf\Proto\authority_info.proto</Link>
+        </ContractMessage>
+    </ItemGroup>
+    <ItemGroup>
+        <ContractBase Include="..\..\protobuf\acs1.proto">
+            <Link>Protobuf\Proto\reference\acs1.proto</Link>
+        </ContractBase>
         <ContractReference Include="..\..\protobuf\acs2.proto">
             <Link>Protobuf\Proto\reference\acs2.proto</Link>
         </ContractReference>
-      <ContractReference Include="..\..\protobuf\acs3.proto">
-        <Link>Protobuf\Proto\reference\acs3.proto</Link>
-      </ContractReference>
+        <ContractReference Include="..\..\protobuf\acs3.proto">
+            <Link>Protobuf\Proto\reference\acs3.proto</Link>
+        </ContractReference>
         <ContractReference Include="..\..\protobuf\token_contract.proto">
             <Link>Protobuf\Proto\reference\token_contract.proto</Link>
         </ContractReference>
         <ContractReference Include="..\..\protobuf\token_contract_impl.proto">
             <Link>Protobuf\Proto\reference\token_contract_impl.proto</Link>
         </ContractReference>
-      <ContractReference Include="..\..\protobuf\aedpos_contract.proto">
-        <Link>Protobuf\Proto\reference\aedpos_contract.proto</Link>
-      </ContractReference>
-      <ContractReference Include="..\..\protobuf\parliament_contract.proto">
-        <Link>Protobuf\Proto\reference\parliament_contract.proto</Link>
-      </ContractReference>
+        <ContractReference Include="..\..\protobuf\aedpos_contract.proto">
+            <Link>Protobuf\Proto\reference\aedpos_contract.proto</Link>
+        </ContractReference>
+        <ContractReference Include="..\..\protobuf\parliament_contract.proto">
+            <Link>Protobuf\Proto\reference\parliament_contract.proto</Link>
+        </ContractReference>
         <ContractReference Include="..\..\protobuf\transaction_fee.proto">
             <Link>Protobuf\Proto\reference\transaction_fee.proto</Link>
         </ContractReference>

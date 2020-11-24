@@ -1,14 +1,15 @@
-using AElf.Contracts.TestKit;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.Kernel;
 using AElf.Kernel.Blockchain.Application;
 using AElf.Kernel.SmartContract.Application;
 using AElf.Types;
 using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
 
 namespace AElf.Boilerplate.TestBase
 {
-    public class DAppContractTestBase<TModule> : ContractTestBase<TModule> where TModule : ContractTestModule
+    public class DAppContractTestBase<TModule> : ContractTestBase<TModule> where TModule : AbpModule
     {
         public Address DAppContractAddress => GetAddress(DAppSmartContractAddressNameProvider.StringName);
 

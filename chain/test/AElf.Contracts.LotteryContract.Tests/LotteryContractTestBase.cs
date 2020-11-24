@@ -1,7 +1,7 @@
 using System.Linq;
 using AElf.Boilerplate.TestBase;
 using AElf.Contracts.MultiToken;
-using AElf.Contracts.TestKit;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.Cryptography.ECDSA;
 using AElf.Kernel;
 using AElf.Kernel.Blockchain.Application;
@@ -19,7 +19,7 @@ namespace AElf.Contracts.LotteryContract
         internal Address LotteryContractAddress => GetAddress(DAppSmartContractAddressNameProvider.StringName);
 
         internal LotteryContractContainer.LotteryContractStub LotteryContractStub =>
-            GetLotteryContractStub(SampleECKeyPairs.KeyPairs[0]);
+            GetLotteryContractStub(SampleAccount.Accounts.First().KeyPair);
 
         internal LotteryContractContainer.LotteryContractStub GetLotteryContractStub(ECKeyPair senderKeyPair)
         {
@@ -36,10 +36,10 @@ namespace AElf.Contracts.LotteryContract
         }
 
         internal TokenContractContainer.TokenContractStub TokenContractStub =>
-            GetTokenContractStub(SampleECKeyPairs.KeyPairs[0]);
+            GetTokenContractStub(SampleAccount.Accounts.First().KeyPair);
 
-        internal ECKeyPair AliceKeyPair { get; set; } = SampleECKeyPairs.KeyPairs.Last();
-        internal ECKeyPair BobKeyPair { get; set; } = SampleECKeyPairs.KeyPairs.Reverse().Skip(1).First();
+        internal ECKeyPair AliceKeyPair { get; set; } = SampleAccount.Accounts.Last().KeyPair;
+        internal ECKeyPair BobKeyPair { get; set; } = SampleAccount.Accounts.Reverse().Skip(1).First().KeyPair;
         internal Address AliceAddress => Address.FromPublicKey(AliceKeyPair.PublicKey);
         internal Address BobAddress => Address.FromPublicKey(BobKeyPair.PublicKey);
         internal Address TokenContractAddress => GetAddress(TokenSmartContractAddressNameProvider.StringName);

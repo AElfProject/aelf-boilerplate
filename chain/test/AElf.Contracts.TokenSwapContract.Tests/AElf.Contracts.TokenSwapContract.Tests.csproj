@@ -6,10 +6,10 @@
         <RootNamespace>AElf.Contracts.TokenSwapContract</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="AElf.Contracts.TestKit" Version="1.0.0-preview2" />
-        <PackageReference Include="AElf.ContractTestBase" Version="1.0.0-preview2" />
+        <PackageReference Include="AElf.ContractTestKit" Version="1.0.0-rc1" />
+        <PackageReference Include="AElf.ContractTestBase" Version="1.0.0-rc1" />
         <ProjectReference Include="..\..\contract\AElf.Contracts.TokenSwapContract\AElf.Contracts.TokenSwapContract.csproj" />
-        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-preview2" />
+        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-rc1" />
         <ProjectReference Include="..\..\src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj" />
     </ItemGroup>
 
@@ -32,6 +32,12 @@
         <ContractBase Include="..\..\protobuf\transaction_fee.proto">
             <Link>Protobuf\Proto\transaction_fee.proto</Link>
         </ContractBase>
+    </ItemGroup>
+
+    <ItemGroup>
+        <CommonMessage Include="..\..\protobuf\authority_info.proto">
+            <Link>Protobuf\Proto\authority_info.proto</Link>
+        </CommonMessage>
     </ItemGroup>
 
     <ItemGroup>
