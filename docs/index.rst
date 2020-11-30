@@ -9,7 +9,7 @@ Welcome to Boilerplate doc's documentation!
 .. toctree::
    :caption: Getting started
 
-   Usage <usage/index>
+   Overview <overview/index>
 
 .. toctree::
    :caption: AElf Boilerplate guide
@@ -19,12 +19,6 @@ Welcome to Boilerplate doc's documentation!
    test <test_folder>
 
 .. toctree::
-   :caption: Development
-
-   system-contract <system-contract/index>
-   acs <acs/index>
-   demo <demo/index>
-   DApp <dapp/index>
-
-.. toctree::
-   :caption: Related projects
+   :caption: Demo
+   
+   <demo/index>
