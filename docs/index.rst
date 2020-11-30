@@ -21,4 +21,4 @@ Welcome to Boilerplate doc's documentation!
 .. toctree::
    :caption: Demo
    
-   <demo/index>
+   demo/index
