@@ -1,6 +1,3 @@
-Demo
-==== 
-
 .. toctree::
 
     Greeter <greeter>
