@@ -7,13 +7,13 @@ Welcome to Boilerplate doc's documentation!
 ===========================================   
 
 .. toctree::
-   :caption: AElf Boilerplate guide
+   :caption: Overview
    :maxdepth: 3
 
    overview/index
 
 .. toctree::
-   :caption: Demo
+   :caption: Write Contract
    :maxdepth: 3
 
    demo/index
