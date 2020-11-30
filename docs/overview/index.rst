@@ -20,7 +20,6 @@ But before you either start try Greeter and Bingo Game, or ready to develop a sm
 For most of these dependencies we provide ready-to-use command line instructions. In case of problems or if you have more complex needs, we provide the official link with full instructions.
 
 .. toctree::
-   :caption: Usage
    
    Common Dependencies <dependencies>
    Dev Tools <tools>
