@@ -8,7 +8,7 @@ Welcome to Boilerplate doc's documentation!
 
 .. toctree::
    :caption: Getting started
-   :maxdepth: 2
+   :maxdepth: 3
 
    overview/index
 
@@ -21,5 +21,6 @@ Welcome to Boilerplate doc's documentation!
 
 .. toctree::
    :caption: Demo
-   
+   :maxdepth: 3
+
    demo/index
