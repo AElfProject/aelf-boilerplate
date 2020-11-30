@@ -24,3 +24,4 @@ Welcome to Boilerplate doc's documentation!
    :maxdepth: 3
 
    demo/index
+   greeter <demo/greeter-contract>
