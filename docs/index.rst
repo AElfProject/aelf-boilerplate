@@ -10,7 +10,6 @@ Welcome to Boilerplate doc's documentation!
    :caption: Getting started
 
    Usage <usage/index>
-   FAQ <faq>
 
 .. toctree::
    :caption: AElf Boilerplate guide
