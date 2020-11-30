@@ -8,8 +8,9 @@ Welcome to Boilerplate doc's documentation!
 
 .. toctree::
    :caption: Getting started
+   :maxdepth: 2
 
-   Overview <overview/index>
+   overview/index
 
 .. toctree::
    :caption: AElf Boilerplate guide
