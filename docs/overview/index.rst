@@ -1,5 +1,9 @@
-Overview
-===================
+.. toctree::
+   
+   Common Dependencies <dependencies>
+   Dev Tools <tools>
+   Setup Boilerplate <setup>
+
 
 The main usage of aelf-boilerplate is to develop contracts for AElf blockchains. Once you've downloaded or cloned this project, that process looks something like this:
 
@@ -19,8 +23,3 @@ But before you either start try **Greeter** and **Bingo Game**, or ready to deve
 
 For most of these dependencies we provide ready-to-use command line instructions. In case of problems or if you have more complex needs, we provide the official link with full instructions.
 
-.. toctree::
-   
-   Common Dependencies <dependencies>
-   Dev Tools <tools>
-   Setup Boilerplate <setup>
