@@ -57,7 +57,7 @@ In addition, there are some View methods for querying information only:
 |                         |                 |                 |                            |
 |                         |                 | block height    |                            |
 +-------------------------+-----------------+-----------------+----------------------------+
-| ``Bingo``               | Hash            | Empty           | query the game's result    |
+| ``Bingo``               | Hash            | BoolValue       | query the game's result    |
 |                         |                 |                 |                            |
 |                         | the transaction | True indicates  |                            |
 |                         |                 |                 |                            |
@@ -91,7 +91,7 @@ project:
      "Contents": [
      {
        "Origin": "AElf.Contracts.HelloWorldContract",
-       "New": "AElf.Contracts.BingoContract"
+       "New": "AElf.Contracts.BingoContractDemo"
      },
      {
        "Origin": "HelloWorld",
@@ -105,7 +105,7 @@ project:
    }
 
 Then run the ``AElf.Boilerplate.CodeGenerator`` project. After running
-successfully, you will see a `AElf.Contracts.BingoContract.sln` in the
+successfully, you will see a `AElf.Contracts.BingoContractDemo.sln` in the
 same directory as the `AElf.Boilerplate.sln` is in. After opening the sln,
 you will see that the contract project and test case project of the
 Bingo contract have been generated and are included in the new solution.
@@ -124,9 +124,9 @@ bingo_contract.proto file is as follows:
    import "google/protobuf/empty.proto";
    import "google/protobuf/wrappers.proto";
    import "google/protobuf/timestamp.proto";
-   option csharp_namespace = "AElf.Contracts.BingoContract";
+   option csharp_namespace = "AElf.Contracts.BingoContractDemo";
    service BingoContract {
-       option (aelf.csharp_state) = "AElf.Contracts.BingoContract.BingoContractState";
+       option (aelf.csharp_state) = "AElf.Contracts.BingoContractDemo.BingoContractState";
 
        // Actions
        rpc Register (google.protobuf.Empty) returns (google.protobuf.Empty) {
@@ -252,7 +252,7 @@ first let the account transfer ELF to the bingo contract:
    // Prepare awards.
    await tokenStub.Transfer.SendAsync(new TransferInput
    {
-       To = DAppContractAddress,
+       To = BingoContractAddress,
        Symbol = "ELF",
        Amount = 100_00000000
    });
@@ -282,7 +282,7 @@ Bet, but before you can bet, you need to Approve the bingo contract:
    // Play.
    await tokenStub.Approve.SendAsync(new ApproveInput
    {
-       Spender = DAppContractAddress,
+       Spender = BingoContractAddress,
        Symbol = "ELF",
        Amount = 10000
    });

@@ -1,3 +1,6 @@
+Write Contract
+--------------
+
 .. toctree::
    :caption: Write Contract
 
