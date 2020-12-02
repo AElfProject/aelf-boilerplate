@@ -12,16 +12,16 @@ The following content will walk you through the basics of writing a smart contra
 
 The ```Greeter``` contract is a very simple contract that exposes a ``Greet`` method that simply logs to the console and returns a "Hello World" message and a more sophisticated ```GreetTo``` method that records every greeting it receives and returns the greeting message as well as the time of the greeting.
 
-This tutorial shows you how to develop a smart contract with the C# contract SDK; you can find you more [here](https://docs.aelf.io/en/latest/reference/contract-sdk/index.html). Boilerplate will automatically add the reference to the SDK. 
+This tutorial shows you how to develop a smart contract with the contract SDK; you can find more details [here](https://docs.aelf.io/en/latest/reference/contract-sdk/index.html). **Boilerplate** will automatically add the reference to the SDK. 
 
 ## Create the project
 With **AElf Boilerplate**'s code generator, you can easily and quickly set up a contract project.  See [here](../overview/setup.md) for details.
 
 ## Defining the contract
 
-After creating the contract project, you can define the methods and types of your contract. AElf defines smart contracts as services that are implemented using gRPC and Protobuf. The definition contains no logic; at build time the proto file is used to generate C# classes that will be used to implement the logic and state of the contract.
+After creating the contract project, you can define the methods and types of your contract. **AElf** defines smart contracts as services that are implemented using `gRPC` and `Protobuf`. The definition contains no logic; at build time the proto file is used to generate C# classes that will be used to implement the logic and state of the contract.
 
-We recommend putting the contract's definition in Boilerplate's **protobuf** folder so that it can easily be included in the build/generation process and also that you name the contract with the following syntax **contract_name_contract.proto**:
+We recommend putting the contract's definition in **protobuf** folder so that it can easily be included in the *build/generation* process and also that you name the contract with the following syntax **contract_name_contract.proto**:
 
 <!-- 
 Boilerplate
@@ -52,10 +52,10 @@ Boilerplate
             └── ...
 ```
 
-The "protobuf" folder already contains a certain amount of contract definitions, including tutorial examples, system contracts. You'll also notice it contains AElf Contract Standard definitions that are also defined the same way as contracts. Lastly, it also contains **options.proto** and **core.proto** that contain fundamental types for developing smart contracts, more on this later. 
+The "protobuf" folder already contains a certain amount of contract definitions, including tutorial examples, system contracts. You'll also notice it contains **AElf** Contract Standard definitions that are also defined the same way as contracts. Lastly, it also contains **options.proto** and **core.proto** that contain fundamental types for developing smart contracts, more on this later. 
 
 **Best practices:**
-- place your contract definition in Boilerplate's **protobuf** folder.
+- place your contract definition in **protobuf** folder.
 - name your contract with **contractname_contract.proto**, all lower case.
 
 Now let's take a look a the Greeter contract's definition:
@@ -117,7 +117,7 @@ option csharp_namespace = "AElf.Contracts.Greeter";
 ```
 
 The first line specifies the syntax that this protobuf file uses, we recommend you always use **proto3** for your contracts. Next, you'll notice that this contract specifies some imports, let's analyze them briefly:
-- **aelf/options.proto** : contracts can use AElf specific options; this file contains the definitions. One example is the **is_view** options that we will use later.
+- **aelf/options.proto** : contracts can use **AElf** specific options; this file contains the definitions. One example is the **is_view** options that we will use later.
 - **empty.proto, timestamp.proto and wrappers.proto** : these are proto files imported directly from protobuf's library. They are useful for defining things like an empty return value, time, and wrappers around some common types such as string. 
 
 The last line specifies an option that determines the target namespace of the generated code. Here the generated code will be in the ```AElf.Contracts.Greeter``` namespace.
@@ -249,7 +249,7 @@ Let's briefly explain what is happening in the `GreetTo` method:
 Assert(!string.IsNullOrWhiteSpace(input.Value), "Invalid name.");
 ```
 
-When writing a smart contract, it is often useful (and recommended) to validate the input. AElf smart contracts can use the ```Assert``` method defined in the base smart contract class to implement this pattern. For example, here, the method validates that the input string is null or composed only of white spaces. If the condition is false, this line will abort the execution of the transaction.
+When writing a smart contract, it is often useful (and recommended) to validate the input. **AElf** smart contracts can use the ```Assert``` method defined in the base smart contract class to implement this pattern. For example, here, the method validates that the input string is null or composed only of white spaces. If the condition is false, this line will abort the execution of the transaction.
 
 ### Accessing and saving state 
 

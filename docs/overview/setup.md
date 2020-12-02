@@ -244,8 +244,8 @@ You can use this layout as a template for your future smart contracts. Before yo
 
 You will also notice the **src** folder. This folder contains **Boilerplate**'s modules and the executable for the node.
 
+All production contracts (contracts destined to be deployed to a live chain) must go through a complete review process by the contract author and undergo proper testing. It is the author's responsibility to check the validity and security of his contract. The author should not simply copy the contracts contained in **Boilerplate**. It's the author's responsibility to ensure the security and correctness of his contracts.
+
 ## Next 
 
 You've just seen a short introduction on how to run a smart contract that is already included in **Boilerplate**. The next article will show you a complete smart contract and extra content on how to organize your code and test files.
-
-All production contracts (contracts destined to be deployed to a live chain) must go through a complete review process by the contract author and undergo proper testing. It is the author's responsibility to check the validity and security of his contract. The author should not simply copy the contracts contained in **Boilerplate**. It's the author's responsibility to ensure the security and correctness of his contracts.
