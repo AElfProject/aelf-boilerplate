@@ -20,20 +20,7 @@ If not already done, open vscode and open the **Boilerplate** folder. If asked t
 
 Open vscode's **Integrated Terminal** and build the project with the following command. Note: you can find out more about vscode's terminal [**here**](https://code.visualstudio.com/docs/editor/integrated-terminal).
 
-### Install script
-
-As stated earlier, Boilerplate takes care of the C# code generation and thus has a dependency on protobuf. If you don't already have it installed, run the following script from withing the folder:
-
-```bash
-# Mac or Linux
-sh chain/scripts/install.sh
-
-# Windows
-# open a PowerShell console as administrator
-chain/scripts/install.ps1
-```
-
-If you have problems, you can refer to the following guide to [**manually install**](https://github.com/protocolbuffers/protobuf/blob/master/src) protobuf on your system.
+As stated earlier, Boilerplate takes care of the C# code generation and thus has a dependency on protobuf. If you don't already have it installed, you can refer to the guide for [quickly install](./tools.md) or [**manually install**](https://github.com/protocolbuffers/protobuf/blob/master/src).
 
 ### Build and run
 
