@@ -33,7 +33,7 @@ sh chain/scripts/install.sh
 chain/scripts/install.ps1
 ```
 
-If you have problems, you can refer to the following guide to [**manually install**](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md) protobuf on your system.
+If you have problems, you can refer to the following guide to [**manually install**](https://github.com/protocolbuffers/protobuf/blob/master/src) protobuf on your system.
 
 ### Build and run
 
