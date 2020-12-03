@@ -210,8 +210,6 @@ namespace AElf.Contracts.Greeter
             // Update State.GreetedList.Value by setting it's value directly.
             State.GreetedList.Value = greetList;
 
-            Context.LogDebug(() => $"Hello {input.Value}!");
-
             return new GreetToOutput
             {
                 GreetTime = Context.CurrentBlockTime,
