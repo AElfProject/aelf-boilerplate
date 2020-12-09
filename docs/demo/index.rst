@@ -1,13 +1,11 @@
-Demo
-==== 
+Write Contract
+--------------
 
 .. toctree::
-   :caption: Demo
+   :caption: Write Contract
 
-   Bingo Game <bingo-game>
-   Greeter <greeter>
-   Lottery <lottery>
-   Random <random>
+    Greeter <greeter>
+    Bingo Game <bingo-game>
 
 
 
