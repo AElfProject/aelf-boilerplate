@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to AElf Boilerplate documentation!
-========================================== 
+==========================================
 
 .. toctree::
    :maxdepth: 3
