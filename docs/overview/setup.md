@@ -2,7 +2,7 @@
 
 ## Clone the repository
 
-The following command will clone AElf Boilerplate into a **aelf-boilerplate** folder with Boilerplate's code inside it, open a terminal and enter the following command:
+The following command will clone **Boilerplate** code into a folder, open a terminal and enter the following command:
 
 ```bash
 git clone https://github.com/AElfProject/aelf-boilerplate
@@ -14,32 +14,17 @@ The [**boilerplate repo**](https://github.com/AElfProject/aelf-boilerplate) cont
 
 ### Open the project
 
-If not already done, open vscode and open the **aelf-boilerplate** folder. If asked to add some "required assets" say **yes**. There may also be some dependencies to restore: for all of them, choose **Restore**.
+If not already done, open vscode and open the **Boilerplate** folder. If asked to add some "required assets" say **yes**. There may also be some dependencies to restore: for all of them, choose **Restore**.
 
 ![setup-1](./pictures/vscode-dep-autox150.png)
 
 Open vscode's **Integrated Terminal** and build the project with the following command. Note: you can find out more about vscode's terminal [**here**](https://code.visualstudio.com/docs/editor/integrated-terminal).
 
-### Install script
-
-As stated earlier, Boilerplate takes care of the C# code generation and thus has a dependency on protobuf. If you don't already have it installed, run the following script from withing the **aelf-boilerplate** folder:
-
-```bash
-# Mac or Linux
-sh chain/scripts/install.sh
-
-# Windows
-# open a PowerShell console as administrator
-chain/scripts/install.ps1
-```
-
-{% hint style="info" %}
-If you prefer or have problems, you can refer to the following guide to [**manually install**](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md) protobuf on your system.
-{% endhint %}
+As stated earlier, Boilerplate takes care of the C# code generation and thus has a dependency on protobuf. If you don't already have it installed, you can refer to the guide for [**manually install**](https://github.com/protocolbuffers/protobuf/blob/master/src).
 
 ### Build and run
 
-The next step is to build Boilerplate and all the contracts to ensure everything is working correctly. Once everything is built, we'll run Boilerplate's internal node.
+The next step is to build all the contracts in **Boilerplate** to ensure everything is working correctly. Once everything is built, we'll run as below
 
 ```bash
 # enter the Launcher folder and build 
@@ -52,13 +37,13 @@ dotnet build
 dotnet run --no-build bin/Debug/netcoreapp3.1/AElf.Boilerplate.Launcher
 ```
 
- When running Boilerplate, you might see some errors related to an incorrect password, to solve this, you need to backup your `data-dir/keys/` folder and start with an empty keys folder. Once you've cleaned the keys, stop and restart the node with the ```dotnet run``` command shown above.
+ When running **Boilerplate**, you might see some errors related to an incorrect password, to solve this, you need to backup your `data-dir/keys/` folder and start with an empty keys folder. Once you've cleaned the keys, stop and restart the node with the ```dotnet run``` command shown above.
 
 At this point, the smart contracts have been deployed and are ready to be called (Boilerplate has a functioning API). You should see the node's logs in the terminal and see the node producing blocks. You can now stop the node by killing the process (usually **control-c** or **ctrl-c** in the terminal).
 
 ### Run tests
 
-Boilerplate makes it easy to write unit tests for your contracts. Here we'll take the tests of the Hello World contract included in Boilerplate as an example. To run the tests, navigate to the **AElf.Contracts.HelloWorldContract.Test** folder and run:
+**Boilerplate** makes it easy to write unit tests for your contracts. Here we'll take the tests of the Hello World contract included in Boilerplate as an example. To run the tests, navigate to the **AElf.Contracts.HelloWorldContract.Test** folder and run:
 
 ```bash
 cd ../../test/AElf.Contracts.HelloWorldContract.Test/
@@ -99,7 +84,7 @@ For example, if you want to develop a `NovelWritingContract`.
     ],
 ```
 
-Run code generator project in you IDE, or tune paths in `Folders` and `Files` nodes in appsettings.json, follow these commands:
+Run the code generator and then you will find a `AElf.Contracts.NovelWritingContract.sln` in `aelf-boilerplate\chain`, you can use this sln to develop your own smart contract.
 
 ```bash
 # enter the Launcher folder and build 
@@ -112,11 +97,11 @@ dotnet build
 dotnet run --no-build bin/Debug/netcoreapp3.1/AElf.Boilerplate.CodeGenerator
 ```
 
-Then you will find a `AElf.Contracts.NovelWritingContract.sln` in `aelf-boilerplate\chain`, you can use this sln to develop your own smart contract.
+
 
 #### Single node contract deployment
 
-With `AElf.Contracts.XXContract.sln`, you can run project `AElf.Boilerplate.XXContract.Launcher` which is newly generated via above step, the `XXContract` will automatically deployed in the block of height 2.
+With `AElf.Contracts.XXContract.sln`, you can run project `AElf.Boilerplate.XXContract.Launcher` which is newly generated via above step, the `XXContract` will be automatically deployed in the block of height 2.
 
 Check following code in `AElf.Boilerplate.XXContract.Launcher/DeployContractsSystemTransactionGenerator.cs`:
 
@@ -149,7 +134,7 @@ private byte[] GetContractCodes()
 }
 ```
 
-You can customize code in if section to add more transactions to deploy more contracts.
+You can customize code in `if` section to add more actions to deploy more contracts.
 
 For example, you develop two smart contract using one generated sln: `XXContract` and `YYContract`, the deployment code should be like this:
 
@@ -190,13 +175,13 @@ private byte[] GetContractCodes(string contractName)
 }
 ```
 
-By the way, don't forget to make sure these contracts are referenced by this Launcher project.
+Don't forget to make sure these contracts are referenced by this `AElf.Boilerplate.XXContract.Launcher` project.
 
 ## More on Boilerplate
 
-Boilerplate is an environment that is used to develop smart contracts and dApps. After writing and testing your contract on Boilerplate, you can deploy it to a running AElf chain. Internally Boilerplate will run an AElf node that will automatically have your contract deployed on it at genesis.
+**Boilerplate** is an environment that is used to develop smart contracts and dApps. After writing and testing your contract on **Boilerplate**, you can deploy it to a running **AElf** chain. Internally **Boilerplate** will run an simplified node that will automatically have your contract deployed on it at genesis.
 
-Boilerplate is composed of two root folders: **chain** and **web**. This series of tutorial articles focuses on contract development so we'll only go into the details of the **chain** part of Boilerplate. Here is a brief overview of the folders:
+**Boilerplate** is composed of two root folders: **chain** and **web**. This series of tutorial articles focuses on contract development so we'll only go into the details of the **chain** part of **Boilerplate**. Here is a brief overview of the folders:
 
 <!-- 
 ## chain  // root of the contract development folder
@@ -244,10 +229,10 @@ The hello world contract and its tests are split between the following folders:
 
 You can use this layout as a template for your future smart contracts. Before you do, we recommend you follow through all the articles of this series.
 
-You will also notice the **src** folder. This folder contains Boilerplate's modules and the executable for the node.
+You will also notice the **src** folder. This folder contains **Boilerplate**'s modules and the executable for the node.
+
+All production contracts (contracts destined to be deployed to a live chain) must go through a complete review process by the contract author and undergo proper testing. It is the author's responsibility to check the validity and security of his contract. The author should not simply copy the contracts contained in **Boilerplate**. It's the author's responsibility to ensure the security and correctness of his contracts.
 
 ## Next 
 
-You've just seen a short introduction on how to run a smart contract that is already included in Boilerplate. The next article will show you a complete smart contract and extra content on how to organize your code and test files.
-
-All production contracts (contracts destined to be deployed to a live chain) must go through a complete review process by the contract author and undergo proper testing. It is the author's responsibility to check the validity and security of his contract. The author should not simply copy the contracts contained in Boilerplate; it's the author's responsibility to ensure the security and correctness of his contracts.
+You've just seen a short introduction on how to run a smart contract that is already included in **Boilerplate**. The next article will show you a complete smart contract and extra content on how to organize your code and test files.
