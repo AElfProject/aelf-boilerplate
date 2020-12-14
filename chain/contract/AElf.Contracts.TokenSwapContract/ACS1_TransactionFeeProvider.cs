@@ -19,7 +19,8 @@ namespace AElf.Contracts.TokenSwapContract
             {
                 return new MethodFees
                 {
-                    MethodName = input.Value
+                    MethodName = input.Value,
+                    IsSizeFeeFree = true
                 };
             }
 
