@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>AElf.Contracts.BingoContract</RootNamespace>
+    <RootNamespace>GameStoreContract</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -25,15 +25,19 @@
     <PackageReference Include="AElf.ContractTestKit" Version="1.0.0" />
     <PackageReference Include="AElf.ContractTestBase" Version="1.0.0" />
   </ItemGroup>
-
   <ItemGroup>
-    <ContractStub Include="..\..\protobuf\bingo_contract.proto">
-      <Link>Protobuf\Proto\bingo_contract.proto</Link>
+    <ContractMessage Include="..\..\protobuf\authority_info.proto">
+      <Link>Protobuf\Proto\authority_info.proto</Link>
+    </ContractMessage>
+  </ItemGroup>
+  <ItemGroup>
+    <ContractStub Include="..\..\protobuf\game_store_contract.proto">
+      <Link>Protobuf\Proto\game_store_contract.proto</Link>
     </ContractStub>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\contract\AElf.Contracts.BingoContract\AElf.Contracts.BingoContract.csproj" />
+    <ProjectReference Include="..\..\contract\GameStoreContract\GameStoreContract.csproj" />
     <ProjectReference Include="..\..\src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj" />
   </ItemGroup>
 

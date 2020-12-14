@@ -11,7 +11,7 @@ using AElf.Types;
 using Google.Protobuf;
 using Microsoft.Extensions.Options;
 
-namespace AElf.Boilerplate.HelloWorldContract.Launcher
+namespace AElf.Boilerplate.GameStoreContract.Launcher
 {
     public class DeployContractsSystemTransactionGenerator : ISystemTransactionGenerator
     {
@@ -49,7 +49,7 @@ namespace AElf.Boilerplate.HelloWorldContract.Launcher
         private byte[] GetContractCodes()
         {
             return ContractsDeployer.GetContractCodes<DeployContractsSystemTransactionGenerator>(_contractOptions
-                .GenesisContractDir)["AElf.Contracts.HelloWorldContract"];
+                .GenesisContractDir)["GameStoreContract"];
         }
     }
 }
