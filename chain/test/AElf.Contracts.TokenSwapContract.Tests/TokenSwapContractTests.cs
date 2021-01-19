@@ -239,15 +239,27 @@ namespace AElf.Contracts.TokenSwapContract
                 Transferred.Parser.ParseFrom(tokenTransferredEvent.Indexed[2]).Symbol.ShouldBe(DefaultSymbol2);
             }
 
-            var swapAmounts = await TokenSwapContractStub.GetSwapAmounts.CallAsync(new GetSwapAmountsInput
             {
-                SwapId = swapId,
-                UniqueId = Hash.LoadFromHex(receiptIdHash)
-            });
-            swapAmounts.Receiver.ShouldBe(receiverAddress);
-            swapAmounts.ReceivedAmounts.Count.ShouldBe(2);
-            swapAmounts.ReceivedAmounts[DefaultSymbol1] = expectedAmount1;
-            swapAmounts.ReceivedAmounts[DefaultSymbol2] = expectedAmount2;
+                var swapAmounts = await TokenSwapContractStub.GetSwapAmounts.CallAsync(new GetSwapAmountsInput
+                {
+                    SwapId = swapId,
+                    UniqueId = Hash.LoadFromHex(receiptIdHash)
+                });
+                swapAmounts.Receiver.ShouldBe(receiverAddress);
+                swapAmounts.ReceivedAmounts.Count.ShouldBe(2);
+                swapAmounts.ReceivedAmounts[DefaultSymbol1] = expectedAmount1;
+                swapAmounts.ReceivedAmounts[DefaultSymbol2] = expectedAmount2;
+            }
+            
+            {
+                var swapAmounts = await TokenSwapContractStub.GetSwapAmounts.CallAsync(new GetSwapAmountsInput
+                {
+                    SwapId = swapId,
+                    UniqueId = HashHelper.ComputeFrom("UniqueId")
+                });
+                swapAmounts.Receiver.ShouldBeNull();
+                swapAmounts.ReceivedAmounts.Count.ShouldBe(0);
+            }
 
             {
                 var swapPair = await TokenSwapContractStub.GetSwapPair.CallAsync(new GetSwapPairInput
