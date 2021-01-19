@@ -86,6 +86,10 @@ namespace AElf.Contracts.TokenSwapContract
                 "Invalid token swap input.");
             var leafHash = ComputeLeafHash(amount, input.UniqueId, swapInfo, input.ReceiverAddress);
             var computed = input.MerklePath.ComputeRootWithLeafNode(leafHash);
+            var swapAmounts = new SwapAmounts
+            {
+                Receiver = input.ReceiverAddress
+            };
             foreach (var (symbol, pairId) in swapInfo.SwapTargetTokenMap)
             {
                 var swapPair = GetTokenSwapPair(pairId);
@@ -104,7 +108,6 @@ namespace AElf.Contracts.TokenSwapContract
 
                 AssertValidSwapPair(swapPair);
                 State.SwapPairs[input.SwapId] = swapPair;
-                State.Ledger[input.SwapId][input.UniqueId] = targetTokenAmount;
 
                 // transfer
                 TransferToken(swapPair.TargetTokenSymbol, targetTokenAmount, input.ReceiverAddress);
@@ -114,7 +117,11 @@ namespace AElf.Contracts.TokenSwapContract
                     Address = input.ReceiverAddress,
                     Symbol = swapPair.TargetTokenSymbol
                 });
+
+                swapAmounts.ReceivedAmounts[symbol] = targetTokenAmount;
             }
+            
+            State.Ledger[input.SwapId][input.UniqueId] = swapAmounts;
 
             return new Empty();
         }
@@ -169,6 +176,11 @@ namespace AElf.Contracts.TokenSwapContract
             State.SwapPairs[swapPairId] = swapPair;
             TransferDepositFrom(swapPair.TargetTokenSymbol, input.Amount, Context.Sender);
             return new Empty();
+        }
+
+        public override SwapAmounts GetSwapAmounts(GetSwapAmountsInput input)
+        {
+            return State.Ledger[input.SwapId][input.UniqueId];
         }
     }
 }

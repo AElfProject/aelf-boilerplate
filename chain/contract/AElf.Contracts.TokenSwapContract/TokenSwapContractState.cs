@@ -14,7 +14,7 @@ namespace AElf.Contracts.TokenSwapContract
         
         public MappedState<Hash, string, long, SwapRound> SwapRounds { get; set; }
 
-        public MappedState<Hash, Hash, long> Ledger { get; set; }
+        public MappedState<Hash, Hash, SwapAmounts> Ledger { get; set; }
         public SingletonState<AuthorityInfo> MethodFeeController { get; set; }
 
         internal TokenContractContainer.TokenContractReferenceState TokenContract { get; set; }

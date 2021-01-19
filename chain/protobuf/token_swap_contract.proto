@@ -10,9 +10,9 @@ service TokenSwapContract {
     option (aelf.csharp_state) = "AElf.Contracts.TokenSwapContract.TokenSwapContractState";
     option (aelf.base) = "acs1.proto";
 
-    rpc CreateSwap(CreateSwapInput) returns (aelf.Hash) {
+    rpc CreateSwap (CreateSwapInput) returns (aelf.Hash) {
     }
-    rpc CreateSwapRound(CreateSwapRoundInput) returns (google.protobuf.Empty) {
+    rpc CreateSwapRound (CreateSwapRoundInput) returns (google.protobuf.Empty) {
     }
     rpc SwapToken (SwapTokenInput) returns (google.protobuf.Empty) {
     }
@@ -20,27 +20,33 @@ service TokenSwapContract {
     }
     rpc Deposit (DepositInput) returns (google.protobuf.Empty) {
     }
-    rpc GetSwapInfo(aelf.Hash) returns (SwapInfo) {
+    rpc GetSwapInfo (aelf.Hash) returns (SwapInfo) {
+        option (aelf.is_view) = true;
     }
-    rpc GetSwapPair(GetSwapPairInput) returns (SwapPair) {
+    rpc GetSwapPair (GetSwapPairInput) returns (SwapPair) {
+        option (aelf.is_view) = true;
     }
-    rpc GetSwapRound(GetSwapRoundInput) returns (SwapRound) {
+    rpc GetSwapRound (GetSwapRoundInput) returns (SwapRound) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetSwapAmounts (GetSwapAmountsInput) returns (SwapAmounts) {
+        option (aelf.is_view) = true;
     }
 }
 
 message CreateSwapInput {
     int32 origin_token_size_in_byte = 1;
     bool origin_token_numeric_big_endian = 2;
-    repeated SwapTargetToken swap_target_token_list =3;
+    repeated SwapTargetToken swap_target_token_list = 3;
 }
 
-message SwapTargetToken{
+message SwapTargetToken {
     string target_token_symbol = 1;
     SwapRatio swap_ratio = 2;
     int64 deposit_amount = 3;
 }
 
-message SwapInfo{
+message SwapInfo {
     aelf.Hash swap_id = 1;
     int32 origin_token_size_in_byte = 2;
     bool origin_token_numeric_big_endian = 3;
@@ -48,7 +54,7 @@ message SwapInfo{
     aelf.Address controller = 5;
 }
 
-message SwapPair{
+message SwapPair {
     aelf.Hash swap_id = 1;
     int32 origin_token_size_in_byte = 2;
     bool origin_token_numeric_big_endian = 3;
@@ -77,7 +83,7 @@ message CreateSwapRoundInput {
     int64 round_id = 3;
 }
 
-message SwapRound{
+message SwapRound {
     aelf.Hash swap_id = 1;
     aelf.Hash merkle_tree_root = 2;
     google.protobuf.Timestamp start_time = 3;
@@ -85,7 +91,7 @@ message SwapRound{
     int64 swapped_times = 5;
 }
 
-message SwapTokenInput{
+message SwapTokenInput {
     aelf.Hash swap_id = 1;
     string origin_amount = 2;
     aelf.MerklePath merkle_path = 3;
@@ -94,12 +100,12 @@ message SwapTokenInput{
     int64 round_id = 6;
 }
 
-message SwapPairAdded{
+message SwapPairAdded {
     option (aelf.is_event) = true;
     aelf.Hash swap_id = 1;
 }
 
-message SwapRoundUpdated{
+message SwapRoundUpdated {
     option (aelf.is_event) = true;
     aelf.Hash merkle_tree_root = 1;
     google.protobuf.Timestamp start_time = 2;
@@ -107,33 +113,43 @@ message SwapRoundUpdated{
 }
 
 
-message DepositInput{
+message DepositInput {
     aelf.Hash swap_id = 1;
     string target_token_symbol = 2;
-    int64 amount = 3; 
+    int64 amount = 3;
 }
 
-message SwapRatioChanged{
+message SwapRatioChanged {
     option (aelf.is_event) = true;
     aelf.Hash swap_id = 1;
     SwapRatio new_swap_ratio = 2;
     string target_token_symbol = 3;
 }
 
-message TokenSwapEvent{
+message TokenSwapEvent {
     option (aelf.is_event) = true;
     aelf.Address address = 1;
     int64 amount = 2;
     string symbol = 3;
 }
 
-message GetSwapPairInput{
+message GetSwapPairInput {
     aelf.Hash swap_id = 1;
     string target_token_symbol = 2;
 }
 
-message GetSwapRoundInput{
+message GetSwapRoundInput {
     aelf.Hash swap_id = 1;
     string target_token_symbol = 2;
     int64 round_id = 3;
+}
+
+message GetSwapAmountsInput {
+    aelf.Hash swap_id = 1;
+    aelf.Hash unique_id = 2;
+}
+
+message SwapAmounts {
+    aelf.Address receiver = 1;
+    map<string, int64> received_amounts = 2;
 }

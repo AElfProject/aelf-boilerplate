@@ -184,7 +184,7 @@ namespace AElf.Contracts.TokenSwapContract
         protected async Task CreatAndIssueDefaultTokenAsync()
         {
             await ApproveTokenAsync(DefaultSymbol1, TotalSupply);
-            await CreateAndApproveTokenAsync(TokenName2, DefaultSymbol2, 8, TotalSupply, TotalSupply);
+            await CreateAndApproveTokenAsync(TokenName2, DefaultSymbol2, 8, TotalSupply * 10, TotalSupply * 10);
         }
 
         protected string DefaultSymbol1 { get; set; } = "ELF";

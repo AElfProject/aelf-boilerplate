@@ -93,7 +93,7 @@ namespace AElf.Contracts.TokenSwapContract
             var amountInString = swapTokenInput.OriginAmount;
             var validationResult = amountInString.Length > 0 && IsValidAmount(swapTokenInput.OriginAmount);
             Assert(validationResult, "Invalid token swap input.");
-            Assert(State.Ledger[swapTokenInput.SwapId][swapTokenInput.UniqueId] == 0, "Already claimed.");
+            Assert(State.Ledger[swapTokenInput.SwapId][swapTokenInput.UniqueId] == null, "Already claimed.");
         }
 
         private Hash GetHashTokenAmountData(decimal amount, int originTokenSizeInByte, bool isBigEndian)
