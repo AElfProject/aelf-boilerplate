@@ -20,6 +20,9 @@ service TokenSwapContract {
     }
     rpc Deposit (DepositInput) returns (google.protobuf.Empty) {
     }
+    rpc Withdraw (WithdrawInput) returns (google.protobuf.Empty) {
+    }
+
     rpc GetSwapInfo (aelf.Hash) returns (SwapInfo) {
         option (aelf.is_view) = true;
     }
@@ -152,4 +155,10 @@ message GetSwapAmountsInput {
 message SwapAmounts {
     aelf.Address receiver = 1;
     map<string, int64> received_amounts = 2;
+}
+
+message WithdrawInput {
+    aelf.Hash swap_id = 1;
+    string target_token_symbol = 2;
+    int64 amount = 3;
 }

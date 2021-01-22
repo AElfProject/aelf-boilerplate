@@ -178,6 +178,20 @@ namespace AElf.Contracts.TokenSwapContract
             return new Empty();
         }
 
+        public override Empty Withdraw(WithdrawInput input)
+        {
+            var swapInfo = GetTokenSwapInfo(input.SwapId);
+            Assert(swapInfo.Controller == Context.Sender, "No permission.");
+            var swapPairId = swapInfo.SwapTargetTokenMap[input.TargetTokenSymbol];
+            var swapPair = GetTokenSwapPair(swapPairId);
+            Assert(swapPair.DepositAmount >= input.Amount, "Deposits not enough.");
+            swapPair.DepositAmount = swapPair.DepositAmount.Sub(input.Amount);
+            AssertValidSwapPair(swapPair);
+            State.SwapPairs[swapPairId] = swapPair;
+            WithdrawDepositTo(swapPair.TargetTokenSymbol, input.Amount, Context.Sender);
+            return new Empty();
+        }
+
         public override SwapAmounts GetSwapAmounts(GetSwapAmountsInput input)
         {
             return State.Ledger[input.SwapId][input.UniqueId];

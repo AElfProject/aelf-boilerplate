@@ -164,6 +164,18 @@ namespace AElf.Contracts.TokenSwapContract
                 Memo = "Token swap contract deposit."
             });
         }
+        
+        private void WithdrawDepositTo(string symbol, long amount, Address address)
+        {
+            RequireTokenContractStateSet();
+            State.TokenContract.Transfer.Send(new TransferInput()
+            {
+                Amount = amount,
+                To = address,
+                Symbol = symbol,
+                Memo = "Token swap withdraw deposit."
+            });
+        }
 
         private void AssertSwapTargetToken(string symbol)
         {

@@ -202,7 +202,35 @@ namespace AElf.Contracts.TokenSwapContract
                 MerklePath = merklePath,
                 SwapId = swapId
             };
+
+            var swapPair1Before = await TokenSwapContractStub.GetSwapPair.CallAsync(new GetSwapPairInput
+            {
+                SwapId = swapId,
+                TargetTokenSymbol = DefaultSymbol1
+            });
+                
+            var swapPair2Before = await TokenSwapContractStub.GetSwapPair.CallAsync(new GetSwapPairInput
+            {
+                SwapId = swapId,
+                TargetTokenSymbol = DefaultSymbol2
+            });
+            
             var swapTokenTx = await TokenSwapContractStub.SwapToken.SendAsync(swapTokenInput);
+            
+            var swapPair1After = await TokenSwapContractStub.GetSwapPair.CallAsync(new GetSwapPairInput
+            {
+                SwapId = swapId,
+                TargetTokenSymbol = DefaultSymbol1
+            });
+                
+            var swapPair2After = await TokenSwapContractStub.GetSwapPair.CallAsync(new GetSwapPairInput
+            {
+                SwapId = swapId,
+                TargetTokenSymbol = DefaultSymbol2
+            });
+
+            (swapPair1Before.DepositAmount - swapPair1After.DepositAmount).ShouldBe(expectedAmount1);
+            (swapPair2Before.DepositAmount - swapPair2After.DepositAmount).ShouldBe(expectedAmount2);
             {
                 var tokenSwapEvent = TokenSwapEvent.Parser.ParseFrom(swapTokenTx.TransactionResult.Logs
                     .First(l => l.Name == nameof(TokenSwapEvent)).NonIndexed);
@@ -650,6 +678,88 @@ namespace AElf.Contracts.TokenSwapContract
                     tokenSwapEvent.Amount.ShouldBe(decimal.ToInt64(amount / originShare));
                 }
             }
+        }
+
+        [Fact]
+        public async Task DepositTest()
+        {
+            await CreatAndIssueDefaultTokenAsync();
+            var depositAmount = 10000;
+            var swapId = await CreateSwapAsync(DefaultSymbol1, 32, null, depositAmount);
+            {
+                var swapPair = await TokenSwapContractStub.GetSwapPair.CallAsync(new GetSwapPairInput
+                {
+                    SwapId = swapId,
+                    TargetTokenSymbol = DefaultSymbol1
+                });
+
+                swapPair.DepositAmount.ShouldBe(depositAmount);
+            }
+            
+            await TokenSwapContractStub.Deposit.SendAsync(new DepositInput
+            {
+                SwapId = swapId,
+                TargetTokenSymbol = DefaultSymbol1,
+                Amount = 1000
+            });
+            
+            {
+                var swapPair = await TokenSwapContractStub.GetSwapPair.CallAsync(new GetSwapPairInput
+                {
+                    SwapId = swapId,
+                    TargetTokenSymbol = DefaultSymbol1
+                });
+
+                swapPair.DepositAmount.ShouldBe(depositAmount + 1000);
+            }
+        }
+        
+        [Fact]
+        public async Task WithdrawTest()
+        {
+            await CreatAndIssueDefaultTokenAsync();
+            var depositAmount = 10000;
+            var swapId = await CreateSwapAsync(DefaultSymbol1, 32, null, depositAmount);
+            {
+                var swapPair = await TokenSwapContractStub.GetSwapPair.CallAsync(new GetSwapPairInput
+                {
+                    SwapId = swapId,
+                    TargetTokenSymbol = DefaultSymbol1
+                });
+
+                swapPair.DepositAmount.ShouldBe(depositAmount);
+            }
+
+            var balanceBefore = await TokenContractStub.GetBalance.CallAsync(new GetBalanceInput
+            {
+                Owner = DefaultAccount.Address,
+                Symbol = DefaultSymbol1
+            });
+            
+            await TokenSwapContractStub.Withdraw.SendAsync(new WithdrawInput
+            {
+                SwapId = swapId,
+                TargetTokenSymbol = DefaultSymbol1,
+                Amount = 1000
+            });
+            
+            {
+                var swapPair = await TokenSwapContractStub.GetSwapPair.CallAsync(new GetSwapPairInput
+                {
+                    SwapId = swapId,
+                    TargetTokenSymbol = DefaultSymbol1
+                });
+
+                swapPair.DepositAmount.ShouldBe(depositAmount - 1000);
+            }
+            
+            var balanceAfter = await TokenContractStub.GetBalance.CallAsync(new GetBalanceInput
+            {
+                Owner = DefaultAccount.Address,
+                Symbol = DefaultSymbol1
+            });
+
+            (balanceAfter.Balance - balanceBefore.Balance).ShouldBe(1000);
         }
     }
 }
