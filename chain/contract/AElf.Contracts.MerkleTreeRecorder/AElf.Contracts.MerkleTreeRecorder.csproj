@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>AElf.Contracts.MerkleTreeRecorder</AssemblyName>
+        <RootNamespace>AElf.Contracts.MerkleTreeRecorder</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <CommonMessage Include="..\..\protobuf\authority_info.proto">
+            <Link>Protobuf\Proto\authority_info.proto</Link>
+        </CommonMessage>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ContractBase Include="..\..\protobuf\acs1.proto">
+            <Link>Protobuf\Proto\acs1.proto</Link>
+        </ContractBase>
+    </ItemGroup>
+    <ItemGroup>
+        <ContractCode Include="..\..\protobuf\merkle_tree_recorder.proto">
+            <Link>Protobuf\Proto\merkle_tree_recorder.proto</Link>
+        </ContractCode>
+    </ItemGroup>
+    
+</Project>

@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package MTRecorder;
+
+import "aelf/core.proto";
+import "acs1.proto";
+import "google/protobuf/timestamp.proto";
+
+service MerkleTreeRecorder{
+    option (aelf.csharp_state) = "AElf.Contracts.MerkleTreeRecorder.MerkleTreeRecorderState";
+    option (aelf.base) = "acs1.proto";
+
+    rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    }
+    
+    rpc CreateRecorder (Recorder) returns (google.protobuf.Empty) {
+    }
+    
+    rpc RecordMerkleTree (RecordMerkleTreeInput) returns (google.protobuf.Empty) {
+    }
+    
+    rpc ChangeOwner(aelf.Address) returns (google.protobuf.Empty) {
+    }
+
+    rpc MerkleProof (MerkleProofInput) returns (google.protobuf.BoolValue){
+        option (aelf.is_view) = true;
+    }
+
+    rpc GetLeafLocatedMerkleTree(GetLeafLocatedMerkleTreeInput) returns (MerkleTree) {
+        option (aelf.is_view) = true;
+    }
+
+    rpc GetMerkleTree(GetMerkleTreeInput) returns (MerkleTree){
+        option (aelf.is_view) = true;
+    }
+}
+
+message InitializeInput {
+}
+
+message Recorder{
+    aelf.Address admin = 1;
+    int64 maximal_leaf_count =2;
+}
+
+message RecordMerkleTreeInput{
+    int64 recorder_id = 1;
+    int64 last_leaf_index = 2;
+    aelf.Hash merkle_tree_root = 3;
+}
+
+message GetLocatedMerkleTreeInput{
+    
+}
+
+message MerkleTree{
+    int64 last_leaf_index = 1;
+    int64 first_leaf_index = 2;
+    aelf.Hash merkle_tree_root = 3;
+}
+
+
+message GetLeafLocatedMerkleTreeInput{
+    int64 leaf_index = 1;
+    int64 recorder_id = 2;
+}
+
+message GetMerkleTreeInput{
+    
+}
+
+message MerkleProofInput{
+    
+}
