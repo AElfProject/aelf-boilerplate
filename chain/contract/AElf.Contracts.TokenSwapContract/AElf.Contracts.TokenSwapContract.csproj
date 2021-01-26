@@ -32,6 +32,9 @@
         <ContractReference Include="..\..\protobuf\token_contract.proto">
             <Link>Protobuf\Proto\reference\token_contract.proto</Link>
         </ContractReference>
+        <ContractReference Include="..\..\protobuf\merkle_tree_recorder.proto">
+            <Link>Protobuf\Proto\reference\merkle_tree_recorder.proto</Link>
+        </ContractReference>
     </ItemGroup>
     <ItemGroup>
         <ContractCode Include="..\..\protobuf\token_swap_contract.proto">

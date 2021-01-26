@@ -9,6 +9,7 @@
         <PackageReference Include="AElf.ContractTestKit" Version="1.0.0" />
         <PackageReference Include="AElf.ContractTestBase" Version="1.0.0" />
         <ProjectReference Include="..\..\contract\AElf.Contracts.TokenSwapContract\AElf.Contracts.TokenSwapContract.csproj" />
+        <ProjectReference Include="..\..\contract\AElf.Contracts.MerkleTreeRecorderContract\AElf.Contracts.MerkleTreeRecorderContract.csproj" />
         <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0" />
         <ProjectReference Include="..\..\src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj" />
     </ItemGroup>
@@ -22,6 +23,9 @@
         </ContractBase>
         <ContractStub Include="..\..\protobuf\token_swap_contract.proto">
             <Link>Protobuf\Proto\stub\token_swap_contract.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\merkle_tree_recorder.proto">
+            <Link>Protobuf\Proto\stub\merkle_tree_recorder.proto</Link>
         </ContractStub>
         <ContractBase Include="..\..\protobuf\token_contract.proto">
             <Link>Protobuf/Proto/token_contract.proto</Link>

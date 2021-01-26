@@ -3,16 +3,15 @@ using AElf.ContractTestBase;
 using AElf.Kernel.SmartContract.Application;
 using AElf.Types;
 
-namespace AElf.Contracts.TokenSwapContract
+namespace AElf.Contracts.MerkleTreeRecorderContract
 {
-    public class TokenSwapContractDeploymentList : MainChainContractDeploymentListProvider,
+    public class MerkleTreeRecorderContractDeploymentList : SideChainContractDeploymentListProvider,
         IContractDeploymentListProvider
     {
-        public List<Hash> GetDeployContractNameList()
+        public new List<Hash> GetDeployContractNameList()
         {
             var list = base.GetDeployContractNameList();
             list.Add(MerkleTreeRecorderContractNameProvider.Name);
-            list.Add(TokenSwapContractNameProvider.Name);
             return list;
         }
     }

@@ -82,7 +82,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.TokenSwapCon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.TokenSwapContract.Tests", "test\AElf.Contracts.TokenSwapContract.Tests\AElf.Contracts.TokenSwapContract.Tests.csproj", "{EB2A658B-B0A4-4E3A-9135-194D30FDE7C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.MerkleTreeRecorder", "contract\AElf.Contracts.MerkleTreeRecorder\AElf.Contracts.MerkleTreeRecorder.csproj", "{A7A99FE1-1ED1-4CE4-8320-DCACBADC02EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.MerkleTreeRecorderContract", "contract\AElf.Contracts.MerkleTreeRecorderContract\AElf.Contracts.MerkleTreeRecorderContract.csproj", "{A7A99FE1-1ED1-4CE4-8320-DCACBADC02EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.MerkleTreeRecorderContract.Tests", "test\AElf.Contracts.MerkleTreeRecorderContract.Tests\AElf.Contracts.MerkleTreeRecorderContract.Tests.csproj", "{3CF79418-08A2-40CF-89C9-BB933EA3EFD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -246,6 +248,10 @@ Global
 		{A7A99FE1-1ED1-4CE4-8320-DCACBADC02EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7A99FE1-1ED1-4CE4-8320-DCACBADC02EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7A99FE1-1ED1-4CE4-8320-DCACBADC02EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CF79418-08A2-40CF-89C9-BB933EA3EFD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CF79418-08A2-40CF-89C9-BB933EA3EFD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CF79418-08A2-40CF-89C9-BB933EA3EFD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CF79418-08A2-40CF-89C9-BB933EA3EFD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -287,6 +293,7 @@ Global
 		{FD64F281-9821-49E0-BDB0-D5E43C831A08} = {5C980166-C987-470D-AEE0-3858A170A903}
 		{EB2A658B-B0A4-4E3A-9135-194D30FDE7C5} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 		{A7A99FE1-1ED1-4CE4-8320-DCACBADC02EB} = {5C980166-C987-470D-AEE0-3858A170A903}
+		{3CF79418-08A2-40CF-89C9-BB933EA3EFD9} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7426B41-E959-40E4-9ED8-ED8D9C50F133}

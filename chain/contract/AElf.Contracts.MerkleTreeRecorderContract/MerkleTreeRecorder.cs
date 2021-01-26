@@ -1,15 +1,16 @@
 using AElf.CSharp.Core;
+using AElf.Sdk.CSharp;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
 using MTRecorder;
 
-namespace AElf.Contracts.MerkleTreeRecorder
+namespace AElf.Contracts.MerkleTreeRecorderContract
 {
-    public partial class MerkleTreeRecorder : MerkleTreeRecorderContainer.MerkleTreeRecorderBase
+    public partial class MerkleTreeRecorderContract : MerkleTreeRecorderContractContainer.MerkleTreeRecorderContractBase
     {
         public override Empty Initialize(Empty input)
         {
-            AssertOwner(null);
+            AssertOwner(null, "Already initialized.");
             State.Owner.Value = Context.Sender;
             return new Empty();
         }
@@ -26,6 +27,13 @@ namespace AElf.Contracts.MerkleTreeRecorder
             AssertOwner(Context.Sender);
             State.Recorder[State.MerkleTreeRecorderCount.Value] = input;
             State.LastRecordedLeafIndex[State.MerkleTreeRecorderCount.Value] = -1; 
+            Context.Fire(new RecorderCreated
+            {
+                Admin = input.Admin,
+                MaximalLeafCount = input.MaximalLeafCount,
+                RecorderId = State.MerkleTreeRecorderCount.Value
+            });
+            
             State.MerkleTreeRecorderCount.Value = State.MerkleTreeRecorderCount.Value.Add(1);
             return new Empty();
         }
@@ -40,25 +48,21 @@ namespace AElf.Contracts.MerkleTreeRecorder
             Assert(input.LastLeafIndex.Sub(lastRecordedLeafIndex) <= recorder.MaximalLeafCount,
                 "Satisfied MerkleTree absent.");
             
-            if (lastRecordedLeafIndex >= 0)
-            {
-                // recorded before
-                var lastRecordedLeafLocated = lastRecordedLeafIndex.Div(recorder.MaximalLeafCount);
-                var newRecordedLeafLocated = input.LastLeafIndex.Div(recorder.MaximalLeafCount);
-                if (newRecordedLeafLocated > lastRecordedLeafLocated)
-                    Assert(lastRecordedLeafIndex ==
-                           lastRecordedLeafLocated.Add(1).Mul(recorder.MaximalLeafCount).Sub(1),
-                        $"Unable to record the tree with {input.LastLeafIndex}");
-            }
+            var satisfiedMerkleTreeCount = State.SatisfiedMerkleTreeCount[input.RecorderId];
+            var newRecordedLeafLocated = input.LastLeafIndex.Div(recorder.MaximalLeafCount);
+            if (newRecordedLeafLocated > satisfiedMerkleTreeCount)
+                Assert(lastRecordedLeafIndex ==
+                       satisfiedMerkleTreeCount.Add(1).Mul(recorder.MaximalLeafCount).Sub(1),
+                    $"Unable to record the tree with {input.LastLeafIndex}");
             
             var merkleTree = new MerkleTree
             {
                 MerkleTreeRoot = input.MerkleTreeRoot,
                 LastLeafIndex = input.LastLeafIndex,
-                FirstLeafIndex = State.SatisfiedMerkleTreeCount[input.RecorderId].Mul(recorder.MaximalLeafCount)
+                FirstLeafIndex = State.SatisfiedMerkleTreeCount[input.RecorderId].Mul(recorder.MaximalLeafCount),
             };
 
-            if (input.LastLeafIndex == recorder.MaximalLeafCount.Mul(State.SatisfiedMerkleTreeCount[input.RecorderId]).Sub(1))
+            if (input.LastLeafIndex == recorder.MaximalLeafCount.Mul(State.SatisfiedMerkleTreeCount[input.RecorderId].Add(1)).Sub(1))
             {
                 // new satisfied merkle tree
                 State.SatisfiedMerkleTrees[input.RecorderId][State.SatisfiedMerkleTreeCount[input.RecorderId]] =
@@ -75,6 +79,11 @@ namespace AElf.Contracts.MerkleTreeRecorder
             }
 
             State.LastRecordedLeafIndex[input.RecorderId] = input.LastLeafIndex;
+            Context.Fire(new MerkleTreeRecorded
+            {
+                LastLeafIndex = input.LastLeafIndex,
+                RecorderId = input.RecorderId
+            });
             
             return new Empty();
         }

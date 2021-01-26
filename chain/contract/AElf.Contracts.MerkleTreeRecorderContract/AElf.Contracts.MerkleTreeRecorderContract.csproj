@@ -2,8 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <AssemblyName>AElf.Contracts.MerkleTreeRecorder</AssemblyName>
-        <RootNamespace>AElf.Contracts.MerkleTreeRecorder</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

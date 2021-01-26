@@ -1,16 +1,24 @@
-﻿using AElf;
-using AElf.CSharp.Core;
+﻿using AElf.CSharp.Core;
 using AElf.Sdk.CSharp;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
+using MTRecorder;
 using Tokenswap;
 
 namespace AElf.Contracts.TokenSwapContract
 {
     public partial class TokenSwapContract : TokenSwapContractContainer.TokenSwapContractBase
     {
+        public override Empty Initialize(InitializeInput input)
+        {
+            Assert(State.MerkleTreeRecorderContract.Value == null, "Already initialized.");
+            State.MerkleTreeRecorderContract.Value = input.MerkleTreeRecorderAddress;
+            return new Empty();
+        }
+    
         public override Hash CreateSwap(CreateSwapInput input)
         {
+            Assert(State.MerkleTreeRecorderContract.Value != null, "Not initialized.");
             var swapId = HashHelper.ConcatAndCompute(Context.TransactionId, HashHelper.ComputeFrom(input));
             Assert(State.SwapInfo[swapId] == null, "Already added.");
 
@@ -19,7 +27,8 @@ namespace AElf.Contracts.TokenSwapContract
                 SwapId = swapId,
                 Controller = Context.Sender,
                 OriginTokenNumericBigEndian = input.OriginTokenNumericBigEndian,
-                OriginTokenSizeInByte = input.OriginTokenSizeInByte
+                OriginTokenSizeInByte = input.OriginTokenSizeInByte,
+                RecorderId = input.RecorderId
             };
             foreach (var swapTargetToken in input.SwapTargetTokenList)
             {
@@ -50,33 +59,7 @@ namespace AElf.Contracts.TokenSwapContract
             });
             return swapId;
         }
-
-        public override Empty CreateSwapRound(CreateSwapRoundInput input)
-        {
-            var swapInfo = GetTokenSwapInfo(input.SwapId);
-            Assert(swapInfo.Controller == Context.Sender, "No permission.");
-            foreach (var (symbol, pairId) in swapInfo.SwapTargetTokenMap)
-            {
-                var swapPair = State.SwapPairs[pairId];
-                Assert(swapPair.RoundCount == input.RoundId, "Round id not matched.");
-                swapPair.RoundCount += 1;
-                State.SwapPairs[pairId] = swapPair;
-                State.SwapRounds[input.SwapId][symbol][input.RoundId] = new SwapRound
-                {
-                    SwapId = swapInfo.SwapId,
-                    MerkleTreeRoot = input.MerkleTreeRoot,
-                    StartTime = Context.CurrentBlockTime
-                };
-            }
-
-            Context.Fire(new SwapRoundUpdated
-            {
-                MerkleTreeRoot = input.MerkleTreeRoot,
-                StartTime = Context.CurrentBlockTime
-            });
-            return new Empty();
-        }
-
+        
         public override Empty SwapToken(SwapTokenInput input)
         {
             Assert(Context.Sender == input.ReceiverAddress, "Only receiver has permission to swap token.");
@@ -86,6 +69,14 @@ namespace AElf.Contracts.TokenSwapContract
                 "Invalid token swap input.");
             var leafHash = ComputeLeafHash(amount, input.UniqueId, swapInfo, input.ReceiverAddress);
             var computed = input.MerklePath.ComputeRootWithLeafNode(leafHash);
+            Assert(State.MerkleTreeRecorderContract.MerkleProof.Call(new MerkleProofInput
+            {
+                LastLeafIndex = input.LastLeafIndex,
+                LeafNode = leafHash,
+                MerklePath = input.MerklePath,
+                RecorderId = swapInfo.RecorderId
+            }).Value, "Failed to swap token.");
+
             var swapAmounts = new SwapAmounts
             {
                 Receiver = input.ReceiverAddress
@@ -93,17 +84,12 @@ namespace AElf.Contracts.TokenSwapContract
             foreach (var (symbol, pairId) in swapInfo.SwapTargetTokenMap)
             {
                 var swapPair = GetTokenSwapPair(pairId);
-                Assert(swapPair.RoundCount > input.RoundId, "Round id not matched.");
-                var swapRound = State.SwapRounds[input.SwapId][symbol][input.RoundId];
-                Assert(computed == swapRound.MerkleTreeRoot, "Failed to swap token.");
                 var targetTokenAmount = GetTargetTokenAmount(amount, swapPair.SwapRatio);
                 Assert(targetTokenAmount <= swapPair.DepositAmount, "Deposit not enough.");
 
                 // update swap pair and ledger
                 swapPair.SwappedAmount = swapPair.SwappedAmount.Add(targetTokenAmount);
                 swapPair.SwappedTimes = swapPair.SwappedTimes.Add(1);
-                swapRound.SwappedAmount = swapRound.SwappedAmount.Add(targetTokenAmount);
-                swapRound.SwappedTimes = swapRound.SwappedTimes.Add(1);
                 swapPair.DepositAmount = swapPair.DepositAmount.Sub(targetTokenAmount);
 
                 AssertValidSwapPair(swapPair);
@@ -158,11 +144,6 @@ namespace AElf.Contracts.TokenSwapContract
                 "Target token not registered.");
             var swapPair = GetTokenSwapPair(pairId);
             return swapPair;
-        }
-
-        public override SwapRound GetSwapRound(GetSwapRoundInput input)
-        {
-            return State.SwapRounds[input.SwapId][input.TargetTokenSymbol][input.RoundId];
         }
 
         public override Empty Deposit(DepositInput input)

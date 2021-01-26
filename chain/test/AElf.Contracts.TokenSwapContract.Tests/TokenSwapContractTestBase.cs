@@ -8,7 +8,9 @@ using AElf.Kernel;
 using AElf.Kernel.Blockchain.Application;
 using AElf.Kernel.SmartContract.Application;
 using AElf.Types;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.DependencyInjection;
+using MTRecorder;
 using Tokenswap;
 using Volo.Abp.Threading;
 
@@ -21,15 +23,18 @@ namespace AElf.Contracts.TokenSwapContract
         protected ECKeyPair NormalKeyPair => SampleAccount.Accounts[1].KeyPair;
         protected Address DefaultSenderAddress => Address.FromPublicKey(DefaultSenderKeyPair.PublicKey);
         protected Address TokenSwapContractAddress => GetAddress(TokenSwapContractNameProvider.StringName);
+        protected Address MerkleTreeRecorderContractAddress => GetAddress(MerkleTreeRecorderContractNameProvider.StringName);
 
         private IReadOnlyDictionary<string, byte[]> _patchedCodes;
         internal TokenSwapContractContainer.TokenSwapContractStub TokenSwapContractStub { get; set; }
+        internal MerkleTreeRecorderContractContainer.MerkleTreeRecorderContractStub MerkleTreeRecorderContractStub { get; set; }
 
 
         public TokenSwapContractTestBase()
         {
             TokenContractStub = GetTokenContractStub(DefaultSenderKeyPair);
             TokenSwapContractStub = GetTokenSwapContractStub(DefaultSenderKeyPair);
+            MerkleTreeRecorderContractStub = GetMerkleTreeRecorderContractStub(DefaultSenderKeyPair);
         }
 
 
@@ -132,15 +137,29 @@ namespace AElf.Contracts.TokenSwapContract
             return swapId;
         }
 
-        protected async Task AddSwapRound(Hash swapId, Hash merkleTreeRoot, long roundId)
+        protected async Task InitializeAsync()
         {
-            var addSwapRoundInput = new CreateSwapRoundInput
+            await MerkleTreeRecorderContractStub.Initialize.SendAsync(new Empty());
+            await MerkleTreeRecorderContractStub.CreateRecorder.SendAsync(new Recorder
             {
+                Admin = DefaultAccount.Address,
+                MaximalLeafCount = 1024
+            });
+            
+            await TokenSwapContractStub.Initialize.SendAsync(new InitializeInput
+            {
+                MerkleTreeRecorderAddress = GetAddress(MerkleTreeRecorderContractNameProvider.StringName)
+            });
+        }
+
+        protected async Task RecordeMerkleTree(Hash merkleTreeRoot, long lastLeafIndex)
+        {
+            await MerkleTreeRecorderContractStub.RecordMerkleTree.SendAsync(new RecordMerkleTreeInput
+            {
+                LastLeafIndex = lastLeafIndex,
                 MerkleTreeRoot = merkleTreeRoot,
-                SwapId = swapId,
-                RoundId = roundId
-            };
-            await TokenSwapContractStub.CreateSwapRound.SendAsync(addSwapRoundInput);
+                RecorderId = 0
+            });
         }
 
         internal TokenSwapContractContainer.TokenSwapContractStub GetTokenSwapContractStub(ECKeyPair ecKeyPair)
@@ -148,6 +167,10 @@ namespace AElf.Contracts.TokenSwapContract
             return GetTester<TokenSwapContractContainer.TokenSwapContractStub>(TokenSwapContractAddress, ecKeyPair);
         }
 
+        internal MerkleTreeRecorderContractContainer.MerkleTreeRecorderContractStub GetMerkleTreeRecorderContractStub(ECKeyPair ecKeyPair)
+        {
+            return GetTester<MerkleTreeRecorderContractContainer.MerkleTreeRecorderContractStub>(MerkleTreeRecorderContractAddress, ecKeyPair);
+        }
         
         internal TokenContractImplContainer.TokenContractImplStub GetTokenContractStub(ECKeyPair senderKeyPair)
         {
