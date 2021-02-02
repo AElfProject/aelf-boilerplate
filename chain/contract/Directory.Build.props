@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <ItemGroup>
-        <PackageReference Include="AElf.Sdk.CSharp" Version="1.0.0-preview3-18473" />
-        <PackageReference Include="AElf.Sdk.CSharp" Version="1.0.0-preview3-18550" />
+
+        <PackageReference Include="AElf.Sdk.CSharp" Version="1.0.0-rc1" />
+
     </ItemGroup>
     <Import Project="..\AElf.Contract.Tools.targets" />
 </Project>
