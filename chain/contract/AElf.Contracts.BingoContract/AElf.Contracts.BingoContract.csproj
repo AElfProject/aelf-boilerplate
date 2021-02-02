@@ -18,6 +18,9 @@
         <ContractCode Include="..\..\protobuf\bingo_contract.proto">
             <Link>Protobuf\Proto\bingo_contract.proto</Link>
         </ContractCode>
+        <ContractMessage Include="..\..\protobuf\authority_info.proto">
+            <Link>Protobuf\Proto\reference\authority_info.proto</Link>
+        </ContractMessage>
         <ContractReference Include="..\..\protobuf\token_contract.proto">
             <Link>Protobuf\Proto\reference\token_contract.proto</Link>
         </ContractReference>

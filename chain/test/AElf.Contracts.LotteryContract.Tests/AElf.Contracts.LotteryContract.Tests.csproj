@@ -11,8 +11,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.EconomicSystem" Version="1.0.0-rc1" />
-        <PackageReference Include="AElf.GovernmentSystem" Version="1.0.0-rc1" />
+        <PackageReference Include="AElf.EconomicSystem" Version="1.0.0" />
+        <PackageReference Include="AElf.GovernmentSystem" Version="1.0.0" />
         <PackageReference Include="coverlet.msbuild" Version="2.5.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
         <PackageReference Include="Shouldly" Version="3.0.2" />
@@ -22,8 +22,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.ContractTestKit" Version="1.0.0-rc1" />
-        <PackageReference Include="AElf.ContractTestBase" Version="1.0.0-rc1" />
+        <PackageReference Include="AElf.ContractTestKit" Version="1.0.0" />
+        <PackageReference Include="AElf.ContractTestBase" Version="1.0.0" />
     </ItemGroup>
     <ItemGroup>
         <ContractMessage Include="..\..\protobuf\authority_info.proto">
@@ -60,8 +60,9 @@
     <ItemGroup>
         <ProjectReference Include="..\..\contract\AElf.Contracts.LotteryContract\AElf.Contracts.LotteryContract.csproj" />
         <ProjectReference Include="..\..\src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj" />
-        <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="1.0.0-rc1" />
-        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-rc1" />
-        <PackageReference Include="AElf.Contracts.Parliament" Version="1.0.0-rc1" />
+        <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="1.0.0" />
+        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0" />
+        <PackageReference Include="AElf.Contracts.Parliament" Version="1.0.0" />
+
     </ItemGroup>
 </Project>

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using AElf.Boilerplate.TestBase;
-using AElf.Contracts.TestKit;
 using AElf.ContractTestBase;
 using AElf.Kernel.SmartContract.Application;
 using Microsoft.Extensions.DependencyInjection;
