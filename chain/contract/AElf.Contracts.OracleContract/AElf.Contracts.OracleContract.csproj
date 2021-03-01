@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <!-- The root namespace -->
+        <!-- Mark this project as a contract -->
+        <IsContract>true</IsContract>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <ItemGroup>
+        <!-- Reference the protobuf definition of the contract -->
+        <ContractCode Include="..\..\protobuf\oracle_contract.proto">
+            <Link>Protobuf\Proto\oracle_contract.proto</Link>
+        </ContractCode>
+    </ItemGroup>
+</Project>
