@@ -13,19 +13,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ContractBase Include="..\..\protobuf\acs13.proto">
+        <ContractReference Include="..\..\protobuf\acs13.proto">
             <Link>Protobuf\Proto\acs13.proto</Link>
-        </ContractBase>
-        <ContractBase Include="..\..\protobuf\oracle_contract.proto">
-            <Link>Protobuf\Proto\oracle_contract_impl.proto</Link>
-        </ContractBase>
-<!--        <ContractBase Include="..\..\protobuf\token_contract.proto">-->
-<!--            <Link>Protobuf\Proto\token_contract.proto</Link>-->
-<!--        </ContractBase>-->
+        </ContractReference>
+        <ContractReference Include="..\..\protobuf\token_contract.proto">
+            <Link>Protobuf\Proto\token_contract.proto</Link>
+        </ContractReference>
     </ItemGroup>
+
     <ItemGroup>
-        <!-- Reference the protobuf definition of the contract -->
-        <ContractCode Include="..\..\protobuf\oracle_contract_impl.proto">
+        <ContractCode Include="..\..\protobuf\oracle_contract.proto">
             <Link>Protobuf\Proto\oracle_contract.proto</Link>
         </ContractCode>
     </ItemGroup>

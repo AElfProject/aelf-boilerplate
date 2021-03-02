@@ -46,7 +46,7 @@ namespace AElf.Contracts.OracleContract
         public MappedState<Hash, Commitment> Commitments { get; set; }
         
         // 记录每次request，各个节点发送的经过hash后的data。
-        public MappedState<Hash, Address, Hash> OracleHashData { get; set; }
+        public MappedState<Hash, Address, Hash> HashData { get; set; }
         
         // 记录answer的轮数
         public MappedState<Hash, long> AnswerCounter { get; set; }
