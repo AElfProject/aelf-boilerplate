@@ -13,6 +13,10 @@ namespace AElf.Contracts.OracleContract
         
         public SingletonState<long> ExpirationTime { get; set; }
         
+        public SingletonState<int>  MinimumHashData { get; set; }
+        
+        public SingletonState<int>  MinimumDataWithSalt { get; set; }
+        
         //合约治理地址
         public SingletonState<Address> Controller { get; set; }
         

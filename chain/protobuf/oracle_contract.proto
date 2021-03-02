@@ -54,6 +54,7 @@ message CreateRequestInput{
     string method_name = 5;
     aelf.Address aggregator = 6;
     int32 data_version = 7;
+    AvailableNodes designated_nodes = 11;
 }
 
 message NewRequest{
@@ -68,6 +69,7 @@ message NewRequest{
     string attribute_to_fetch = 8;
     aelf.Address aggregator = 9;
     int32 data_version = 10;
+    AvailableNodes designated_nodes = 11;
 }
 
 message CancelRequest{
@@ -103,6 +105,7 @@ message UpdatedRequest {
 message Commitment {
     aelf.Hash params_hash = 1;
     int32 data_version = 2;
+    AvailableNodes designated_nodes = 3;
 }
 
 message Response{
@@ -113,9 +116,14 @@ message Response{
 }
 
 message Answer{
-    uint64 minimum_responses = 1;
-    uint64 max_responses = 2;
-    repeated string responses = 3;
+    int32 hash_data_responses = 1;
+    int32 data_with_salt_responses = 2;
+    repeated NodeWithData responses = 3;
+}
+
+message NodeWithData{
+    aelf.Address node = 1;
+    string responses = 2;
 }
 
 message AnswerInfo{
