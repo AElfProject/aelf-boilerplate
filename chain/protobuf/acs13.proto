@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package acs13;
+import "aelf/options.proto";
+import "aelf/core.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+option (aelf.identity) = "acs13";
+option csharp_namespace = "AElf.Standards.ACS13";
+
+service OracleAggregatorContract {
+    rpc UpdateInformationFromCrossChain (google.protobuf.BytesValue) returns (google.protobuf.Empty) {
+    }
+    
+    rpc GetChainInitializationInformation (google.protobuf.BytesValue) returns (google.protobuf.BytesValue) {
+        option (aelf.is_view) = true;
+    }
+    rpc CheckCrossChainIndexingPermission (aelf.Address) returns (google.protobuf.BoolValue) {
+        option (aelf.is_view) = true;
+    }
+}
