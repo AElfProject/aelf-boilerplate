@@ -42,18 +42,13 @@ namespace AElf.Contracts.OracleContract
         
         // key为request id， value为查询信息生成的hash值
         public MappedState<Hash, Commitment> Commitments { get; set; }
-        
-        // 记录每次request，各个节点发送的经过hash后的data。
-        public MappedState<Hash, Address, Hash> HashData { get; set; }
-        
+
         // 记录answer的轮数
         public MappedState<Hash, long> AnswerCounter { get; set; }
         
         //记录每一轮数据的信息
         public MappedState<Hash, long, Answer> Answers { get; set; }
         
-        //key 为request id， value为当前answer的轮数
-        public MappedState<Hash, long> RequestAnswers { get; set; }
         
         //记录每一轮的最终结果
         public MappedState<Hash, long, AnswerInfo> CurrentAnswersInfo { get; set; }

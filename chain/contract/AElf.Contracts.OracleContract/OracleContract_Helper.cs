@@ -53,9 +53,8 @@ namespace AElf.Contracts.OracleContract
             return HashHelper.ConcatAndCompute(dataHash, saltHash);
         }
 
-        private void VerifyHashDataWithSalt(Hash requestId, Address sender, ByteString rawData, string salt)
+        private void VerifyHashDataWithSalt(Hash savedHash, ByteString rawData, string salt)
         {
-            var savedHash = State.HashData[requestId][sender];
             var saltHash = HashHelper.ComputeFrom(salt);
             var dataHash = HashHelper.ComputeFrom(rawData.ToByteArray());
             dataHash = HashHelper.ConcatAndCompute(dataHash, saltHash);

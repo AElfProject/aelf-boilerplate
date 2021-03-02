@@ -119,7 +119,8 @@ message Answer{
 
 message NodeWithData{
     aelf.Address node = 1;
-    bytes real_data = 2;
+    aelf.Hash hash_data = 2;
+    bytes real_data = 3;
 }
 
 message AnswerInfo{
