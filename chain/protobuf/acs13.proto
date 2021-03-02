@@ -20,3 +20,13 @@ service OracleAggregatorContract {
         option (aelf.is_view) = true;
     }
 }
+
+message roundData{
+    
+}
+
+message UpdatedRequest {
+    option (aelf.is_event) = true;
+    aelf.Hash request_id = 1 [(aelf.is_indexed) = true];
+    bytes agreed_value = 2;
+}

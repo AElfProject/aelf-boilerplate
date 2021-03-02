@@ -1,4 +1,5 @@
 using AElf.Types;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.OracleContract
@@ -43,6 +44,22 @@ namespace AElf.Contracts.OracleContract
             var expirationHash = HashHelper.ComputeFrom(expiration.ToBytesValue());
             paramsHash = HashHelper.ConcatAndCompute(paramsHash, expirationHash);
             return paramsHash;
-        } 
+        }
+
+        private Hash GenerateHashWithSalt(ByteString rawData, string salt)
+        {
+            var saltHash = HashHelper.ComputeFrom(salt);
+            var dataHash = HashHelper.ComputeFrom(rawData.ToByteArray());
+            return HashHelper.ConcatAndCompute(dataHash, saltHash);
+        }
+
+        private void VerifyHashDataWithSalt(Hash requestId, Address sender, ByteString rawData, string salt)
+        {
+            var savedHash = State.HashData[requestId][sender];
+            var saltHash = HashHelper.ComputeFrom(salt);
+            var dataHash = HashHelper.ComputeFrom(rawData.ToByteArray());
+            dataHash = HashHelper.ConcatAndCompute(dataHash, saltHash);
+            Assert(savedHash == dataHash, "Wrong real data or salt");
+        }
     }
 }

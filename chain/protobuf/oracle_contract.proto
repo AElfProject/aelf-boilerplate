@@ -22,6 +22,8 @@ import "google/protobuf/empty.proto";
 // import for using the google.protobuf.Timestamp type
 import "google/protobuf/timestamp.proto";
 
+import "acs13.proto";
+
 // the name of the C# namespace in which the contract code will be,
 // generated code will also be in this namespace.
 option csharp_namespace = "AElf.Contracts.OracleContract";
@@ -94,7 +96,7 @@ message GetEnoughData{
 
 message SendDataWithSaltInput{
     aelf.Hash request_id = 1;
-    string real_data = 2;
+    bytes real_data = 2;
     string salt = 3;
     int64 payment = 4;
     aelf.Address callback_address = 5;
@@ -102,26 +104,11 @@ message SendDataWithSaltInput{
     google.protobuf.Timestamp cancel_expiration = 7;
 }
 
-message UpdatedRequest {
-    option (aelf.is_event) = true;
-    aelf.Hash request_id = 1 [(aelf.is_indexed) = true];
-    string url_to_query = 2;
-    string attribute_to_fetch = 3;
-    string agreed_value = 4;
-}
-
 message Commitment {
     aelf.Hash params_hash = 1;
     int32 data_version = 2;
     AvailableNodes designated_nodes = 3;
     aelf.Address aggregator = 4;
-}
-
-message Response{
-    option (aelf.is_event) = true;
-    bytes request_id = 1 [(aelf.is_indexed) = true];
-    string real_value = 2;
-
 }
 
 message Answer{
@@ -132,10 +119,10 @@ message Answer{
 
 message NodeWithData{
     aelf.Address node = 1;
-    string responses = 2;
+    bytes real_data = 2;
 }
 
 message AnswerInfo{
-    string current_value = 1;
+    bytes current_value = 1;
     google.protobuf.Timestamp updated_timestamps = 2;
 }

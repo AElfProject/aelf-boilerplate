@@ -1,6 +1,11 @@
+using System.Collections.Generic;
+using System.Linq;
 using AElf.CSharp.Core;
 using AElf.CSharp.Core.Extension;
 using AElf.Sdk.CSharp;
+using AElf.Standards.ACS13;
+using AElf.Types;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.OracleContract
@@ -22,10 +27,11 @@ namespace AElf.Contracts.OracleContract
             if (designatedNodesCount > 0)
             {
                 Assert(
-                    designatedNodesCount >= State.MinimumHashData.Value &&
+                    designatedNodesCount >= State.MinimumResponses.Value &&
                     designatedNodesCount <= State.AvailableNodes.Value.NodeList.Count,
                     "Invalid count of designated nodes");
             }
+
             State.Commitments[requestId] = new Commitment
             {
                 ParamsHash = paramsHash,
@@ -59,12 +65,17 @@ namespace AElf.Contracts.OracleContract
             VerifyRequest(requestId, input.Payment, input.CallbackAddress, input.MethodName, input.CancelExpiration);
             var currentRoundCount = State.AnswerCounter[requestId];
             var answer = State.Answers[requestId][currentRoundCount];
-            int minimumHashData = State.MinimumHashData.Value;
-            Assert( answer.HashDataResponses < minimumHashData,
+            int minimumHashData = State.MinimumResponses.Value;
+            Assert(answer.HashDataResponses < minimumHashData,
                 $"Enough hash data for request {requestId}");
             VerifyNode(requestId, Context.Sender);
-            Assert(State.HashData[requestId][Context.Sender] == null, $"{Context.Sender} has sent data hash");
+            var lastHashData = State.HashData[requestId][Context.Sender];
             State.HashData[requestId][Context.Sender] = input.HashData;
+            if (lastHashData != null)
+            {
+                return new Empty();
+            }
+
             answer.HashDataResponses = answer.HashDataResponses.Add(1);
             State.Answers[requestId][currentRoundCount] = answer;
             if (answer.HashDataResponses == minimumHashData)
@@ -74,6 +85,7 @@ namespace AElf.Contracts.OracleContract
                     RequestId = requestId
                 });
             }
+
             return new Empty();
         }
 
@@ -82,14 +94,67 @@ namespace AElf.Contracts.OracleContract
             var requestId = input.RequestId;
             VerifyRequest(requestId, input.Payment, input.CallbackAddress, input.MethodName, input.CancelExpiration);
             var currentRoundCount = State.AnswerCounter[requestId];
-            var answer = State.Answers[requestId][currentRoundCount];
-            Assert( answer.HashDataResponses == State.MinimumHashData.Value,
+            var answers = State.Answers[requestId][currentRoundCount];
+            Assert(answers.HashDataResponses == State.MinimumResponses.Value,
                 $"Not enough hash data received for request {requestId}");
+            Assert(answers.DataWithSaltResponses < State.MinimumResponses.Value,
+                $"Enough real data received for request {requestId}");
             VerifyNode(requestId, Context.Sender);
-            
-            
-            
+            var nodeRealData = answers.Responses;
+            if (nodeRealData.Any(x => x.Node == Context.Sender))
+            {
+                return new Empty();
+            }
+
+            VerifyHashDataWithSalt(requestId, Context.Sender, input.RealData, input.Salt);
+            nodeRealData.Add(new NodeWithData
+            {
+                Node = Context.Sender,
+                RealData = input.RealData
+            });
+            answers.DataWithSaltResponses = answers.DataWithSaltResponses.Add(1);
+            State.Answers[requestId][currentRoundCount] = answers;
+            if (answers.DataWithSaltResponses != State.MinimumResponses.Value) return new Empty();
+            var aggregatorAddress = State.Commitments[requestId].Aggregator;
+            if (aggregatorAddress != null)
+            {
+                // var aggregatorAnswer = new AElf.Standards.ACS13.
+                // Context.SendInline(aggregatorAddress, "asd", answers);
+                return new Empty();
+            }
+
+            if (AggregateData(nodeRealData, out var chooseData))
+            {
+                Context.Fire(new UpdatedRequest
+                {
+                    RequestId = requestId,
+                    AgreedValue = chooseData
+                });
+                Context.SendInline(input.CallbackAddress, input.MethodName, chooseData);
+                return new Empty();
+            }
+
+            DealQuestionableQuery(requestId, currentRoundCount, nodeRealData);
             return new Empty();
+        }
+
+        private bool AggregateData(IEnumerable<NodeWithData> allData, out ByteString chooseData)
+        {
+            var groupData = allData.GroupBy(x => x.RealData);
+            var groupedData = groupData as IGrouping<ByteString, NodeWithData>[] ?? groupData.ToArray();
+            var maxCount = groupedData.Max(x => x.Count());
+            if (maxCount < State.ThresholdToUpdateData.Value)
+            {
+                chooseData = null;
+                return false;
+            }
+
+            chooseData = groupedData.First(x => x.Count() == maxCount).Key;
+            return true;
+        }
+
+        private void DealQuestionableQuery(Hash requestId, long roundId, IEnumerable<NodeWithData> allData)
+        {
         }
     }
 }
