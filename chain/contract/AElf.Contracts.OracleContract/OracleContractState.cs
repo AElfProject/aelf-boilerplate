@@ -48,5 +48,13 @@ namespace AElf.Contracts.OracleContract
         //记录每一轮的最终结果
         public MappedState<Hash, RoundLastUpdateAnswer> RoundLastAnswersInfo { get; set; }
         
+        // manage questionable node
+        public SingletonState<RequestIds> QuestionableRequestsList { get; set; }
+        
+        public MappedState<Hash, bool> QuestionableRequestsMap { get; set; }
+        
+        public MappedState<Hash, Rounds> QuestionableRequestRounds { get; set; }
+        
+        public MappedState<Hash, RequestQuestionableQueryInfo> QuestionableInfo { get; set; }
     }
 }

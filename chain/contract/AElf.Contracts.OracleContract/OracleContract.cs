@@ -114,7 +114,13 @@ namespace AElf.Contracts.OracleContract
             senderDataInfo.RealData = input.RealData;
             answers.DataWithSaltResponses = answers.DataWithSaltResponses.Add(1);
             State.DetailAnswers[requestId].RoundAnswers[currentRoundCount] = answers;
+            
+            // pay to node
             PayToNode(requestId, input.Payment, Context.Sender);
+            
+            // update statistic information
+            AddQueryCount(Context.Sender);
+            
             if (answers.DataWithSaltResponses != State.ThresholdResponses.Value) return new Empty();
             var aggregatorAddress = State.Commitments[requestId].Aggregator;
             if (aggregatorAddress != null)
@@ -144,9 +150,15 @@ namespace AElf.Contracts.OracleContract
             }
 
             DealQuestionableNode(requestId, currentRoundCount, allNodeRealData);
+            ClearRequestInfo(requestId);
+            Context.Fire(new QuestionableQueryFound
+            {
+                RequestId = requestId,
+                RoundId = currentRoundCount
+            });
             return new Empty();
         }
-        
+
         private void PayToNode(Hash requestId, long payment, Address node)
         {
             var commitment = State.Commitments[requestId];
@@ -179,9 +191,29 @@ namespace AElf.Contracts.OracleContract
 
         private void DealQuestionableNode(Hash requestId, long roundId, IEnumerable<NodeWithDetailData> allData)
         {
-            
-            //
-            ClearRequestInfo(requestId);
+            if (!State.QuestionableRequestsMap[requestId])
+            {
+                var questionableRequestIds = State.QuestionableRequestsList.Value;
+                questionableRequestIds.Requests.Add(requestId);
+                State.QuestionableRequestsList.Value = questionableRequestIds;
+                State.QuestionableRequestsMap[requestId] = true;
+            }
+
+            var rounds = State.QuestionableRequestRounds[requestId];
+            rounds.RoundList.Add(roundId);
+            State.QuestionableRequestRounds[requestId] = rounds;
+            var questionableInfo = State.QuestionableInfo[requestId];
+            questionableInfo.QuestionableQueryInformation[roundId] = new QuestionableQueryInfo
+            {
+                UpdateTime = Context.CurrentBlockTime
+            };
+            questionableInfo.QuestionableQueryInformation[roundId].AllQuestionableNodes.AddRange(allData.Select(x =>
+                new QuestionableNodeInfo
+                {
+                    Node = x.Node,
+                    RealValue = x.RealData
+                }));
+            State.QuestionableInfo[requestId] = questionableInfo;
         }
 
         private void UpdateRoundData(Hash requestId, long currentRoundCount, ByteString updateValue)
@@ -197,6 +229,12 @@ namespace AElf.Contracts.OracleContract
         {
             State.DetailAnswers.Remove(requestId);
             State.Commitments.Remove(requestId);
+        }
+
+        private void AddQueryCount(Address node)
+        {
+            var statisticInfo = State.NodeStatistic[node]?? new NodeStatistic();
+            statisticInfo.QueryCount = statisticInfo.QueryCount.Add(1);
         }
     }
 }

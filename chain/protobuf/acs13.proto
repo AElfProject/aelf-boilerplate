@@ -21,6 +21,9 @@ service OracleAggregatorContract {
     option (aelf.is_view) = true;
   }
 
+  rpc GetQuestionAbleQuery(GetQuestionAbleQueryInput) returns (QuestionableQueryInfo) {
+    option (aelf.is_view) = true;
+  }
 }
 
 message AnswerUpdated {
@@ -28,6 +31,12 @@ message AnswerUpdated {
   aelf.Hash request_id = 1 [(aelf.is_indexed) = true];
   int64 round_id = 2;
   bytes agreed_value = 3;
+}
+
+message QuestionableQueryFound {
+  option (aelf.is_event) = true;
+  aelf.Hash request_id = 1 [(aelf.is_indexed) = true];
+  int64 round_id = 2;
 }
 
 message AggregateInput{
@@ -55,4 +64,20 @@ message Answer{
 message GetAnswerByRoundIdInput{
   aelf.Hash request_id = 1;
   int64 round_id = 2;
+}
+
+message GetQuestionAbleQueryInput{
+  aelf.Hash request_id = 1;
+  int64 round_id = 2;
+}
+
+message QuestionableQueryInfo{
+  aelf.Address aggregator = 1;
+  google.protobuf.Timestamp update_time = 2;
+  repeated QuestionableNodeInfo all_questionable_nodes = 3;
+}
+
+message QuestionableNodeInfo{
+  aelf.Address node = 1;
+  bytes real_value = 2;
 }

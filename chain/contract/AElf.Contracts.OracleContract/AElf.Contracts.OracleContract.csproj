@@ -12,6 +12,12 @@
         <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     </PropertyGroup>
 
+<!--    <ItemGroup>-->
+<!--        <ContractBase Include="..\..\protobuf\acs13.proto">-->
+<!--            <Link>Protobuf\Proto\acs13.proto</Link>-->
+<!--        </ContractBase>-->
+<!--    </ItemGroup>-->
+
     <ItemGroup>
         <ContractReference Include="..\..\protobuf\acs13.proto">
             <Link>Protobuf\Proto\acs13.proto</Link>
