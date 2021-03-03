@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using AElf.Standards.ACS13;
 using AElf.Types;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
@@ -25,6 +28,7 @@ namespace AElf.Contracts.OracleContract
                 Assert(nodeList.Contains(sender), "Sender is not authorized");
             }
         }
+
         private Hash GenerateRequestId(Address sender, long nonce)
         {
             var requestId = HashHelper.ComputeFrom(sender);
@@ -46,19 +50,28 @@ namespace AElf.Contracts.OracleContract
             return paramsHash;
         }
 
-        private Hash GenerateHashWithSalt(ByteString rawData, string salt)
-        {
-            var saltHash = HashHelper.ComputeFrom(salt);
-            var dataHash = HashHelper.ComputeFrom(rawData.ToByteArray());
-            return HashHelper.ConcatAndCompute(dataHash, saltHash);
-        }
-
         private void VerifyHashDataWithSalt(Hash savedHash, ByteString rawData, string salt)
         {
             var saltHash = HashHelper.ComputeFrom(salt);
             var dataHash = HashHelper.ComputeFrom(rawData.ToByteArray());
             dataHash = HashHelper.ConcatAndCompute(dataHash, saltHash);
             Assert(savedHash == dataHash, "Wrong real data or salt");
+        }
+
+        private AggregateInput TransferToAggregateInput(Hash requestId, long round, IList<NodeWithDetailData> nodeList)
+        {
+            var aggregateInput = new AggregateInput
+            {
+                RequestId = requestId,
+                RoundId = round
+            };
+            var responses = nodeList.Select(x => new NodeWithData
+            {
+                Node = x.Node,
+                RealData = x.RealData
+            }).ToList();
+            aggregateInput.Responses.AddRange(responses);
+            return aggregateInput;
         }
     }
 }

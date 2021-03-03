@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using AElf.Sdk.CSharp.State;
 using AElf.Types;
 
@@ -21,19 +20,7 @@ namespace AElf.Contracts.OracleContract
         
         //最少从多少个节点获取数据
         public SingletonState<int> MinimumResponses { get; set; }
-        
-        //最多从多少个节点获取数据
-        public SingletonState<int> MaxResponses { get; set; }
-        
-        //一次request的过期时间
-        public SingletonState<int> ExpireTime { get; set; }
-        
-        //发送解密数据的阈值
-        public SingletonState<int> ReceiveDataWithSaltThreshold { get; set; }
-        
-        //聚合数据所需要的数据量
-        public SingletonState<int> ResponseThreshold{ get; set; }
-        
+
         // 是否为有效节点
         public MappedState<Address, bool> AuthorizedNodes { get; set; }
         
@@ -47,11 +34,10 @@ namespace AElf.Contracts.OracleContract
         public MappedState<Hash, long> AnswerCounter { get; set; }
         
         //记录每一轮数据的信息
-        public MappedState<Hash, RoundAnswerDetailInfo> Answers { get; set; }
-        
+        public MappedState<Hash, RoundAnswerDetailInfo> DetailAnswers { get; set; }
         
         //记录每一轮的最终结果
-        public MappedState<Hash, RoundLastUpdateAnswer> CurrentAnswersInfo { get; set; }
+        public MappedState<Hash, RoundLastUpdateAnswer> RoundLastAnswersInfo { get; set; }
         
     }
 }

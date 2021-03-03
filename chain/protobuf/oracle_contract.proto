@@ -111,6 +111,7 @@ message Commitment {
   int32 data_version = 2;
   AvailableNodes designated_nodes = 3;
   aelf.Address aggregator = 4;
+  aelf.Address owner = 5;
 }
 
 message RoundAnswerDetailInfo{
@@ -120,10 +121,10 @@ message RoundAnswerDetailInfo{
 message AnswerDetail{
   int32 hash_data_responses = 1;
   int32 data_with_salt_responses = 2;
-  repeated NodeWithData responses = 3;
+  repeated NodeWithDetailData responses = 3;
 }
 
-message NodeWithData{
+message NodeWithDetailData{
   aelf.Address node = 1;
   aelf.Hash hash_data = 2;
   bytes real_data = 3;
