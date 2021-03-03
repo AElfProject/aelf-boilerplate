@@ -32,7 +32,7 @@ service OracleContract {
   option (aelf.csharp_state) = "AElf.Contracts.OracleContract.OracleContractState";
 
   rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {}
-  
+
   // base function
 
   rpc CreateRequest (CreateRequestInput) returns (google.protobuf.Empty) {}
@@ -40,13 +40,13 @@ service OracleContract {
   rpc SendHashData (SendHashDataInput) returns (google.protobuf.Empty) {}
 
   rpc SendDataWithSalt (SendDataWithSaltInput) returns (google.protobuf.Empty) {}
-  
+
   // manage request
   rpc CancelRequest(CancelRequestInput) returns (google.protobuf.Empty) {}
 
   // deal with evil node
   rpc NoticeQuestionableNode(NoticeQuestionableNodeInput) returns (google.protobuf.Empty) {}
-  
+
   // manage nodes
   rpc DepositEscrow(DepositEscrowInput) returns (google.protobuf.Empty) {}
 
@@ -55,6 +55,10 @@ service OracleContract {
   rpc AddNode(AddNodeInput) returns (google.protobuf.Empty) {}
 
   rpc RemoveNode(aelf.Address) returns (google.protobuf.Empty) {}
+
+  rpc AddQuestionableNode(aelf.Address) returns (google.protobuf.Empty) {}
+
+  rpc RemoveQuestionableNode(aelf.Address) returns (google.protobuf.Empty) {}
 
   rpc RemoveNodeStatistic(aelf.Address) returns (google.protobuf.Empty) {}
 
@@ -180,7 +184,7 @@ message WithdrawEscrowInput{
 message NodeInfo{
   int64 escrow = 1;
   int64 withdrawable = 2;
-  
+
 }
 
 message NodeStatistic{

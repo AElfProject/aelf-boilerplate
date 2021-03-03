@@ -23,6 +23,9 @@ namespace AElf.Contracts.OracleContract
         // 是否为有效节点
         public MappedState<Address, bool> AuthorizedNodes { get; set; }
         
+        // 节点是否被质疑
+        public MappedState<Address, bool> QuestionableNodes { get; set; }
+        
         // 有哪些节点
         public SingletonState<AvailableNodes> AvailableNodes { get; set; }
         
