@@ -35,10 +35,10 @@ namespace AElf.Contracts.OracleContract
             State.Commitments[requestId] = new Commitment
             {
                 ParamsHash = paramsHash,
-                DataVersion = input.DataVersion,
                 DesignatedNodes = designatedNodes,
                 Aggregator = input.Aggregator,
-                Owner = Context.Sender
+                Owner = Context.Sender,
+                Payment = input.Payment
             };
             var roundCount = State.AnswerCounter[requestId];
             roundCount = roundCount.Add(1);
@@ -117,9 +117,12 @@ namespace AElf.Contracts.OracleContract
             State.DetailAnswers[requestId].RoundAnswers[currentRoundCount] = answers;
             if (answers.DataWithSaltResponses != State.MinimumResponses.Value) return new Empty();
             var aggregatorAddress = State.Commitments[requestId].Aggregator;
+            State.DetailAnswers.Remove(requestId);
             if (aggregatorAddress != null)
             {
                 var aggregatorInput = TransferToAggregateInput(requestId, currentRoundCount, allNodeRealData);
+                aggregatorInput.CallbackAddress = input.CallbackAddress;
+                aggregatorInput.MethodName = input.MethodName;
                 Context.SendInline(aggregatorAddress,
                     nameof(OracleAggregatorContractContainer.OracleAggregatorContractReferenceState.Aggregate),
                     aggregatorInput);
@@ -136,7 +139,7 @@ namespace AElf.Contracts.OracleContract
                 });
                 Context.SendInline(input.CallbackAddress, input.MethodName, chooseData);
                 UpdateRoundData(requestId, currentRoundCount, chooseData);
-
+                State.Commitments.Remove(requestId);
                 return new Empty();
             }
 
@@ -160,6 +163,7 @@ namespace AElf.Contracts.OracleContract
 
         private void DealQuestionableNode(Hash requestId, long roundId, IEnumerable<NodeWithDetailData> allData)
         {
+            State.Commitments.Remove(requestId);
         }
 
         private void UpdateRoundData(Hash requestId, long currentRoundCount, ByteString updateValue)
@@ -169,12 +173,6 @@ namespace AElf.Contracts.OracleContract
                 LastValue = updateValue,
                 UpdatedTimestamps = Context.CurrentBlockTime
             };
-        }
-
-        private void ClearRequestInfo(Hash requestId)
-        {
-            State.Commitments.Remove(requestId);
-            State.DetailAnswers.Remove(requestId);
         }
     }
 }

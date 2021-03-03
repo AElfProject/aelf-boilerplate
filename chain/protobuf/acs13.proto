@@ -35,6 +35,8 @@ message AggregateInput{
   aelf.Hash request_id = 1;
   int64 round_id = 2;
   repeated NodeWithData responses = 3;
+  aelf.Address callback_address = 4;
+  string method_name = 5;
 }
 
 message NodeWithData{

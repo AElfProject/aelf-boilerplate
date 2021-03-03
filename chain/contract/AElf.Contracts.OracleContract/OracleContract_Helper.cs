@@ -58,7 +58,7 @@ namespace AElf.Contracts.OracleContract
             Assert(savedHash == dataHash, "Wrong real data or salt");
         }
 
-        private AggregateInput TransferToAggregateInput(Hash requestId, long round, IList<NodeWithDetailData> nodeList)
+        private AggregateInput TransferToAggregateInput(Hash requestId, long round, IEnumerable<NodeWithDetailData> nodeList)
         {
             var aggregateInput = new AggregateInput
             {
