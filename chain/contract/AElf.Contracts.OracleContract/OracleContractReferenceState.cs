@@ -1,7 +1,9 @@
+using AElf.Contracts.MultiToken;
+
 namespace AElf.Contracts.OracleContract
 {
-    public class OracleContractReferenceState
+    public partial class OracleContractState
     {
-        
+        internal TokenContractContainer.TokenContractReferenceState TokenContract { get; set; }
     }
 }

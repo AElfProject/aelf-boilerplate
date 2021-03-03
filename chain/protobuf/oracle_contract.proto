@@ -32,16 +32,31 @@ service OracleContract {
   option (aelf.csharp_state) = "AElf.Contracts.OracleContract.OracleContractState";
 
   rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  
+  // base function
 
   rpc CreateRequest (CreateRequestInput) returns (google.protobuf.Empty) {}
 
   rpc SendHashData (SendHashDataInput) returns (google.protobuf.Empty) {}
 
   rpc SendDataWithSalt (SendDataWithSaltInput) returns (google.protobuf.Empty) {}
-
+  
+  // manage request
   rpc CancelRequest(CancelRequestInput) returns (google.protobuf.Empty) {}
 
+  // deal with evil node
   rpc NoticeQuestionableNode(NoticeQuestionableNodeInput) returns (google.protobuf.Empty) {}
+  
+  // manage nodes
+  rpc DepositEscrow(DepositEscrowInput) returns (google.protobuf.Empty) {}
+
+  rpc WithdrawEscrow(WithdrawEscrowInput) returns (google.protobuf.Empty) {}
+
+  rpc AddNode(AddNodeInput) returns (google.protobuf.Empty) {}
+
+  rpc RemoveNode(aelf.Address) returns (google.protobuf.Empty) {}
+
+  rpc RemoveNodeStatistic(aelf.Address) returns (google.protobuf.Empty) {}
 
 }
 
@@ -152,4 +167,28 @@ message NoticeQuestionableNodeInput{
 
 message CancelRequestInput{
   aelf.Hash request_id = 1;
+}
+
+message DepositEscrowInput{
+  int64 amount = 1;
+}
+
+message WithdrawEscrowInput{
+  int64 amount = 1;
+}
+
+message NodeInfo{
+  int64 escrow = 1;
+  int64 withdrawable = 2;
+  
+}
+
+message NodeStatistic{
+  int64 query_count = 1;
+  int64 invalid_query_count = 2;
+}
+
+message AddNodeInput{
+  aelf.Address node = 1;
+  int64 amount = 2;
 }

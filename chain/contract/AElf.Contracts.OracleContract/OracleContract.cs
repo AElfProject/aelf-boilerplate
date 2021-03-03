@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using AElf.Contracts.MultiToken;
 using AElf.CSharp.Core;
 using AElf.CSharp.Core.Extension;
 using AElf.Sdk.CSharp;
@@ -113,6 +114,7 @@ namespace AElf.Contracts.OracleContract
             senderDataInfo.RealData = input.RealData;
             answers.DataWithSaltResponses = answers.DataWithSaltResponses.Add(1);
             State.DetailAnswers[requestId].RoundAnswers[currentRoundCount] = answers;
+            PayToNode(requestId, input.Payment, Context.Sender);
             if (answers.DataWithSaltResponses != State.ThresholdResponses.Value) return new Empty();
             var aggregatorAddress = State.Commitments[requestId].Aggregator;
             if (aggregatorAddress != null)
@@ -143,6 +145,22 @@ namespace AElf.Contracts.OracleContract
 
             DealQuestionableNode(requestId, currentRoundCount, allNodeRealData);
             return new Empty();
+        }
+        
+        private void PayToNode(Hash requestId, long payment, Address node)
+        {
+            var commitment = State.Commitments[requestId];
+            var user = commitment.Owner;
+            State.TokenContract.TransferFrom.Send(new TransferFromInput
+            {
+                Symbol = TokenSymbol,
+                From = user,
+                To = Context.Self,
+                Amount = payment
+            });
+            var nodeInfo = State.NodeInfo[node];
+            nodeInfo.Withdrawable = nodeInfo.Withdrawable.Add(payment);
+            State.NodeInfo[node] = nodeInfo;
         }
 
         private bool AggregateData(IEnumerable<NodeWithDetailData> allData, out ByteString chooseData)

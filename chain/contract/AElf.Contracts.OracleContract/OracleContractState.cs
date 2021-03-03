@@ -6,7 +6,7 @@ namespace AElf.Contracts.OracleContract
     /// <summary>
     /// The state class of the contract, it inherits from the AElf.Sdk.CSharp.State.ContractState type. 
     /// </summary>
-    public class OracleContractState : ContractState
+    public partial class OracleContractState : ContractState
     {
         // request过期时间，默认为300s(单位秒)
         public SingletonState<long> ExpirationTime { get; set; }
@@ -26,6 +26,11 @@ namespace AElf.Contracts.OracleContract
         // 有哪些节点
         public SingletonState<AvailableNodes> AvailableNodes { get; set; }
         
+        public MappedState<Address, NodeInfo> NodeInfo { get; set; }
+        
+        public MappedState<Address, NodeStatistic> NodeStatistic { get; set; }
+        
+        public SingletonState<long> MinimumEscrow { get; set; }
         
         
         // key为request id， value为查询信息生成的hash值
