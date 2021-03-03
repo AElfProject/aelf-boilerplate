@@ -110,7 +110,6 @@ message Commitment {
   AvailableNodes designated_nodes = 2;
   aelf.Address aggregator = 3;
   aelf.Address owner = 4;
-  int64 payment = 5;
 }
 
 message RoundAnswerDetailInfo{

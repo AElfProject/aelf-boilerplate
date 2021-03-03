@@ -27,8 +27,7 @@ namespace AElf.Contracts.OracleContract
             if (designatedNodesCount > 0)
             {
                 Assert(
-                    designatedNodesCount >= State.MinimumResponses.Value &&
-                    designatedNodesCount <= State.AvailableNodes.Value.NodeList.Count,
+                    designatedNodesCount > State.ThresholdResponses.Value,
                     "Invalid count of designated nodes");
             }
 
@@ -37,8 +36,7 @@ namespace AElf.Contracts.OracleContract
                 ParamsHash = paramsHash,
                 DesignatedNodes = designatedNodes,
                 Aggregator = input.Aggregator,
-                Owner = Context.Sender,
-                Payment = input.Payment
+                Owner = Context.Sender
             };
             var roundCount = State.AnswerCounter[requestId];
             roundCount = roundCount.Add(1);
@@ -66,8 +64,8 @@ namespace AElf.Contracts.OracleContract
             VerifyRequest(requestId, input.Payment, input.CallbackAddress, input.MethodName, input.CancelExpiration);
             var currentRoundCount = State.AnswerCounter[requestId];
             var answer = State.DetailAnswers[requestId].RoundAnswers[currentRoundCount];
-            int minimumHashData = State.MinimumResponses.Value;
-            Assert(answer.HashDataResponses < minimumHashData,
+            int thresholdResponses = State.ThresholdResponses.Value;
+            Assert(answer.HashDataResponses < thresholdResponses,
                 $"Enough hash data for request {requestId}");
             VerifyNode(requestId, Context.Sender);
             var nodeInfo = answer.Responses.SingleOrDefault(x => x.Node == Context.Sender) ?? new NodeWithDetailData
@@ -86,7 +84,7 @@ namespace AElf.Contracts.OracleContract
             answer.Responses.Add(nodeInfo);
             answer.HashDataResponses = answer.HashDataResponses.Add(1);
             State.DetailAnswers[requestId].RoundAnswers[currentRoundCount] = answer;
-            if (answer.HashDataResponses == minimumHashData)
+            if (answer.HashDataResponses == thresholdResponses)
             {
                 Context.Fire(new GetEnoughData
                 {
@@ -103,9 +101,9 @@ namespace AElf.Contracts.OracleContract
             VerifyRequest(requestId, input.Payment, input.CallbackAddress, input.MethodName, input.CancelExpiration);
             var currentRoundCount = State.AnswerCounter[requestId];
             var answers = State.DetailAnswers[requestId].RoundAnswers[currentRoundCount];
-            Assert(answers.HashDataResponses == State.MinimumResponses.Value,
+            Assert(answers.HashDataResponses == State.ThresholdResponses.Value,
                 $"Not enough hash data received for request {requestId}");
-            Assert(answers.DataWithSaltResponses < State.MinimumResponses.Value,
+            Assert(answers.DataWithSaltResponses < State.ThresholdResponses.Value,
                 $"Enough real data received for request {requestId}");
             VerifyNode(requestId, Context.Sender);
             var allNodeRealData = answers.Responses;
@@ -115,9 +113,8 @@ namespace AElf.Contracts.OracleContract
             senderDataInfo.RealData = input.RealData;
             answers.DataWithSaltResponses = answers.DataWithSaltResponses.Add(1);
             State.DetailAnswers[requestId].RoundAnswers[currentRoundCount] = answers;
-            if (answers.DataWithSaltResponses != State.MinimumResponses.Value) return new Empty();
+            if (answers.DataWithSaltResponses != State.ThresholdResponses.Value) return new Empty();
             var aggregatorAddress = State.Commitments[requestId].Aggregator;
-            State.DetailAnswers.Remove(requestId);
             if (aggregatorAddress != null)
             {
                 var aggregatorInput = TransferToAggregateInput(requestId, currentRoundCount, allNodeRealData);
@@ -126,6 +123,7 @@ namespace AElf.Contracts.OracleContract
                 Context.SendInline(aggregatorAddress,
                     nameof(OracleAggregatorContractContainer.OracleAggregatorContractReferenceState.Aggregate),
                     aggregatorInput);
+                ClearRequestInfo(requestId);
                 return new Empty();
             }
 
@@ -139,7 +137,7 @@ namespace AElf.Contracts.OracleContract
                 });
                 Context.SendInline(input.CallbackAddress, input.MethodName, chooseData);
                 UpdateRoundData(requestId, currentRoundCount, chooseData);
-                State.Commitments.Remove(requestId);
+                ClearRequestInfo(requestId);
                 return new Empty();
             }
 
@@ -163,7 +161,9 @@ namespace AElf.Contracts.OracleContract
 
         private void DealQuestionableNode(Hash requestId, long roundId, IEnumerable<NodeWithDetailData> allData)
         {
-            State.Commitments.Remove(requestId);
+            
+            //
+            ClearRequestInfo(requestId);
         }
 
         private void UpdateRoundData(Hash requestId, long currentRoundCount, ByteString updateValue)
@@ -173,6 +173,12 @@ namespace AElf.Contracts.OracleContract
                 LastValue = updateValue,
                 UpdatedTimestamps = Context.CurrentBlockTime
             };
+        }
+
+        private void ClearRequestInfo(Hash requestId)
+        {
+            State.DetailAnswers.Remove(requestId);
+            State.Commitments.Remove(requestId);
         }
     }
 }
