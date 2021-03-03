@@ -42,7 +42,7 @@ namespace AElf.Contracts.OracleContract
             var roundCount = State.AnswerCounter[requestId];
             roundCount = roundCount.Add(1);
             State.AnswerCounter[requestId] = roundCount;
-            State.Answers[requestId][roundCount] = new Answer();
+            State.Answers[requestId].RoundAnswers[roundCount] = new AnswerDetail();
             Context.Fire(new NewRequest
             {
                 Requester = Context.Sender,
@@ -64,7 +64,7 @@ namespace AElf.Contracts.OracleContract
             var requestId = input.RequestId;
             VerifyRequest(requestId, input.Payment, input.CallbackAddress, input.MethodName, input.CancelExpiration);
             var currentRoundCount = State.AnswerCounter[requestId];
-            var answer = State.Answers[requestId][currentRoundCount];
+            var answer = State.Answers[requestId].RoundAnswers[currentRoundCount];
             int minimumHashData = State.MinimumResponses.Value;
             Assert(answer.HashDataResponses < minimumHashData,
                 $"Enough hash data for request {requestId}");
@@ -78,12 +78,12 @@ namespace AElf.Contracts.OracleContract
             nodeInfo.HashData = input.HashData;
             if (isHashDataExisted)
             {
-                State.Answers[requestId][currentRoundCount] = answer;
+                State.Answers[requestId].RoundAnswers[currentRoundCount] = answer;
                 return new Empty();
             }
             answer.Responses.Add(nodeInfo);
             answer.HashDataResponses = answer.HashDataResponses.Add(1);
-            State.Answers[requestId][currentRoundCount] = answer;
+            State.Answers[requestId].RoundAnswers[currentRoundCount] = answer;
             if (answer.HashDataResponses == minimumHashData)
             {
                 Context.Fire(new GetEnoughData
@@ -100,7 +100,7 @@ namespace AElf.Contracts.OracleContract
             var requestId = input.RequestId;
             VerifyRequest(requestId, input.Payment, input.CallbackAddress, input.MethodName, input.CancelExpiration);
             var currentRoundCount = State.AnswerCounter[requestId];
-            var answers = State.Answers[requestId][currentRoundCount];
+            var answers = State.Answers[requestId].RoundAnswers[currentRoundCount];
             Assert(answers.HashDataResponses == State.MinimumResponses.Value,
                 $"Not enough hash data received for request {requestId}");
             Assert(answers.DataWithSaltResponses < State.MinimumResponses.Value,
@@ -112,7 +112,7 @@ namespace AElf.Contracts.OracleContract
             VerifyHashDataWithSalt(senderDataInfo.HashData, input.RealData, input.Salt);
             senderDataInfo.RealData = input.RealData;
             answers.DataWithSaltResponses = answers.DataWithSaltResponses.Add(1);
-            State.Answers[requestId][currentRoundCount] = answers;
+            State.Answers[requestId].RoundAnswers[currentRoundCount] = answers;
             if (answers.DataWithSaltResponses != State.MinimumResponses.Value) return new Empty();
             var aggregatorAddress = State.Commitments[requestId].Aggregator;
             if (aggregatorAddress != null)
@@ -124,9 +124,10 @@ namespace AElf.Contracts.OracleContract
 
             if (AggregateData(allNodeRealData, out var chooseData))
             {
-                Context.Fire(new UpdatedRequest
+                Context.Fire(new AnswerUpdated
                 {
                     RequestId = requestId,
+                    RoundId = currentRoundCount,
                     AgreedValue = chooseData
                 });
                 Context.SendInline(input.CallbackAddress, input.MethodName, chooseData);
@@ -158,11 +159,11 @@ namespace AElf.Contracts.OracleContract
         {
         }
 
-        private void UpdateRoundData(Hash requestId, long currentRoundCount, ByteString currentValue)
+        private void UpdateRoundData(Hash requestId, long currentRoundCount, ByteString updateValue)
         {
-            State.CurrentAnswersInfo[requestId][currentRoundCount] = new AnswerInfo
+            State.CurrentAnswersInfo[requestId].RoundAnswers[currentRoundCount] = new LastUpdateAnswer
             {
-                CurrentValue = currentValue,
+                LastValue = updateValue,
                 UpdatedTimestamps = Context.CurrentBlockTime
             };
         }

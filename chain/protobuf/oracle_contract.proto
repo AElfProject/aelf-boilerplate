@@ -22,8 +22,6 @@ import "google/protobuf/empty.proto";
 // import for using the google.protobuf.Timestamp type
 import "google/protobuf/timestamp.proto";
 
-import "acs13.proto";
-
 // the name of the C# namespace in which the contract code will be,
 // generated code will also be in this namespace.
 option csharp_namespace = "AElf.Contracts.OracleContract";
@@ -31,99 +29,128 @@ option csharp_namespace = "AElf.Contracts.OracleContract";
 // the contract definition: a gRPC service definition.
 service OracleContract {
 
-    option (aelf.csharp_state) = "AElf.Contracts.OracleContract.OracleContractState";
+  option (aelf.csharp_state) = "AElf.Contracts.OracleContract.OracleContractState";
 
-    rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) { }
+  rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {}
 
-    rpc CreateRequest (CreateRequestInput) returns (google.protobuf.Empty) { }
+  rpc CreateRequest (CreateRequestInput) returns (google.protobuf.Empty) {}
 
-    rpc SendHashData (SendHashDataInput) returns (google.protobuf.Empty) { }
+  rpc SendHashData (SendHashDataInput) returns (google.protobuf.Empty) {}
 
-    rpc SendDataWithSalt (SendDataWithSaltInput) returns (google.protobuf.Empty) { }
+  rpc SendDataWithSalt (SendDataWithSaltInput) returns (google.protobuf.Empty) {}
+
+  rpc CancelRequest(CancelRequestInput) returns (google.protobuf.Empty) {}
+
+  rpc NoticeQuestionableNode(NoticeQuestionableNodeInput) returns (google.protobuf.Empty) {}
 
 }
 
 message AvailableNodes{
-    repeated aelf.Address node_list = 1;
+  repeated aelf.Address node_list = 1;
 }
 
 message CreateRequestInput{
-    string url_to_query = 1;
-    string attribute_to_fetch = 2;
-    int64 payment = 3;
-    aelf.Address callback_address = 4;
-    string method_name = 5;
-    aelf.Address aggregator = 6;
-    int32 data_version = 7;
-    AvailableNodes designated_nodes = 11;
-    int64 nonce = 12;
+  string url_to_query = 1;
+  string attribute_to_fetch = 2;
+  int64 payment = 3;
+  aelf.Address callback_address = 4;
+  string method_name = 5;
+  aelf.Address aggregator = 6;
+  int32 data_version = 7;
+  AvailableNodes designated_nodes = 11;
+  int64 nonce = 12;
 }
 
 message NewRequest{
-    option (aelf.is_event) = true;
-    aelf.Hash request_id = 1[(aelf.is_indexed) = true];
-    aelf.Address requester = 2;
-    int64 payment = 3;
-    aelf.Address callback_address = 4;
-    string method_name = 5;
-    google.protobuf.Timestamp cancel_expiration = 6;
-    string url_to_query = 7;
-    string attribute_to_fetch = 8;
-    aelf.Address aggregator = 9;
-    int32 data_version = 10;
-    AvailableNodes designated_nodes = 11;
+  option (aelf.is_event) = true;
+  aelf.Hash request_id = 1[(aelf.is_indexed) = true];
+  aelf.Address requester = 2;
+  int64 payment = 3;
+  aelf.Address callback_address = 4;
+  string method_name = 5;
+  google.protobuf.Timestamp cancel_expiration = 6;
+  string url_to_query = 7;
+  string attribute_to_fetch = 8;
+  aelf.Address aggregator = 9;
+  int32 data_version = 10;
+  AvailableNodes designated_nodes = 11;
 }
 
 message CancelRequest{
-    option (aelf.is_event) = true;
-    bytes request_id = 1 [(aelf.is_indexed) = true];
+  option (aelf.is_event) = true;
+  bytes request_id = 1 [(aelf.is_indexed) = true];
 
 }
 
 message SendHashDataInput{
-    aelf.Hash request_id = 1;
-    aelf.Hash hash_data = 2;
-    int64 payment = 3;
-    aelf.Address callback_address = 4;
-    string method_name = 5;
-    google.protobuf.Timestamp cancel_expiration = 6;
+  aelf.Hash request_id = 1;
+  aelf.Hash hash_data = 2;
+  int64 payment = 3;
+  aelf.Address callback_address = 4;
+  string method_name = 5;
+  google.protobuf.Timestamp cancel_expiration = 6;
 }
 
 message GetEnoughData{
-    option (aelf.is_event) = true;
-    aelf.Hash request_id = 1 [(aelf.is_indexed) = true];
+  option (aelf.is_event) = true;
+  aelf.Hash request_id = 1 [(aelf.is_indexed) = true];
 }
 
 message SendDataWithSaltInput{
-    aelf.Hash request_id = 1;
-    bytes real_data = 2;
-    string salt = 3;
-    int64 payment = 4;
-    aelf.Address callback_address = 5;
-    string method_name = 6;
-    google.protobuf.Timestamp cancel_expiration = 7;
+  aelf.Hash request_id = 1;
+  bytes real_data = 2;
+  string salt = 3;
+  int64 payment = 4;
+  aelf.Address callback_address = 5;
+  string method_name = 6;
+  google.protobuf.Timestamp cancel_expiration = 7;
 }
 
 message Commitment {
-    aelf.Hash params_hash = 1;
-    int32 data_version = 2;
-    AvailableNodes designated_nodes = 3;
-    aelf.Address aggregator = 4;
+  aelf.Hash params_hash = 1;
+  int32 data_version = 2;
+  AvailableNodes designated_nodes = 3;
+  aelf.Address aggregator = 4;
 }
 
-message Answer{
-    int32 hash_data_responses = 1;
-    int32 data_with_salt_responses = 2;
-    repeated NodeWithData responses = 3;
+message RoundAnswerDetailInfo{
+  map<int64, AnswerDetail> RoundAnswers = 1;
+}
+
+message AnswerDetail{
+  int32 hash_data_responses = 1;
+  int32 data_with_salt_responses = 2;
+  repeated NodeWithData responses = 3;
 }
 
 message NodeWithData{
-    aelf.Address node = 1;
-    aelf.Hash hash_data = 2;
-    bytes real_data = 3;
+  aelf.Address node = 1;
+  aelf.Hash hash_data = 2;
+  bytes real_data = 3;
 }
 
-message AnswerInfo{
-    bytes current_value = 1;
-    google.protobuf.Timestamp updated_timestamps = 2;
+message RoundLastUpdateAnswer{
+  map<int64, LastUpdateAnswer> RoundAnswers = 1;
+}
+
+message LastUpdateAnswer{
+  bytes last_value = 1;
+  google.protobuf.Timestamp updated_timestamps = 2;
+}
+
+message QuestionableNodeInfo{
+  aelf.Address node = 1;
+  bytes real_value = 2;
+}
+
+message NoticeQuestionableNodeInput{
+  aelf.Hash request_id = 1;
+  int64 round_id = 2;
+  bytes reference_value = 3;
+  aelf.Address aggregator = 4;
+  repeated QuestionableNodeInfo all_questionable_nodes = 5;
+}
+
+message CancelRequestInput{
+  aelf.Hash request_id = 1;
 }

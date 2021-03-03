@@ -5,33 +5,53 @@ import "aelf/options.proto";
 import "aelf/core.proto";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 option (aelf.identity) = "acs13";
 option csharp_namespace = "AElf.Standards.ACS13";
 
 service OracleAggregatorContract {
-    rpc UpdateInformationFromCrossChain (google.protobuf.BytesValue) returns (google.protobuf.Empty) {
-    }
-    
-    rpc GetChainInitializationInformation (google.protobuf.BytesValue) returns (google.protobuf.BytesValue) {
-        option (aelf.is_view) = true;
-    }
-    rpc CheckCrossChainIndexingPermission (aelf.Address) returns (google.protobuf.BoolValue) {
-        option (aelf.is_view) = true;
-    }
+  rpc Aggregate (AggregateInput) returns (google.protobuf.Empty) {
+  }
+
+  rpc GetLastAnswer (GetLastAnswerInput) returns (Answer) {
+    option (aelf.is_view) = true;
+  }
+
+  rpc GetAnswerByRoundId (GetAnswerByRoundIdInput) returns (Answer) {
+    option (aelf.is_view) = true;
+  }
+
 }
 
-message UpdatedRequest {
-    option (aelf.is_event) = true;
-    aelf.Hash request_id = 1 [(aelf.is_indexed) = true];
-    bytes agreed_value = 2;
+message AnswerUpdated {
+  option (aelf.is_event) = true;
+  aelf.Hash request_id = 1 [(aelf.is_indexed) = true];
+  int64 round_id = 2;
+  bytes agreed_value = 3;
 }
 
-message Answer{
-    repeated NodeWithData responses = 3;
+message AggregateInput{
+  aelf.Hash request_id = 1;
+  int64 round_id = 2;
+  repeated NodeWithData responses = 3;
 }
 
 message NodeWithData{
-    aelf.Address node = 1;
-    bytes real_data = 3;
+  aelf.Address node = 1;
+  bytes real_data = 3;
+}
+
+message GetLastAnswerInput{
+  aelf.Hash request_id = 1;
+}
+
+message Answer{
+  bytes answer = 1;
+  google.protobuf.Timestamp update_time = 2;
+}
+
+message GetAnswerByRoundIdInput{
+  aelf.Hash request_id = 1;
+  int64 round_id = 2;
 }

@@ -47,11 +47,11 @@ namespace AElf.Contracts.OracleContract
         public MappedState<Hash, long> AnswerCounter { get; set; }
         
         //记录每一轮数据的信息
-        public MappedState<Hash, long, Answer> Answers { get; set; }
+        public MappedState<Hash, RoundAnswerDetailInfo> Answers { get; set; }
         
         
         //记录每一轮的最终结果
-        public MappedState<Hash, long, AnswerInfo> CurrentAnswersInfo { get; set; }
+        public MappedState<Hash, RoundLastUpdateAnswer> CurrentAnswersInfo { get; set; }
         
     }
 }
