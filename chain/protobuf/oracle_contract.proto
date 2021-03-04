@@ -98,20 +98,23 @@ message CreateRequestInput{
 message NewRequest{
   option (aelf.is_event) = true;
   aelf.Hash request_id = 1[(aelf.is_indexed) = true];
-  aelf.Address requester = 2;
-  int64 payment = 3;
-  aelf.Address callback_address = 4;
-  string method_name = 5;
-  google.protobuf.Timestamp cancel_expiration = 6;
-  string url_to_query = 7;
-  string attribute_to_fetch = 8;
-  aelf.Address aggregator = 9;
-  AvailableNodes designated_nodes = 10;
+  int64 round_id = 2 [(aelf.is_indexed) = true];
+  aelf.Address requester = 3;
+  int64 payment = 4;
+  aelf.Address callback_address = 5;
+  string method_name = 6;
+  google.protobuf.Timestamp cancel_expiration = 7;
+  string url_to_query = 8;
+  string attribute_to_fetch = 9;
+  aelf.Address aggregator = 10;
+  AvailableNodes designated_nodes = 11;
 }
 
 message CancelRequest{
   option (aelf.is_event) = true;
   bytes request_id = 1 [(aelf.is_indexed) = true];
+  int64 round_id = 2 [(aelf.is_indexed) = true];
+  google.protobuf.Timestamp cancel_time = 3;
 
 }
 
@@ -198,6 +201,7 @@ message NodeInfo{
 
 message NodeStatistic{
   int64 query_count = 1;
+  int64 valid_count = 2;
 }
 
 message AddNodeInput{
@@ -219,9 +223,8 @@ message RequestQuestionableQueryInfo{
 }
 
 message QuestionableQueryInfo{
-  aelf.Address aggregator = 1;
-  google.protobuf.Timestamp update_time = 2;
-  repeated QuestionableNodeInfo all_questionable_nodes = 3;
+  google.protobuf.Timestamp update_time = 1;
+  repeated QuestionableNodeInfo all_questionable_nodes = 2;
 }
 
 message QuestionableNodeInfo{
@@ -231,7 +234,6 @@ message QuestionableNodeInfo{
 
 message RemoveQuestionableQueryInfoInput{
   aelf.Hash request_id = 1;
-  int64 round_id  = 2;
 }
 
 message RemoveRedundantRoundDataInput {

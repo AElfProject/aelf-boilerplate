@@ -1,4 +1,5 @@
 using AElf.Boilerplate.TestBase;
+using AElf.Contracts.OracleContract;
 using AElf.Cryptography.ECDSA;
 
 namespace AElf.Contracts.Oracle

@@ -49,6 +49,7 @@ namespace AElf.Contracts.OracleContract
             Context.Fire(new NewRequest
             {
                 Requester = Context.Sender,
+                RoundId = roundCount,
                 RequestId = requestId,
                 Payment = payment,
                 CallbackAddress = callbackAddress,
@@ -117,18 +118,19 @@ namespace AElf.Contracts.OracleContract
             senderDataInfo.RealData = input.RealData;
             answers.DataWithSaltResponses = answers.DataWithSaltResponses.Add(1);
             State.DetailAnswers[requestId].RoundAnswers[currentRoundCount] = answers;
-            
+
             // pay to node
             PayToNode(requestId, input.Payment, Context.Sender);
-            
+
             // update statistic information
             AddQueryCount(Context.Sender);
-            
+
             if (answers.DataWithSaltResponses != State.ThresholdResponses.Value) return new Empty();
             var aggregatorAddress = State.Commitments[requestId].Aggregator;
             if (aggregatorAddress != null)
             {
                 var aggregatorInput = TransferToAggregateInput(requestId, currentRoundCount, allNodeRealData);
+                aggregatorInput.Requester = State.CommitmentsOwner[requestId];
                 aggregatorInput.CallbackAddress = input.CallbackAddress;
                 aggregatorInput.MethodName = input.MethodName;
                 Context.SendInline(aggregatorAddress,
@@ -161,14 +163,12 @@ namespace AElf.Contracts.OracleContract
             });
             return new Empty();
         }
-        
+
         public override Empty RemoveQuestionableQueryInfo(RemoveQuestionableQueryInfoInput input)
         {
             var owner = State.CommitmentsOwner[input.RequestId];
             Assert(owner != null && Context.Sender == owner, "Not authorized");
-            var requestQuestionableInfo = State.QuestionableInfo[input.RequestId];
-            requestQuestionableInfo.QuestionableQueryInformation.Remove(input.RoundId);
-            State.QuestionableInfo[input.RequestId] = requestQuestionableInfo;
+            State.QuestionableInfo.Remove(input.RequestId);
             return new Empty();
         }
 
@@ -177,11 +177,13 @@ namespace AElf.Contracts.OracleContract
             var owner = State.CommitmentsOwner[input.RequestId];
             Assert(owner != null && Context.Sender == owner, "Not authorized");
             State.RoundLastAnswersInfo.Remove(input.RequestId);
-            if (State.Commitments[input.RequestId] == null)
+            if (State.Commitments[input.RequestId] == null && State.QuestionableInfo[input.RequestId] == null)
             {
                 State.CommitmentsOwner.Remove(input.RequestId);
             }
-            return new Empty();  
+
+            PayToCleanDataRedundant(owner);
+            return new Empty();
         }
 
         private void PayToNode(Hash requestId, long payment, Address node)
@@ -209,7 +211,14 @@ namespace AElf.Contracts.OracleContract
                 return false;
             }
 
-            chooseData = groupData.First(x => x.Count() == maxCount).Key;
+            var chooseGroup = groupData.First(x => x.Count() == maxCount);
+            chooseData = chooseGroup.Key;
+            foreach (var chooseNode in chooseGroup)
+            {
+                var statisticInfo = State.NodeStatistic[chooseNode.Node];
+                statisticInfo.ValidCount = statisticInfo.ValidCount.Add(1);
+                State.NodeStatistic[chooseNode.Node] = statisticInfo;
+            }
             return true;
         }
 
@@ -246,8 +255,13 @@ namespace AElf.Contracts.OracleContract
 
         private void AddQueryCount(Address node)
         {
-            var statisticInfo = State.NodeStatistic[node]?? new NodeStatistic();
+            var statisticInfo = State.NodeStatistic[node] ?? new NodeStatistic();
             statisticInfo.QueryCount = statisticInfo.QueryCount.Add(1);
+            State.NodeStatistic[node] = statisticInfo;
+        }
+
+        private void PayToCleanDataRedundant(Address user)
+        {
         }
     }
 }

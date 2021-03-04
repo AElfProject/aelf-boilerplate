@@ -20,7 +20,7 @@ namespace AElf.Contracts.Oracle
         public override void OnPreApplicationInitialization(ApplicationInitializationContext context)
         {
             var contractCodeProvider = context.ServiceProvider.GetService<IContractCodeProvider>();
-            var contractDllLocation = typeof(OracleContract).Assembly.Location;
+            var contractDllLocation = typeof(OracleContract.OracleContract).Assembly.Location;
             var contractCodes = new Dictionary<string, byte[]>(contractCodeProvider.Codes)
             {
                 {
