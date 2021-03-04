@@ -50,11 +50,7 @@ namespace AElf.Contracts.OracleContract
         
         // manage questionable node
         public SingletonState<RequestIds> QuestionableRequestsList { get; set; }
-        
-        public MappedState<Hash, bool> QuestionableRequestsMap { get; set; }
-        
-        public MappedState<Hash, Rounds> QuestionableRequestRounds { get; set; }
-        
+
         public MappedState<Hash, RequestQuestionableQueryInfo> QuestionableInfo { get; set; }
     }
 }

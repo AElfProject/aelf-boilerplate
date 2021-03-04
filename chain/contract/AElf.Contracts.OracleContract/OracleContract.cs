@@ -191,17 +191,6 @@ namespace AElf.Contracts.OracleContract
 
         private void DealQuestionableNode(Hash requestId, long roundId, IEnumerable<NodeWithDetailData> allData)
         {
-            if (!State.QuestionableRequestsMap[requestId])
-            {
-                var questionableRequestIds = State.QuestionableRequestsList.Value;
-                questionableRequestIds.Requests.Add(requestId);
-                State.QuestionableRequestsList.Value = questionableRequestIds;
-                State.QuestionableRequestsMap[requestId] = true;
-            }
-
-            var rounds = State.QuestionableRequestRounds[requestId];
-            rounds.RoundList.Add(roundId);
-            State.QuestionableRequestRounds[requestId] = rounds;
             var questionableInfo = State.QuestionableInfo[requestId];
             questionableInfo.QuestionableQueryInformation[roundId] = new QuestionableQueryInfo
             {
