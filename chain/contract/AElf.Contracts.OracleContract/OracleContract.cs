@@ -13,6 +13,19 @@ namespace AElf.Contracts.OracleContract
 {
     public partial class OracleContract : OracleContractContainer.OracleContractBase
     {
+        public override Empty Initialize(Empty input)
+        {
+            Assert(!State.IsInitialized.Value, "Contract has been initialized");
+            State.Controller.Value = Context.Sender;
+            State.IsInitialized.Value = true;
+            State.ExpirationTime.Value = DefaultExpirationTime;
+            State.ThresholdResponses.Value = DefaultThresholdResponses;
+            State.ThresholdToUpdateData.Value = DefaultThresholdToUpdateData;
+            State.MinimumEscrow.Value = DefaultMinimumEscrow;
+            State.ClearRedundantRevenue.Value = DefaultClearRedundantRevenue;
+            return new Empty();
+        }
+
         public override Empty CreateRequest(CreateRequestInput input)
         {
             var expiration = Context.CurrentBlockTime.AddSeconds(State.ExpirationTime.Value);
@@ -283,6 +296,13 @@ namespace AElf.Contracts.OracleContract
 
         private void PayToCleanDataRedundant(Address user)
         {
+            var revenue = State.ClearRedundantRevenue.Value;
+            // State.TokenContract.Transfer.Send(new TransferInput
+            // {
+            //     To = user,
+            //     Symbol = TokenSymbol,
+            //     Amount = revenue
+            // });
         }
     }
 }
