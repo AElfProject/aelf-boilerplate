@@ -36,9 +36,12 @@ namespace AElf.Contracts.OracleContract
             {
                 ParamsHash = paramsHash,
                 DesignatedNodes = designatedNodes,
-                Aggregator = input.Aggregator,
-                Owner = Context.Sender
+                Aggregator = input.Aggregator
             };
+            if (State.CommitmentsOwner[requestId] == null)
+            {
+                State.CommitmentsOwner[requestId] = Context.Sender;
+            }
             var roundCount = State.AnswerCounter[requestId];
             roundCount = roundCount.Add(1);
             State.AnswerCounter[requestId] = roundCount;
@@ -149,7 +152,7 @@ namespace AElf.Contracts.OracleContract
                 return new Empty();
             }
 
-            DealQuestionableNode(requestId, currentRoundCount, allNodeRealData);
+            DealQuestionableQuery(requestId, currentRoundCount, allNodeRealData);
             ClearRequestInfo(requestId);
             Context.Fire(new QuestionableQueryFound
             {
@@ -158,11 +161,32 @@ namespace AElf.Contracts.OracleContract
             });
             return new Empty();
         }
+        
+        public override Empty RemoveQuestionableQueryInfo(RemoveQuestionableQueryInfoInput input)
+        {
+            var owner = State.CommitmentsOwner[input.RequestId];
+            Assert(owner != null && Context.Sender == owner, "Not authorized");
+            var requestQuestionableInfo = State.QuestionableInfo[input.RequestId];
+            requestQuestionableInfo.QuestionableQueryInformation.Remove(input.RoundId);
+            State.QuestionableInfo[input.RequestId] = requestQuestionableInfo;
+            return new Empty();
+        }
+
+        public override Empty RemoveRedundantRoundData(RemoveRedundantRoundDataInput input)
+        {
+            var owner = State.CommitmentsOwner[input.RequestId];
+            Assert(owner != null && Context.Sender == owner, "Not authorized");
+            State.RoundLastAnswersInfo.Remove(input.RequestId);
+            if (State.Commitments[input.RequestId] == null)
+            {
+                State.CommitmentsOwner.Remove(input.RequestId);
+            }
+            return new Empty();  
+        }
 
         private void PayToNode(Hash requestId, long payment, Address node)
         {
-            var commitment = State.Commitments[requestId];
-            var user = commitment.Owner;
+            var user = State.CommitmentsOwner[requestId];
             State.TokenContract.TransferFrom.Send(new TransferFromInput
             {
                 Symbol = TokenSymbol,
@@ -189,7 +213,7 @@ namespace AElf.Contracts.OracleContract
             return true;
         }
 
-        private void DealQuestionableNode(Hash requestId, long roundId, IEnumerable<NodeWithDetailData> allData)
+        private void DealQuestionableQuery(Hash requestId, long roundId, IEnumerable<NodeWithDetailData> allData)
         {
             var questionableInfo = State.QuestionableInfo[requestId];
             questionableInfo.QuestionableQueryInformation[roundId] = new QuestionableQueryInfo

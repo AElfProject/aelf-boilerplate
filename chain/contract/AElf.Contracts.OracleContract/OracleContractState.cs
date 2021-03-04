@@ -38,6 +38,8 @@ namespace AElf.Contracts.OracleContract
         
         // key为request id， value为查询信息生成的hash值
         public MappedState<Hash, Commitment> Commitments { get; set; }
+        
+        public MappedState<Hash, Address> CommitmentsOwner { get; set; }
 
         // 记录answer的轮数
         public MappedState<Hash, long> AnswerCounter { get; set; }
@@ -48,9 +50,7 @@ namespace AElf.Contracts.OracleContract
         //记录每一轮的最终结果
         public MappedState<Hash, RoundLastUpdateAnswer> RoundLastAnswersInfo { get; set; }
         
-        // manage questionable node
-        public SingletonState<RequestIds> QuestionableRequestsList { get; set; }
-
+        // manage questionable query
         public MappedState<Hash, RequestQuestionableQueryInfo> QuestionableInfo { get; set; }
     }
 }
