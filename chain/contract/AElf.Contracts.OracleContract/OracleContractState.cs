@@ -33,7 +33,7 @@ namespace AElf.Contracts.OracleContract
 
         public MappedState<Address, NodeInfo> NodeInfo { get; set; }
 
-        public MappedState<Address, NodeStatistic> NodeStatistic { get; set; }
+        public MappedState<Address, StatisticInfo> NodeStatistic { get; set; }
 
         public SingletonState<long> MinimumEscrow { get; set; }
         

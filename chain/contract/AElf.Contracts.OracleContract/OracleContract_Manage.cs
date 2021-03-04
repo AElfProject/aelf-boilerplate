@@ -119,10 +119,12 @@ namespace AElf.Contracts.OracleContract
         public override Empty RemoveNode(Address input)
         {
             Assert(Context.Sender == State.Controller.Value, "Not authorized");
+            State.QuestionableNodes.Remove(input);
             State.AuthorizedNodes.Remove(Context.Sender);
             var nodeList = State.AvailableNodes.Value;
             nodeList.NodeList.Remove(input);
             State.AvailableNodes.Value = nodeList;
+            State.NodeStatistic.Remove(input);
             return new Empty();
         }
 

@@ -85,10 +85,23 @@ service OracleContract {
   rpc GetController (google.protobuf.Empty) returns (aelf.Address) {
     option (aelf.is_view) = true;
   }
+
+  rpc GetNodeStatistic (google.protobuf.Empty) returns (AllNodeStatisticInfo) {
+    option (aelf.is_view) = true;
+  }
+  
+  rpc GetAvailableAndQuestionableNode (google.protobuf.Empty) returns (WorkNodes){
+    option (aelf.is_view) = true;
+  }
 }
 
 message AvailableNodes{
   repeated aelf.Address node_list = 1;
+}
+
+message WorkNodes{
+  repeated aelf.Address available_nodes = 1;
+  repeated aelf.Address questionable_nodes = 2;
 }
 
 message CreateRequestInput{
@@ -207,9 +220,19 @@ message NodeInfo{
 
 }
 
-message NodeStatistic{
+message StatisticInfo{
   int64 query_count = 1;
   int64 valid_count = 2;
+}
+
+message NodeStatistic{
+  aelf.Address node = 1;
+  StatisticInfo statistic_info= 2;
+}
+
+message AllNodeStatisticInfo{
+  repeated NodeStatistic all_node_statistic_info = 1;
+  
 }
 
 message AddNodeInput{

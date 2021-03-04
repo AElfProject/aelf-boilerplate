@@ -1,3 +1,4 @@
+using System.Linq;
 using AElf.CSharp.Core;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
@@ -35,6 +36,35 @@ namespace AElf.Contracts.OracleContract
         public override Address GetController(Empty input)
         {
             return State.Controller.Value;
+        }
+
+        public override AllNodeStatisticInfo GetNodeStatistic(Empty input)
+        {
+            var ret = new AllNodeStatisticInfo();
+            var allNodes = State.AvailableNodes.Value.NodeList;
+            ret.AllNodeStatisticInfo_.AddRange(allNodes.Select(x => new NodeStatistic
+            {
+                Node = x,
+                StatisticInfo = State.NodeStatistic[x]
+            }));
+            return ret;
+        }
+
+        public override WorkNodes GetAvailableAndQuestionableNode(Empty input)
+        {
+            var allNodes = State.AvailableNodes.Value.NodeList;
+            var ret = new WorkNodes();
+            foreach (var node in allNodes)
+            {
+                if (State.QuestionableNodes[node])
+                {
+                    ret.QuestionableNodes.Add(node);
+                    continue;
+                }
+                ret.AvailableNodes.Add(node);
+            }
+
+            return ret;
         }
     }
 }

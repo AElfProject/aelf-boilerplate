@@ -179,7 +179,7 @@ namespace AElf.Contracts.OracleContract
             Assert(commitment != null, "commitment does not exist");
             var commitmentOwner = State.CommitmentsOwner[input.RequestId];
             Assert(commitmentOwner == Context.Sender, "Sender is not authorized");
-            Assert(commitment.CancelExpiration > Context.CurrentBlockTime, "It is not expired, can't cancel request");
+            Assert(commitment.CancelExpiration < Context.CurrentBlockTime, "It is not expired, can't cancel request");
             ClearRequestInfo(input.RequestId);
             return new Empty();
         }
@@ -195,7 +195,9 @@ namespace AElf.Contracts.OracleContract
         public override Empty RemoveRedundantRoundData(RemoveRedundantRoundDataInput input)
         {
             var owner = State.CommitmentsOwner[input.RequestId];
-            Assert(owner != null && Context.Sender == owner, "Not authorized");
+            Assert(owner != null && Context.Sender == owner || Context.Sender == State.Controller.Value,
+                "Not authorized");
+            Assert(State.RoundLastAnswersInfo[input.RequestId] != null, "invalid operation");
             State.RoundLastAnswersInfo.Remove(input.RequestId);
             if (State.Commitments[input.RequestId] == null && State.QuestionableInfo[input.RequestId] == null)
             {
@@ -274,11 +276,13 @@ namespace AElf.Contracts.OracleContract
 
         private void UpdateRoundData(Hash requestId, long currentRoundCount, ByteString updateValue)
         {
-            State.RoundLastAnswersInfo[requestId].RoundAnswers[currentRoundCount] = new LastUpdateAnswer
+            var roundLastAnswer = State.RoundLastAnswersInfo[requestId] ?? new RoundLastUpdateAnswer();
+            roundLastAnswer.RoundAnswers[currentRoundCount] = new LastUpdateAnswer
             {
                 LastValue = updateValue,
                 UpdatedTimestamps = Context.CurrentBlockTime
             };
+            State.RoundLastAnswersInfo[requestId] = roundLastAnswer;
         }
 
         private void ClearRequestInfo(Hash requestId)
@@ -289,7 +293,7 @@ namespace AElf.Contracts.OracleContract
 
         private void AddQueryCount(Address node)
         {
-            var statisticInfo = State.NodeStatistic[node] ?? new NodeStatistic();
+            var statisticInfo = State.NodeStatistic[node] ?? new StatisticInfo();
             statisticInfo.QueryCount = statisticInfo.QueryCount.Add(1);
             State.NodeStatistic[node] = statisticInfo;
         }
