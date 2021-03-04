@@ -36,7 +36,8 @@ namespace AElf.Contracts.OracleContract
             {
                 ParamsHash = paramsHash,
                 DesignatedNodes = designatedNodes,
-                Aggregator = input.Aggregator
+                Aggregator = input.Aggregator,
+                CancelExpiration = expiration
             };
             if (State.CommitmentsOwner[requestId] == null)
             {
@@ -156,11 +157,17 @@ namespace AElf.Contracts.OracleContract
 
             DealQuestionableQuery(requestId, currentRoundCount, allNodeRealData);
             ClearRequestInfo(requestId);
-            Context.Fire(new QuestionableQueryFound
-            {
-                RequestId = requestId,
-                RoundId = currentRoundCount
-            });
+            return new Empty();
+        }
+
+        public override Empty CancelRequest(CancelRequestInput input)
+        {
+            var commitment = State.Commitments[input.RequestId];
+            Assert(commitment != null, "commitment does not exist");
+            var commitmentOwner = State.CommitmentsOwner[input.RequestId];
+            Assert(commitmentOwner == Context.Sender, "Sender is not authorized");
+            Assert(commitment.CancelExpiration > Context.CurrentBlockTime, "It is not expired, can't cancel request");
+            ClearRequestInfo(input.RequestId);
             return new Empty();
         }
 
@@ -222,20 +229,34 @@ namespace AElf.Contracts.OracleContract
             return true;
         }
 
-        private void DealQuestionableQuery(Hash requestId, long roundId, IEnumerable<NodeWithDetailData> allData)
+        private void DealQuestionableQuery(Hash requestId, long roundId, IList<NodeWithDetailData> allDataList)
         {
-            var questionableInfo = State.QuestionableInfo[requestId];
-            questionableInfo.QuestionableQueryInformation[roundId] = new QuestionableQueryInfo
+            var requestQuestionableInfo = State.QuestionableInfo[requestId]?? new RequestQuestionableQueryInfo();
+            requestQuestionableInfo.QuestionableQueryInformation[roundId] = new QuestionableQueryInfo
             {
                 UpdateTime = Context.CurrentBlockTime
             };
-            questionableInfo.QuestionableQueryInformation[roundId].AllQuestionableNodes.AddRange(allData.Select(x =>
-                new QuestionableNodeInfo
+            requestQuestionableInfo.QuestionableQueryInformation[roundId].AllQuestionableNodes.AddRange(
+                allDataList.Select(x =>
+                    new QuestionableNodeInfo
+                    {
+                        Node = x.Node,
+                        RealValue = x.RealData
+                    }));
+            State.QuestionableInfo[requestId] = requestQuestionableInfo;
+            var questionableInfo = new NodesInfo();
+            questionableInfo.NodeList.AddRange(allDataList.Select(x =>
+                new NodeWithData
                 {
                     Node = x.Node,
-                    RealValue = x.RealData
+                    RealData = x.RealData
                 }));
-            State.QuestionableInfo[requestId] = questionableInfo;
+            Context.Fire(new QuestionableQueryFound
+            {
+                RequestId = requestId,
+                RoundId = roundId,
+                NodesInfo = questionableInfo
+            });
         }
 
         private void UpdateRoundData(Hash requestId, long currentRoundCount, ByteString updateValue)

@@ -132,5 +132,12 @@ namespace AElf.Contracts.OracleContract
             State.NodeStatistic.Remove(input);
             return new Empty();
         }
+
+        public override Empty ChangeController(Address input)
+        {
+            Assert(Context.Sender == State.Controller.Value, "Not authorized");
+            State.Controller.Value = input;
+            return new Empty();
+        }
     }
 }
