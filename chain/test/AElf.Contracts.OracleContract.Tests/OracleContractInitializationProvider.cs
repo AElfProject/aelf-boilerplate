@@ -3,7 +3,7 @@ using AElf.Boilerplate.TestBase;
 using AElf.Kernel.SmartContract.Application;
 using AElf.Types;
 
-namespace AElf.Contracts.Oracle
+namespace AElf.Contracts.OracleContract
 {
     public class OracleContractInitializationProvider : IContractInitializationProvider
     {
