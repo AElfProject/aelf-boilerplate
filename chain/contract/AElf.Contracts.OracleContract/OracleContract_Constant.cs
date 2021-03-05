@@ -2,17 +2,19 @@ namespace AElf.Contracts.OracleContract
 {
     public partial class OracleContract
     {
-        public const string TokenSymbol = "AELINK";
+        private const string TokenSymbol = "AELINK";
+        private const string TokenName = "AelfLinK";
+        private const long TotalSupply = 100_000_000_00000000;
 
         // seconds
-        public const long DefaultExpirationTime = 300;
+        private const long DefaultExpirationTime = 300;
 
-        public const long DefaultClearRedundantRevenue = 1_00000000;
+        private const long DefaultClearRedundantRevenue = 1_00000000;
 
-        public const int DefaultThresholdResponses = 9;
+        private const int DefaultThresholdResponses = 9;
 
-        public const int DefaultThresholdToUpdateData = 6;
+        private const int DefaultThresholdToUpdateData = 6;
 
-        public const long DefaultMinimumEscrow = 1_000_00000000;
+        private const long DefaultMinimumEscrow = 1_000_00000000;
     }
 }

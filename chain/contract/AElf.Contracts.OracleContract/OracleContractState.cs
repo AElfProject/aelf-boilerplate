@@ -38,6 +38,8 @@ namespace AElf.Contracts.OracleContract
         public SingletonState<long> MinimumEscrow { get; set; }
         
         public SingletonState<long> ClearRedundantRevenue { get; set; }
+        
+        public SingletonState<long> FundPoolToRevenue { get; set; }
 
 
         // key为request id， value为查询信息生成的hash值

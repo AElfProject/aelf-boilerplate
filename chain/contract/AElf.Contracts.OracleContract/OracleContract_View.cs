@@ -10,8 +10,15 @@ namespace AElf.Contracts.OracleContract
         public override LastUpdateAnswer GetLastAnswer(GetLastAnswerInput input)
         {
             var lastRoundCount = State.AnswerCounter[input.RequestId];
+            if (lastRoundCount == 0)
+            {
+                return new LastUpdateAnswer();
+            }
+
             var commitment = State.Commitments[input.RequestId];
-            if (commitment == null) return State.RoundLastAnswersInfo[input.RequestId].RoundAnswers[lastRoundCount];
+            if (commitment == null)
+                return State.RoundLastAnswersInfo[input.RequestId].RoundAnswers[lastRoundCount] ??
+                       new LastUpdateAnswer();
             if (lastRoundCount == 1)
             {
                 return new LastUpdateAnswer();
@@ -19,13 +26,12 @@ namespace AElf.Contracts.OracleContract
 
             lastRoundCount = lastRoundCount.Sub(1);
 
-            return State.RoundLastAnswersInfo[input.RequestId].RoundAnswers[lastRoundCount];
-
+            return State.RoundLastAnswersInfo[input.RequestId].RoundAnswers[lastRoundCount] ?? new LastUpdateAnswer();
         }
 
         public override LastUpdateAnswer GetAnswerByRound(GetAnswerByRoundInput input)
         {
-            return State.RoundLastAnswersInfo[input.RequestId].RoundAnswers[input.RoundId];
+            return State.RoundLastAnswersInfo[input.RequestId].RoundAnswers[input.RoundId]?? new LastUpdateAnswer();
         }
 
         public override QuestionableQueryInfo GetQuestionableQuery(GetQuestionableQueryInput input)

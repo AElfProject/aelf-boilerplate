@@ -16,13 +16,15 @@ namespace AElf.Contracts.OracleContract
         public override Empty Initialize(Empty input)
         {
             Assert(!State.IsInitialized.Value, "Contract has been initialized");
+            InitializeContractReference();
             State.Controller.Value = Context.Sender;
-            State.IsInitialized.Value = true;
+            CreateToken();
             State.ExpirationTime.Value = DefaultExpirationTime;
             State.ThresholdResponses.Value = DefaultThresholdResponses;
             State.ThresholdToUpdateData.Value = DefaultThresholdToUpdateData;
             State.MinimumEscrow.Value = DefaultMinimumEscrow;
             State.ClearRedundantRevenue.Value = DefaultClearRedundantRevenue;
+            State.IsInitialized.Value = true;
             return new Empty();
         }
 
@@ -301,12 +303,43 @@ namespace AElf.Contracts.OracleContract
         private void PayToCleanDataRedundant(Address user)
         {
             var revenue = State.ClearRedundantRevenue.Value;
-            // State.TokenContract.Transfer.Send(new TransferInput
-            // {
-            //     To = user,
-            //     Symbol = TokenSymbol,
-            //     Amount = revenue
-            // });
+            var totalFundPool = State.FundPoolToRevenue.Value;
+            if (revenue > totalFundPool)
+            {
+                revenue = totalFundPool;
+            }
+
+            if (revenue == 0)
+            {
+                return;
+            }
+            State.TokenContract.Transfer.Send(new TransferInput
+            {
+                To = user,
+                Symbol = TokenSymbol,
+                Amount = revenue
+            });
+            totalFundPool = totalFundPool.Sub(revenue);
+            State.FundPoolToRevenue.Value = totalFundPool;
+        }
+
+        private void InitializeContractReference()
+        {
+            State.TokenContract.Value = Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
+            State.ParliamentContract.Value = Context.GetContractAddressByName(SmartContractConstants.ParliamentContractSystemName);
+        }
+        
+        private void CreateToken()
+        {
+            var defaultParliament = State.ParliamentContract.GetDefaultOrganizationAddress.Call(new Empty());
+            State.TokenContract.Create.Send(new CreateInput
+            {
+                Symbol = TokenSymbol,
+                TokenName = TokenName,
+                IsBurnable = true,
+                Issuer = defaultParliament,
+                TotalSupply = TotalSupply
+            });
         }
     }
 }
