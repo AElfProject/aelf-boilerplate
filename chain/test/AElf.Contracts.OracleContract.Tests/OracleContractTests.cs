@@ -7,7 +7,7 @@ using Google.Protobuf.WellKnownTypes;
 using Shouldly;
 using Xunit;
 
-namespace AElf.Contracts.Oracle
+namespace AElf.Contracts.OracleContract
 {
     public class OracleContractTests : OracleContractTestBase
     {

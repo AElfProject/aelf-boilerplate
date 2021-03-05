@@ -23,9 +23,10 @@ namespace AElf.Contracts.OracleContract
         private void VerifyNode(Hash requestId, Address sender)
         {
             var commitment = State.Commitments[requestId];
+            Assert(!State.QuestionableNodes[sender], "questionable node");
             Assert(State.AuthorizedNodes[sender], "Invalid node");
             var nodeList = commitment.DesignatedNodes.NodeList;
-            if (nodeList.Count > 0)
+            if (nodeList.Any())
             {
                 Assert(nodeList.Contains(sender), "Sender is not authorized");
             }

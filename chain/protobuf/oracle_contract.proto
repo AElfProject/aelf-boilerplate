@@ -21,20 +21,75 @@ service OracleContract {
 
   rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {}
 
+  // base function
+
   rpc CreateRequest (CreateRequestInput) returns (google.protobuf.Empty) {}
 
   rpc SendHashData (SendHashDataInput) returns (google.protobuf.Empty) {}
 
   rpc SendDataWithSalt (SendDataWithSaltInput) returns (google.protobuf.Empty) {}
 
+  // manage request
   rpc CancelRequest(CancelRequestInput) returns (google.protobuf.Empty) {}
 
-  rpc NoticeQuestionableNode(NoticeQuestionableNodeInput) returns (google.protobuf.Empty) {}
+  rpc RemoveQuestionableQueryInfo(RemoveQuestionableQueryInfoInput) returns (google.protobuf.Empty) {}
 
+  rpc RemoveRedundantRoundData(RemoveRedundantRoundDataInput) returns (google.protobuf.Empty) {}
+
+  // manage nodes
+  rpc DepositEscrow(DepositEscrowInput) returns (google.protobuf.Empty) {}
+
+  rpc WithdrawEscrow(WithdrawEscrowInput) returns (google.protobuf.Empty) {}
+  
+  rpc WithdrawRevenue(google.protobuf.Empty) returns (google.protobuf.Empty){}
+
+  rpc AddNode(AddNodeInput) returns (google.protobuf.Empty) {}
+
+  rpc RemoveNode(aelf.Address) returns (google.protobuf.Empty) {}
+
+  rpc AddQuestionableNode(aelf.Address) returns (google.protobuf.Empty) {}
+
+  rpc RemoveQuestionableNode(aelf.Address) returns (google.protobuf.Empty) {}
+
+  rpc RemoveNodeStatistic(aelf.Address) returns (google.protobuf.Empty) {}
+  
+  // controller
+  rpc ChangeController(aelf.Address) returns (google.protobuf.Empty) {}
+  
+  // view methods
+
+  rpc GetQuestionableQuery(GetQuestionableQueryInput) returns (QuestionableQueryInfo) {
+    option (aelf.is_view) = true;
+  }
+
+  rpc GetLastAnswer (GetLastAnswerInput) returns (LastUpdateAnswer) {
+    option (aelf.is_view) = true;
+  }
+
+  rpc GetAnswerByRound (GetAnswerByRoundInput) returns (LastUpdateAnswer) {
+    option (aelf.is_view) = true;
+  }
+
+  rpc GetController (google.protobuf.Empty) returns (aelf.Address) {
+    option (aelf.is_view) = true;
+  }
+
+  rpc GetNodeStatistic (google.protobuf.Empty) returns (AllNodeStatisticInfo) {
+    option (aelf.is_view) = true;
+  }
+  
+  rpc GetAvailableAndQuestionableNode (google.protobuf.Empty) returns (WorkNodes){
+    option (aelf.is_view) = true;
+  }
 }
 
 message AvailableNodes{
   repeated aelf.Address node_list = 1;
+}
+
+message WorkNodes{
+  repeated aelf.Address available_nodes = 1;
+  repeated aelf.Address questionable_nodes = 2;
 }
 
 message CreateRequestInput{
@@ -51,21 +106,23 @@ message CreateRequestInput{
 message NewRequest{
   option (aelf.is_event) = true;
   aelf.Hash request_id = 1[(aelf.is_indexed) = true];
-  aelf.Address requester = 2;
-  int64 payment = 3;
-  aelf.Address callback_address = 4;
-  string method_name = 5;
-  google.protobuf.Timestamp cancel_expiration = 6;
-  string url_to_query = 7;
-  string attribute_to_fetch = 8;
-  aelf.Address aggregator = 9;
-  int32 data_version = 10;
+  int64 round_id = 2 [(aelf.is_indexed) = true];
+  aelf.Address requester = 3;
+  int64 payment = 4;
+  aelf.Address callback_address = 5;
+  string method_name = 6;
+  google.protobuf.Timestamp cancel_expiration = 7;
+  string url_to_query = 8;
+  string attribute_to_fetch = 9;
+  aelf.Address aggregator = 10;
   AvailableNodes designated_nodes = 11;
 }
 
 message CancelRequest{
   option (aelf.is_event) = true;
   bytes request_id = 1 [(aelf.is_indexed) = true];
+  int64 round_id = 2 [(aelf.is_indexed) = true];
+  google.protobuf.Timestamp cancel_time = 3;
 
 }
 
@@ -97,8 +154,7 @@ message Commitment {
   aelf.Hash params_hash = 1;
   AvailableNodes designated_nodes = 2;
   aelf.Address aggregator = 3;
-  aelf.Address owner = 4;
-  int64 payment = 5;
+  google.protobuf.Timestamp cancel_expiration = 4;
 }
 
 message RoundAnswerDetailInfo{
@@ -126,19 +182,88 @@ message LastUpdateAnswer{
   google.protobuf.Timestamp updated_timestamps = 2;
 }
 
+message RequestIds{
+  repeated aelf.Hash requests = 1;
+}
+
+message Rounds{
+  repeated int64 round_list = 1;
+}
+
+message CancelRequestInput{
+  aelf.Hash request_id = 1;
+}
+
+message DepositEscrowInput{
+  int64 amount = 1;
+}
+
+message WithdrawEscrowInput{
+  int64 amount = 1;
+}
+
+message NodeInfo{
+  int64 escrow = 1;
+  int64 withdrawable = 2;
+
+}
+
+message StatisticInfo{
+  int64 query_count = 1;
+  int64 valid_count = 2;
+}
+
+message NodeStatistic{
+  aelf.Address node = 1;
+  StatisticInfo statistic_info= 2;
+}
+
+message AllNodeStatisticInfo{
+  repeated NodeStatistic all_node_statistic_info = 1;
+  
+}
+
+message AddNodeInput{
+  aelf.Address node = 1;
+  int64 amount = 2;
+}
+
+message GetQuestionAbleRoundsInput{
+  aelf.Hash request_id = 1;
+}
+
+message GetQuestionableQueryInput{
+  aelf.Hash request_id = 1;
+  int64 round_id = 2;
+}
+
+message RequestQuestionableQueryInfo{
+  map<int64, QuestionableQueryInfo> questionable_query_information = 1;
+}
+
+message QuestionableQueryInfo{
+  google.protobuf.Timestamp update_time = 1;
+  repeated QuestionableNodeInfo all_questionable_nodes = 2;
+}
+
 message QuestionableNodeInfo{
   aelf.Address node = 1;
   bytes real_value = 2;
 }
 
-message NoticeQuestionableNodeInput{
+message RemoveQuestionableQueryInfoInput{
   aelf.Hash request_id = 1;
-  int64 round_id = 2;
-  bytes reference_value = 3;
-  aelf.Address aggregator = 4;
-  repeated QuestionableNodeInfo all_questionable_nodes = 5;
 }
 
-message CancelRequestInput{
+message RemoveRedundantRoundDataInput {
   aelf.Hash request_id = 1;
+}
+
+message GetLastAnswerInput{
+  aelf.Hash request_id = 1;
+}
+
+message GetAnswerByRoundInput{
+  aelf.Hash request_id = 1;
+  int64 round_id = 2;
 }

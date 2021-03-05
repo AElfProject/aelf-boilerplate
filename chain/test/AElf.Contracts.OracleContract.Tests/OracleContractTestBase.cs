@@ -1,7 +1,7 @@
 using AElf.Boilerplate.TestBase;
 using AElf.Cryptography.ECDSA;
 
-namespace AElf.Contracts.Oracle
+namespace AElf.Contracts.OracleContract
 {
     public class OracleContractTestBase : DAppContractTestBase<OracleContractTestModule>
     {

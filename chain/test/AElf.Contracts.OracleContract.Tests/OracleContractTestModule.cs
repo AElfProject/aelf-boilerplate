@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.Modularity;
 
-namespace AElf.Contracts.Oracle
+namespace AElf.Contracts.OracleContract
 {
     [DependsOn(typeof(MainChainDAppContractTestModule))]
     public class OracleContractTestModule : MainChainDAppContractTestModule
