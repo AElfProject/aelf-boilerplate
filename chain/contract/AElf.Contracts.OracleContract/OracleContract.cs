@@ -30,6 +30,7 @@ namespace AElf.Contracts.OracleContract
 
         public override Empty CreateRequest(CreateRequestInput input)
         {
+            Assert(State.IsAvailableNodesEnough.Value, "Not enough available node");
             var expiration = Context.CurrentBlockTime.AddSeconds(State.ExpirationTime.Value);
             var requestId = GenerateRequestId(Context.Sender, input.Nonce);
             long payment = input.Payment;

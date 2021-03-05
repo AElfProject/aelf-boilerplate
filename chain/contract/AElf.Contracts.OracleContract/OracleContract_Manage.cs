@@ -82,23 +82,12 @@ namespace AElf.Contracts.OracleContract
             }
 
             var nodeInfo = State.NodeInfo[Context.Sender];
-            if (input.Amount > 0)
-            {
-                State.TokenContract.TransferFrom.Send(new TransferFromInput
-                {
-                    Symbol = TokenSymbol,
-                    From = input.Node,
-                    To = Context.Self,
-                    Amount = input.Amount
-                });
-                nodeInfo.Escrow = nodeInfo.Escrow.Add(input.Amount);
-            }
-
             Assert(nodeInfo != null && nodeInfo.Escrow >= State.MinimumEscrow.Value, "Insufficient escrow");
             State.AuthorizedNodes[Context.Sender] = true;
             var nodeList = State.AvailableNodes.Value;
             nodeList.NodeList.Add(input.Node);
             State.AvailableNodes.Value = nodeList;
+            UpdateIsAvailableNodesEnoughState();
             return new Empty();
         }
 
@@ -106,6 +95,7 @@ namespace AElf.Contracts.OracleContract
         {
             Assert(Context.Sender == State.Controller.Value, "Not authorized");
             State.QuestionableNodes[input] = true;
+            UpdateIsAvailableNodesEnoughState();
             return new Empty();
         }
         
@@ -113,6 +103,7 @@ namespace AElf.Contracts.OracleContract
         {
             Assert(Context.Sender == State.Controller.Value, "Not authorized");
             State.QuestionableNodes.Remove(input);
+            UpdateIsAvailableNodesEnoughState();
             return new Empty();
         }
 
@@ -125,6 +116,7 @@ namespace AElf.Contracts.OracleContract
             nodeList.NodeList.Remove(input);
             State.AvailableNodes.Value = nodeList;
             State.NodeStatistic.Remove(input);
+            UpdateIsAvailableNodesEnoughState();
             return new Empty();
         }
 

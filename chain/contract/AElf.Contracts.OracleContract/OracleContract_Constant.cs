@@ -9,7 +9,7 @@ namespace AElf.Contracts.OracleContract
         // seconds
         private const long DefaultExpirationTime = 300;
 
-        private const long DefaultClearRedundantRevenue = 1_00000000;
+        private const long DefaultClearRedundantRevenue = 10000000;
 
         private const int DefaultThresholdResponses = 9;
 

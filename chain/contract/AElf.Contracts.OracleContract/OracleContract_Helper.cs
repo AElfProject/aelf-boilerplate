@@ -74,5 +74,12 @@ namespace AElf.Contracts.OracleContract
             aggregateInput.Responses.AddRange(responses);
             return aggregateInput;
         }
+
+        private void UpdateIsAvailableNodesEnoughState()
+        {
+            var availableNodes = State.AvailableNodes.Value;
+            var currentAvailableNodeCount = availableNodes.NodeList.Count(x => !State.QuestionableNodes[x]);
+            State.IsAvailableNodesEnough.Value = currentAvailableNodeCount >= State.MinimumAvailableNodesCount.Value;
+        }
     }
 }
