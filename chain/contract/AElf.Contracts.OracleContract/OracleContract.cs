@@ -22,6 +22,7 @@ namespace AElf.Contracts.OracleContract
             State.ExpirationTime.Value = DefaultExpirationTime;
             State.ThresholdResponses.Value = DefaultThresholdResponses;
             State.ThresholdToUpdateData.Value = DefaultThresholdToUpdateData;
+            State.MinimumAvailableNodesCount.Value = DefaultMinimumAvailableNodesCount;
             State.MinimumEscrow.Value = DefaultMinimumEscrow;
             State.ClearRedundantRevenue.Value = DefaultClearRedundantRevenue;
             State.IsInitialized.Value = true;

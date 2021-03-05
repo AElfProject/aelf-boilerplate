@@ -133,5 +133,19 @@ namespace AElf.Contracts.OracleContract
             State.Controller.Value = input;
             return new Empty();
         }
+
+        public override Empty SetThreshold(SetThresholdInput input)
+        {
+            Assert(Context.Sender == State.Controller.Value, "Not authorized");
+            Assert(input.DefaultMinimumAvailableNodesCount >= input.DefaultThresholdResponses,
+                "DefaultMinimumAvailableNodesCount should be greater than DefaultThresholdResponses");
+            Assert(input.DefaultThresholdResponses > input.DefaultThresholdToUpdateData,
+                "DefaultThresholdResponses should be greater than DefaultThresholdToUpdateData");
+            Assert(input.DefaultThresholdToUpdateData > 0, "Invalid DefaultThresholdToUpdateData");
+            State.MinimumAvailableNodesCount.Value = input.DefaultMinimumAvailableNodesCount;
+            State.ThresholdResponses.Value = input.DefaultThresholdResponses;
+            State.ThresholdToUpdateData.Value = input.DefaultThresholdToUpdateData;
+            return new Empty();
+        }
     }
 }

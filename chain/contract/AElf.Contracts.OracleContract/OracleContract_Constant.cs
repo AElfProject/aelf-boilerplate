@@ -15,6 +15,8 @@ namespace AElf.Contracts.OracleContract
 
         private const int DefaultThresholdToUpdateData = 6;
 
+        private const int DefaultMinimumAvailableNodesCount = 15;
+
         private const long DefaultMinimumEscrow = 1_000_00000000;
     }
 }

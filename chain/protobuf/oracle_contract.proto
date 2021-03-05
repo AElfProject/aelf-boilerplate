@@ -52,7 +52,7 @@ service OracleContract {
   rpc DepositEscrow(DepositEscrowInput) returns (google.protobuf.Empty) {}
 
   rpc WithdrawEscrow(WithdrawEscrowInput) returns (google.protobuf.Empty) {}
-  
+
   rpc WithdrawRevenue(google.protobuf.Empty) returns (google.protobuf.Empty){}
 
   rpc AddNode(AddNodeInput) returns (google.protobuf.Empty) {}
@@ -64,10 +64,14 @@ service OracleContract {
   rpc RemoveQuestionableNode(aelf.Address) returns (google.protobuf.Empty) {}
 
   rpc RemoveNodeStatistic(aelf.Address) returns (google.protobuf.Empty) {}
-  
+
   // controller
   rpc ChangeController(aelf.Address) returns (google.protobuf.Empty) {}
-  
+
+  // config setting
+
+  rpc SetThreshold(SetThresholdInput) returns(google.protobuf.Empty){}
+
   // view methods
 
   rpc GetQuestionableQuery(GetQuestionableQueryInput) returns (QuestionableQueryInfo) {
@@ -89,7 +93,7 @@ service OracleContract {
   rpc GetNodeStatistic (google.protobuf.Empty) returns (AllNodeStatisticInfo) {
     option (aelf.is_view) = true;
   }
-  
+
   rpc GetAvailableAndQuestionableNode (google.protobuf.Empty) returns (WorkNodes){
     option (aelf.is_view) = true;
   }
@@ -227,12 +231,12 @@ message StatisticInfo{
 
 message NodeStatistic{
   aelf.Address node = 1;
-  StatisticInfo statistic_info= 2;
+  StatisticInfo statistic_info = 2;
 }
 
 message AllNodeStatisticInfo{
   repeated NodeStatistic all_node_statistic_info = 1;
-  
+
 }
 
 message AddNodeInput{
@@ -277,4 +281,10 @@ message GetLastAnswerInput{
 message GetAnswerByRoundInput{
   aelf.Hash request_id = 1;
   int64 round_id = 2;
+}
+
+message SetThresholdInput{
+  int32 default_minimum_available_nodes_count = 1;
+  int32 default_threshold_responses = 2;
+  int32 default_threshold_to_update_data = 3;
 }
