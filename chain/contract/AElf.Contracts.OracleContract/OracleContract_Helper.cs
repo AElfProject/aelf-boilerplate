@@ -23,6 +23,8 @@ namespace AElf.Contracts.OracleContract
             var commitment = State.Commitments[requestId];
             Assert(!State.QuestionableNodes[sender], "questionable node");
             Assert(State.AuthorizedNodes[sender], "Invalid node");
+            if(commitment.DesignatedNodes == null)
+                return;
             var nodeList = commitment.DesignatedNodes.NodeList;
             if (nodeList.Any())
             {

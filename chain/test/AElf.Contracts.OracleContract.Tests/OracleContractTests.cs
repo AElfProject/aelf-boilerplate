@@ -5,6 +5,7 @@ using AElf.Contracts.MultiToken;
 using AElf.ContractTestBase.ContractTestKit;
 using AElf.CSharp.Core.Extension;
 using AElf.Kernel;
+using AElf.Standards.ACS13;
 using AElf.Standards.ACS3;
 using AElf.Types;
 using Google.Protobuf;
@@ -32,7 +33,7 @@ namespace AElf.Contracts.OracleContract
         private async Task TransferTokenOwner()
         {
             var defaultParliament = await GetDefaultParliament();
-            await DefaultParliamentPropose(new CreateProposalInput
+            await DefaultParliamentProposeAndRelease(new CreateProposalInput
             {
                 ToAddress = TokenContractAddress,
                 ContractMethodName = nameof(TokenContractContainer.TokenContractStub.ChangeTokenIssuer),
@@ -44,12 +45,24 @@ namespace AElf.Contracts.OracleContract
                 }.ToByteString(),
                 ExpiredTime = TimestampHelper.GetUtcNow().AddHours(1)
             });
+            await TokenContractStub.Issue.SendAsync(new IssueInput
+            {
+                Symbol = TokenSymbol,
+                To = DefaultSender,
+                Amount = 1000_00000000
+            });
+            await TokenContractStub.Approve.SendAsync(new ApproveInput
+            {
+                Amount = 1000_00000000,
+                Symbol = TokenSymbol,
+                Spender = DAppContractAddress
+            });
         }
 
         private async Task<IList<OracleContractContainer.OracleContractStub>> CreateOracleNode(int count)
         {
             var nodeAccounts = GetNodes(count).ToList();
-            var nodesStubs = new List<OracleContractContainer.OracleContractStub>();
+            OracleNodes.Clear();
             foreach (var node in nodeAccounts)
             {
                 await TokenContractStub.Issue.SendAsync(new IssueInput
@@ -74,14 +87,14 @@ namespace AElf.Contracts.OracleContract
                 {
                     Node = node.Address
                 });
-                nodesStubs.Add(nodeOracleStub);
+                OracleNodes.Add(nodeOracleStub);
             }
 
-            return nodesStubs;
+            return OracleNodes;
         }
 
         [Fact]
-        public async Task CreateRequest_Success_Test()
+        private async Task<NewRequest> CreateRequest_Success_Test()
         {
             await InitializeOracleContract();
             await TransferTokenOwner();
@@ -91,12 +104,89 @@ namespace AElf.Contracts.OracleContract
                 UrlToQuery = "wwww.adc.com",
                 AttributeToFetch = "id = 1",
                 Payment = 100,
-                MethodName = "callback",
+                MethodName = "",
                 CallbackAddress = new Address()
             });
             var newRequest = new NewRequest();
             newRequest.MergeFrom(ret.TransactionResult.Logs.First(l => l.Name == nameof(NewRequest)));
             newRequest.RoundId.ShouldBe(1);
+            return newRequest;
+        }
+
+        [Fact]
+        private async Task<NewRequest> SendHashData_Success_Test()
+        {
+            var newRequest = await CreateRequest_Success_Test();
+            var realValue = new Int32Value
+            {
+                Value = 32
+            };
+            var byteStringValue = realValue.ToByteString();
+            var salt = "SALT";
+            var dataHash = ComputeDataHash(byteStringValue, salt);
+            var count = 0;
+            foreach (var oracleNodeStub in OracleNodes)
+            {
+                var ret = await oracleNodeStub.SendHashData.SendAsync(new SendHashDataInput
+                {
+                    Payment = newRequest.Payment,
+                    CallbackAddress = newRequest.CallbackAddress,
+                    CancelExpiration = newRequest.CancelExpiration,
+                    RequestId = newRequest.RequestId,
+                    HashData = dataHash,
+                    MethodName = newRequest.MethodName
+                });
+                count++;
+                if (count != DefaultThresholdResponses) continue;
+                var getEnoughData = new GetEnoughData();
+                getEnoughData.MergeFrom(ret.TransactionResult.Logs.First(x => x.Name == nameof(GetEnoughData)));
+                getEnoughData.RequestId.ShouldBe(newRequest.RequestId);
+                break;
+            }
+
+            return newRequest;
+        }
+
+        [Fact]
+        public async Task SendDataWithSalt_Success_Test()
+        {
+            var newRequest = await SendHashData_Success_Test();
+            var realValue = new Int32Value
+            {
+                Value = 32
+            };
+            var byteStringValue = realValue.ToByteString();
+            var salt = "SALT";
+            var count = 0;
+            foreach (var oracleNodeStub in OracleNodes)
+            {
+                var ret = await oracleNodeStub.SendDataWithSalt.SendAsync(new SendDataWithSaltInput
+                {
+                    Payment = newRequest.Payment,
+                    CallbackAddress = newRequest.CallbackAddress,
+                    CancelExpiration = newRequest.CancelExpiration,
+                    RequestId = newRequest.RequestId,
+                    MethodName = newRequest.MethodName,
+                    RealData = byteStringValue,
+                    Salt = salt
+                });
+                count++;
+                if (count != DefaultThresholdResponses) continue;
+                var answerUpdated = new AnswerUpdated();
+                answerUpdated.MergeFrom(ret.TransactionResult.Logs.First(x => x.Name == nameof(AnswerUpdated)));
+                answerUpdated.RequestId.ShouldBe(newRequest.RequestId);
+                var lastValue = Int32Value.Parser.ParseFrom(answerUpdated.AgreedValue);
+                lastValue.Value.ShouldBe(32);
+                break;
+            }
+            
+        }
+
+        private Hash ComputeDataHash(ByteString rawData, string salt)
+        {
+            var saltHash = HashHelper.ComputeFrom(salt);
+            var dataHash = HashHelper.ComputeFrom(rawData.ToByteArray());
+            return HashHelper.ConcatAndCompute(dataHash, saltHash);
         }
     }
 }

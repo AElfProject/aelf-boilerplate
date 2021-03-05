@@ -186,7 +186,10 @@ namespace AElf.Contracts.OracleContract
                     RoundId = currentRoundCount,
                     AgreedValue = chooseData
                 });
-                Context.SendInline(input.CallbackAddress, input.MethodName, chooseData);
+                if (!string.IsNullOrEmpty(input.MethodName))
+                {
+                    Context.SendInline(input.CallbackAddress, input.MethodName, chooseData);
+                }
                 UpdateRoundData(requestId, currentRoundCount, chooseData);
                 ClearRequestInfo(requestId);
                 return new Empty();
