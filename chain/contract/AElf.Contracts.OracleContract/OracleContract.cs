@@ -12,11 +12,18 @@ namespace AElf.Contracts.OracleContract
 {
     public partial class OracleContract : OracleContractContainer.OracleContractBase
     {
+        public override Empty Initialize(Empty input)
+        {
+            State.TokenContract.Value =
+                Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
+            return new Empty();
+        }
+
         public override Empty CreateRequest(CreateRequestInput input)
         {
             var expiration = Context.CurrentBlockTime.AddSeconds(State.ExpirationTime.Value);
             var requestId = GenerateRequestId(Context.Sender, input.Nonce);
-            long payment = input.Payment;
+            var payment = input.Payment;
             var callbackAddress = input.CallbackAddress;
             var methodName = input.MethodName;
             var aggregator = input.Aggregator;
@@ -75,7 +82,7 @@ namespace AElf.Contracts.OracleContract
                 Node = Context.Sender
             };
 
-            bool isHashDataExisted = nodeInfo.HashData != null;
+            var isHashDataExisted = nodeInfo.HashData != null;
             nodeInfo.HashData = input.HashData;
             if (isHashDataExisted)
             {

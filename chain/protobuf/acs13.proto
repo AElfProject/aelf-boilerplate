@@ -31,7 +31,7 @@ message AnswerUpdated {
   bytes agreed_value = 3;
 }
 
-message AggregateInput{
+message AggregateInput {
   aelf.Hash request_id = 1;
   int64 round_id = 2;
   repeated NodeWithData responses = 3;
@@ -39,21 +39,21 @@ message AggregateInput{
   string method_name = 5;
 }
 
-message NodeWithData{
+message NodeWithData {
   aelf.Address node = 1;
   bytes real_data = 3;
 }
 
-message GetLastAnswerInput{
+message GetLastAnswerInput {
   aelf.Hash request_id = 1;
 }
 
-message Answer{
+message Answer {
   bytes answer = 1;
   google.protobuf.Timestamp update_time = 2;
 }
 
-message GetAnswerByRoundIdInput{
+message GetAnswerByRoundIdInput {
   aelf.Hash request_id = 1;
   int64 round_id = 2;
 }

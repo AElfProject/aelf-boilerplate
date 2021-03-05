@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using AElf.Sdk.CSharp;
 using AElf.Standards.ACS13;
 using AElf.Types;
 using Google.Protobuf;
@@ -13,7 +14,8 @@ namespace AElf.Contracts.OracleContract
             Timestamp expiration)
         {
             var commitment = State.Commitments[requestId];
-            Assert(commitment != null, $"Request id {requestId} does not exist");
+            if (commitment == null)
+                throw new AssertionException($"Request id {requestId} does not exist");
             var paramsHash = GenerateParamHash(payment, callbackAddress, methodName, expiration);
             Assert(commitment.ParamsHash == paramsHash, "Params do not match request ID");
         }
