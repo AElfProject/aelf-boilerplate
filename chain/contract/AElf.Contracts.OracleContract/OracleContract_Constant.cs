@@ -7,7 +7,7 @@ namespace AElf.Contracts.OracleContract
         private const long TotalSupply = 100_000_000_00000000;
 
         // seconds
-        private const long DefaultExpirationTime = 300;
+        private const int DefaultExpirationTime = 300;
 
         private const long DefaultClearRedundantRevenue = 10000000;
 

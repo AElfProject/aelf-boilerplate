@@ -81,7 +81,7 @@ namespace AElf.Contracts.OracleContract
                 return new Empty();
             }
 
-            var nodeInfo = State.NodeInfo[Context.Sender];
+            var nodeInfo = State.NodeInfo[input.Node];
             Assert(nodeInfo != null && nodeInfo.Escrow >= State.MinimumEscrow.Value, "Insufficient escrow");
             State.AuthorizedNodes[Context.Sender] = true;
             var nodeList = State.AvailableNodes.Value;

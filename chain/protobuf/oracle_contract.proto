@@ -31,7 +31,7 @@ service OracleContract {
 
   option (aelf.csharp_state) = "AElf.Contracts.OracleContract.OracleContractState";
 
-  rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {}
 
   // base function
 
@@ -287,4 +287,13 @@ message SetThresholdInput{
   int32 default_minimum_available_nodes_count = 1;
   int32 default_threshold_responses = 2;
   int32 default_threshold_to_update_data = 3;
+}
+
+message InitializeInput{
+  int32 default_minimum_available_nodes_count = 1;
+  int32 default_threshold_responses = 2;
+  int32 default_threshold_to_update_data = 3;
+  int32 expiration_time = 4;
+  int64 minimum_escrow = 5;
+  int64 clear_redundant_revenue = 6;
 }
