@@ -44,10 +44,13 @@ namespace AElf.Contracts.OracleContract
             Timestamp expiration)
         {
             var paramsHash = HashHelper.ComputeFrom(payment);
-            var callbackHash = HashHelper.ComputeFrom(callbackAddress);
-            paramsHash = HashHelper.ConcatAndCompute(paramsHash, callbackHash);
-            var methodNameHash = HashHelper.ComputeFrom(methodName);
-            paramsHash = HashHelper.ConcatAndCompute(paramsHash, methodNameHash);
+            if (!string.IsNullOrEmpty(methodName))
+            {
+                var callbackHash = HashHelper.ComputeFrom(callbackAddress);
+                paramsHash = HashHelper.ConcatAndCompute(paramsHash, callbackHash);
+                var methodNameHash = HashHelper.ComputeFrom(methodName);
+                paramsHash = HashHelper.ConcatAndCompute(paramsHash, methodNameHash);
+            }
             var expirationHash = HashHelper.ComputeFrom(expiration.ToBytesValue());
             paramsHash = HashHelper.ConcatAndCompute(paramsHash, expirationHash);
             return paramsHash;
