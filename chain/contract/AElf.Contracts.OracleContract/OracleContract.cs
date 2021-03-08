@@ -146,8 +146,6 @@ namespace AElf.Contracts.OracleContract
             var answers = State.DetailAnswers[requestId].RoundAnswers[currentRoundCount];
             Assert(answers.HashDataResponses == State.ThresholdResponses.Value,
                 $"Not enough hash data received for request {requestId}");
-            Assert(answers.DataWithSaltResponses < State.ThresholdResponses.Value,
-                $"Enough real data received for request {requestId}");
             VerifyNode(requestId, Context.Sender);
             var allNodeRealData = answers.Responses;
             var senderDataInfo = allNodeRealData.SingleOrDefault(x => x.Node == Context.Sender);
