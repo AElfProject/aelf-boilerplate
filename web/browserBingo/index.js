@@ -14,7 +14,7 @@ const wallet = AElf.wallet.createNewWallet();
 // link to local Blockchain, you can learn how to run a local node in https://docs.aelf.io/main/main/setup
 // const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
 const aelf = new AElf(new AElf.providers.HttpProvider('http://127.0.0.1:1235'));
-
+const bingoAddress = '2LUmicHyH4RXrMjG4beDwuDsiWJESyLkgkwPdGTR8kahRzq5XS';
 if (!aelf.isConnected()) {
   alert('Blockchain Node is not running.');
 }
@@ -31,7 +31,7 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   const refreshButton = document.getElementById('refresh-button');
   const loader = document.getElementById('loader');
   let txId = 0;
-
+  register.innerText = 'Register';
   // Update your card number,Returns the change in the number of your cards
   function getBalance() {
     const payload = {
@@ -70,6 +70,41 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
     getBalance();
   };
 
+  //Approve 
+  function Approve() {
+    multiTokenContract
+      .Approve({
+        symbol: "CARD",
+        spender: bingoAddress,
+        amount: "100000000000000000000",
+      })
+      .then((approve) => {
+        return aelf.chain.getTxResult(approve.TransactionId);
+      })
+      .then((r) => {
+        return new Promise((resolve) => {
+          register.innerText = "Loading";
+          setTimeout(() => {
+            getBalance();
+            loading = false;
+            register.innerText = "Approve";
+            loader.style.display = "none";
+            resolve();
+          }, 3000);
+        });
+      })
+      .then(() => {
+        alert("Congratulations on your successful approve");
+        siteBody.style.display = "block";
+        register.style.display = "none";
+      })
+      .catch((err) => {
+        loading = false;
+        alert(err?.Error);
+        console.log(err, "=====r");
+      });
+  }
+
   // register game, update the number of cards, display game interface
   let loading = false;
   register.onclick = () => {
@@ -78,7 +113,8 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
     }
     loading = true;
     loader.style.display = 'inline-block';
-    bingoGameContract.Register()
+    if(register.innerText === 'Register'){
+      bingoGameContract.Register()
       .then(() => {
         return new Promise(resolve => {
           register.innerText = 'Loading';
@@ -92,13 +128,15 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
         });
       })
       .then(() => {
-        alert('Congratulations on your successful registration！');
-        siteBody.style.display = 'block';
-        register.style.display = 'none';
+        alert('Congratulations on your successful registration！Please approve');
+        register.innerText = 'Approve';
       })
       .catch(err => {
         console.log(err);
       });
+    } else {
+      Approve();
+    }
   };
 
   // click button to change the number of bets
@@ -128,6 +166,9 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
   play.onclick = () => {
     const reg = /^[1-9]\d*$/;
     const value = parseInt(balanceInput.value, 10);
+    if (value < 2) {
+      return alert("A minimum bet of 2 cards!");
+    }
     if (reg.test(value) && value <= balance.innerText) {
       loader.style.display = 'inline-block';
       bingoGameContract.Play({ value })
@@ -135,6 +176,9 @@ function initDomEvent(multiTokenContract, bingoGameContract) {
           console.log('Play result: ', result);
           play.style.display = 'none';
           txId = result.TransactionId;
+          return aelf.chain.getTxResult(txId)
+        })
+        .then(()=>{
           setTimeout(() => {
             bingo.style.display = 'inline-block';
             loader.style.display = 'none';
@@ -181,14 +225,11 @@ function init() {
     // get instance by GenesisContractAddress
     .then(res => aelf.chain.contractAt(res.GenesisContractAddress, wallet))
     // return contract's address which you query by contract's name
-    .then(zeroC => Promise.all([
-      zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.Token')),
-      zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.BingoGameContract'))
-    ]))
+    .then(zeroC => zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.Token')))
     // return contract's instance and you can call the methods on this instance
-    .then(([tokenAddress, bingoAddress]) => Promise.all([
+    .then((tokenAddress) => Promise.all([
       aelf.chain.contractAt(tokenAddress, wallet),
-      aelf.chain.contractAt(bingoAddress, wallet)
+      aelf.chain.contractAt(bingoAddress, wallet),
     ]))
     .then(([multiTokenContract, bingoGameContract]) => {
       initDomEvent(multiTokenContract, bingoGameContract);

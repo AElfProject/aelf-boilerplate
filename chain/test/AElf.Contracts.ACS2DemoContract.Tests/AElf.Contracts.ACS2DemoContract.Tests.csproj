@@ -11,7 +11,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.Kernel.SmartContract.Parallel" Version="1.0.0-preview3-18473" />
+        <PackageReference Include="AElf.EconomicSystem" Version="1.0.0" />
+        <PackageReference Include="AElf.GovernmentSystem" Version="1.0.0" />
+        <PackageReference Include="AElf.Kernel.SmartContract.Parallel" Version="1.0.0" />
         <PackageReference Include="coverlet.msbuild" Version="2.5.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
         <PackageReference Include="Shouldly" Version="3.0.2" />
@@ -21,9 +23,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0-preview3-18473" />
+        <PackageReference Include="AElf.ContractTestKit" Version="1.0.0" />
+        <PackageReference Include="AElf.ContractTestBase" Version="1.0.0" />
+        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0" />
     </ItemGroup>
-
+    <ItemGroup>
+        <ContractMessage Include="..\..\protobuf\authority_info.proto">
+            <Link>Protobuf\Proto\authority_info.proto</Link>
+        </ContractMessage>
+    </ItemGroup>
     <ItemGroup>
         <ContractStub Include="..\..\protobuf\acs2.proto">
             <Link>Protobuf\Proto\acs2.proto</Link>

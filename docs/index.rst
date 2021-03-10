@@ -7,25 +7,11 @@ Welcome to Boilerplate doc's documentation!
 ===========================================   
 
 .. toctree::
-   :caption: Getting started
+   :maxdepth: 3
 
-   Usage <usage/index>
-   FAQ <faq>
-
-.. toctree::
-   :caption: AElf Boilerplate guide
-
-   contract <contract_folder>
-   src <src_folder>
-   test <test_folder>
+   overview/index
 
 .. toctree::
-   :caption: Development
+   :maxdepth: 3
 
-   system-contract <system-contract/index>
-   acs <acs/index>
-   demo <demo/index>
-   DApp <dapp/index>
-
-.. toctree::
-   :caption: Related projects
+   demo/index

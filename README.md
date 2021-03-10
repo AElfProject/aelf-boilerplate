@@ -11,7 +11,7 @@ Boilerplate is an environment that is used to develop smart contracts and dApps.
 
 ## Getting Started
 
-You can follow the tutorials [**here**](https://docs.aelf.io/main/main-1) that will get you started with contract development on Boilerplate. This tutorial also will guide you through the needed dependencies.
+You can follow the tutorials [**here**](https://aelf-boilerplate-docs.readthedocs.io/en/latest/) that will get you started with contract development on Boilerplate. This tutorial also will guide you through the needed dependencies.
 
 ## Boilerplate
 

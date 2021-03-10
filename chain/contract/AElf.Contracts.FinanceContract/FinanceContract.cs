@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading;
-using Acs0;
+using AElf.Standards.ACS0;
 using AElf.Contracts.Genesis;
 using AElf.Contracts.MultiToken;
 using AElf.CSharp.Core;

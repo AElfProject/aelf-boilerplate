@@ -19,11 +19,17 @@
         <ContractBase Include="..\..\protobuf\acs1.proto">
             <Link>Protobuf\Proto\reference\acs1.proto</Link>
         </ContractBase>
+        <ContractBase Include="..\..\protobuf\authority_info.proto">
+            <Link>Protobuf\Proto\reference\authority_info.proto</Link>
+        </ContractBase>
         <ContractReference Include="..\..\protobuf\token_contract.proto">
             <Link>Protobuf\Proto\reference\token_contract.proto</Link>
         </ContractReference>
         <ContractReference Include="..\..\protobuf\basic_contract_zero.proto">
             <Link>Protobuf\Proto\reference\basic_contract_zero.proto</Link>
+        </ContractReference>
+        <ContractReference Include="..\..\protobuf\basic_contract_zero_impl.proto">
+            <Link>Protobuf\Proto\reference\basic_contract_zero_impl.proto</Link>
         </ContractReference>
     </ItemGroup>
     
@@ -34,6 +40,10 @@
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Include="Google.Protobuf" Version="3.12.3" />
+      <PackageReference Include="Google.Protobuf" Version="3.15.5" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Protobuf\Generated" />
     </ItemGroup>
 </Project>

@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "GameStoreContract";
+
+service GameStoreContract {
+
+    option (aelf.csharp_state) = "GameStoreContractState";
+
+    rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) { }
+    
+    // 添加游戏
+    rpc AddGame (GameInfo) returns (google.protobuf.Empty) { }
+    
+    // 购买游戏
+    rpc Buy (google.protobuf.StringValue) returns (google.protobuf.Empty) { }
+    
+    // 获取当前所有游戏
+    rpc GetTotalGameList (google.protobuf.Empty) returns (GameList) {
+        option (aelf.is_view) = true;
+    }
+    
+    // 获取玩家拥有的游戏
+    rpc GetOwnGameList (aelf.Address) returns (GameList) {
+        option (aelf.is_view) = true;
+    }
+}
+
+message GameInfo {
+    string name = 1;
+    string description = 2;
+    int64 price = 3;
+    google.protobuf.Timestamp time = 4;
+}
+
+message GameList {
+    repeated GameInfo value = 1;
+}
+
+message StringList {
+    repeated string value = 1;
+}
+
+
+// Events
+
+message GameAdded {
+    option (aelf.is_event) = true;
+    string name = 1;
+    string description = 2;
+    int64 price = 3;
+    google.protobuf.Timestamp time = 4;
+}

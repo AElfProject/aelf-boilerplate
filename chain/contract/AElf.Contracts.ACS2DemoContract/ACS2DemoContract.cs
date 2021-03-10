@@ -1,4 +1,4 @@
-using Acs2;
+using AElf.Standards.ACS2;
 using AElf.CSharp.Core;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
@@ -26,7 +26,7 @@ namespace AElf.Contracts.ACS2DemoContract
                 var args = TransferCreditsInput.Parser.ParseFrom(input.Params);
                 return new ResourceInfo
                 {
-                    Paths =
+                    WritePaths =
                     {
                         GetPath(nameof(ACS2DemoContractState.Credits), input.From.ToString()),
                         GetPath(nameof(ACS2DemoContractState.Credits), args.To.ToString()),

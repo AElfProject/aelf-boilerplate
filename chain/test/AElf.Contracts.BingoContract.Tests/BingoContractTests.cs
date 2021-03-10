@@ -1,10 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
-using AElf.Contracts.TestKit;
-using AElf.Types;
-using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
-using Shouldly;
+using AElf.ContractTestBase.ContractTestKit;
 using Xunit;
 
 namespace AElf.Contracts.BingoContract

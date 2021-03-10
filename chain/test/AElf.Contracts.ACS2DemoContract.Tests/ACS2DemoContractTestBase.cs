@@ -1,6 +1,5 @@
 using AElf.Boilerplate.TestBase;
 using AElf.Cryptography.ECDSA;
-using AElf.Types;
 
 namespace AElf.Contracts.ACS2DemoContract
 {

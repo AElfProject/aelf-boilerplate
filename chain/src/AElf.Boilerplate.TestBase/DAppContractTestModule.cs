@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using AElf.ContractDeployer;
-using AElf.ContractTestBase.ContractTestKit;
 using AElf.ContractTestBase;
+using AElf.ContractTestBase.ContractTestKit;
 using AElf.Kernel.Consensus.AEDPoS;
 using AElf.Kernel.Miner.Application;
 using AElf.Kernel.SmartContract.Application;

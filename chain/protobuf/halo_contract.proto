@@ -1,0 +1,72 @@
+/* This files is part of the Hello World smart contract example that is included in Boilerplate.
+ * It is only the definition of the contract, implementation is located in the "contract" folder
+ * and tests are located in the "test" folder.
+ *
+ * You can use this as a basic template for new contracts.
+ * 
+ * When building Boilerplate or the contract project located in the "../contract/AElf.Contracts.HaloContract/" 
+ * protoc (the protobuf compiler) will be invoked and this file will produce a .c.cs file and .g.cs file, in the 
+ * "../contract/AElf.Contracts.HaloContract/Protobuf/Generated/" folder. 
+ */
+
+// the version of the language, use proto3 for contracts
+syntax = "proto3";
+
+// some core imports for aelf chain types
+import "aelf/core.proto";
+import "aelf/options.proto";
+
+// import for using the google.protobuf.Empty type.
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+// the name of the C# namespace in which the contract code will be,
+// generated code will also be in this namespace.
+option csharp_namespace = "AElf.Contracts.HaloContract";
+
+// the contract definition: a gRPC service definition.
+service HaloContract {
+
+    // the full name of the C# class that will contain the state (here <namespace>.<state-class-name> format).
+    option (aelf.csharp_state) = "AElf.Contracts.HaloContract.HaloContractState";
+
+    // an action defined as a gRPC service method.
+    // this action take a google.protobuf.Empty (placeholder for void) as input
+    // and returns a custom defined type: HelloReturn.
+    rpc Hello (google.protobuf.Empty) returns (HelloReturn) { }
+    rpc Halo (google.protobuf.Empty) returns (HaloReturn) { }
+    rpc SetNativeGreeting (google.protobuf.StringValue) returns (google.protobuf.Empty) {}
+    rpc SetGreeting (GreetingInfo)returns (google.protobuf.Empty){}
+    
+    //views
+    rpc GetGreetings (google.protobuf.StringValue) returns (GreetingInfo){
+        option (aelf.is_view) = true;
+    }
+    rpc GetNativeGreeting(google.protobuf.Empty) returns (google.protobuf.StringValue) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetGreetedList(google.protobuf.Empty) returns (GreetedList) {
+        option (aelf.is_view) = true;
+    }
+}
+
+// a custom message, used as the return type of the Hello action
+message HelloReturn {
+    string Value = 1;
+}
+
+message HaloReturn {
+    int64 Height = 1;
+    string Value = 2;
+}
+
+message GreetingInfo {
+    string times = 1;
+    string greeting = 2;
+}
+
+message GreetedList {
+    repeated GreetingInfo greatInfo = 1;
+}
+

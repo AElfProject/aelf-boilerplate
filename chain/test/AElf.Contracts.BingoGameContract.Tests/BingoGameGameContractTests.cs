@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AElf.Contracts.MultiToken;
 using AElf.ContractTestBase.ContractTestKit;
+using AElf.Kernel.Infrastructure;
 using AElf.Kernel.Token;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
@@ -30,7 +31,24 @@ namespace AElf.Contracts.BingoGameContract
                 Amount = 100_00000000
             });
 
+            await tokenStub.Create.SendAsync(new CreateInput
+            {
+                Symbol = "CARD",
+                TokenName = "Bingo Card",
+                Decimals = 0,
+                Issuer = DAppContractAddress,
+                IsBurnable = true,
+                TotalSupply = long.MaxValue
+            });
+
             await stub.Register.SendAsync(new Empty());
+
+            await tokenStub.Approve.SendAsync(new ApproveInput
+            {
+                Spender = DAppContractAddress,
+                Symbol = "CARD",
+                Amount = long.MaxValue
+            });
 
             // Now I have player information.
             var address = Address.FromPublicKey(keyPair.PublicKey);

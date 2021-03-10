@@ -9,7 +9,7 @@ namespace AElf.Contracts.FinanceContract
     {
         internal TokenContractContainer.TokenContractReferenceState TokenContract { get; set; }
 
-        internal BasicContractZeroContainer.BasicContractZeroReferenceState GenesisContract { get; set; }
+        internal BasicContractZeroImplContainer.BasicContractZeroImplReferenceState GenesisContract { get; set; }
 
         /// <summary>
         /// Contract administrator

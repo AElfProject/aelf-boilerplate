@@ -11,6 +11,11 @@
         <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     </PropertyGroup>
     <ItemGroup>
+        <ContractMessage Include="..\..\protobuf\authority_info.proto">
+            <Link>Protobuf\Proto\authority_info.proto</Link>
+        </ContractMessage>
+    </ItemGroup>
+    <ItemGroup>
         <ContractCode Include="..\..\protobuf\bingo_game_contract.proto">
             <Link>Protobuf/Proto/bingo_game_contract.proto</Link>
         </ContractCode>
