@@ -19,6 +19,8 @@ service OracleContract {
 
   option (aelf.csharp_state) = "AElf.Contracts.OracleContract.OracleContractState";
 
+  option (aelf.base) = "acs13.proto";
+
   rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {}
 
   // base function

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+// some core imports for aelf chain types
+import "aelf/core.proto";
+import "aelf/options.proto";
+
+// import for using the google.protobuf.Empty type.
+import "google/protobuf/empty.proto";
+
+// import for using the google.protobuf.Timestamp type
+import "google/protobuf/timestamp.proto";
+
+// the name of the C# namespace in which the contract code will be,
+// generated code will also be in this namespace.
+option csharp_namespace = "AElf.Contracts.AggregatorContract";
+
+// the contract definition: a gRPC service definition.
+service AggregatorContract {
+
+  option (aelf.csharp_state) = "AElf.Contracts.AggregatorContract.AggregatorContractState";
+
+  option (aelf.base) = "acs13.proto";
+
+  rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+}
