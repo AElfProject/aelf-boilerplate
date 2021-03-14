@@ -3,6 +3,7 @@ syntax = "proto3";
 // some core imports for aelf chain types
 import "aelf/core.proto";
 import "aelf/options.proto";
+import "acs13.proto";
 
 // import for using the google.protobuf.Empty type.
 import "google/protobuf/empty.proto";

@@ -1,5 +1,6 @@
 using System.Linq;
 using AElf.CSharp.Core;
+using AElf.Standards.ACS13;
 using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
 
@@ -7,7 +8,7 @@ namespace AElf.Contracts.OracleContract
 {
     public partial class OracleContract
     {
-        public override LastUpdateAnswer GetLastAnswer(GetLastAnswerInput input)
+        private LastUpdateAnswer GetLastAnswer(GetLastAnswerInput input)
         {
             var lastRoundCount = State.AnswerCounter[input.RequestId];
             if (lastRoundCount == 0)
@@ -29,7 +30,7 @@ namespace AElf.Contracts.OracleContract
             return State.RoundLastAnswersInfo[input.RequestId].RoundAnswers[lastRoundCount] ?? new LastUpdateAnswer();
         }
 
-        public override LastUpdateAnswer GetAnswerByRound(GetAnswerByRoundInput input)
+        private LastUpdateAnswer GetAnswerByRound(GetAnswerByRoundInput input)
         {
             return State.RoundLastAnswersInfo[input.RequestId].RoundAnswers[input.RoundId]?? new LastUpdateAnswer();
         }

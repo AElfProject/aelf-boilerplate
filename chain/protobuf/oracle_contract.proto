@@ -19,8 +19,6 @@ service OracleContract {
 
   option (aelf.csharp_state) = "AElf.Contracts.OracleContract.OracleContractState";
 
-  option (aelf.base) = "acs13.proto";
-
   rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {}
 
   // base function
@@ -65,14 +63,6 @@ service OracleContract {
   // view methods
 
   rpc GetQuestionableQuery(GetQuestionableQueryInput) returns (QuestionableQueryInfo) {
-    option (aelf.is_view) = true;
-  }
-
-  rpc GetLastAnswer (GetLastAnswerInput) returns (LastUpdateAnswer) {
-    option (aelf.is_view) = true;
-  }
-
-  rpc GetAnswerByRound (GetAnswerByRoundInput) returns (LastUpdateAnswer) {
     option (aelf.is_view) = true;
   }
 
@@ -262,15 +252,6 @@ message RemoveQuestionableQueryInfoInput{
 
 message RemoveRedundantRoundDataInput {
   aelf.Hash request_id = 1;
-}
-
-message GetLastAnswerInput{
-  aelf.Hash request_id = 1;
-}
-
-message GetAnswerByRoundInput{
-  aelf.Hash request_id = 1;
-  int64 round_id = 2;
 }
 
 message SetThresholdInput{
