@@ -29,10 +29,25 @@
     <ContractMessage Include="..\..\protobuf\authority_info.proto">
       <Link>Protobuf\Proto\authority_info.proto</Link>
     </ContractMessage>
+    <ContractMessage Include="..\..\protobuf\acs3.proto">
+      <Link>Protobuf\Proto\acs3.proto</Link>
+    </ContractMessage>
+    <ContractMessage Include="..\..\protobuf\acs1.proto">
+      <Link>Protobuf\Proto\acs1.proto</Link>
+    </ContractMessage>
   </ItemGroup>
   <ItemGroup>
     <ContractStub Include="..\..\protobuf\oracle_contract.proto">
       <Link>Protobuf\Proto\oracle_contract.proto</Link>
+    </ContractStub>
+    <ContractStub Include="..\..\protobuf\token_contract.proto">
+      <Link>Protobuf\Proto\token_contract.proto</Link>
+    </ContractStub>
+    <ContractStub Include="..\..\protobuf\parliament_contract_impl.proto">
+      <Link>Protobuf\Proto\parliament_contract_impl.proto</Link>
+    </ContractStub>
+    <ContractStub Include="..\..\protobuf\acs13.proto">
+      <Link>Protobuf\Proto\acs13.proto</Link>
     </ContractStub>
   </ItemGroup>
 

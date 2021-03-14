@@ -30,6 +30,10 @@ namespace AElf.Contracts.OracleContract
 
         // 有哪些节点
         public SingletonState<AvailableNodes> AvailableNodes { get; set; }
+        
+        public SingletonState<long> MinimumAvailableNodesCount { get; set; }
+        
+        public SingletonState<bool> IsAvailableNodesEnough { get; set; }
 
         public MappedState<Address, NodeInfo> NodeInfo { get; set; }
 

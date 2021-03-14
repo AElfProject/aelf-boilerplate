@@ -7,13 +7,15 @@ namespace AElf.Contracts.OracleContract
         private const long TotalSupply = 100_000_000_00000000;
 
         // seconds
-        private const long DefaultExpirationTime = 300;
+        private const int DefaultExpirationTime = 300;
 
-        private const long DefaultClearRedundantRevenue = 1_00000000;
+        private const long DefaultClearRedundantRevenue = 10000000;
 
         private const int DefaultThresholdResponses = 9;
 
         private const int DefaultThresholdToUpdateData = 6;
+
+        private const int DefaultMinimumAvailableNodesCount = 15;
 
         private const long DefaultMinimumEscrow = 1_000_00000000;
     }

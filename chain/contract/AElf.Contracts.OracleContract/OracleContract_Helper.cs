@@ -25,6 +25,8 @@ namespace AElf.Contracts.OracleContract
             var commitment = State.Commitments[requestId];
             Assert(!State.QuestionableNodes[sender], "questionable node");
             Assert(State.AuthorizedNodes[sender], "Invalid node");
+            if(commitment.DesignatedNodes == null)
+                return;
             var nodeList = commitment.DesignatedNodes.NodeList;
             if (nodeList.Any())
             {
@@ -44,10 +46,13 @@ namespace AElf.Contracts.OracleContract
             Timestamp expiration)
         {
             var paramsHash = HashHelper.ComputeFrom(payment);
-            var callbackHash = HashHelper.ComputeFrom(callbackAddress);
-            paramsHash = HashHelper.ConcatAndCompute(paramsHash, callbackHash);
-            var methodNameHash = HashHelper.ComputeFrom(methodName);
-            paramsHash = HashHelper.ConcatAndCompute(paramsHash, methodNameHash);
+            if (!string.IsNullOrEmpty(methodName))
+            {
+                var callbackHash = HashHelper.ComputeFrom(callbackAddress);
+                paramsHash = HashHelper.ConcatAndCompute(paramsHash, callbackHash);
+                var methodNameHash = HashHelper.ComputeFrom(methodName);
+                paramsHash = HashHelper.ConcatAndCompute(paramsHash, methodNameHash);
+            }
             var expirationHash = HashHelper.ComputeFrom(expiration.ToBytesValue());
             paramsHash = HashHelper.ConcatAndCompute(paramsHash, expirationHash);
             return paramsHash;
@@ -75,6 +80,13 @@ namespace AElf.Contracts.OracleContract
             }).ToList();
             aggregateInput.Responses.AddRange(responses);
             return aggregateInput;
+        }
+
+        private void UpdateIsAvailableNodesEnoughState()
+        {
+            var availableNodes = State.AvailableNodes.Value;
+            var currentAvailableNodeCount = availableNodes.NodeList.Count(x => !State.QuestionableNodes[x]);
+            State.IsAvailableNodesEnough.Value = currentAvailableNodeCount >= State.MinimumAvailableNodesCount.Value;
         }
     }
 }

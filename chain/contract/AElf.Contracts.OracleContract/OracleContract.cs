@@ -13,23 +13,40 @@ namespace AElf.Contracts.OracleContract
 {
     public partial class OracleContract : OracleContractContainer.OracleContractBase
     {
-        public override Empty Initialize(Empty input)
+        public override Empty Initialize(InitializeInput input)
         {
             Assert(!State.IsInitialized.Value, "Contract has been initialized");
             InitializeContractReference();
             State.Controller.Value = Context.Sender;
             CreateToken();
-            State.ExpirationTime.Value = DefaultExpirationTime;
-            State.ThresholdResponses.Value = DefaultThresholdResponses;
-            State.ThresholdToUpdateData.Value = DefaultThresholdToUpdateData;
-            State.MinimumEscrow.Value = DefaultMinimumEscrow;
-            State.ClearRedundantRevenue.Value = DefaultClearRedundantRevenue;
+            input.DefaultMinimumAvailableNodesCount = input.DefaultMinimumAvailableNodesCount == 0
+                ? DefaultMinimumAvailableNodesCount
+                : input.DefaultMinimumAvailableNodesCount;
+            input.DefaultThresholdResponses = input.DefaultThresholdResponses == 0
+                ? DefaultThresholdResponses
+                : input.DefaultThresholdResponses;
+            input.DefaultThresholdToUpdateData = input.DefaultThresholdToUpdateData == 0
+                ? DefaultThresholdToUpdateData
+                : input.DefaultThresholdToUpdateData;
+            Assert(input.DefaultMinimumAvailableNodesCount >= input.DefaultThresholdResponses,
+                "DefaultMinimumAvailableNodesCount should be greater than DefaultThresholdResponses");
+            Assert(input.DefaultThresholdResponses > input.DefaultThresholdToUpdateData,
+                "DefaultThresholdResponses should be greater than DefaultThresholdToUpdateData");
+            Assert(input.DefaultThresholdToUpdateData > 0, "Invalid DefaultThresholdToUpdateData");
+            State.ExpirationTime.Value = input.ExpirationTime == 0? DefaultExpirationTime: input.ExpirationTime;
+            State.ThresholdResponses.Value = input.DefaultThresholdResponses;
+            State.ThresholdToUpdateData.Value = input.DefaultThresholdToUpdateData;
+            State.MinimumAvailableNodesCount.Value = input.DefaultMinimumAvailableNodesCount;
+            State.MinimumEscrow.Value = input.MinimumEscrow == 0? DefaultMinimumEscrow: input.MinimumEscrow;
+            State.ClearRedundantRevenue.Value = input.ClearRedundantRevenue == 0? DefaultClearRedundantRevenue: input.ClearRedundantRevenue;
+            State.AvailableNodes.Value = new AvailableNodes();
             State.IsInitialized.Value = true;
             return new Empty();
         }
 
         public override Empty CreateRequest(CreateRequestInput input)
         {
+            Assert(State.IsAvailableNodesEnough.Value, "Not enough available node");
             var expiration = Context.CurrentBlockTime.AddSeconds(State.ExpirationTime.Value);
             var requestId = GenerateRequestId(Context.Sender, input.Nonce);
             long payment = input.Payment;
@@ -39,12 +56,15 @@ namespace AElf.Contracts.OracleContract
             var paramsHash = GenerateParamHash(payment, callbackAddress, methodName, expiration);
             Assert(State.Commitments[requestId] == null, "Repeated request");
             var designatedNodes = input.DesignatedNodes;
-            var designatedNodesCount = designatedNodes.NodeList.Count;
-            if (designatedNodesCount > 0)
+            if (designatedNodes != null)
             {
-                Assert(
-                    designatedNodesCount > State.ThresholdResponses.Value,
-                    "Invalid count of designated nodes");
+                var designatedNodesCount = designatedNodes.NodeList.Count;
+                if (designatedNodesCount > 0)
+                {
+                    Assert(
+                        designatedNodesCount > State.ThresholdResponses.Value,
+                        "Invalid count of designated nodes");
+                }
             }
 
             State.Commitments[requestId] = new Commitment
@@ -61,7 +81,9 @@ namespace AElf.Contracts.OracleContract
             var roundCount = State.AnswerCounter[requestId];
             roundCount = roundCount.Add(1);
             State.AnswerCounter[requestId] = roundCount;
-            State.DetailAnswers[requestId].RoundAnswers[roundCount] = new AnswerDetail();
+            var roundAnswers = State.DetailAnswers[requestId] ?? new RoundAnswerDetailInfo();
+            roundAnswers.RoundAnswers[roundCount] = new AnswerDetail();
+            State.DetailAnswers[requestId] = roundAnswers;
             Context.Fire(new NewRequest
             {
                 Requester = Context.Sender,
@@ -124,8 +146,6 @@ namespace AElf.Contracts.OracleContract
             var answers = State.DetailAnswers[requestId].RoundAnswers[currentRoundCount];
             Assert(answers.HashDataResponses == State.ThresholdResponses.Value,
                 $"Not enough hash data received for request {requestId}");
-            Assert(answers.DataWithSaltResponses < State.ThresholdResponses.Value,
-                $"Enough real data received for request {requestId}");
             VerifyNode(requestId, Context.Sender);
             var allNodeRealData = answers.Responses;
             var senderDataInfo = allNodeRealData.SingleOrDefault(x => x.Node == Context.Sender);
@@ -164,7 +184,10 @@ namespace AElf.Contracts.OracleContract
                     RoundId = currentRoundCount,
                     AgreedValue = chooseData
                 });
-                Context.SendInline(input.CallbackAddress, input.MethodName, chooseData);
+                if (!string.IsNullOrEmpty(input.MethodName))
+                {
+                    Context.SendInline(input.CallbackAddress, input.MethodName, chooseData);
+                }
                 UpdateRoundData(requestId, currentRoundCount, chooseData);
                 ClearRequestInfo(requestId);
                 return new Empty();
