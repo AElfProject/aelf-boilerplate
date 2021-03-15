@@ -23,4 +23,32 @@ service AggregatorContract {
   option (aelf.base) = "acs13.proto";
 
   rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  
+  rpc RegisterAggregation (RegisterAggregationInput) returns (google.protobuf.Empty) {}
+  
+  rpc CancelAggregation (CancelAggregationInput) returns (google.protobuf.Empty) {}
+
+  // Notary things.
+
+  rpc ApplyNotary (ApplyNotaryInput) returns (google.protobuf.Empty) {}
+
+  rpc QuitNotary (QuitNotaryInput) returns (google.protobuf.Empty) {}
+
+  rpc VoteNotary (VoteNotaryInput) returns (google.protobuf.Empty) {}
+
+}
+
+message RegisterAggregationInput {
+}
+
+message CancelAggregationInput {
+}
+
+message ApplyNotaryInput {
+}
+
+message QuitNotaryInput {
+}
+
+message VoteNotaryInput {
 }

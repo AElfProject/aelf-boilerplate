@@ -15,9 +15,12 @@ namespace AElf.Contracts.OracleContract
     {
         public override Empty Initialize(InitializeInput input)
         {
-            Assert(!State.IsInitialized.Value, "Contract has been initialized");
-            InitializeContractReference();
+            Assert(!State.IsInitialized.Value, "Already initialized.");
+            InitializeContractReferences();
+
+            // Controller will be the sender by default.
             State.Controller.Value = Context.Sender;
+
             CreateToken();
             input.DefaultMinimumAvailableNodesCount = input.DefaultMinimumAvailableNodesCount == 0
                 ? DefaultMinimumAvailableNodesCount
@@ -46,15 +49,15 @@ namespace AElf.Contracts.OracleContract
 
         public override Empty CreateRequest(CreateRequestInput input)
         {
-            Assert(State.IsAvailableNodesEnough.Value, "Not enough available node");
+            Assert(State.IsAvailableNodesEnough.Value, "Available nodes not enough.");
             var expiration = Context.CurrentBlockTime.AddSeconds(State.ExpirationTime.Value);
             var requestId = GenerateRequestId(Context.Sender, input.Nonce);
-            long payment = input.Payment;
+            var payment = input.Payment;
             var callbackAddress = input.CallbackAddress;
             var methodName = input.MethodName;
             var aggregator = input.Aggregator;
             var paramsHash = GenerateParamHash(payment, callbackAddress, methodName, expiration);
-            Assert(State.Commitments[requestId] == null, "Repeated request");
+            Assert(State.Commitments[requestId] == null, "Request already exists.");
             var designatedNodes = input.DesignatedNodes;
             if (designatedNodes != null)
             {
@@ -346,7 +349,7 @@ namespace AElf.Contracts.OracleContract
             State.FundPoolToRevenue.Value = totalFundPool;
         }
 
-        private void InitializeContractReference()
+        private void InitializeContractReferences()
         {
             State.TokenContract.Value = Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
             State.ParliamentContract.Value = Context.GetContractAddressByName(SmartContractConstants.ParliamentContractSystemName);
