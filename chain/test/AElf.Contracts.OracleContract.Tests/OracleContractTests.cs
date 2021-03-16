@@ -25,7 +25,7 @@ namespace AElf.Contracts.OracleContract
                 DefaultThresholdToUpdateData = DefaultThresholdToUpdateData,
                 MinimumEscrow = DefaultMinimumEscrow,
                 ClearRedundantRevenue = DefaultClearRedundantRevenue,
-                ExpirationTime = DefaultExpirationTime
+                ExpirationSeconds = DefaultExpirationSeconds
             });
         }
 
@@ -93,7 +93,7 @@ namespace AElf.Contracts.OracleContract
         }
 
         [Fact]
-        private async Task<NewRequest> CreateRequest_Success_Test()
+        private async Task<RequestCreated> CreateRequest_Success_Test()
         {
             await InitializeOracleContract();
             await TransferTokenOwner();
@@ -106,16 +106,16 @@ namespace AElf.Contracts.OracleContract
                 MethodName = "",
                 CallbackAddress = new Address()
             });
-            var newRequest = new NewRequest();
-            newRequest.MergeFrom(ret.TransactionResult.Logs.First(l => l.Name == nameof(NewRequest)));
+            var newRequest = new RequestCreated();
+            newRequest.MergeFrom(ret.TransactionResult.Logs.First(l => l.Name == nameof(RequestCreated)));
             newRequest.RoundId.ShouldBe(1);
             return newRequest;
         }
 
         [Fact]
-        private async Task<NewRequest> SendHashData_Success_Test()
+        private async Task<RequestCreated> SendHashData_Success_Test()
         {
-            var newRequest = await CreateRequest_Success_Test();
+            var requestCreated = await CreateRequest_Success_Test();
             var realValue = new Int32Value
             {
                 Value = 32
@@ -128,22 +128,22 @@ namespace AElf.Contracts.OracleContract
             {
                 var ret = await oracleNodeStub.SendHashData.SendAsync(new SendHashDataInput
                 {
-                    Payment = newRequest.Payment,
-                    CallbackAddress = newRequest.CallbackAddress,
-                    CancelExpiration = newRequest.CancelExpiration,
-                    RequestId = newRequest.RequestId,
+                    Payment = requestCreated.Payment,
+                    CallbackAddress = requestCreated.CallbackAddress,
+                    CancelExpiration = requestCreated.CancelExpiration,
+                    RequestId = requestCreated.RequestId,
                     HashData = dataHash,
-                    MethodName = newRequest.MethodName
+                    MethodName = requestCreated.MethodName
                 });
                 count++;
                 if (count != DefaultThresholdResponses) continue;
-                var getEnoughData = new GetEnoughData();
-                getEnoughData.MergeFrom(ret.TransactionResult.Logs.First(x => x.Name == nameof(GetEnoughData)));
-                getEnoughData.RequestId.ShouldBe(newRequest.RequestId);
+                var getEnoughData = new SufficientDataCollected();
+                getEnoughData.MergeFrom(ret.TransactionResult.Logs.First(x => x.Name == nameof(SufficientDataCollected)));
+                getEnoughData.RequestId.ShouldBe(requestCreated.RequestId);
                 break;
             }
 
-            return newRequest;
+            return requestCreated;
         }
 
         [Fact]

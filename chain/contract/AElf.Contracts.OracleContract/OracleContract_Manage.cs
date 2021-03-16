@@ -142,9 +142,9 @@ namespace AElf.Contracts.OracleContract
             Assert(input.DefaultThresholdResponses > input.DefaultThresholdToUpdateData,
                 "DefaultThresholdResponses should be greater than DefaultThresholdToUpdateData");
             Assert(input.DefaultThresholdToUpdateData > 0, "Invalid DefaultThresholdToUpdateData");
-            State.MinimumAvailableNodesCount.Value = input.DefaultMinimumAvailableNodesCount;
-            State.ThresholdResponses.Value = input.DefaultThresholdResponses;
-            State.ThresholdToUpdateData.Value = input.DefaultThresholdToUpdateData;
+            State.MinimumDesignatedNodeCount.Value = input.DefaultMinimumAvailableNodesCount;
+            State.ConfirmThreshold.Value = input.DefaultThresholdResponses;
+            State.AgreeThreshold.Value = input.DefaultThresholdToUpdateData;
             return new Empty();
         }
     }

@@ -25,6 +25,12 @@ service OracleContract {
 
   rpc CreateRequest (CreateRequestInput) returns (google.protobuf.Empty) {}
 
+  rpc Query (QueryInput) returns (google.protobuf.Empty) {}
+  
+  rpc Commit (CommitInput) returns (google.protobuf.Empty) {}
+  
+  rpc Reveal (RevealInput) returns (google.protobuf.Empty) {}
+
   rpc SendHashData (SendHashDataInput) returns (google.protobuf.Empty) {}
 
   rpc SendDataWithSalt (SendDataWithSaltInput) returns (google.protobuf.Empty) {}
@@ -79,6 +85,15 @@ service OracleContract {
   }
 }
 
+message InitializeInput{
+  int32 default_minimum_available_nodes_count = 1;
+  int32 default_threshold_responses = 2;
+  int32 default_threshold_to_update_data = 3;
+  int32 expiration_seconds = 4;
+  int64 minimum_escrow = 5;
+  int64 clear_redundant_revenue = 6;
+}
+
 message AvailableNodes{
   repeated aelf.Address node_list = 1;
 }
@@ -88,38 +103,56 @@ message WorkNodes{
   repeated aelf.Address questionable_nodes = 2;
 }
 
-message CreateRequestInput{
+message CreateRequestInput {
   string url_to_query = 1;
   string attribute_to_fetch = 2;
   int64 payment = 3;
   aelf.Address callback_address = 4;
   string method_name = 5;
-  aelf.Address aggregator = 6;
+  aelf.Address aggregator_address = 6;
   AvailableNodes designated_nodes = 7;
   int64 nonce = 8;
 }
 
-message NewRequest{
-  option (aelf.is_event) = true;
-  aelf.Hash request_id = 1[(aelf.is_indexed) = true];
-  int64 round_id = 2 [(aelf.is_indexed) = true];
-  aelf.Address requester = 3;
-  int64 payment = 4;
-  aelf.Address callback_address = 5;
-  string method_name = 6;
-  google.protobuf.Timestamp cancel_expiration = 7;
-  string url_to_query = 8;
-  string attribute_to_fetch = 9;
-  aelf.Address aggregator = 10;
-  AvailableNodes designated_nodes = 11;
+message QueryInput {
+  int64 payment = 1;// Maximum for this query option.
+  CallbackInfo callback_info = 2;
+  aelf.Address aggregator_contract_address = 3;
+  AddressList designated_node_list = 4;// Will be association address if count is 1.
+  string url_to_query = 5;
+  string attribute_to_fetch = 6;
 }
 
-message CancelRequest{
-  option (aelf.is_event) = true;
-  bytes request_id = 1 [(aelf.is_indexed) = true];
-  int64 round_id = 2 [(aelf.is_indexed) = true];
-  google.protobuf.Timestamp cancel_time = 3;
+message CallbackInfo {
+  aelf.Address contract_address = 1;
+  string method_name = 2;
+}
 
+message AddressList {
+  repeated aelf.Address value = 1;
+}
+
+message QueryRecord {
+  aelf.Hash query_hash = 1;
+  AddressList designated_node_list = 2;
+  aelf.Address aggregator_contract_address = 3;
+  google.protobuf.Timestamp expiration_timestamp = 4;
+  bool is_sufficient_commitments_collected = 5;
+  bool is_sufficient_data_collected = 6;
+  bytes final_result = 7;
+  int64 payment = 8;
+  CallbackInfo callback_info = 9;
+}
+
+message CommitInput {
+  aelf.Hash query_id = 1;
+  aelf.Hash commitment = 2;
+}
+
+message RevealInput {
+  aelf.Hash query_id = 1;
+  bytes data = 2;
+  aelf.Hash salt = 3;
 }
 
 message SendHashDataInput{
@@ -129,11 +162,6 @@ message SendHashDataInput{
   aelf.Address callback_address = 4;
   string method_name = 5;
   google.protobuf.Timestamp cancel_expiration = 6;
-}
-
-message GetEnoughData{
-  option (aelf.is_event) = true;
-  aelf.Hash request_id = 1 [(aelf.is_indexed) = true];
 }
 
 message SendDataWithSaltInput{
@@ -216,7 +244,6 @@ message NodeStatistic{
 
 message AllNodeStatisticInfo{
   repeated NodeStatistic all_node_statistic_info = 1;
-
 }
 
 message AddNodeInput{
@@ -260,11 +287,46 @@ message SetThresholdInput{
   int32 default_threshold_to_update_data = 3;
 }
 
-message InitializeInput{
-  int32 default_minimum_available_nodes_count = 1;
-  int32 default_threshold_responses = 2;
-  int32 default_threshold_to_update_data = 3;
-  int32 expiration_time = 4;
-  int64 minimum_escrow = 5;
-  int64 clear_redundant_revenue = 6;
+message ResultList {
+  repeated bytes results = 1;
+  repeated int32 frequencies = 2;
+}
+
+// Events
+message RequestCreated {
+  option (aelf.is_event) = true;
+  aelf.Hash request_id = 1;
+  int64 round_id = 2;
+  aelf.Address requester = 3;
+  int64 payment = 4;
+  aelf.Address callback_address = 5;
+  string method_name = 6;
+  google.protobuf.Timestamp cancel_expiration = 7;
+  string url_to_query = 8;
+  string attribute_to_fetch = 9;
+  aelf.Address aggregator = 10;
+  AvailableNodes designated_nodes = 11;
+}
+
+message RequestCancelled {
+  option (aelf.is_event) = true;
+  bytes request_id = 1;
+  int64 round_id = 2;
+  google.protobuf.Timestamp cancel_time = 3;
+}
+
+message SufficientDataCollected {
+  option (aelf.is_event) = true;
+  aelf.Hash request_id = 1;
+}
+
+message SufficientCommitmentsCollected {
+  option (aelf.is_event) = true;
+  aelf.Hash query_id = 1;
+}
+
+message QueryCompleted {
+  option (aelf.is_event) = true;
+  aelf.Hash query_id = 1;
+  bytes result = 2;
 }

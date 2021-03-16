@@ -1,3 +1,4 @@
+using AElf.Contracts.Association;
 using AElf.Contracts.MultiToken;
 using AElf.Contracts.Parliament;
 using AElf.Standards.ACS13;
@@ -15,5 +16,7 @@ namespace AElf.Contracts.OracleContract
             get;
             set;
         }
+
+        internal AssociationContractContainer.AssociationContractReferenceState AssociationContract { get; set; }
     }
 }

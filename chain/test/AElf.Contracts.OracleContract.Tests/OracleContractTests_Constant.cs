@@ -4,7 +4,7 @@ namespace AElf.Contracts.OracleContract
     {
         private const string TokenSymbol = "AELINK";
         
-        private const int DefaultExpirationTime = 300;
+        private const int DefaultExpirationSeconds = 300;
 
         private const long DefaultClearRedundantRevenue = 10000000;
 

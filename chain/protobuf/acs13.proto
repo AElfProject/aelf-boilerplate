@@ -4,13 +4,14 @@ package acs13;
 import "aelf/options.proto";
 import "aelf/core.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
 import "google/protobuf/timestamp.proto";
 
 option (aelf.identity) = "acs13";
 option csharp_namespace = "AElf.Standards.ACS13";
 
 service OracleAggregatorContract {
-  rpc Aggregate (AggregateInput) returns (google.protobuf.Empty) {
+  rpc Aggregate (AggregateInput) returns (google.protobuf.BytesValue) {
   }
 
   rpc GetLastAnswer (GetLastAnswerInput) returns (Answer) {
@@ -40,9 +41,11 @@ message NodesInfo{
   repeated NodeWithData node_list = 1;
 }
 
-message AggregateInput{
-  aelf.Hash request_id = 1;
-  aelf.Address requester = 2;
+message AggregateInput {
+  repeated bytes results = 1;
+  repeated int32 frequencies = 2;
+  aelf.Hash request_id = 7;
+  aelf.Address requester = 8;
   int64 round_id = 3;
   repeated NodeWithData responses = 4;
   aelf.Address callback_address = 5;

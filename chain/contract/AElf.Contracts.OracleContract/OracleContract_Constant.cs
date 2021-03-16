@@ -6,8 +6,7 @@ namespace AElf.Contracts.OracleContract
         private const string TokenName = "AelfLinK";
         private const long TotalSupply = 100_000_000_00000000;
 
-        // seconds
-        private const int DefaultExpirationTime = 300;
+        private const int DefaultExpirationSeconds = 3600;
 
         private const long DefaultClearRedundantRevenue = 10000000;
 

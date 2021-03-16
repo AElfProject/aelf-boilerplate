@@ -15,13 +15,14 @@ namespace AElf.Contracts.OracleContract
     {
         public override Empty Initialize(InitializeInput input)
         {
-            Assert(!State.IsInitialized.Value, "Already initialized.");
+            Assert(!State.Initialized.Value, "Already initialized.");
             InitializeContractReferences();
 
             // Controller will be the sender by default.
             State.Controller.Value = Context.Sender;
 
             CreateToken();
+
             input.DefaultMinimumAvailableNodesCount = input.DefaultMinimumAvailableNodesCount == 0
                 ? DefaultMinimumAvailableNodesCount
                 : input.DefaultMinimumAvailableNodesCount;
@@ -31,32 +32,216 @@ namespace AElf.Contracts.OracleContract
             input.DefaultThresholdToUpdateData = input.DefaultThresholdToUpdateData == 0
                 ? DefaultThresholdToUpdateData
                 : input.DefaultThresholdToUpdateData;
+
             Assert(input.DefaultMinimumAvailableNodesCount >= input.DefaultThresholdResponses,
                 "DefaultMinimumAvailableNodesCount should be greater than DefaultThresholdResponses");
             Assert(input.DefaultThresholdResponses > input.DefaultThresholdToUpdateData,
                 "DefaultThresholdResponses should be greater than DefaultThresholdToUpdateData");
             Assert(input.DefaultThresholdToUpdateData > 0, "Invalid DefaultThresholdToUpdateData");
-            State.ExpirationTime.Value = input.ExpirationTime == 0? DefaultExpirationTime: input.ExpirationTime;
-            State.ThresholdResponses.Value = input.DefaultThresholdResponses;
-            State.ThresholdToUpdateData.Value = input.DefaultThresholdToUpdateData;
-            State.MinimumAvailableNodesCount.Value = input.DefaultMinimumAvailableNodesCount;
-            State.MinimumEscrow.Value = input.MinimumEscrow == 0? DefaultMinimumEscrow: input.MinimumEscrow;
-            State.ClearRedundantRevenue.Value = input.ClearRedundantRevenue == 0? DefaultClearRedundantRevenue: input.ClearRedundantRevenue;
+
+            State.ExpirationSeconds.Value =
+                input.ExpirationSeconds == 0 ? DefaultExpirationSeconds : input.ExpirationSeconds;
+            State.ConfirmThreshold.Value = input.DefaultThresholdResponses;
+            State.AgreeThreshold.Value = input.DefaultThresholdToUpdateData;
+            State.MinimumDesignatedNodeCount.Value = input.DefaultMinimumAvailableNodesCount;
+            State.MinimumEscrow.Value = input.MinimumEscrow == 0 ? DefaultMinimumEscrow : input.MinimumEscrow;
+            State.ClearRedundantRevenue.Value = input.ClearRedundantRevenue == 0
+                ? DefaultClearRedundantRevenue
+                : input.ClearRedundantRevenue;
             State.AvailableNodes.Value = new AvailableNodes();
-            State.IsInitialized.Value = true;
+            State.Initialized.Value = true;
+            return new Empty();
+        }
+
+        public override Empty Query(QueryInput input)
+        {
+            var queryId = Context.GenerateId(Context.TransactionId);
+            var expirationTimestamp = Context.CurrentBlockTime.AddSeconds(State.ExpirationSeconds.Value);
+
+            // Transfer tokens to Oracle Contract.
+            State.TokenContract.TransferFrom.Send(new TransferFromInput
+            {
+                From = Context.Sender,
+                To = Context.ConvertVirtualAddressToContractAddress(queryId),
+                Amount = input.Payment,
+                Symbol = TokenSymbol
+            });
+
+            Assert(State.QueryRecords[queryId] == null, "Query already exists.");
+
+            var designatedNodeListCount = GetDesignatedNodeListCount(input.DesignatedNodeList);
+            Assert(designatedNodeListCount > State.MinimumDesignatedNodeCount.Value, "Invalid designated nodes count.");
+
+            State.QueryRecords[queryId] = new QueryRecord
+            {
+                QueryHash = ComputeQueryHash(input.CallbackInfo, input.UrlToQuery, input.AttributeToFetch),
+                AggregatorContractAddress = input.AggregatorContractAddress,
+                DesignatedNodeList = input.DesignatedNodeList,
+                ExpirationTimestamp = expirationTimestamp
+            };
+
+            State.UserAddresses[queryId] = Context.Sender;
+
+            return new Empty();
+        }
+
+        private int GetDesignatedNodeListCount(AddressList inputDesignatedNodeList)
+        {
+            var designatedNodeListCount = inputDesignatedNodeList.Value.Count;
+            if (designatedNodeListCount == 1)
+            {
+                var organization =
+                    State.AssociationContract.GetOrganization.Call(inputDesignatedNodeList.Value.First());
+                designatedNodeListCount = organization.OrganizationMemberList.OrganizationMembers.Count;
+            }
+
+            return designatedNodeListCount;
+        }
+
+        public override Empty Commit(CommitInput input)
+        {
+            var queryRecord = State.QueryRecords[input.QueryId];
+
+            // Confirm this query is in stage Commit.
+            Assert(!queryRecord.IsSufficientCommitmentsCollected,
+                "This query already collected sufficient commitments.");
+
+            // Permission check.
+            var designatedNodeListCount = queryRecord.DesignatedNodeList.Value.Count;
+            bool isSenderInDesignatedNodeList;
+            int actualNodeListCount; // Will use this variable later.
+            if (designatedNodeListCount != 1)
+            {
+                isSenderInDesignatedNodeList = queryRecord.DesignatedNodeList.Value.Contains(Context.Sender);
+                actualNodeListCount = queryRecord.DesignatedNodeList.Value.Count;
+            }
+            else
+            {
+                var organization =
+                    State.AssociationContract.GetOrganization.Call(queryRecord.DesignatedNodeList.Value.First());
+                isSenderInDesignatedNodeList =
+                    organization.OrganizationMemberList.OrganizationMembers.Contains(Context.Sender);
+                actualNodeListCount = organization.OrganizationMemberList.OrganizationMembers.Count;
+            }
+
+            Assert(isSenderInDesignatedNodeList, "No permission to commit for this query.");
+            Assert(actualNodeListCount > State.MinimumDesignatedNodeCount.Value, "Invalid designated nodes count.");
+
+            var updatedResponseCount = State.ResponseCount[input.QueryId].Add(1);
+            State.CommitmentMap[input.QueryId][Context.Sender] = input.Commitment;
+
+            if (updatedResponseCount >= GetCommitStageNodeCountThreshold(actualNodeListCount))
+            {
+                // Move to next stage: Reveal
+                queryRecord.IsSufficientCommitmentsCollected = true;
+                State.ResponseCount[input.QueryId] = 0;
+                State.QueryRecords[input.QueryId] = queryRecord;
+
+                Context.Fire(new SufficientCommitmentsCollected
+                {
+                    QueryId = input.QueryId
+                });
+            }
+            else
+            {
+                State.ResponseCount[input.QueryId] = updatedResponseCount;
+            }
+
+            return new Empty();
+        }
+
+        public override Empty Reveal(RevealInput input)
+        {
+            var queryRecord = State.QueryRecords[input.QueryId];
+
+            // Confirm this query is in stage Commit.
+            Assert(queryRecord.IsSufficientCommitmentsCollected && !queryRecord.IsSufficientDataCollected,
+                "This query already collected sufficient results.");
+
+            // Permission check.
+            var commitment = State.CommitmentMap[input.QueryId][Context.Sender];
+            if (commitment == null)
+            {
+                throw new AssertionException(
+                    "No permission to reveal for this query. Sender hasn't submit commitment.");
+            }
+
+            var helpfulNodeList = State.HelpfulNodeListMap[input.QueryId] ?? new AddressList();
+            Assert(!helpfulNodeList.Value.Contains(Context.Sender), "Sender already revealed commitment.");
+            helpfulNodeList.Value.Add(Context.Sender);
+            State.HelpfulNodeListMap[input.QueryId] = helpfulNodeList;
+
+            // Check commitment.
+            var dataHash = HashHelper.ComputeFrom(input.Data.ToArray());
+            Assert(HashHelper.ConcatAndCompute(dataHash, input.Salt) == commitment, "Incorrect commitment.");
+
+            // Record data to result list.
+            var resultList = State.ResultListMap[input.QueryId] ?? new ResultList();
+            if (resultList.Results.Contains(input.Data))
+            {
+                var index = resultList.Results.IndexOf(input.Data);
+                resultList.Frequencies[index] = resultList.Frequencies[index].Add(1);
+            }
+            else
+            {
+                resultList.Results.Add(input.Data);
+                resultList.Frequencies.Add(0);
+            }
+
+            var designatedNodeListCount = GetDesignatedNodeListCount(queryRecord.DesignatedNodeList);
+            var helpfulNodeListCount = helpfulNodeList.Value.Count;
+            if (helpfulNodeListCount < GetRevealStageNodeCountThreshold(designatedNodeListCount)) return new Empty();
+
+            // Move to next stage: Aggregator.
+            queryRecord.IsSufficientDataCollected = true;
+            State.ResponseCount.Remove(input.QueryId);
+
+            // Distributed rewards to helpful oracle nodes.
+            foreach (var helpfulNode in helpfulNodeList.Value)
+            {
+                var paymentToEachNode = queryRecord.Payment.Div(helpfulNodeListCount);
+                Context.SendVirtualInline(input.QueryId, State.TokenContract.Value,
+                    nameof(State.TokenContract.Transfer), new TransferInput
+                    {
+                        To = helpfulNode,
+                        Symbol = TokenSymbol,
+                        Amount = paymentToEachNode
+                    });
+            }
+
+            // Call Aggregator plugin contract.
+            State.OracleAggregatorContract.Value = queryRecord.AggregatorContractAddress;
+            var finalResult = State.OracleAggregatorContract.Aggregate.Call(new AggregateInput
+            {
+                Results = {resultList.Results},
+                Frequencies = {resultList.Frequencies}
+            });
+            queryRecord.FinalResult = finalResult.Value;
+
+            State.QueryRecords[input.QueryId] = queryRecord;
+
+            // Callback User Contract
+            var callbackInfo = queryRecord.CallbackInfo;
+            Context.SendInline(callbackInfo.ContractAddress, callbackInfo.MethodName, finalResult);
+
+            Context.Fire(new QueryCompleted
+            {
+                QueryId = input.QueryId,
+                Result = finalResult.Value
+            });
+
             return new Empty();
         }
 
         public override Empty CreateRequest(CreateRequestInput input)
         {
-            Assert(State.IsAvailableNodesEnough.Value, "Available nodes not enough.");
-            var expiration = Context.CurrentBlockTime.AddSeconds(State.ExpirationTime.Value);
-            var requestId = GenerateRequestId(Context.Sender, input.Nonce);
+            var requestId = Context.GenerateId(Context.TransactionId);
+            var expirationTimestamp = Context.CurrentBlockTime.AddSeconds(State.ExpirationSeconds.Value);
             var payment = input.Payment;
             var callbackAddress = input.CallbackAddress;
             var methodName = input.MethodName;
-            var aggregator = input.Aggregator;
-            var paramsHash = GenerateParamHash(payment, callbackAddress, methodName, expiration);
+            var aggregator = input.AggregatorAddress;
+            var paramsHash = GenerateParamHash(payment, callbackAddress, methodName, expirationTimestamp);
             Assert(State.Commitments[requestId] == null, "Request already exists.");
             var designatedNodes = input.DesignatedNodes;
             if (designatedNodes != null)
@@ -65,7 +250,7 @@ namespace AElf.Contracts.OracleContract
                 if (designatedNodesCount > 0)
                 {
                     Assert(
-                        designatedNodesCount > State.ThresholdResponses.Value,
+                        designatedNodesCount > State.ConfirmThreshold.Value,
                         "Invalid count of designated nodes");
                 }
             }
@@ -74,20 +259,21 @@ namespace AElf.Contracts.OracleContract
             {
                 ParamsHash = paramsHash,
                 DesignatedNodes = designatedNodes,
-                Aggregator = input.Aggregator,
-                CancelExpiration = expiration
+                Aggregator = input.AggregatorAddress,
+                CancelExpiration = expirationTimestamp
             };
             if (State.CommitmentsOwner[requestId] == null)
             {
                 State.CommitmentsOwner[requestId] = Context.Sender;
             }
+
             var roundCount = State.AnswerCounter[requestId];
             roundCount = roundCount.Add(1);
             State.AnswerCounter[requestId] = roundCount;
             var roundAnswers = State.DetailAnswers[requestId] ?? new RoundAnswerDetailInfo();
             roundAnswers.RoundAnswers[roundCount] = new AnswerDetail();
             State.DetailAnswers[requestId] = roundAnswers;
-            Context.Fire(new NewRequest
+            Context.Fire(new RequestCreated
             {
                 Requester = Context.Sender,
                 RoundId = roundCount,
@@ -95,7 +281,7 @@ namespace AElf.Contracts.OracleContract
                 Payment = payment,
                 CallbackAddress = callbackAddress,
                 MethodName = methodName,
-                CancelExpiration = expiration,
+                CancelExpiration = expirationTimestamp,
                 UrlToQuery = input.UrlToQuery,
                 AttributeToFetch = input.AttributeToFetch,
                 Aggregator = aggregator
@@ -110,7 +296,7 @@ namespace AElf.Contracts.OracleContract
             VerifyRequest(requestId, input.Payment, input.CallbackAddress, input.MethodName, input.CancelExpiration);
             var currentRoundCount = State.AnswerCounter[requestId];
             var answer = State.DetailAnswers[requestId].RoundAnswers[currentRoundCount];
-            int thresholdResponses = State.ThresholdResponses.Value;
+            int thresholdResponses = State.ConfirmThreshold.Value;
             Assert(answer.HashDataResponses < thresholdResponses,
                 $"Enough hash data for request {requestId}");
             VerifyNode(requestId, Context.Sender);
@@ -132,7 +318,7 @@ namespace AElf.Contracts.OracleContract
             State.DetailAnswers[requestId].RoundAnswers[currentRoundCount] = answer;
             if (answer.HashDataResponses == thresholdResponses)
             {
-                Context.Fire(new GetEnoughData
+                Context.Fire(new SufficientDataCollected
                 {
                     RequestId = requestId
                 });
@@ -147,7 +333,7 @@ namespace AElf.Contracts.OracleContract
             VerifyRequest(requestId, input.Payment, input.CallbackAddress, input.MethodName, input.CancelExpiration);
             var currentRoundCount = State.AnswerCounter[requestId];
             var answers = State.DetailAnswers[requestId].RoundAnswers[currentRoundCount];
-            Assert(answers.HashDataResponses == State.ThresholdResponses.Value,
+            Assert(answers.HashDataResponses == State.ConfirmThreshold.Value,
                 $"Not enough hash data received for request {requestId}");
             VerifyNode(requestId, Context.Sender);
             var allNodeRealData = answers.Responses;
@@ -164,7 +350,7 @@ namespace AElf.Contracts.OracleContract
             // update statistic information
             AddQueryCount(Context.Sender);
 
-            if (answers.DataWithSaltResponses != State.ThresholdResponses.Value) return new Empty();
+            if (answers.DataWithSaltResponses != State.ConfirmThreshold.Value) return new Empty();
             var aggregatorAddress = State.Commitments[requestId].Aggregator;
             if (aggregatorAddress != null)
             {
@@ -191,6 +377,7 @@ namespace AElf.Contracts.OracleContract
                 {
                     Context.SendInline(input.CallbackAddress, input.MethodName, chooseData);
                 }
+
                 UpdateRoundData(requestId, currentRoundCount, chooseData);
                 ClearRequestInfo(requestId);
                 return new Empty();
@@ -255,7 +442,7 @@ namespace AElf.Contracts.OracleContract
         {
             var groupData = allData.GroupBy(x => x.RealData).ToList();
             var maxCount = groupData.Max(x => x.Count());
-            if (maxCount < State.ThresholdToUpdateData.Value)
+            if (maxCount < State.AgreeThreshold.Value)
             {
                 chooseData = null;
                 return false;
@@ -269,12 +456,13 @@ namespace AElf.Contracts.OracleContract
                 statisticInfo.ValidCount = statisticInfo.ValidCount.Add(1);
                 State.NodeStatistic[chooseNode.Node] = statisticInfo;
             }
+
             return true;
         }
 
         private void DealQuestionableQuery(Hash requestId, long roundId, IList<NodeWithDetailData> allDataList)
         {
-            var requestQuestionableInfo = State.QuestionableInfo[requestId]?? new RequestQuestionableQueryInfo();
+            var requestQuestionableInfo = State.QuestionableInfo[requestId] ?? new RequestQuestionableQueryInfo();
             requestQuestionableInfo.QuestionableQueryInformation[roundId] = new QuestionableQueryInfo
             {
                 UpdateTime = Context.CurrentBlockTime
@@ -339,6 +527,7 @@ namespace AElf.Contracts.OracleContract
             {
                 return;
             }
+
             State.TokenContract.Transfer.Send(new TransferInput
             {
                 To = user,
@@ -351,10 +540,12 @@ namespace AElf.Contracts.OracleContract
 
         private void InitializeContractReferences()
         {
-            State.TokenContract.Value = Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
-            State.ParliamentContract.Value = Context.GetContractAddressByName(SmartContractConstants.ParliamentContractSystemName);
+            State.TokenContract.Value =
+                Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
+            State.ParliamentContract.Value =
+                Context.GetContractAddressByName(SmartContractConstants.ParliamentContractSystemName);
         }
-        
+
         private void CreateToken()
         {
             var defaultParliament = State.ParliamentContract.GetDefaultOrganizationAddress.Call(new Empty());

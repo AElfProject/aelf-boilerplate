@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using AElf.CSharp.Core;
 using AElf.Sdk.CSharp;
 using AElf.Standards.ACS13;
 using AElf.Types;
@@ -34,14 +36,6 @@ namespace AElf.Contracts.OracleContract
             }
         }
 
-        private Hash GenerateRequestId(Address sender, long nonce)
-        {
-            var requestId = HashHelper.ComputeFrom(sender);
-            var nonceHash = HashHelper.ComputeFrom(nonce);
-            requestId = HashHelper.ConcatAndCompute(requestId, nonceHash);
-            return requestId;
-        }
-
         private Hash GenerateParamHash(long payment, Address callbackAddress, string methodName,
             Timestamp expiration)
         {
@@ -56,6 +50,28 @@ namespace AElf.Contracts.OracleContract
             var expirationHash = HashHelper.ComputeFrom(expiration.ToBytesValue());
             paramsHash = HashHelper.ConcatAndCompute(paramsHash, expirationHash);
             return paramsHash;
+        }
+
+        private Hash ComputeQueryHash(CallbackInfo callbackInfo, params string[] queryParameters)
+        {
+            var queryHash = HashHelper.ComputeFrom(callbackInfo);
+            foreach (var parameter in queryParameters)
+            {
+                var parameterHash = HashHelper.ComputeFrom(parameter);
+                queryHash = HashHelper.ConcatAndCompute(queryHash, parameterHash);
+            }
+
+            return queryHash;
+        }
+
+        private int GetCommitStageNodeCountThreshold(int nodeCount)
+        {
+            return Math.Max(nodeCount.Mul(2).Div(3).Add(1), State.ConfirmThreshold.Value);
+        }
+        
+        private int GetRevealStageNodeCountThreshold(int nodeCount)
+        {
+            return Math.Max(nodeCount.Div(3).Add(1), State.AgreeThreshold.Value);
         }
 
         private void VerifyHashDataWithSalt(Hash savedHash, ByteString rawData, string salt)
@@ -86,7 +102,7 @@ namespace AElf.Contracts.OracleContract
         {
             var availableNodes = State.AvailableNodes.Value;
             var currentAvailableNodeCount = availableNodes.NodeList.Count(x => !State.QuestionableNodes[x]);
-            State.IsAvailableNodesEnough.Value = currentAvailableNodeCount >= State.MinimumAvailableNodesCount.Value;
+            State.IsAvailableNodesEnough.Value = currentAvailableNodeCount >= State.MinimumDesignatedNodeCount.Value;
         }
     }
 }
