@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "aelf/options.proto";
+import "aelf/core.proto";
+import "acs13.proto";
+
+option csharp_namespace = "AElf.Contracts.IntegerAggregatorContract";
+
+service IntegerAggregatorContract {
+    option (aelf.csharp_state) = "AElf.Contracts.IntegerAggregatorContract.IntegerAggregatorContractState";
+    option (aelf.base) = "acs13.proto";
+}

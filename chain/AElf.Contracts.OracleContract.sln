@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.AggregatorCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.UserContract", "contract\AElf.Contracts.UserContract\AElf.Contracts.UserContract.csproj", "{1A8F790C-4172-426C-83E3-2B49589782AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.IntegerAggregatorContract", "contract\AElf.Contracts.IntegerAggregatorContract\AElf.Contracts.IntegerAggregatorContract.csproj", "{E36098E9-74EF-4FC0-B1FA-740FB77D029E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +80,10 @@ Global
 		{1A8F790C-4172-426C-83E3-2B49589782AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A8F790C-4172-426C-83E3-2B49589782AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A8F790C-4172-426C-83E3-2B49589782AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E36098E9-74EF-4FC0-B1FA-740FB77D029E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E36098E9-74EF-4FC0-B1FA-740FB77D029E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E36098E9-74EF-4FC0-B1FA-740FB77D029E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E36098E9-74EF-4FC0-B1FA-740FB77D029E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,6 +99,7 @@ Global
 		{DCC207EA-842A-4B54-858B-295CAA8947D5} = {21D85A91-5BB8-4912-8107-49435A461AAC}
 		{BC3485FC-1B31-46E9-8984-A23007F8BB6F} = {5C980166-C987-470D-AEE0-3858A170A903}
 		{1A8F790C-4172-426C-83E3-2B49589782AB} = {5C980166-C987-470D-AEE0-3858A170A903}
+		{E36098E9-74EF-4FC0-B1FA-740FB77D029E} = {5C980166-C987-470D-AEE0-3858A170A903}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7426B41-E959-40E4-9ED8-ED8D9C50F133}

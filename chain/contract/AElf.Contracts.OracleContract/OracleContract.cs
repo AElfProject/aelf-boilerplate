@@ -544,6 +544,8 @@ namespace AElf.Contracts.OracleContract
                 Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
             State.ParliamentContract.Value =
                 Context.GetContractAddressByName(SmartContractConstants.ParliamentContractSystemName);
+            State.AssociationContract.Value =
+                Context.GetContractAddressByName(SmartContractConstants.AssociationContractSystemName);
         }
 
         private void CreateToken()

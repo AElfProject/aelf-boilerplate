@@ -7,7 +7,7 @@ namespace AElf.Contracts.AggregatorContract
     {
         public override Empty Initialize(Empty input)
         {
-            return base.Initialize(input);
+            return new Empty();
         }
     }
 }
