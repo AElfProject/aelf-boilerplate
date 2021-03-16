@@ -16,11 +16,14 @@
         <ContractReference Include="..\..\protobuf\token_contract.proto">
             <Link>Protobuf\Proto\token_contract.proto</Link>
         </ContractReference>
+        <ContractReference Include="..\..\protobuf\oracle_contract.proto">
+            <Link>Protobuf\Proto\oracle_contract.proto</Link>
+        </ContractReference>
     </ItemGroup>
 
     <ItemGroup>
-        <ContractCode Include="..\..\protobuf\aggregator_contract.proto">
-            <Link>Protobuf\Proto\aggregator_contract.proto</Link>
+        <ContractCode Include="..\..\protobuf\user_contract.proto">
+            <Link>Protobuf\Proto\user_contract.proto</Link>
         </ContractCode>
     </ItemGroup>
 </Project>
