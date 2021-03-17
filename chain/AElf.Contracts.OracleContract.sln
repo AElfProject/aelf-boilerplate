@@ -22,17 +22,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.TestBase",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.SystemTransactionGenerator", "src\AElf.Boilerplate.SystemTransactionGenerator\AElf.Boilerplate.SystemTransactionGenerator.csproj", "{217599C5-2CF0-411E-97B5-5657739CEE5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.OracleContract", "contract\AElf.Contracts.OracleContract\AElf.Contracts.OracleContract.csproj", "{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.Oracle", "contract\AElf.Contracts.Oracle\AElf.Contracts.Oracle.csproj", "{AC06E580-EFC8-4D3F-BA4A-B2D2D1F65B9F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.OracleContract.Tests", "test\AElf.Contracts.OracleContract.Tests\AElf.Contracts.OracleContract.Tests.csproj", "{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AElf.Contracts.Oracle.Tests", "test\AElf.Contracts.Oracle.Tests\AElf.Contracts.Oracle.Tests.csproj", "{3631B538-C617-4FCE-9C9B-1D1B5F290A7F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.ContractPatcher", "src\AElf.Boilerplate.ContractPatcher\AElf.Boilerplate.ContractPatcher.csproj", "{DCC207EA-842A-4B54-858B-295CAA8947D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.AggregatorContract", "contract\AElf.Contracts.AggregatorContract\AElf.Contracts.AggregatorContract.csproj", "{BC3485FC-1B31-46E9-8984-A23007F8BB6F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.Report", "contract\AElf.Contracts.Report\AElf.Contracts.Report.csproj", "{BC3485FC-1B31-46E9-8984-A23007F8BB6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.UserContract", "contract\AElf.Contracts.UserContract\AElf.Contracts.UserContract.csproj", "{1A8F790C-4172-426C-83E3-2B49589782AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.OracleUser", "contract\AElf.Contracts.OracleUser\AElf.Contracts.OracleUser.csproj", "{1A8F790C-4172-426C-83E3-2B49589782AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.IntegerAggregatorContract", "contract\AElf.Contracts.IntegerAggregatorContract\AElf.Contracts.IntegerAggregatorContract.csproj", "{E36098E9-74EF-4FC0-B1FA-740FB77D029E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.IntegerAggregator", "contract\AElf.Contracts.IntegerAggregator\AElf.Contracts.IntegerAggregator.csproj", "{E36098E9-74EF-4FC0-B1FA-740FB77D029E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

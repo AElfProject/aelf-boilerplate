@@ -4,9 +4,9 @@ import "aelf/options.proto";
 import "aelf/core.proto";
 import "acs13.proto";
 
-option csharp_namespace = "AElf.Contracts.IntegerAggregatorContract";
+option csharp_namespace = "AElf.Contracts.IntegerAggregator";
 
 service IntegerAggregatorContract {
-    option (aelf.csharp_state) = "AElf.Contracts.IntegerAggregatorContract.IntegerAggregatorContractState";
+    option (aelf.csharp_state) = "AElf.Contracts.IntegerAggregator.IntegerAggregatorContractState";
     option (aelf.base) = "acs13.proto";
 }

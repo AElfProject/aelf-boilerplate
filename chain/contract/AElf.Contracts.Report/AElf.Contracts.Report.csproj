@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <!-- The root namespace -->
+        <!-- Mark this project as a contract -->
+        <IsContract>true</IsContract>
+        <RootNamespace>AElf.Contracts.Report</RootNamespace>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ContractReference Include="..\..\protobuf\token_contract.proto">
+            <Link>Protobuf\Proto\token_contract.proto</Link>
+        </ContractReference>
+        <ContractReference Include="..\..\protobuf\oracle_contract.proto">
+            <Link>Protobuf\Proto\oracle_contract.proto</Link>
+        </ContractReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ContractCode Include="..\..\protobuf\report_contract.proto">
+            <Link>Protobuf\Proto\report_contract.proto</Link>
+        </ContractCode>
+    </ItemGroup>
+</Project>

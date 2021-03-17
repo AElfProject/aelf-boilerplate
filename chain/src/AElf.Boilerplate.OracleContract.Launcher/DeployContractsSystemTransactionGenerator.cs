@@ -49,7 +49,7 @@ namespace AElf.Boilerplate.OracleContract.Launcher
         private byte[] GetContractCodes()
         {
             return ContractsDeployer.GetContractCodes<DeployContractsSystemTransactionGenerator>(_contractOptions
-                .GenesisContractDir)["AElf.Contracts.OracleContract"];
+                .GenesisContractDir)["AElf.Contracts.Oracle"];
         }
     }
 }

@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+// some core imports for aelf chain types
+import "aelf/core.proto";
+import "aelf/options.proto";
+
+// import for using the google.protobuf.Empty type.
+import "google/protobuf/empty.proto";
+
+// import for using the google.protobuf.Timestamp type
+import "google/protobuf/timestamp.proto";
+
+// the name of the C# namespace in which the contract code will be,
+// generated code will also be in this namespace.
+option csharp_namespace = "AElf.Contracts.Report";
+
+// the contract definition: a gRPC service definition.
+service ReportContract {
+  option (aelf.csharp_state) = "AElf.Contracts.Report.ReportContractState";
+
+  rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  
+  rpc RegisterAggregation (RegisterAggregationInput) returns (google.protobuf.Empty) {}
+  
+  rpc CancelAggregation (CancelAggregationInput) returns (google.protobuf.Empty) {}
+
+  // Notary things.
+
+  rpc ApplyNotary (ApplyNotaryInput) returns (google.protobuf.Empty) {}
+
+  rpc QuitNotary (QuitNotaryInput) returns (google.protobuf.Empty) {}
+
+  rpc VoteNotary (VoteNotaryInput) returns (google.protobuf.Empty) {}
+
+}
+
+message RegisterAggregationInput {
+}
+
+message CancelAggregationInput {
+}
+
+message ApplyNotaryInput {
+}
+
+message QuitNotaryInput {
+}
+
+message VoteNotaryInput {
+}

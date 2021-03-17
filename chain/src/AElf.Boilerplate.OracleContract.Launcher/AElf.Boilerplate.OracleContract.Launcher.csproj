@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\contract\AElf.Contracts.OracleContract\AElf.Contracts.OracleContract.csproj">
+        <ProjectReference Include="..\..\contract\AElf.Contracts.Oracle\AElf.Contracts.Oracle.csproj">
           <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
         </ProjectReference>
         <ProjectReference Include="..\AElf.Boilerplate.MainChain\AElf.Boilerplate.MainChain.csproj" />

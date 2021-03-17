@@ -12,12 +12,11 @@ import "google/protobuf/timestamp.proto";
 
 // the name of the C# namespace in which the contract code will be,
 // generated code will also be in this namespace.
-option csharp_namespace = "AElf.Contracts.OracleContract";
+option csharp_namespace = "AElf.Contracts.Oracle";
 
 // the contract definition: a gRPC service definition.
 service OracleContract {
-
-  option (aelf.csharp_state) = "AElf.Contracts.OracleContract.OracleContractState";
+  option (aelf.csharp_state) = "AElf.Contracts.Oracle.OracleContractState";
 
   rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {}
 
