@@ -3,7 +3,7 @@ using AElf.Types;
 
 namespace AElf.Boilerplate.TestBase
 {
-    public class UserSmartContractAddressNameProvider
+    public class OracleUserSmartContractAddressNameProvider
     {
         public static readonly Hash Name = HashHelper.ComputeFrom("AElf.ContractNames.User");
 

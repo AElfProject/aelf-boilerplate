@@ -16,7 +16,7 @@ namespace AElf.Contracts.Oracle
 {
     public partial class OracleContractTests : OracleContractTestBase
     {
-        private async Task InitializeOracleContract()
+        private async Task InitializeOracleContractAsync()
         {
             await OracleContractStub.Initialize.SendAsync(new InitializeInput
             {
@@ -29,7 +29,7 @@ namespace AElf.Contracts.Oracle
             });
         }
 
-        private async Task TransferTokenOwner()
+        private async Task TransferTokenOwnerAsync()
         {
             var defaultParliament = await GetDefaultParliament();
             await DefaultParliamentProposeAndRelease(new CreateProposalInput
@@ -95,8 +95,8 @@ namespace AElf.Contracts.Oracle
         [Fact]
         private async Task<RequestCreated> CreateRequest_Success_Test()
         {
-            await InitializeOracleContract();
-            await TransferTokenOwner();
+            await InitializeOracleContractAsync();
+            await TransferTokenOwnerAsync();
             await CreateOracleNode(DefaultMinimumAvailableNodesCount);
             var ret = await OracleContractStub.CreateRequest.SendAsync(new CreateRequestInput
             {

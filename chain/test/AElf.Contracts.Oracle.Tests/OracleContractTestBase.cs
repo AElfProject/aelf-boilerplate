@@ -26,9 +26,10 @@ namespace AElf.Contracts.Oracle
         internal AssociationContractContainer.AssociationContractStub AssociationContractStub { get; set; }
         internal OracleUserContractContainer.OracleUserContractStub OracleUserContractStub { get; set; }
         internal ReportContractContainer.ReportContractStub ReportContractStub { get; set; }
+        internal IntegerAggregatorContractContainer.IntegerAggregatorContractStub IntegerAggregatorContractStub { get; set; }
 
         protected Address OracleUserContractAddress =>
-            SystemContractAddresses[UserSmartContractAddressNameProvider.Name];
+            SystemContractAddresses[OracleUserSmartContractAddressNameProvider.Name];
 
         protected Address ReportContractAddress =>
             SystemContractAddresses[ReportSmartContractAddressNameProvider.Name];
@@ -43,6 +44,10 @@ namespace AElf.Contracts.Oracle
             OracleContractStub = GetOracleContractStub(keyPair);
             TokenContractStub = GetTokenContractStub(keyPair);
             ParliamentContractStub = GetParliamentContractStub(keyPair);
+            OracleUserContractStub = GetOracleUserContractStub(keyPair);
+            AssociationContractStub = GetAssociationContractStub(keyPair);
+            ReportContractStub = GetReportContractStub(keyPair);
+            IntegerAggregatorContractStub = GetIntegerAggregatorContractStub(keyPair);
             OracleNodes = new List<OracleContractContainer.OracleContractStub>();
         }
 

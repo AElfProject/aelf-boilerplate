@@ -21,6 +21,9 @@ namespace AElf.Boilerplate.TestBase
         {
             var list = base.GetDeployContractNameList();
             list.Add(DAppSmartContractAddressNameProvider.Name);
+            list.Add(OracleUserSmartContractAddressNameProvider.Name);
+            list.Add(IntegerAggregatorSmartContractAddressNameProvider.Name);
+            list.Add(ReportSmartContractAddressNameProvider.Name);
             return list;
         }
     }

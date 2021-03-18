@@ -73,5 +73,10 @@ namespace AElf.Contracts.Oracle
 
             return ret;
         }
+
+        public override QueryRecord GetQueryRecord(Hash input)
+        {
+            return State.QueryRecords[input];
+        }
     }
 }

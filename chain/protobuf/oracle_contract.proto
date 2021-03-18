@@ -24,7 +24,7 @@ service OracleContract {
 
   rpc CreateRequest (CreateRequestInput) returns (google.protobuf.Empty) {}
 
-  rpc Query (QueryInput) returns (google.protobuf.Empty) {}
+  rpc Query (QueryInput) returns (aelf.Hash) {}
   
   rpc Commit (CommitInput) returns (google.protobuf.Empty) {}
   
@@ -80,6 +80,10 @@ service OracleContract {
   }
 
   rpc GetAvailableAndQuestionableNode (google.protobuf.Empty) returns (WorkNodes){
+    option (aelf.is_view) = true;
+  }
+  
+  rpc GetQueryRecord (aelf.Hash) returns (QueryRecord){
     option (aelf.is_view) = true;
   }
 }

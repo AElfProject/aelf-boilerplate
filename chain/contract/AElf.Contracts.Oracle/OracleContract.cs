@@ -53,9 +53,9 @@ namespace AElf.Contracts.Oracle
             return new Empty();
         }
 
-        public override Empty Query(QueryInput input)
+        public override Hash Query(QueryInput input)
         {
-            var queryId = Context.GenerateId(Context.TransactionId);
+            var queryId = Context.GenerateId(HashHelper.ComputeFrom(input));
             var expirationTimestamp = Context.CurrentBlockTime.AddSeconds(State.ExpirationSeconds.Value);
 
             // Transfer tokens to Oracle Contract.
@@ -82,7 +82,7 @@ namespace AElf.Contracts.Oracle
 
             State.UserAddresses[queryId] = Context.Sender;
 
-            return new Empty();
+            return queryId;
         }
 
         private int GetDesignatedNodeListCount(AddressList inputDesignatedNodeList)

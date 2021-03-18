@@ -11,13 +11,19 @@ option csharp_namespace = "AElf.Contracts.OracleUser";
 service OracleUserContract {
   option (aelf.csharp_state) = "AElf.Contracts.OracleUser.OracleUserContractState";
 
-  rpc QueryTemperature (aelf.Address) returns (google.protobuf.Empty) {}
+  rpc QueryTemperature (QueryTemperatureInput) returns (aelf.Hash) {}
   
   rpc RecordTemperature (TemperatureRecord) returns (google.protobuf.Empty) {}
 
   rpc GetHistoryTemperatures (google.protobuf.Empty) returns (TemperatureRecordList) {
       option (aelf.is_view) = true;
   }
+}
+
+message QueryTemperatureInput {
+  aelf.Address oracle_contract_address = 1;
+  aelf.Address aggregator_contract_address = 2;
+  repeated aelf.Address designated_nodes = 3;
 }
 
 message TemperatureRecord {
