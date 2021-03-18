@@ -74,6 +74,7 @@ namespace AElf.Contracts.Oracle
 
             State.QueryRecords[queryId] = new QueryRecord
             {
+                QueryId = queryId,
                 QueryHash = ComputeQueryHash(input.CallbackInfo, input.UrlToQuery, input.AttributeToFetch),
                 AggregatorContractAddress = input.AggregatorContractAddress,
                 DesignatedNodeList = input.DesignatedNodeList,
@@ -85,17 +86,25 @@ namespace AElf.Contracts.Oracle
             return queryId;
         }
 
-        private int GetDesignatedNodeListCount(AddressList inputDesignatedNodeList)
+        private int GetDesignatedNodeListCount(AddressList designatedNodeList)
         {
-            var designatedNodeListCount = inputDesignatedNodeList.Value.Count;
-            if (designatedNodeListCount == 1)
-            {
-                var organization =
-                    State.AssociationContract.GetOrganization.Call(inputDesignatedNodeList.Value.First());
-                designatedNodeListCount = organization.OrganizationMemberList.OrganizationMembers.Count;
-            }
+            return GetDesignatedNodeList(designatedNodeList).Value.Count;
+        }
 
-            return designatedNodeListCount;
+        private AddressList GetDesignatedNodeList(AddressList designatedNodeList)
+        {
+            if (designatedNodeList.Value.Count != 1) return designatedNodeList;
+            var organization =
+                State.AssociationContract.GetOrganization.Call(designatedNodeList.Value.First());
+            designatedNodeList = new AddressList
+                {Value = {organization.OrganizationMemberList.OrganizationMembers}};
+            return designatedNodeList;
+        }
+
+        private AddressList GetDesignatedNodeList(Hash queryId)
+        {
+            var queryRecord = State.QueryRecords[queryId];
+            return queryRecord == null ? new AddressList() : GetDesignatedNodeList(queryRecord.DesignatedNodeList);
         }
 
         public override Empty Commit(CommitInput input)
@@ -172,7 +181,7 @@ namespace AElf.Contracts.Oracle
             State.HelpfulNodeListMap[input.QueryId] = helpfulNodeList;
 
             // Check commitment.
-            var dataHash = HashHelper.ComputeFrom(input.Data.ToArray());
+            var dataHash = HashHelper.ComputeFrom(input.Data.ToByteArray());
             Assert(HashHelper.ConcatAndCompute(dataHash, input.Salt) == commitment, "Incorrect commitment.");
 
             // Record data to result list.

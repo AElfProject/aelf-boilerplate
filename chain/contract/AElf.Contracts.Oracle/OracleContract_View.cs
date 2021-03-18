@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using AElf.CSharp.Core;
 using AElf.Standards.ACS13;
@@ -32,7 +33,7 @@ namespace AElf.Contracts.Oracle
 
         private LastUpdateAnswer GetAnswerByRound(GetAnswerByRoundInput input)
         {
-            return State.RoundLastAnswersInfo[input.RequestId].RoundAnswers[input.RoundId]?? new LastUpdateAnswer();
+            return State.RoundLastAnswersInfo[input.RequestId].RoundAnswers[input.RoundId] ?? new LastUpdateAnswer();
         }
 
         public override QuestionableQueryInfo GetQuestionableQuery(GetQuestionableQueryInput input)
@@ -68,6 +69,7 @@ namespace AElf.Contracts.Oracle
                     ret.QuestionableNodes.Add(node);
                     continue;
                 }
+
                 ret.AvailableNodes.Add(node);
             }
 
@@ -77,6 +79,21 @@ namespace AElf.Contracts.Oracle
         public override QueryRecord GetQueryRecord(Hash input)
         {
             return State.QueryRecords[input];
+        }
+
+        public override CommitmentMap GetCommitmentMap(Hash input)
+        {
+            var dict = new Dictionary<string, Hash>();
+            foreach (var address in GetDesignatedNodeList(input).Value)
+            {
+                var commitment = State.CommitmentMap[input][address];
+                if (commitment != null)
+                {
+                    dict.Add(address.Value.ToHex(), commitment);
+                }
+            }
+
+            return new CommitmentMap {Value = {dict}};
         }
     }
 }

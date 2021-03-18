@@ -9,6 +9,7 @@ using AElf.Kernel;
 using AElf.Standards.ACS3;
 using AElf.Types;
 using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using Shouldly;
 using Xunit;
 
@@ -63,10 +64,71 @@ namespace AElf.Contracts.Oracle
         }
 
         [Fact]
-        internal async Task CommitTest()
+        internal async Task<QueryRecord> CommitTest()
         {
             var queryRecord = await QueryTest();
+
+            await CommitTemperatures(queryRecord.QueryId, new List<string>
+            {
+                "10.1",
+                "10.2",
+                "10.3",
+                "10.4"
+            });
             
+            var newQueryRecord = await OracleContractStub.GetQueryRecord.CallAsync(queryRecord.QueryId);
+            newQueryRecord.IsSufficientCommitmentsCollected.ShouldBeTrue();
+
+            return newQueryRecord;
+        }
+
+        [Fact]
+        internal async Task RevealTest()
+        {
+            var queryRecord = await CommitTest();
+            
+            await RevealTemperatures(queryRecord.QueryId, new List<string>
+            {
+                "10.1",
+                "10.2",
+                "10.3",
+                "10.4"
+            });
+            
+            var newQueryRecord = await OracleContractStub.GetQueryRecord.CallAsync(queryRecord.QueryId);
+            newQueryRecord.IsSufficientDataCollected.ShouldBeTrue();
+            newQueryRecord.FinalResult.ShouldBe("10.25");
+        }
+
+        private async Task CommitTemperatures(Hash queryId, List<string> temperatures)
+        {
+            for (var i = 0; i < temperatures.Count; i++)
+            {
+                var temperature = temperatures[i];
+                await OracleNodeList[i].Commit.SendAsync(new CommitInput
+                {
+                    QueryId = queryId,
+                    Commitment = HashHelper.ConcatAndCompute(HashHelper.ComputeFrom(temperature),
+                        HashHelper.ComputeFrom($"Salt{i}"))
+                });
+
+                var commitmentMap = await OracleContractStub.GetCommitmentMap.CallAsync(queryId);
+                commitmentMap.Value.Count.ShouldBe(i + 1);
+            }
+        }
+        
+        private async Task RevealTemperatures(Hash queryId, List<string> temperatures)
+        {
+            for (var i = 0; i < temperatures.Count; i++)
+            {
+                var temperature = temperatures[i];
+                await OracleNodeList[i].Reveal.SendAsync(new RevealInput
+                {
+                    QueryId = queryId,
+                    Data = new StringValue {Value = temperature}.ToByteString(),
+                    Salt = HashHelper.ComputeFrom($"Salt{i}")
+                });
+            }
         }
 
         private Hash ComputeQueryId(Hash txId, Hash queryInputHash)

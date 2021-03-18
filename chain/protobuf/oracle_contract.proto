@@ -83,7 +83,11 @@ service OracleContract {
     option (aelf.is_view) = true;
   }
   
-  rpc GetQueryRecord (aelf.Hash) returns (QueryRecord){
+  rpc GetQueryRecord (aelf.Hash) returns (QueryRecord) {
+    option (aelf.is_view) = true;
+  }
+  
+  rpc GetCommitmentMap (aelf.Hash) returns (CommitmentMap) {
     option (aelf.is_view) = true;
   }
 }
@@ -142,9 +146,10 @@ message QueryRecord {
   google.protobuf.Timestamp expiration_timestamp = 4;
   bool is_sufficient_commitments_collected = 5;
   bool is_sufficient_data_collected = 6;
-  bytes final_result = 7;
+  string final_result = 7;
   int64 payment = 8;
   CallbackInfo callback_info = 9;
+  aelf.Hash query_id = 10;
 }
 
 message CommitInput {
@@ -156,6 +161,10 @@ message RevealInput {
   aelf.Hash query_id = 1;
   bytes data = 2;
   aelf.Hash salt = 3;
+}
+
+message CommitmentMap {
+  map<string, aelf.Hash> value = 1;
 }
 
 message SendHashDataInput{
@@ -331,5 +340,5 @@ message SufficientCommitmentsCollected {
 message QueryCompleted {
   option (aelf.is_event) = true;
   aelf.Hash query_id = 1;
-  bytes result = 2;
+  string result = 2;
 }

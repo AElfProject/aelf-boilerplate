@@ -11,7 +11,7 @@ option (aelf.identity) = "acs13";
 option csharp_namespace = "AElf.Standards.ACS13";
 
 service OracleAggregatorContract {
-  rpc Aggregate (AggregateInput) returns (google.protobuf.BytesValue) {
+  rpc Aggregate (AggregateInput) returns (google.protobuf.StringValue) {
   }
 
   rpc GetLastAnswer (GetLastAnswerInput) returns (Answer) {
