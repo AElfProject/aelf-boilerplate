@@ -28,6 +28,24 @@ namespace AElf.Contracts.TransferWrapperContract
             return new Empty();
         }
 
+        public override Empty ContractTransfer(ThroughContractTransferInput input)
+        {
+            if (State.TokenContract.Value == null)
+            {
+                State.TokenContract.Value =
+                    Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
+            }
+
+            State.TokenContract.Transfer.Send(new TransferInput
+            {
+                To = input.To,
+                Amount = input.Amount,
+                Symbol = input.Symbol,
+                Memo = input.Memo
+            });
+            return new Empty();
+        }
+
         public override ResourceInfo GetResourceInfo(Transaction txn)
         {
             var args = TransferInput.Parser.ParseFrom(txn.Params);

@@ -31,6 +31,9 @@ service TransferWrapperContract {
 
     rpc ThroughContractTransfer (ThroughContractTransferInput) returns (google.protobuf.Empty) {
     }
+
+    rpc ContractTransfer (ThroughContractTransferInput) returns (google.protobuf.Empty) {
+    }
 }
 
 message ThroughContractTransferInput {
