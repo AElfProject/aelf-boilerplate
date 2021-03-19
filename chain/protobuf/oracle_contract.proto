@@ -30,6 +30,8 @@ service OracleContract {
   
   rpc Reveal (RevealInput) returns (google.protobuf.Empty) {}
 
+  rpc CancelQuery (aelf.Hash) returns (google.protobuf.Empty) {}
+
   rpc SendHashData (SendHashDataInput) returns (google.protobuf.Empty) {}
 
   rpc SendDataWithSalt (SendDataWithSaltInput) returns (google.protobuf.Empty) {}
@@ -129,6 +131,7 @@ message QueryInput {
   string url_to_query = 5;
   string attribute_to_fetch = 6;
   int32 aggregate_threshold = 7;
+  aelf.Address query_manager = 8;
 }
 
 message CallbackInfo {
@@ -152,6 +155,10 @@ message QueryRecord {
   CallbackInfo callback_info = 9;
   aelf.Hash query_id = 10;
   int32 aggregate_threshold = 11;
+  aelf.Address query_manager = 12;
+  bool is_commit_stage_finished = 13;
+  int32 commitments_count = 14;
+  bool is_cancelled = 15;
 }
 
 message CommitInput {
@@ -342,10 +349,10 @@ message SufficientCommitmentsCollected {
 message CommitmentRevealed {
   option (aelf.is_event) = true;
   aelf.Hash query_id = 1;
-  aelf.Address oracle_node_address = 1;
-  aelf.Hash commitment = 2;
-  bytes data = 3;
-  aelf.Hash salt = 4;
+  aelf.Address oracle_node_address = 2;
+  aelf.Hash commitment = 3;
+  bytes data = 4;
+  aelf.Hash salt = 5;
 }
 
 message QueryCompleted {

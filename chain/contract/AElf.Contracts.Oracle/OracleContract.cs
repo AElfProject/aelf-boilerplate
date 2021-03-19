@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AElf.Contracts.MultiToken;
@@ -75,7 +76,7 @@ namespace AElf.Contracts.Oracle
             State.QueryRecords[queryId] = new QueryRecord
             {
                 QueryId = queryId,
-                QueryHash = ComputeQueryHash(input.CallbackInfo, input.UrlToQuery, input.AttributeToFetch),
+                QueryManager = input.QueryManager ?? Context.Sender,
                 AggregatorContractAddress = input.AggregatorContractAddress,
                 DesignatedNodeList = input.DesignatedNodeList,
                 ExpirationTimestamp = expirationTimestamp,
@@ -116,9 +117,8 @@ namespace AElf.Contracts.Oracle
         {
             var queryRecord = State.QueryRecords[input.QueryId];
 
-            // Confirm this query is in stage Commit.
-            Assert(!queryRecord.IsSufficientCommitmentsCollected,
-                "This query already collected sufficient commitments.");
+            // Confirm this query is still in Commit stage.
+            Assert(!queryRecord.IsCommitStageFinished, "Commit stage of this query is already finished.");
 
             // Permission check.
             var designatedNodeListCount = queryRecord.DesignatedNodeList.Value.Count;
@@ -149,7 +149,6 @@ namespace AElf.Contracts.Oracle
                 // Move to next stage: Reveal
                 queryRecord.IsSufficientCommitmentsCollected = true;
                 State.ResponseCount[input.QueryId] = 0;
-                State.QueryRecords[input.QueryId] = queryRecord;
 
                 Context.Fire(new SufficientCommitmentsCollected
                 {
@@ -161,6 +160,9 @@ namespace AElf.Contracts.Oracle
                 State.ResponseCount[input.QueryId] = updatedResponseCount;
             }
 
+            queryRecord.CommitmentsCount = queryRecord.CommitmentsCount.Add(1);
+            State.QueryRecords[input.QueryId] = queryRecord;
+
             return new Empty();
         }
 
@@ -169,8 +171,7 @@ namespace AElf.Contracts.Oracle
             var queryRecord = State.QueryRecords[input.QueryId];
 
             // Confirm this query is in stage Commit.
-            Assert(queryRecord.IsSufficientCommitmentsCollected,
-                "This query hasn't collected sufficient commitments.");
+            Assert(queryRecord.IsSufficientCommitmentsCollected, "This query hasn't collected sufficient commitments.");
 
             // Permission check.
             var commitment = State.CommitmentMap[input.QueryId][Context.Sender];
@@ -178,6 +179,15 @@ namespace AElf.Contracts.Oracle
             {
                 throw new AssertionException(
                     "No permission to reveal for this query. Sender hasn't submit commitment.");
+            }
+
+            if (!queryRecord.IsCommitStageFinished)
+            {
+                // Finish Commit stage anyway (because at least one oracle node revealed commitment after execution of this tx.)
+                queryRecord.IsCommitStageFinished = true;
+                // Maybe lessen the aggregate threshold.
+                queryRecord.AggregateThreshold = Math.Min(queryRecord.AggregateThreshold, queryRecord.CommitmentsCount);
+                State.QueryRecords[input.QueryId] = queryRecord;
             }
 
             var helpfulNodeList = State.HelpfulNodeListMap[input.QueryId] ?? new AddressList();
@@ -213,7 +223,6 @@ namespace AElf.Contracts.Oracle
 
             return new Empty();
         }
-        
 
         private void PayToNodesAndAggregateResults(QueryRecord queryRecord, AddressList helpfulNodeList,
             ResultList resultList)
@@ -312,6 +321,36 @@ namespace AElf.Contracts.Oracle
                 AttributeToFetch = input.AttributeToFetch,
                 Aggregator = aggregator
             });
+
+            return new Empty();
+        }
+
+        public override Empty CancelQuery(Hash input)
+        {
+            var queryRecord = State.QueryRecords[input];
+            if (queryRecord == null)
+            {
+                throw new AssertionException("Query not exists.");
+            }
+
+            Assert(queryRecord.QueryManager == Context.Sender, "No permission to cancel this query.");
+            Assert(queryRecord.ExpirationTimestamp <= Context.CurrentBlockTime, "Query not expired.");
+            Assert(!queryRecord.IsSufficientDataCollected && string.IsNullOrEmpty(queryRecord.FinalResult),
+                "Query already finished.");
+            Assert(!queryRecord.IsCancelled, "Query already cancelled.");
+
+            queryRecord.IsCancelled = true;
+
+            State.QueryRecords[input] = queryRecord;
+
+            // Return tokens to query manager.
+            Context.SendVirtualInline(queryRecord.QueryId, State.TokenContract.Value,
+                nameof(State.TokenContract.Transfer), new TransferInput
+                {
+                    To = queryRecord.QueryManager,
+                    Symbol = TokenSymbol,
+                    Amount = queryRecord.Payment
+                });
 
             return new Empty();
         }
