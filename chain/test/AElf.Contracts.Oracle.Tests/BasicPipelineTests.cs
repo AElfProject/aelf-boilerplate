@@ -86,16 +86,26 @@ namespace AElf.Contracts.Oracle
         internal async Task RevealTest()
         {
             var queryRecord = await CommitTest();
-            
+
+            await RevealTemperatures(queryRecord.QueryId, new List<string>
+            {
+                "10.1",
+                "10.2"
+            });
+ 
+            var newQueryRecord = await OracleContractStub.GetQueryRecord.CallAsync(queryRecord.QueryId);
+            newQueryRecord.IsSufficientDataCollected.ShouldBeTrue();
+            newQueryRecord.FinalResult.ShouldBe("10.15");
+
             await RevealTemperatures(queryRecord.QueryId, new List<string>
             {
                 "10.1",
                 "10.2",
                 "10.3",
                 "10.4"
-            });
+            }, 2);
             
-            var newQueryRecord = await OracleContractStub.GetQueryRecord.CallAsync(queryRecord.QueryId);
+            newQueryRecord = await OracleContractStub.GetQueryRecord.CallAsync(queryRecord.QueryId);
             newQueryRecord.IsSufficientDataCollected.ShouldBeTrue();
             newQueryRecord.FinalResult.ShouldBe("10.25");
         }
@@ -108,7 +118,8 @@ namespace AElf.Contracts.Oracle
                 await OracleNodeList[i].Commit.SendAsync(new CommitInput
                 {
                     QueryId = queryId,
-                    Commitment = HashHelper.ConcatAndCompute(HashHelper.ComputeFrom(temperature),
+                    Commitment = HashHelper.ConcatAndCompute(
+                        HashHelper.ComputeFrom(new StringValue {Value = temperature}),
                         HashHelper.ComputeFrom($"Salt{i}"))
                 });
 
@@ -117,9 +128,9 @@ namespace AElf.Contracts.Oracle
             }
         }
         
-        private async Task RevealTemperatures(Hash queryId, List<string> temperatures)
+        private async Task RevealTemperatures(Hash queryId, List<string> temperatures, int startIndex = 0)
         {
-            for (var i = 0; i < temperatures.Count; i++)
+            for (var i = startIndex; i < temperatures.Count; i++)
             {
                 var temperature = temperatures[i];
                 await OracleNodeList[i].Reveal.SendAsync(new RevealInput

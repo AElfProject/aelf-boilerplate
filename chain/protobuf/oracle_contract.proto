@@ -128,6 +128,7 @@ message QueryInput {
   AddressList designated_node_list = 4;// Will be association address if count is 1.
   string url_to_query = 5;
   string attribute_to_fetch = 6;
+  int32 aggregate_threshold = 7;
 }
 
 message CallbackInfo {
@@ -150,6 +151,7 @@ message QueryRecord {
   int64 payment = 8;
   CallbackInfo callback_info = 9;
   aelf.Hash query_id = 10;
+  int32 aggregate_threshold = 11;
 }
 
 message CommitInput {
@@ -335,6 +337,15 @@ message SufficientDataCollected {
 message SufficientCommitmentsCollected {
   option (aelf.is_event) = true;
   aelf.Hash query_id = 1;
+}
+
+message CommitmentRevealed {
+  option (aelf.is_event) = true;
+  aelf.Hash query_id = 1;
+  aelf.Address oracle_node_address = 1;
+  aelf.Hash commitment = 2;
+  bytes data = 3;
+  aelf.Hash salt = 4;
 }
 
 message QueryCompleted {

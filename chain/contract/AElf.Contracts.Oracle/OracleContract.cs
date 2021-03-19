@@ -78,7 +78,12 @@ namespace AElf.Contracts.Oracle
                 QueryHash = ComputeQueryHash(input.CallbackInfo, input.UrlToQuery, input.AttributeToFetch),
                 AggregatorContractAddress = input.AggregatorContractAddress,
                 DesignatedNodeList = input.DesignatedNodeList,
-                ExpirationTimestamp = expirationTimestamp
+                ExpirationTimestamp = expirationTimestamp,
+                CallbackInfo = input.CallbackInfo,
+                Payment = input.Payment,
+                AggregateThreshold = input.AggregateThreshold == 0
+                    ? GetRevealStageNodeCountThreshold(designatedNodeListCount)
+                    : input.AggregateThreshold
             };
 
             State.UserAddresses[queryId] = Context.Sender;
@@ -164,8 +169,8 @@ namespace AElf.Contracts.Oracle
             var queryRecord = State.QueryRecords[input.QueryId];
 
             // Confirm this query is in stage Commit.
-            Assert(queryRecord.IsSufficientCommitmentsCollected && !queryRecord.IsSufficientDataCollected,
-                "This query already collected sufficient results.");
+            Assert(queryRecord.IsSufficientCommitmentsCollected,
+                "This query hasn't collected sufficient commitments.");
 
             // Permission check.
             var commitment = State.CommitmentMap[input.QueryId][Context.Sender];
@@ -194,28 +199,41 @@ namespace AElf.Contracts.Oracle
             else
             {
                 resultList.Results.Add(input.Data);
-                resultList.Frequencies.Add(0);
+                resultList.Frequencies.Add(1);
             }
 
-            var designatedNodeListCount = GetDesignatedNodeListCount(queryRecord.DesignatedNodeList);
-            var helpfulNodeListCount = helpfulNodeList.Value.Count;
-            if (helpfulNodeListCount < GetRevealStageNodeCountThreshold(designatedNodeListCount)) return new Empty();
+            State.ResultListMap[input.QueryId] = resultList;
 
-            // Move to next stage: Aggregator.
-            queryRecord.IsSufficientDataCollected = true;
-            State.ResponseCount.Remove(input.QueryId);
+            if (helpfulNodeList.Value.Count >= queryRecord.AggregateThreshold)
+            {
+                // Move to next stage: Aggregator.
+                queryRecord.IsSufficientDataCollected = true;
+                PayToNodesAndAggregateResults(queryRecord, helpfulNodeList, resultList);
+            }
 
-            // Distributed rewards to helpful oracle nodes.
+            return new Empty();
+        }
+        
+
+        private void PayToNodesAndAggregateResults(QueryRecord queryRecord, AddressList helpfulNodeList,
+            ResultList resultList)
+        {
+            State.ResponseCount.Remove(queryRecord.QueryId);
+
+            // Distributed rewards to oracle nodes.
             foreach (var helpfulNode in helpfulNodeList.Value)
             {
-                var paymentToEachNode = queryRecord.Payment.Div(helpfulNodeListCount);
-                Context.SendVirtualInline(input.QueryId, State.TokenContract.Value,
-                    nameof(State.TokenContract.Transfer), new TransferInput
-                    {
-                        To = helpfulNode,
-                        Symbol = TokenSymbol,
-                        Amount = paymentToEachNode
-                    });
+                var paymentToEachNode = queryRecord.Payment.Div(helpfulNodeList.Value.Count);
+                if (paymentToEachNode > 0)
+                {
+                    Context.SendVirtualInline(queryRecord.QueryId, State.TokenContract.Value,
+                        nameof(State.TokenContract.Transfer), new TransferInput
+                        {
+                            To = helpfulNode,
+                            Symbol = TokenSymbol,
+                            Amount = paymentToEachNode
+                        });
+                }
             }
 
             // Call Aggregator plugin contract.
@@ -227,7 +245,8 @@ namespace AElf.Contracts.Oracle
             });
             queryRecord.FinalResult = finalResult.Value;
 
-            State.QueryRecords[input.QueryId] = queryRecord;
+            // Update FinalResult field.
+            State.QueryRecords[queryRecord.QueryId] = queryRecord;
 
             // Callback User Contract
             var callbackInfo = queryRecord.CallbackInfo;
@@ -235,11 +254,9 @@ namespace AElf.Contracts.Oracle
 
             Context.Fire(new QueryCompleted
             {
-                QueryId = input.QueryId,
+                QueryId = queryRecord.QueryId,
                 Result = finalResult.Value
             });
-
-            return new Empty();
         }
 
         public override Empty CreateRequest(CreateRequestInput input)
