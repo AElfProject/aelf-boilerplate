@@ -29,10 +29,17 @@ service TransferWrapperContract {
     option (aelf.csharp_state) = "AElf.Contracts.TransferWrapperContract.TransferWrapperContractState";
     option (aelf.base) = "acs2.proto";
 
+    rpc Initialize(aelf.Address) returns (google.protobuf.Empty){
+    }
+    
     rpc ThroughContractTransfer (ThroughContractTransferInput) returns (google.protobuf.Empty) {
     }
 
     rpc ContractTransfer (ThroughContractTransferInput) returns (google.protobuf.Empty) {
+    }
+    
+    rpc GetTokenAddress (google.protobuf.Empty) returns (aelf.Address){
+        option (aelf.is_view) = true;
     }
 }
 

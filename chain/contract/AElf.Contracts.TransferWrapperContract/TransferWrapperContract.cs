@@ -1,4 +1,4 @@
-using AElf.Contracts.MultiToken;
+using AElf.Contracts.BasicTokenContract;
 using AElf.Standards.ACS2;
 using AElf.Types;
 using Google.Protobuf;
@@ -14,10 +14,18 @@ namespace AElf.Contracts.TransferWrapperContract
     /// </summary>
     public class TransferWrapperContract : TransferWrapperContractContainer.TransferWrapperContractBase
     {
+        public override Empty Initialize(Address input)
+        {
+            Assert(State.TokenContract.Value == null, "Already initialized.");
+            State.TokenContract.Value = input;
+            return new Empty();
+        }
+
         public override Empty ThroughContractTransfer(ThroughContractTransferInput input)
         {
+            Assert(State.TokenContract.Value != null, "Please initialize first.");
             Context.SendVirtualInline(HashHelper.ComputeFrom(Context.Sender),
-                Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName),
+                State.TokenContract.Value,
                 nameof(State.TokenContract.Transfer), new TransferInput
                 {
                     To = input.To,
@@ -30,12 +38,7 @@ namespace AElf.Contracts.TransferWrapperContract
 
         public override Empty ContractTransfer(ThroughContractTransferInput input)
         {
-            if (State.TokenContract.Value == null)
-            {
-                State.TokenContract.Value =
-                    Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
-            }
-
+            Assert(State.TokenContract.Value != null, "Please initialize first.");
             State.TokenContract.Transfer.Send(new TransferInput
             {
                 To = input.To,
@@ -44,6 +47,11 @@ namespace AElf.Contracts.TransferWrapperContract
                 Memo = input.Memo
             });
             return new Empty();
+        }
+
+        public override Address GetTokenAddress(Empty input)
+        {
+            return State.TokenContract.Value;
         }
 
         public override ResourceInfo GetResourceInfo(Transaction txn)
@@ -58,8 +66,7 @@ namespace AElf.Contracts.TransferWrapperContract
                 },
                 ReadPaths =
                 {
-                    GetTokenContractPath("TokenInfos", args.Symbol),
-                    GetTokenContractPath("ChainPrimaryTokenSymbol")
+                    GetTokenContractPath("TokenInfos", args.Symbol)
                 }
             };
 
@@ -70,7 +77,7 @@ namespace AElf.Contracts.TransferWrapperContract
         {
             return new ScopedStatePath
             {
-                Address = Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName),
+                Address = State.TokenContract.Value,
                 Path = new StatePath
                 {
                     Parts =

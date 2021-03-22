@@ -1,4 +1,4 @@
-using AElf.Contracts.MultiToken;
+using AElf.Contracts.BasicTokenContract;
 using AElf.Sdk.CSharp.State;
 
 namespace AElf.Contracts.TransferWrapperContract
@@ -9,6 +9,6 @@ namespace AElf.Contracts.TransferWrapperContract
     public class TransferWrapperContractState : ContractState
     {
         // Mention: Never initialized the address.
-        internal TokenContractContainer.TokenContractReferenceState TokenContract { get; set; }
+        internal BasicTokenContractContainer.BasicTokenContractReferenceState TokenContract { get; set; }
     }
 }

@@ -1,0 +1,181 @@
+/* This files is part of the Hello World smart contract example that is included in Boilerplate.
+ * It is only the definition of the contract, implementation is located in the "contract" folder
+ * and tests are located in the "test" folder.
+ *
+ * You can use this as a basic template for new contracts.
+ * 
+ * When building Boilerplate or the contract project located in the "../contract/AElf.Contracts.TransferWrapperContract/" 
+ * protoc (the protobuf compiler) will be invoked and this file will produce a .c.cs file and .g.cs file, in the 
+ * "../contract/AElf.Contracts.TransferWrapperContract/Protobuf/Generated/" folder. 
+ */
+
+// the version of the language, use proto3 for contracts
+syntax = "proto3";
+
+// some core imports for aelf chain types
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "acs2.proto";
+
+// import for using the google.protobuf.Empty type.
+import "google/protobuf/empty.proto";
+
+// the name of the C# namespace in which the contract code will be,
+// generated code will also be in this namespace.
+option csharp_namespace = "AElf.Contracts.BasicTokenContract";
+
+// the contract definition: a gRPC service definition.
+service BasicTokenContract {
+    option (aelf.csharp_state) = "AElf.Contracts.BasicTokenContract.BasicTokenContractState";
+    option (aelf.base) = "acs2.proto";
+
+    rpc Create (CreateInput) returns (google.protobuf.Empty) {
+    }
+    rpc Issue (IssueInput) returns (google.protobuf.Empty) {
+    }
+    rpc Transfer (TransferInput) returns (google.protobuf.Empty) {
+    }
+    rpc TransferFrom (TransferFromInput) returns (google.protobuf.Empty) {
+    }
+    rpc Approve (ApproveInput) returns (google.protobuf.Empty) {
+    }
+    rpc UnApprove (UnApproveInput) returns (google.protobuf.Empty) {
+    }
+
+    // Query token information.
+    rpc GetTokenInfo (GetTokenInfoInput) returns (TokenInfo) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetBalance (GetBalanceInput) returns (GetBalanceOutput) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetAllowance (GetAllowanceInput) returns (GetAllowanceOutput) {
+        option (aelf.is_view) = true;
+    }
+}
+
+message TokenInfo {
+    string symbol = 1;
+    string token_name = 2;
+    int64 supply = 3;
+    int64 total_supply = 4;
+    int32 decimals = 5;
+    aelf.Address issuer = 6;
+    int32 issue_chain_id = 8;
+    int64 issued = 9;
+}
+
+message CreateInput {
+    string symbol = 1;
+    string token_name = 2;
+    int64 total_supply = 3;
+    int32 decimals = 4;
+    aelf.Address issuer = 5;
+    int32 issue_chain_id = 8;
+}
+
+message IssueInput {
+    string symbol = 1;
+    int64 amount = 2;
+    string memo = 3;
+    aelf.Address to = 4;
+}
+
+message TransferInput {
+    aelf.Address to = 1;
+    string symbol = 2;
+    int64 amount = 3;
+    string memo = 4;
+}
+
+message TransferFromInput {
+    aelf.Address from = 1;
+    aelf.Address to = 2;
+    string symbol = 3;
+    int64 amount = 4;
+    string memo = 5;
+}
+
+message ApproveInput {
+    aelf.Address spender = 1;
+    string symbol = 2;
+    int64 amount = 3;
+}
+
+message UnApproveInput {
+    aelf.Address spender = 1;
+    string symbol = 2;
+    int64 amount = 3;
+}
+
+message GetTokenInfoInput {
+    string symbol = 1;
+}
+
+message GetBalanceInput {
+    string symbol = 1;
+    aelf.Address owner = 2;
+}
+
+message GetBalanceOutput {
+    string symbol = 1;
+    aelf.Address owner = 2;
+    int64 balance = 3;
+}
+
+message GetAllowanceInput {
+    string symbol = 1;
+    aelf.Address owner = 2;
+    aelf.Address spender = 3;
+}
+
+message GetAllowanceOutput {
+    string symbol = 1;
+    aelf.Address owner = 2;
+    aelf.Address spender = 3;
+    int64 allowance = 4;
+}
+
+message Transferred {
+    option (aelf.is_event) = true;
+    aelf.Address from = 1 [(aelf.is_indexed) = true];
+    aelf.Address to = 2 [(aelf.is_indexed) = true];
+    string symbol = 3 [(aelf.is_indexed) = true];
+    int64 amount = 4;
+    string memo = 5;
+}
+
+message TokenCreated {
+    option (aelf.is_event) = true;
+    string symbol = 1;
+    string token_name = 2;
+    int64 total_supply = 3;
+    int32 decimals = 4;
+    aelf.Address issuer = 5;
+    bool is_burnable = 6;
+    int32 issue_chain_id = 7;
+}
+
+message Issued {
+    option (aelf.is_event) = true;
+    string symbol = 1;
+    int64 amount = 2;
+    string memo = 3;
+    aelf.Address to = 4;
+}
+
+message Approved {
+    option (aelf.is_event) = true;
+    aelf.Address owner = 1 [(aelf.is_indexed) = true];
+    aelf.Address spender = 2 [(aelf.is_indexed) = true];
+    string symbol = 3 [(aelf.is_indexed) = true];
+    int64 amount = 4;
+}
+
+message UnApproved {
+    option (aelf.is_event) = true;
+    aelf.Address owner = 1 [(aelf.is_indexed) = true];
+    aelf.Address spender = 2 [(aelf.is_indexed) = true];
+    string symbol = 3 [(aelf.is_indexed) = true];
+    int64 amount = 4;
+}
