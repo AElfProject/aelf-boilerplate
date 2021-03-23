@@ -6,6 +6,7 @@ import "acs13.proto";
 
 option csharp_namespace = "AElf.Contracts.IntegerAggregator";
 
+// StringValue -> StringValue
 service IntegerAggregatorContract {
     option (aelf.csharp_state) = "AElf.Contracts.IntegerAggregator.IntegerAggregatorContractState";
     option (aelf.base) = "acs13.proto";

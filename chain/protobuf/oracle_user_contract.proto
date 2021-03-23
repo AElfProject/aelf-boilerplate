@@ -2,9 +2,9 @@ syntax = "proto3";
 
 import "aelf/core.proto";
 import "aelf/options.proto";
-
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
+import "callback_input.proto";
 
 option csharp_namespace = "AElf.Contracts.OracleUser";
 
@@ -13,7 +13,7 @@ service OracleUserContract {
 
   rpc QueryTemperature (QueryTemperatureInput) returns (aelf.Hash) {}
   
-  rpc RecordTemperature (TemperatureRecord) returns (google.protobuf.Empty) {}
+  rpc RecordTemperature (CallbackInput) returns (google.protobuf.Empty) {}
 
   rpc GetHistoryTemperatures (google.protobuf.Empty) returns (TemperatureRecordList) {
       option (aelf.is_view) = true;

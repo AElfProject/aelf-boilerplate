@@ -17,6 +17,9 @@
         <ContractMessage Include="..\..\protobuf\acs3.proto">
             <Link>Protobuf\Proto\acs3.proto</Link>
         </ContractMessage>
+        <CommonMessage Include="..\..\protobuf\callback_input.proto">
+            <Link>Protobuf\Proto\callback_input.proto</Link>
+        </CommonMessage>
     </ItemGroup>
 
     <ItemGroup>

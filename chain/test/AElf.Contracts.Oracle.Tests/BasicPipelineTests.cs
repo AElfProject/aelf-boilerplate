@@ -95,7 +95,9 @@ namespace AElf.Contracts.Oracle
  
             var newQueryRecord = await OracleContractStub.GetQueryRecord.CallAsync(queryRecord.QueryId);
             newQueryRecord.IsSufficientDataCollected.ShouldBeTrue();
-            newQueryRecord.FinalResult.ShouldBe("10.15");
+            var result = new StringValue();
+            result.MergeFrom(newQueryRecord.FinalResult);
+            result.Value.ShouldBe("10.15");
 
             await RevealTemperatures(queryRecord.QueryId, new List<string>
             {
@@ -107,7 +109,9 @@ namespace AElf.Contracts.Oracle
             
             newQueryRecord = await OracleContractStub.GetQueryRecord.CallAsync(queryRecord.QueryId);
             newQueryRecord.IsSufficientDataCollected.ShouldBeTrue();
-            newQueryRecord.FinalResult.ShouldBe("10.25");
+            result = new StringValue();
+            result.MergeFrom(newQueryRecord.FinalResult);
+            result.Value.ShouldBe("10.25");
         }
 
         private async Task CommitTemperatures(Hash queryId, List<string> temperatures)

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using AElf.Contracts.MultiToken;
 using AElf.CSharp.Core;
@@ -7,7 +6,6 @@ using AElf.CSharp.Core.Extension;
 using AElf.Sdk.CSharp;
 using AElf.Standards.ACS13;
 using AElf.Types;
-using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.Oracle
@@ -57,7 +55,7 @@ namespace AElf.Contracts.Oracle
             // Transfer tokens to Oracle Contract.
             State.TokenContract.TransferFrom.Send(new TransferFromInput
             {
-                From = Context.Sender,
+                From = input.QueryManager,
                 To = Context.ConvertVirtualAddressToContractAddress(queryId),
                 Amount = input.Payment,
                 Symbol = TokenSymbol
@@ -254,7 +252,11 @@ namespace AElf.Contracts.Oracle
 
             // Callback User Contract
             var callbackInfo = queryRecord.CallbackInfo;
-            Context.SendInline(callbackInfo.ContractAddress, callbackInfo.MethodName, finalResult);
+            Context.SendInline(callbackInfo.ContractAddress, callbackInfo.MethodName, new CallbackInput
+            {
+                QueryId = queryRecord.QueryId,
+                Result = finalResult.Value
+            });
 
             Context.Fire(new QueryCompleted
             {
@@ -273,7 +275,7 @@ namespace AElf.Contracts.Oracle
 
             Assert(queryRecord.QueryManager == Context.Sender, "No permission to cancel this query.");
             Assert(queryRecord.ExpirationTimestamp <= Context.CurrentBlockTime, "Query not expired.");
-            Assert(!queryRecord.IsSufficientDataCollected && string.IsNullOrEmpty(queryRecord.FinalResult),
+            Assert(!queryRecord.IsSufficientDataCollected && queryRecord.FinalResult.IsNullOrEmpty(),
                 "Query already finished.");
             Assert(!queryRecord.IsCancelled, "Query already cancelled.");
 

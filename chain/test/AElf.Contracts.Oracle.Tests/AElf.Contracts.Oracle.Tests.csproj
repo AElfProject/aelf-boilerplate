@@ -35,6 +35,9 @@
     <ContractMessage Include="..\..\protobuf\acs1.proto">
       <Link>Protobuf\Proto\acs1.proto</Link>
     </ContractMessage>
+    <CommonMessage Include="..\..\protobuf\callback_input.proto">
+      <Link>Protobuf\Proto\callback_input.proto</Link>
+    </CommonMessage>
   </ItemGroup>
   <ItemGroup>
     <ContractStub Include="..\..\protobuf\oracle_contract.proto">

@@ -1,24 +1,19 @@
 syntax = "proto3";
 
-// some core imports for aelf chain types
 import "aelf/core.proto";
 import "aelf/options.proto";
-
-// import for using the google.protobuf.Empty type.
 import "google/protobuf/empty.proto";
-
-// import for using the google.protobuf.Timestamp type
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "callback_input.proto";
 
-// the name of the C# namespace in which the contract code will be,
-// generated code will also be in this namespace.
 option csharp_namespace = "AElf.Contracts.Report";
 
 // the contract definition: a gRPC service definition.
 service ReportContract {
     option (aelf.csharp_state) = "AElf.Contracts.Report.ReportContractState";
 
-    rpc Initialize (aelf.Address) returns (google.protobuf.Empty) {}
+    rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {}
   
     rpc QueryOracle (QueryOracleInput) returns (google.protobuf.Empty) {}
   
@@ -26,7 +21,7 @@ service ReportContract {
   
     rpc CommitSignature (CommitSignatureInput) returns (google.protobuf.Empty) {}
   
-    rpc AddQueryToReport (aelf.Hash) returns (google.protobuf.Empty) {}
+    rpc AppendQueryToReport (CallbackInput) returns (google.protobuf.Empty) {}
 
     // Notary management.
 
@@ -44,15 +39,19 @@ service ReportContract {
     }
 }
 
+message InitializeInput {
+    aelf.Address token_contract_address = 1;
+    int64 report_fee = 2;
+}
+
 message QueryOracleInput {
     int64 payment = 1;// Maximum for this query option.
-    CallbackInfo callback_info = 2;
-    aelf.Address aggregator_contract_address = 3;
-    AddressList designated_node_list = 4;// Will be association address if count is 1.
-    string url_to_query = 5;
-    string attribute_to_fetch = 6;
-    int32 aggregate_threshold = 7;
-    aelf.Address query_manager = 8;
+    aelf.Address aggregator_contract_address = 2;
+    repeated aelf.Address designated_nodes = 3;
+    string url_to_query = 4;
+    string attribute_to_fetch = 5;
+    int32 aggregate_threshold = 6;
+    aelf.Address query_manager = 7;
 }
 
 message CommitSignatureInput {
@@ -71,4 +70,12 @@ message VoteNotaryInput {
 
 message Report {
     
+}
+
+// Events
+
+message ReportCreated {
+    option (aelf.is_event) = true;
+    aelf.Hash report_id = 1;
+    Report report = 2;
 }

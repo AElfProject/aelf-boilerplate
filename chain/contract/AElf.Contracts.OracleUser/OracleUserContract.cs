@@ -2,6 +2,7 @@ using AElf.Contracts.MultiToken;
 using AElf.Contracts.Oracle;
 using AElf.Sdk.CSharp;
 using AElf.Types;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.OracleUser
@@ -12,7 +13,7 @@ namespace AElf.Contracts.OracleUser
         {
             State.OracleContract.Value = input.OracleContractAddress;
 
-            var payment = 10_00000000;
+            const int payment = 10_00000000;
             if (State.TokenContract.Value == null)
             {
                 State.TokenContract.Value =
@@ -23,7 +24,7 @@ namespace AElf.Contracts.OracleUser
             {
                 Spender = State.OracleContract.Value,
                 Amount = payment,
-                Symbol = "AELINK"
+                Symbol = State.OracleContract.GetOracleTokenSymbol.Call(new Empty()).Value
             });
 
             var queryInput = new QueryInput
@@ -40,14 +41,22 @@ namespace AElf.Contracts.OracleUser
                 Payment = payment
             };
             State.OracleContract.Query.Send(queryInput);
-            return HashHelper.ComputeFrom(queryInput);
+
+            var queryIdFromHash = HashHelper.ComputeFrom(queryInput);
+            var queryId = Context.GenerateId(State.OracleContract.Value, queryIdFromHash);
+
+            State.QueryIdMap[queryId] = true;
+            return queryId;
         }
 
-        public override Empty RecordTemperature(TemperatureRecord input)
+        public override Empty RecordTemperature(CallbackInput input)
         {
             Assert(Context.Sender == State.OracleContract.Value, "No permission.");
+            Assert(State.QueryIdMap[input.QueryId], "Query doesn't exist.");
+            var temperatureRecord = new TemperatureRecord();
+            temperatureRecord.MergeFrom(input.Result);
             var currentList = State.TemperatureRecordList.Value ?? new TemperatureRecordList();
-            currentList.Value.Add(input);
+            currentList.Value.Add(temperatureRecord);
             State.TemperatureRecordList.Value = currentList;
             return new Empty();
         }

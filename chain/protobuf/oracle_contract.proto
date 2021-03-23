@@ -83,7 +83,7 @@ message QueryRecord {
   google.protobuf.Timestamp expiration_timestamp = 4;
   bool is_sufficient_commitments_collected = 5;
   bool is_sufficient_data_collected = 6;
-  string final_result = 7;
+  bytes final_result = 7;
   int64 payment = 8;
   CallbackInfo callback_info = 9;
   aelf.Hash query_id = 10;
@@ -162,5 +162,5 @@ message CommitmentRevealed {
 message QueryCompleted {
   option (aelf.is_event) = true;
   aelf.Hash query_id = 1;
-  string result = 2;
+  bytes result = 2;
 }
