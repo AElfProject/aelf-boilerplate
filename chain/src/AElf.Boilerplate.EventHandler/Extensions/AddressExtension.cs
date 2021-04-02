@@ -1,6 +1,6 @@
 using AElf.Types;
 
-namespace AElf.Boilerplate.EventHandler.Extensions
+namespace AElf.Boilerplate.EventHandler
 {
     public static class AddressExtension
     {

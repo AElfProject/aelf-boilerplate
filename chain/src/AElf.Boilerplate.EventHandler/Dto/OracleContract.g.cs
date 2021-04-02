@@ -12,7 +12,7 @@ using scg = global::System.Collections.Generic;
 namespace AElf.Contracts.Oracle {
 
   /// <summary>Holder for reflection information generated from oracle_contract.proto</summary>
-  internal static partial class OracleContractReflection {
+  public static partial class OracleContractReflection {
 
     #region Descriptor
     /// <summary>File descriptor for oracle_contract.proto</summary>
@@ -67,41 +67,41 @@ namespace AElf.Contracts.Oracle {
             "RGF0YUxpc3QSGAoFdmFsdWUYASADKAsyCS5Ob2RlRGF0YRIzChxvYnNlcnZl",
             "cl9hc3NvY2lhdGlvbl9hZGRyZXNzGAIgASgLMg0uYWVsZi5BZGRyZXNzEhQK",
             "DHVybF90b19xdWVyeRgDIAEoCRIaChJhdHRyaWJ1dGVfdG9fZmV0Y2gYBCAB",
-            "KAkSDQoFdG9rZW4YBSABKAkivgIKDFF1ZXJ5Q3JlYXRlZBIPCgdwYXltZW50",
+            "KAkSDQoFdG9rZW4YBSABKAkizQIKDFF1ZXJ5Q3JlYXRlZBIPCgdwYXltZW50",
             "GAEgASgDEiQKDWNhbGxiYWNrX2luZm8YAiABKAsyDS5DYWxsYmFja0luZm8S",
             "MgobYWdncmVnYXRvcl9jb250cmFjdF9hZGRyZXNzGAMgASgLMg0uYWVsZi5B",
             "ZGRyZXNzEioKFGRlc2lnbmF0ZWRfbm9kZV9saXN0GAQgASgLMgwuQWRkcmVz",
             "c0xpc3QSFAoMdXJsX3RvX3F1ZXJ5GAUgASgJEhoKEmF0dHJpYnV0ZV90b19m",
             "ZXRjaBgGIAEoCRIbChNhZ2dyZWdhdGVfdGhyZXNob2xkGAcgASgFEiQKDXF1",
             "ZXJ5X21hbmFnZXIYCCABKAsyDS5hZWxmLkFkZHJlc3MSHAoIcXVlcnlfaWQY",
-            "CSABKAsyCi5hZWxmLkhhc2g6BKC7GAEiWQoOUXVlcnlDYW5jZWxsZWQSEAoI",
-            "cXVlcnlfaWQYASABKAwSLwoLY2FuY2VsX3RpbWUYAiABKAsyGi5nb29nbGUu",
-            "cHJvdG9idWYuVGltZXN0YW1wOgSguxgBIj8KF1N1ZmZpY2llbnREYXRhQ29s",
-            "bGVjdGVkEh4KCnJlcXVlc3RfaWQYASABKAsyCi5hZWxmLkhhc2g6BKC7GAEi",
-            "RAoeU3VmZmljaWVudENvbW1pdG1lbnRzQ29sbGVjdGVkEhwKCHF1ZXJ5X2lk",
-            "GAEgASgLMgouYWVsZi5IYXNoOgSguxgBIqwBChJDb21taXRtZW50UmV2ZWFs",
-            "ZWQSHAoIcXVlcnlfaWQYASABKAsyCi5hZWxmLkhhc2gSKgoTb3JhY2xlX25v",
-            "ZGVfYWRkcmVzcxgCIAEoCzINLmFlbGYuQWRkcmVzcxIeCgpjb21taXRtZW50",
-            "GAMgASgLMgouYWVsZi5IYXNoEgwKBGRhdGEYBCABKAwSGAoEc2FsdBgFIAEo",
-            "CzIKLmFlbGYuSGFzaDoEoLsYASJECg5RdWVyeUNvbXBsZXRlZBIcCghxdWVy",
-            "eV9pZBgBIAEoCzIKLmFlbGYuSGFzaBIOCgZyZXN1bHQYAiABKAw6BKC7GAEy",
-            "sAUKDk9yYWNsZUNvbnRyYWN0EjgKCkluaXRpYWxpemUSEC5Jbml0aWFsaXpl",
-            "SW5wdXQaFi5nb29nbGUucHJvdG9idWYuRW1wdHkiABIiCgVRdWVyeRILLlF1",
-            "ZXJ5SW5wdXQaCi5hZWxmLkhhc2giABIwCgZDb21taXQSDC5Db21taXRJbnB1",
-            "dBoWLmdvb2dsZS5wcm90b2J1Zi5FbXB0eSIAEjAKBlJldmVhbBIMLlJldmVh",
-            "bElucHV0GhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5IgASMwoLQ2FuY2VsUXVl",
-            "cnkSCi5hZWxmLkhhc2gaFi5nb29nbGUucHJvdG9idWYuRW1wdHkiABI7ChBD",
-            "aGFuZ2VDb250cm9sbGVyEg0uYWVsZi5BZGRyZXNzGhYuZ29vZ2xlLnByb3Rv",
-            "YnVmLkVtcHR5IgASPAoMU2V0VGhyZXNob2xkEhIuU2V0VGhyZXNob2xkSW5w",
-            "dXQaFi5nb29nbGUucHJvdG9idWYuRW1wdHkiABI9Cg1HZXRDb250cm9sbGVy",
-            "EhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5Gg0uYWVsZi5BZGRyZXNzIgWIifcB",
-            "ARIxCg5HZXRRdWVyeVJlY29yZBIKLmFlbGYuSGFzaBoMLlF1ZXJ5UmVjb3Jk",
-            "IgWIifcBARI1ChBHZXRDb21taXRtZW50TWFwEgouYWVsZi5IYXNoGg4uQ29t",
-            "bWl0bWVudE1hcCIFiIn3AQESUwoUR2V0T3JhY2xlVG9rZW5TeW1ib2wSFi5n",
-            "b29nbGUucHJvdG9idWYuRW1wdHkaHC5nb29nbGUucHJvdG9idWYuU3RyaW5n",
-            "VmFsdWUiBYiJ9wEBGi6yzPYBKUFFbGYuQ29udHJhY3RzLk9yYWNsZS5PcmFj",
-            "bGVDb250cmFjdFN0YXRlQhiqAhVBRWxmLkNvbnRyYWN0cy5PcmFjbGViBnBy",
-            "b3RvMw=="));
+            "CSABKAsyCi5hZWxmLkhhc2gSDQoFdG9rZW4YCiABKAk6BKC7GAEiWQoOUXVl",
+            "cnlDYW5jZWxsZWQSEAoIcXVlcnlfaWQYASABKAwSLwoLY2FuY2VsX3RpbWUY",
+            "AiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wOgSguxgBIj8KF1N1",
+            "ZmZpY2llbnREYXRhQ29sbGVjdGVkEh4KCnJlcXVlc3RfaWQYASABKAsyCi5h",
+            "ZWxmLkhhc2g6BKC7GAEiRAoeU3VmZmljaWVudENvbW1pdG1lbnRzQ29sbGVj",
+            "dGVkEhwKCHF1ZXJ5X2lkGAEgASgLMgouYWVsZi5IYXNoOgSguxgBIqwBChJD",
+            "b21taXRtZW50UmV2ZWFsZWQSHAoIcXVlcnlfaWQYASABKAsyCi5hZWxmLkhh",
+            "c2gSKgoTb3JhY2xlX25vZGVfYWRkcmVzcxgCIAEoCzINLmFlbGYuQWRkcmVz",
+            "cxIeCgpjb21taXRtZW50GAMgASgLMgouYWVsZi5IYXNoEgwKBGRhdGEYBCAB",
+            "KAwSGAoEc2FsdBgFIAEoCzIKLmFlbGYuSGFzaDoEoLsYASJECg5RdWVyeUNv",
+            "bXBsZXRlZBIcCghxdWVyeV9pZBgBIAEoCzIKLmFlbGYuSGFzaBIOCgZyZXN1",
+            "bHQYAiABKAw6BKC7GAEysAUKDk9yYWNsZUNvbnRyYWN0EjgKCkluaXRpYWxp",
+            "emUSEC5Jbml0aWFsaXplSW5wdXQaFi5nb29nbGUucHJvdG9idWYuRW1wdHki",
+            "ABIiCgVRdWVyeRILLlF1ZXJ5SW5wdXQaCi5hZWxmLkhhc2giABIwCgZDb21t",
+            "aXQSDC5Db21taXRJbnB1dBoWLmdvb2dsZS5wcm90b2J1Zi5FbXB0eSIAEjAK",
+            "BlJldmVhbBIMLlJldmVhbElucHV0GhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5",
+            "IgASMwoLQ2FuY2VsUXVlcnkSCi5hZWxmLkhhc2gaFi5nb29nbGUucHJvdG9i",
+            "dWYuRW1wdHkiABI7ChBDaGFuZ2VDb250cm9sbGVyEg0uYWVsZi5BZGRyZXNz",
+            "GhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5IgASPAoMU2V0VGhyZXNob2xkEhIu",
+            "U2V0VGhyZXNob2xkSW5wdXQaFi5nb29nbGUucHJvdG9idWYuRW1wdHkiABI9",
+            "Cg1HZXRDb250cm9sbGVyEhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5Gg0uYWVs",
+            "Zi5BZGRyZXNzIgWIifcBARIxCg5HZXRRdWVyeVJlY29yZBIKLmFlbGYuSGFz",
+            "aBoMLlF1ZXJ5UmVjb3JkIgWIifcBARI1ChBHZXRDb21taXRtZW50TWFwEgou",
+            "YWVsZi5IYXNoGg4uQ29tbWl0bWVudE1hcCIFiIn3AQESUwoUR2V0T3JhY2xl",
+            "VG9rZW5TeW1ib2wSFi5nb29nbGUucHJvdG9idWYuRW1wdHkaHC5nb29nbGUu",
+            "cHJvdG9idWYuU3RyaW5nVmFsdWUiBYiJ9wEBGi6yzPYBKUFFbGYuQ29udHJh",
+            "Y3RzLk9yYWNsZS5PcmFjbGVDb250cmFjdFN0YXRlQhiqAhVBRWxmLkNvbnRy",
+            "YWN0cy5PcmFjbGViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::AElf.Types.CoreReflection.Descriptor, global::AElf.OptionsReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.EmptyReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.WrappersReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -117,7 +117,7 @@ namespace AElf.Contracts.Oracle {
             new pbr::GeneratedClrTypeInfo(typeof(global::AElf.Contracts.Oracle.ResultList), global::AElf.Contracts.Oracle.ResultList.Parser, new[]{ "Results", "Frequencies" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AElf.Contracts.Oracle.NodeData), global::AElf.Contracts.Oracle.NodeData.Parser, new[]{ "Address", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AElf.Contracts.Oracle.NodeDataList), global::AElf.Contracts.Oracle.NodeDataList.Parser, new[]{ "Value", "ObserverAssociationAddress", "UrlToQuery", "AttributeToFetch", "Token" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AElf.Contracts.Oracle.QueryCreated), global::AElf.Contracts.Oracle.QueryCreated.Parser, new[]{ "Payment", "CallbackInfo", "AggregatorContractAddress", "DesignatedNodeList", "UrlToQuery", "AttributeToFetch", "AggregateThreshold", "QueryManager", "QueryId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AElf.Contracts.Oracle.QueryCreated), global::AElf.Contracts.Oracle.QueryCreated.Parser, new[]{ "Payment", "CallbackInfo", "AggregatorContractAddress", "DesignatedNodeList", "UrlToQuery", "AttributeToFetch", "AggregateThreshold", "QueryManager", "QueryId", "Token" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AElf.Contracts.Oracle.QueryCancelled), global::AElf.Contracts.Oracle.QueryCancelled.Parser, new[]{ "QueryId", "CancelTime" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AElf.Contracts.Oracle.SufficientDataCollected), global::AElf.Contracts.Oracle.SufficientDataCollected.Parser, new[]{ "RequestId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AElf.Contracts.Oracle.SufficientCommitmentsCollected), global::AElf.Contracts.Oracle.SufficientCommitmentsCollected.Parser, new[]{ "QueryId" }, null, null, null, null),
@@ -129,7 +129,7 @@ namespace AElf.Contracts.Oracle {
 
   }
   #region Messages
-  internal sealed partial class InitializeInput : pb::IMessage<InitializeInput>
+  public sealed partial class InitializeInput : pb::IMessage<InitializeInput>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -409,7 +409,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class QueryInput : pb::IMessage<QueryInput>
+  public sealed partial class QueryInput : pb::IMessage<QueryInput>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -866,7 +866,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class CallbackInfo : pb::IMessage<CallbackInfo>
+  public sealed partial class CallbackInfo : pb::IMessage<CallbackInfo>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -1083,7 +1083,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class AddressList : pb::IMessage<AddressList>
+  public sealed partial class AddressList : pb::IMessage<AddressList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -1244,7 +1244,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class QueryRecord : pb::IMessage<QueryRecord>
+  public sealed partial class QueryRecord : pb::IMessage<QueryRecord>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -2046,7 +2046,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class CommitInput : pb::IMessage<CommitInput>
+  public sealed partial class CommitInput : pb::IMessage<CommitInput>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -2272,7 +2272,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class RevealInput : pb::IMessage<RevealInput>
+  public sealed partial class RevealInput : pb::IMessage<RevealInput>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -2534,7 +2534,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class CommitmentMap : pb::IMessage<CommitmentMap>
+  public sealed partial class CommitmentMap : pb::IMessage<CommitmentMap>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -2695,7 +2695,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class SetThresholdInput : pb::IMessage<SetThresholdInput>
+  public sealed partial class SetThresholdInput : pb::IMessage<SetThresholdInput>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -2939,7 +2939,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class ResultList : pb::IMessage<ResultList>
+  public sealed partial class ResultList : pb::IMessage<ResultList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -3127,7 +3127,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class NodeData : pb::IMessage<NodeData>
+  public sealed partial class NodeData : pb::IMessage<NodeData>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -3344,7 +3344,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class NodeDataList : pb::IMessage<NodeDataList>
+  public sealed partial class NodeDataList : pb::IMessage<NodeDataList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -3661,7 +3661,7 @@ namespace AElf.Contracts.Oracle {
   /// <summary>
   /// Events
   /// </summary>
-  internal sealed partial class QueryCreated : pb::IMessage<QueryCreated>
+  public sealed partial class QueryCreated : pb::IMessage<QueryCreated>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -3699,6 +3699,7 @@ namespace AElf.Contracts.Oracle {
       aggregateThreshold_ = other.aggregateThreshold_;
       queryManager_ = other.queryManager_ != null ? other.queryManager_.Clone() : null;
       queryId_ = other.queryId_ != null ? other.queryId_.Clone() : null;
+      token_ = other.token_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -3812,6 +3813,17 @@ namespace AElf.Contracts.Oracle {
       }
     }
 
+    /// <summary>Field number for the "token" field.</summary>
+    public const int TokenFieldNumber = 10;
+    private string token_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Token {
+      get { return token_; }
+      set {
+        token_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as QueryCreated);
@@ -3834,6 +3846,7 @@ namespace AElf.Contracts.Oracle {
       if (AggregateThreshold != other.AggregateThreshold) return false;
       if (!object.Equals(QueryManager, other.QueryManager)) return false;
       if (!object.Equals(QueryId, other.QueryId)) return false;
+      if (Token != other.Token) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3849,6 +3862,7 @@ namespace AElf.Contracts.Oracle {
       if (AggregateThreshold != 0) hash ^= AggregateThreshold.GetHashCode();
       if (queryManager_ != null) hash ^= QueryManager.GetHashCode();
       if (queryId_ != null) hash ^= QueryId.GetHashCode();
+      if (Token.Length != 0) hash ^= Token.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3901,6 +3915,10 @@ namespace AElf.Contracts.Oracle {
         output.WriteRawTag(74);
         output.WriteMessage(QueryId);
       }
+      if (Token.Length != 0) {
+        output.WriteRawTag(82);
+        output.WriteString(Token);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3946,6 +3964,10 @@ namespace AElf.Contracts.Oracle {
         output.WriteRawTag(74);
         output.WriteMessage(QueryId);
       }
+      if (Token.Length != 0) {
+        output.WriteRawTag(82);
+        output.WriteString(Token);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -3981,6 +4003,9 @@ namespace AElf.Contracts.Oracle {
       }
       if (queryId_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(QueryId);
+      }
+      if (Token.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Token);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -4034,6 +4059,9 @@ namespace AElf.Contracts.Oracle {
           QueryId = new global::AElf.Types.Hash();
         }
         QueryId.MergeFrom(other.QueryId);
+      }
+      if (other.Token.Length != 0) {
+        Token = other.Token;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -4098,6 +4126,10 @@ namespace AElf.Contracts.Oracle {
               QueryId = new global::AElf.Types.Hash();
             }
             input.ReadMessage(QueryId);
+            break;
+          }
+          case 82: {
+            Token = input.ReadString();
             break;
           }
         }
@@ -4165,6 +4197,10 @@ namespace AElf.Contracts.Oracle {
             input.ReadMessage(QueryId);
             break;
           }
+          case 82: {
+            Token = input.ReadString();
+            break;
+          }
         }
       }
     }
@@ -4172,7 +4208,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class QueryCancelled : pb::IMessage<QueryCancelled>
+  public sealed partial class QueryCancelled : pb::IMessage<QueryCancelled>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -4389,7 +4425,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class SufficientDataCollected : pb::IMessage<SufficientDataCollected>
+  public sealed partial class SufficientDataCollected : pb::IMessage<SufficientDataCollected>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -4570,7 +4606,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class SufficientCommitmentsCollected : pb::IMessage<SufficientCommitmentsCollected>
+  public sealed partial class SufficientCommitmentsCollected : pb::IMessage<SufficientCommitmentsCollected>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -4751,7 +4787,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class CommitmentRevealed : pb::IMessage<CommitmentRevealed>
+  public sealed partial class CommitmentRevealed : pb::IMessage<CommitmentRevealed>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -5103,7 +5139,7 @@ namespace AElf.Contracts.Oracle {
 
   }
 
-  internal sealed partial class QueryCompleted : pb::IMessage<QueryCompleted>
+  public sealed partial class QueryCompleted : pb::IMessage<QueryCompleted>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif

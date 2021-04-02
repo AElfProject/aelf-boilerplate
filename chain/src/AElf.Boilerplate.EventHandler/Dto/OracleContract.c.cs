@@ -11,7 +11,7 @@ using aelf = global::AElf.CSharp.Core;
 namespace AElf.Contracts.Oracle {
 
   #region Events
-  internal partial class QueryCreated : aelf::IEvent<QueryCreated>
+  public partial class QueryCreated : aelf::IEvent<QueryCreated>
   {
     public global::System.Collections.Generic.IEnumerable<QueryCreated> GetIndexed()
     {
@@ -33,11 +33,12 @@ namespace AElf.Contracts.Oracle {
         AggregateThreshold = AggregateThreshold,
         QueryManager = QueryManager,
         QueryId = QueryId,
+        Token = Token,
       };
     }
   }
 
-  internal partial class QueryCancelled : aelf::IEvent<QueryCancelled>
+  public partial class QueryCancelled : aelf::IEvent<QueryCancelled>
   {
     public global::System.Collections.Generic.IEnumerable<QueryCancelled> GetIndexed()
     {
@@ -56,7 +57,7 @@ namespace AElf.Contracts.Oracle {
     }
   }
 
-  internal partial class SufficientDataCollected : aelf::IEvent<SufficientDataCollected>
+  public partial class SufficientDataCollected : aelf::IEvent<SufficientDataCollected>
   {
     public global::System.Collections.Generic.IEnumerable<SufficientDataCollected> GetIndexed()
     {
@@ -74,7 +75,7 @@ namespace AElf.Contracts.Oracle {
     }
   }
 
-  internal partial class SufficientCommitmentsCollected : aelf::IEvent<SufficientCommitmentsCollected>
+  public partial class SufficientCommitmentsCollected : aelf::IEvent<SufficientCommitmentsCollected>
   {
     public global::System.Collections.Generic.IEnumerable<SufficientCommitmentsCollected> GetIndexed()
     {
@@ -92,7 +93,7 @@ namespace AElf.Contracts.Oracle {
     }
   }
 
-  internal partial class CommitmentRevealed : aelf::IEvent<CommitmentRevealed>
+  public partial class CommitmentRevealed : aelf::IEvent<CommitmentRevealed>
   {
     public global::System.Collections.Generic.IEnumerable<CommitmentRevealed> GetIndexed()
     {
@@ -114,7 +115,7 @@ namespace AElf.Contracts.Oracle {
     }
   }
 
-  internal partial class QueryCompleted : aelf::IEvent<QueryCompleted>
+  public partial class QueryCompleted : aelf::IEvent<QueryCompleted>
   {
     public global::System.Collections.Generic.IEnumerable<QueryCompleted> GetIndexed()
     {
@@ -134,7 +135,7 @@ namespace AElf.Contracts.Oracle {
   }
 
   #endregion
-  internal static partial class OracleContractContainer
+  public static partial class OracleContractContainer
   {
     static readonly string __ServiceName = "OracleContract";
 
