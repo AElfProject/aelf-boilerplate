@@ -22,7 +22,7 @@ namespace AElf.Boilerplate.EventHandler
             _configOptions = configOptions.Value;
         }
 
-        public async Task ProcessAsync(LogEvent logEvent)
+        public void Process(LogEvent logEvent)
         {
             var queryCreated = new QueryCreated();
             queryCreated.MergeFrom(logEvent);
@@ -38,7 +38,7 @@ namespace AElf.Boilerplate.EventHandler
                     QueryId = queryCreated.QueryId,
                     Commitment = HashHelper.ConcatAndCompute(
                         HashHelper.ComputeFrom(new StringValue {Value = _configOptions.Data}),
-                        HashHelper.ComputeFrom(new StringValue {Value = _configOptions.Salt}))
+                        HashHelper.ComputeFrom(_configOptions.Salt))
                 });
         }
     }

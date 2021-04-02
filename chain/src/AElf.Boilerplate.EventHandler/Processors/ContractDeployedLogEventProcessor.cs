@@ -11,7 +11,7 @@ namespace AElf.Boilerplate.EventHandler
         public string ContractName => "BasicZero";
         public string LogEventName => nameof(ContractDeployed);
 
-        public async Task ProcessAsync(LogEvent logEvent)
+        public void Process(LogEvent logEvent)
         {
             var contractDeployed = new ContractDeployed();
             contractDeployed.MergeFrom(logEvent);

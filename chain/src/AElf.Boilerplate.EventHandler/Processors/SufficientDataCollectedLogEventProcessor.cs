@@ -11,7 +11,7 @@ namespace AElf.Boilerplate.EventHandler
         public string ContractName => "Oracle";
         public string LogEventName => nameof(SufficientDataCollected);
 
-        public async Task ProcessAsync(LogEvent logEvent)
+        public void Process(LogEvent logEvent)
         {
             var collected = new SufficientDataCollected();
             collected.MergeFrom(logEvent);

@@ -27,20 +27,17 @@ namespace AElf.Boilerplate.EventHandler
         {
             foreach (var logEventProcessor in _logEventProcessors)
             {
-                foreach (var result in eventData.TransactionResults.Values)
+                foreach (var eventLog in eventData.TransactionResults.Values.SelectMany(result => result.Logs))
                 {
-                    foreach (var eventLog in result.Logs)
+                    if (!_contractAddressOptions.ContractAddressMap.TryGetValue(logEventProcessor.ContractName,
+                        out var contractAddress)) return;
+                    if (eventLog.Address != contractAddress) return;
+                    if (eventLog.Name != logEventProcessor.LogEventName) return;
+                    logEventProcessor.Process(new LogEvent
                     {
-                        if (!_contractAddressOptions.ContractAddressMap.TryGetValue(logEventProcessor.ContractName,
-                            out var contractAddress)) return;
-                        if (eventLog.Address != contractAddress) return;
-                        if (eventLog.Name != logEventProcessor.LogEventName) return;
-                        await logEventProcessor.ProcessAsync(new LogEvent
-                        {
-                            Indexed = {eventLog.Indexed.Select(ByteString.FromBase64)},
-                            NonIndexed = ByteString.FromBase64(eventLog.NonIndexed)
-                        });
-                    }
+                        Indexed = {eventLog.Indexed.Select(ByteString.FromBase64)},
+                        NonIndexed = ByteString.FromBase64(eventLog.NonIndexed)
+                    });
                 }
             }
         }

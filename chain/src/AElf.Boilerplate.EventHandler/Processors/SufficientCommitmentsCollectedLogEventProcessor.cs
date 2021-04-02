@@ -24,7 +24,7 @@ namespace AElf.Boilerplate.EventHandler
         public string ContractName => "Oracle";
         public string LogEventName => nameof(SufficientCommitmentsCollected);
 
-        public async Task ProcessAsync(LogEvent logEvent)
+        public void Process(LogEvent logEvent)
         {
             var collected = new SufficientCommitmentsCollected();
             collected.MergeFrom(logEvent);
@@ -34,7 +34,7 @@ namespace AElf.Boilerplate.EventHandler
                 {
                     QueryId = collected.QueryId,
                     Data = new StringValue {Value = _configOptions.Data}.ToByteString(),
-                    Salt = HashHelper.ComputeFrom(new StringValue {Value = _configOptions.Salt})
+                    Salt = HashHelper.ComputeFrom(_configOptions.Salt)
                 });
         }
     }

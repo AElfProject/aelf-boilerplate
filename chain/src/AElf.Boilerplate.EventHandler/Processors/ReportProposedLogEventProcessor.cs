@@ -21,7 +21,7 @@ namespace AElf.Boilerplate.EventHandler
             _contractAddressOptions = contractAddressOptions.Value;
         }
 
-        public async Task ProcessAsync(LogEvent logEvent)
+        public void Process(LogEvent logEvent)
         {
             var reportProposed = new ReportProposed();
             reportProposed.MergeFrom(logEvent);

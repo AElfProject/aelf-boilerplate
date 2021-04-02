@@ -11,7 +11,7 @@ namespace AElf.Boilerplate.EventHandler
         public string ContractName => "Report";
         public string LogEventName => nameof(ReportConfirmed);
 
-        public async Task ProcessAsync(LogEvent logEvent)
+        public void Process(LogEvent logEvent)
         {
             var reportConfirmed = new ReportConfirmed();
             reportConfirmed.MergeFrom(logEvent);

@@ -9,6 +9,6 @@ namespace AElf.Boilerplate.EventHandler
     {
         string ContractName { get; }
         string LogEventName { get; }
-        Task ProcessAsync(LogEvent logEvent);
+        void Process(LogEvent logEvent);
     }
 }
