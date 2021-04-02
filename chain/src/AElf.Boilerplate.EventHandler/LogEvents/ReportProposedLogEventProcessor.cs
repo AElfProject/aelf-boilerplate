@@ -31,7 +31,7 @@ namespace AElf.Boilerplate.EventHandler
                 _contractAddressOptions.ContractAddressMap[ContractName], "ConfirmReport", new ConfirmReportInput
                 {
                     EthereumContractAddress = _configOptions.EthereumContractAddress,
-                    RoundId = reportProposed.Report.RoundId
+                    RoundId = reportProposed.RoundId,
                     // TODO: Compute signature here.
                 });
         }

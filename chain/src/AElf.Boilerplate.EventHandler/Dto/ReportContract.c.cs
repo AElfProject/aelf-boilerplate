@@ -24,9 +24,10 @@ namespace AElf.Contracts.Report {
     {
       return new ReportProposed
       {
-        Report = Report,
+        RawReport = RawReport,
         ObserverAssociationAddress = ObserverAssociationAddress,
         EthereumContractAddress = EthereumContractAddress,
+        RoundId = RoundId,
       };
     }
   }
@@ -77,6 +78,9 @@ namespace AElf.Contracts.Report {
     static readonly aelf::Marshaller<global::AElf.Contracts.Report.GetSignatureInput> __Marshaller_GetSignatureInput = aelf::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::AElf.Contracts.Report.GetSignatureInput.Parser.ParseFrom);
     static readonly aelf::Marshaller<global::Google.Protobuf.WellKnownTypes.StringValue> __Marshaller_google_protobuf_StringValue = aelf::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Google.Protobuf.WellKnownTypes.StringValue.Parser.ParseFrom);
     static readonly aelf::Marshaller<global::AElf.Contracts.Report.ReportQueryRecord> __Marshaller_ReportQueryRecord = aelf::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::AElf.Contracts.Report.ReportQueryRecord.Parser.ParseFrom);
+    static readonly aelf::Marshaller<global::AElf.Contracts.Report.GetCurrentRoundIdByContractAddressInput> __Marshaller_GetCurrentRoundIdByContractAddressInput = aelf::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::AElf.Contracts.Report.GetCurrentRoundIdByContractAddressInput.Parser.ParseFrom);
+    static readonly aelf::Marshaller<global::AElf.Contracts.Report.GetEthererumReportInput> __Marshaller_GetEthererumReportInput = aelf::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::AElf.Contracts.Report.GetEthererumReportInput.Parser.ParseFrom);
+    static readonly aelf::Marshaller<global::AElf.Contracts.Report.GenerateEthererumReportInput> __Marshaller_GenerateEthererumReportInput = aelf::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::AElf.Contracts.Report.GenerateEthererumReportInput.Parser.ParseFrom);
     #endregion
 
     #region Methods
@@ -198,6 +202,27 @@ namespace AElf.Contracts.Report {
         "GetReportQueryRecord",
         __Marshaller_aelf_Hash,
         __Marshaller_ReportQueryRecord);
+
+    static readonly aelf::Method<global::AElf.Contracts.Report.GetCurrentRoundIdByContractAddressInput, global::Google.Protobuf.WellKnownTypes.Int64Value> __Method_GetCurrentRoundIdByContractAddress = new aelf::Method<global::AElf.Contracts.Report.GetCurrentRoundIdByContractAddressInput, global::Google.Protobuf.WellKnownTypes.Int64Value>(
+        aelf::MethodType.View,
+        __ServiceName,
+        "GetCurrentRoundIdByContractAddress",
+        __Marshaller_GetCurrentRoundIdByContractAddressInput,
+        __Marshaller_google_protobuf_Int64Value);
+
+    static readonly aelf::Method<global::AElf.Contracts.Report.GetEthererumReportInput, global::Google.Protobuf.WellKnownTypes.StringValue> __Method_GetEthererumReport = new aelf::Method<global::AElf.Contracts.Report.GetEthererumReportInput, global::Google.Protobuf.WellKnownTypes.StringValue>(
+        aelf::MethodType.View,
+        __ServiceName,
+        "GetEthererumReport",
+        __Marshaller_GetEthererumReportInput,
+        __Marshaller_google_protobuf_StringValue);
+
+    static readonly aelf::Method<global::AElf.Contracts.Report.GenerateEthererumReportInput, global::Google.Protobuf.WellKnownTypes.StringValue> __Method_GenerateEthererumReport = new aelf::Method<global::AElf.Contracts.Report.GenerateEthererumReportInput, global::Google.Protobuf.WellKnownTypes.StringValue>(
+        aelf::MethodType.View,
+        __ServiceName,
+        "GenerateEthererumReport",
+        __Marshaller_GenerateEthererumReportInput,
+        __Marshaller_google_protobuf_StringValue);
 
     #endregion
 
