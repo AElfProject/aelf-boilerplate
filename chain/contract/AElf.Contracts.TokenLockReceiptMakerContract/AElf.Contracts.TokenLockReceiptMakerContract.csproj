@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <AssemblyName>AElf.Contracts.TokenLockReceiptMakerContract</AssemblyName>
+        <RootNamespace>AElf.Contracts.TokenLockReceiptMakerContract</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ContractReference Include="..\..\protobuf\token_contract.proto">
+            <Link>Protobuf\Proto\reference\token_contract.proto</Link>
+        </ContractReference>
+        <ContractBase Include="..\..\protobuf\receipt_maker.proto">
+            <Link>Protobuf\Proto\base\receipt_maker.proto</Link>
+        </ContractBase>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ContractCode Include="..\..\protobuf\token_lock_receipt_maker_contract.proto">
+            <Link>Protobuf\Proto\token_lock_receipt_maker_contract.proto</Link>
+        </ContractCode>
+    </ItemGroup>
+</Project>

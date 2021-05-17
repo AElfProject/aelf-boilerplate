@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>AElf.Contracts.MerkleTreeGenerator</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ContractReference Include="..\..\protobuf\receipt_maker.proto">
+            <Link>Protobuf\Proto\receipt_maker.proto</Link>
+        </ContractReference>
+        <ContractStub Include="..\..\protobuf\token_lock_receipt_maker_contract.proto">
+            <Link>Protobuf\Proto\token_lock_receipt_maker_contract.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\merkle_tree_generator.proto">
+            <Link>Protobuf\Proto\merkle_tree_generator.proto</Link>
+        </ContractStub>
+        <ContractStub Include="..\..\protobuf\token_contract.proto">
+            <Link>Protobuf\Proto\token_contract.proto</Link>
+        </ContractStub>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
+        <ProjectReference Include="..\..\contract\AElf.Contracts.MerkleTreeGenerator\AElf.Contracts.MerkleTreeGenerator.csproj" />
+        <ProjectReference Include="..\..\contract\AElf.Contracts.TokenLockReceiptMakerContract\AElf.Contracts.TokenLockReceiptMakerContract.csproj" />
+        <ProjectReference Include="..\..\src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj" />
+
+        <PackageReference Include="AElf.Contracts.Consensus.AEDPoS" Version="1.0.0" />
+        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0" />
+        <PackageReference Include="AElf.Contracts.Parliament" Version="1.0.0" />
+    </ItemGroup>
+</Project>

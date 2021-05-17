@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <AssemblyName>AElf.Contracts.MerkleTreeGeneratorContract</AssemblyName>
+        <RootNamespace>AElf.Contracts.MerkleTreeGeneratorContract</RootNamespace>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <ItemGroup>
+        <ContractCode Include="..\..\protobuf\merkle_tree_generator.proto">
+            <Link>Protobuf\Proto\merkle_tree_generator.proto</Link>
+        </ContractCode>
+        <ContractReference Include="..\..\protobuf\receipt_maker.proto">
+            <Link>Protobuf\Proto\reference\receipt_maker.proto</Link>
+        </ContractReference>
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="..\..\protobuf\receipt_maker.proto">
+        <Link>Protobuf\Proto\receipt_maker.proto</Link>
+      </Content>
+    </ItemGroup>
+</Project>

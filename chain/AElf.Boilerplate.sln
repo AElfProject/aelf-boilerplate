@@ -78,6 +78,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.ACS10DemoCon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Boilerplate.ContractPatcher", "src\AElf.Boilerplate.ContractPatcher\AElf.Boilerplate.ContractPatcher.csproj", "{136BA87F-62EB-491B-80CB-2A0DAD0D7FEC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.MerkleTreeGenerator", "contract\AElf.Contracts.MerkleTreeGenerator\AElf.Contracts.MerkleTreeGenerator.csproj", "{080BDCE3-D3E8-497E-8D6A-76E1C0305169}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.TokenLockReceiptMakerContract", "contract\AElf.Contracts.TokenLockReceiptMakerContract\AElf.Contracts.TokenLockReceiptMakerContract.csproj", "{E02C57A1-81C8-46CE-A218-7B33E299F1BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.TokenLockReceiptMakerContract.Tests", "test\AElf.Contracts.TokenLockReceiptMakerContract.Tests\AElf.Contracts.TokenLockReceiptMakerContract.Tests.csproj", "{4EA31D8F-4028-4A74-AFCE-D9079A4D8710}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.MerkleTreeGenerator.Tests", "test\AElf.Contracts.MerkleTreeGenerator.Tests\AElf.Contracts.MerkleTreeGenerator.Tests.csproj", "{7E60D56D-08E1-48CA-8949-35160AEA38B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -228,6 +236,22 @@ Global
 		{136BA87F-62EB-491B-80CB-2A0DAD0D7FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{136BA87F-62EB-491B-80CB-2A0DAD0D7FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{136BA87F-62EB-491B-80CB-2A0DAD0D7FEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{080BDCE3-D3E8-497E-8D6A-76E1C0305169}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{080BDCE3-D3E8-497E-8D6A-76E1C0305169}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{080BDCE3-D3E8-497E-8D6A-76E1C0305169}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{080BDCE3-D3E8-497E-8D6A-76E1C0305169}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E02C57A1-81C8-46CE-A218-7B33E299F1BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E02C57A1-81C8-46CE-A218-7B33E299F1BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E02C57A1-81C8-46CE-A218-7B33E299F1BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E02C57A1-81C8-46CE-A218-7B33E299F1BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EA31D8F-4028-4A74-AFCE-D9079A4D8710}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EA31D8F-4028-4A74-AFCE-D9079A4D8710}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EA31D8F-4028-4A74-AFCE-D9079A4D8710}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EA31D8F-4028-4A74-AFCE-D9079A4D8710}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E60D56D-08E1-48CA-8949-35160AEA38B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E60D56D-08E1-48CA-8949-35160AEA38B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E60D56D-08E1-48CA-8949-35160AEA38B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E60D56D-08E1-48CA-8949-35160AEA38B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -266,6 +290,10 @@ Global
 		{A8373241-AFAB-43C1-9075-BB91CE1176C6} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 		{E74130E4-3AAF-44C9-9D5A-D1B2155FA4D7} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 		{136BA87F-62EB-491B-80CB-2A0DAD0D7FEC} = {21D85A91-5BB8-4912-8107-49435A461AAC}
+		{080BDCE3-D3E8-497E-8D6A-76E1C0305169} = {5C980166-C987-470D-AEE0-3858A170A903}
+		{E02C57A1-81C8-46CE-A218-7B33E299F1BA} = {5C980166-C987-470D-AEE0-3858A170A903}
+		{4EA31D8F-4028-4A74-AFCE-D9079A4D8710} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
+		{7E60D56D-08E1-48CA-8949-35160AEA38B7} = {DBC47323-E6A2-42A2-A624-CE2EE6139567}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7426B41-E959-40E4-9ED8-ED8D9C50F133}

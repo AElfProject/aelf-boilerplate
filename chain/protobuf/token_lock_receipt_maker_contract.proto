@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "receipt_maker.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "AElf.Contracts.TokenLockReceiptMakerContract";
+
+service TokenLockReceiptMakerContract {
+    option (aelf.csharp_state) = "AElf.Contracts.TokenLockReceiptMakerContract.TokenLockReceiptMakerContractState";
+    option (aelf.base) = "receipt_maker.proto";
+
+    rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
+    }
+    rpc Lock (LockInput) returns (google.protobuf.Empty) {
+    }
+    rpc UnLock (UnLockInput) returns (google.protobuf.Empty) {
+    }
+    rpc GetMyReceiptIdList (aelf.Address) returns (GetMyReceiptIdListOutput) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetLockTokenAmount (aelf.Address) returns (GetLockTokenAmountOutput) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetTotalLockTokenAmount (google.protobuf.Empty) returns (google.protobuf.Int64Value) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetReceiptInfo (google.protobuf.Int64Value) returns (GetReceiptInfoOutput) {
+        option (aelf.is_view) = true;
+    }
+}
+
+message InitializeInput {
+    int64 lock_time = 1;
+    string symbol = 2;
+}
+
+message LockInput {
+    int64 amount = 1;
+    string target_address = 2;
+}
+
+message UnLockInput {
+    int64 receipt_id = 1;
+}
+
+message GetMyReceiptIdListOutput {
+    repeated int64 receipt_id_list = 1;
+}
+
+message GetLockTokenAmountOutput {
+    int64 amount = 1;
+}
+
+message GetReceiptInfoOutput {
+    string target_address = 1;
+    int64 amount = 2;
+    bool is_unlocked = 3;
+    aelf.Hash unique_id = 4;
+}
+
+message LockReceiptIdList {
+    repeated int64 receipt_id_list = 1;
+}
+
+message LockReceipt {
+    aelf.Address owner = 1;
+    string target_address = 2;
+    int64 amount = 3;
+    google.protobuf.Timestamp start_ts = 4;
+    google.protobuf.Timestamp end_ts = 5;
+    bool unlocked = 6;
+}
+
+message ReceiptCreatedEvent{
+    option (aelf.is_event) = true;
+    int64 receipt_id = 1;
+}

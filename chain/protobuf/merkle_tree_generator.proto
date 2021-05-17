@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+import "receipt_maker.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "AElf.Contracts.MerkleTreeGeneratorContract";
+
+service MerkleTreeGeneratorContract {
+    option (aelf.csharp_state) = "AElf.Contracts.MerkleTreeGeneratorContract.MerkleTreeGeneratorContractState";
+
+    rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
+    }
+
+    rpc RegisterReceiptMaker (RegisterReceiptMakerInput) returns (google.protobuf.Empty) {
+    }
+
+    rpc UnRegisterReceiptMaker (aelf.Address) returns (google.protobuf.Empty) {
+    }
+
+    rpc GetFullTreeCount (aelf.Address) returns (google.protobuf.Int64Value) {
+        option (aelf.is_view) = true;
+    }
+
+    rpc GetMerkleTree (GetMerkleTreeInput) returns (GetMerkleTreeOutput) {
+        option (aelf.is_view) = true;
+    }
+
+    rpc GetReceiptMaker (aelf.Address) returns (GetReceiptMakerOutput) {
+        option (aelf.is_view) = true;
+    }
+
+    rpc GetMerklePath (GetMerklePathInput) returns (aelf.MerklePath) {
+        option (aelf.is_view) = true;
+    }
+}
+
+message InitializeInput {
+    aelf.Address owner = 1;
+}
+
+message RegisterReceiptMakerInput {
+    aelf.Address receipt_maker_address = 1;
+    int32 merkle_tree_leaf_limit = 2;
+}
+
+
+message GetMerkleTreeInput {
+    aelf.Address receipt_maker_address = 1;
+    int64 expected_full_tree_index = 2;
+}
+
+message GetMerkleTreeOutput {
+    aelf.Hash merkle_tree_root = 1;
+    int64 first_index = 2;
+    int64 last_index = 3;
+    bool is_full_tree = 4;
+}
+
+message ReceiptMaker {
+    aelf.Address receipt_maker_address = 1;
+    int32 merkle_tree_leaf_limit = 2;
+}
+
+message MerkleTree {
+    aelf.Hash merkle_tree_root = 1;
+    int64 first_leaf_index = 2;
+    int64 last_leaf_index = 3;
+    bool is_full_tree = 4;
+}
+
+message GetReceiptMakerOutput {
+    aelf.Address receipt_maker_address = 1;
+    int32 merkle_tree_leaf_limit = 2;
+}
+
+message GetMerklePathInput {
+    aelf.Address recipt_maker = 1;
+    int64 receipt_id = 2;
+    int64 first_leaf_index = 3;
+    int64 last_leaf_index = 4;
+}
+
+message ReceiptMakerRegistered {
+    option (aelf.is_event) = true;
+    aelf.Address receipt_maker_address = 1 [(aelf.is_indexed) = true];
+}
+
+message ReceiptMakerUnRegistered {
+    option (aelf.is_event) = true;
+    aelf.Address receipt_maker_address = 1 [(aelf.is_indexed) = true];
+}

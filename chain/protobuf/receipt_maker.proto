@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "AElf.Contracts.ReceiptMakerContract";
+
+service ReceiptMakerContract{
+    rpc GetReceiptCount(google.protobuf.Empty) returns (google.protobuf.Int64Value) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetReceiptHash(google.protobuf.Int64Value) returns (aelf.Hash) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetReceiptHashList(GetReceiptHashListInput) returns (GetReceiptHashListOutput) {
+        option (aelf.is_view) = true;
+    }
+}
+
+message GetReceiptHashListInput{
+    int64 first_leaf_index = 1;
+    int64 last_leaf_index = 2;
+}
+
+message GetReceiptHashListOutput{
+    repeated aelf.Hash receipt_hash_list = 1;
+}
