@@ -1,6 +1,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AElf.ContractTestBase.ContractTestKit;
+using AElf.CSharp.Core.Extension;
+using AElf.Kernel;
 using AElf.Types;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
@@ -11,21 +13,29 @@ namespace Tank.Contracts.Vote
 {
     public class VoteContractTests : VoteContractTestBase
     {
-        [Fact]
-        public async Task Test()
+        private readonly Account _sponsorAccount = SampleAccount.Accounts.First();
+        private VoteContractContainer.VoteContractStub VoteContractStub { get; set; }
+
+        public VoteContractTests()
         {
-            // Get a stub for testing.
-            var keyPair = SampleAccount.Accounts.First().KeyPair;
-            var stub = GetVoteContractStub(keyPair);
+            VoteContractStub = GetVoteContractStub(_sponsorAccount.KeyPair);
+        }
+        [Fact]
+        public async Task InitializeTest()
+        {
+            var deadline = TimestampHelper.GetUtcNow().AddDays(10);
+            await VoteContractStub.Initialize.SendAsync(new InitializeInput
+            {
+                Deadline = deadline,
+                Sponsor = _sponsorAccount.Address,
+                MaxReviewCount = 3
+            });
 
-            // Use CallAsync or SendAsync method of this stub to test.
-            // await stub.Hello.SendAsync(new Empty())
+            var deadlineFromState = await VoteContractStub.GetDeadline.CallAsync(new Empty());
+            deadline.ShouldBe(deadlineFromState);
 
-            // Or maybe you want to get its return value.
-            // var output = (await stub.Hello.SendAsync(new Empty())).Output;
-
-            // Or transaction result.
-            // var transactionResult = (await stub.Hello.SendAsync(new Empty())).TransactionResult;
+            var sponsor = await VoteContractStub.GetSponsor.CallAsync(new Empty());
+            sponsor.ShouldBe(_sponsorAccount.Address);
         }
     }
 }

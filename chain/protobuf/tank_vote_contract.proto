@@ -29,6 +29,16 @@ service VoteContract {
     rpc ChangeSponsor (aelf.Address) returns (google.protobuf.Empty) { }
 
     // Views
+    rpc GetDeadline (google.protobuf.Empty) returns (google.protobuf.Timestamp) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetSponsor (google.protobuf.Empty) returns (aelf.Address) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetArticleInfo (google.protobuf.Int32Value) returns (ArticleInfo) {
+        option (aelf.is_view) = true;
+    }
+    
 }
 
 
