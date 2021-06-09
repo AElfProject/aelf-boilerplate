@@ -13,12 +13,77 @@ service VoteContract {
 
     option (aelf.csharp_state) = "Tank.Contracts.Vote.VoteContractState";
 
+    // Actions
     rpc Initialize (InitializeInput) returns (google.protobuf.Empty) { }
     
+    rpc AddArticleInfo (AddArticleInfoInput) returns (google.protobuf.Empty) { }
+    rpc UpdateArticleInfo (UpdateArticleInfoInput) returns (google.protobuf.Empty) { }
+    rpc DeleteArticleInfo (google.protobuf.Int32Value) returns (google.protobuf.Empty) { }
+    rpc AddReviewer (AddReviewerInput) returns (google.protobuf.Empty) { }
+    rpc DeleteReviewer (aelf.Address) returns (google.protobuf.Empty) { }
+    rpc Assignment (AssignmentInput) returns (google.protobuf.Empty) { }
+    rpc Comment (CommentInput) returns (google.protobuf.Empty) { }
     
+    rpc UpdateDeadline (google.protobuf.Timestamp) returns (google.protobuf.Empty) { }
+    rpc UpdateMaxReviewCount (google.protobuf.Int32Value) returns (google.protobuf.Empty) { }
+    rpc ChangeSponsor (aelf.Address) returns (google.protobuf.Empty) { }
+
+    // Views
 }
 
 
 message InitializeInput {
-    string Value = 1;
+    aelf.Address sponsor = 1;
+    int32 max_review_count = 2;
+    google.protobuf.Timestamp deadline = 3;
+}
+
+message ArticleInfo {
+    string title = 1;
+    repeated string authors = 2;
+    repeated string key_words = 3;
+    aelf.Address submitter = 4;
+    int32 article_id = 5;
+}
+
+message AddArticleInfoInput {
+    string title = 1;
+    repeated string authors = 2;
+    repeated string key_words = 3;
+}
+
+message UpdateArticleInfoInput {
+    string title = 1;
+    repeated string authors = 2;
+    repeated string key_words = 3;
+    int32 article_id = 4;
+}
+
+message AddReviewerInput {
+    aelf.Address reviewer = 1;
+    repeated string key_words = 2;
+}
+
+message AssignmentInput {
+    aelf.Address reviewer = 1;
+    repeated int32 article_ids = 2;
+}
+
+message CommentInput {
+    int32 article_id = 1;
+    int32 score = 2;
+    string comment = 3;
+}
+
+message Comment {
+    int32 article_id = 1;
+    int32 score = 2;
+    string comment = 3;
+    google.protobuf.Timestamp comment_time = 4;
+}
+
+// Events
+message VoterRegistered {
+    option (aelf.is_event) = true;
+    
 }
