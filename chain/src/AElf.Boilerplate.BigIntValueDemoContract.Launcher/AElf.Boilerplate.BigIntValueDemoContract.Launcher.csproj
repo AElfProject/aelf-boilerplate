@@ -1,0 +1,65 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <ServerGarbageCollection>true</ServerGarbageCollection>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AElf.Boilerplate.MainChain\AElf.Boilerplate.MainChain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AElf.ContractDeployer" Version="1.0.0" />
+        <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="3.1.0" />
+        <PackageReference Include="Volo.Abp.Autofac" Version="1.1.2" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\contract\AElf.Contracts.BigIntValueDemoContract\AElf.Contracts.BigIntValueDemoContract.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>Contract</OutputItemType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </ProjectReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.0.0">
+            <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
+            <PackageName>aelf.webapp.application.chain</PackageName>
+        </PackageReference>
+        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.0.0">
+            <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
+            <PackageName>aelf.webapp.application.net</PackageName>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="appsettings.Development.json">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="appsettings.json">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="appsettings.MainChain.MainNet.json">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="log4net.config">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <Target Name="CopyPackages" AfterTargets="AfterBuild">
+        <ItemGroup>
+            <PackageReferenceFiles Condition="%(PackageReference.CopyToOutputDirectory) != 'PreserveNewest' And %(PackageReference.CopyToOutputDirectory) != ''" Include="$(NugetPackageRoot)%(PackageReference.PackageName)\%(PackageReference.Version)\%(PackageReference.CopyToOutputDirectory)" />
+        </ItemGroup>
+        <Copy SourceFiles="@(PackageReferenceFiles)" DestinationFolder="$(OutDir)" />
+    </Target>
+</Project>

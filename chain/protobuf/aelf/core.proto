@@ -101,3 +101,7 @@ message BinaryMerkleTree {
     Hash root = 2;
     int32 leaf_count = 3;
 }
+
+message BigIntValue {
+    string value = 1;
+}

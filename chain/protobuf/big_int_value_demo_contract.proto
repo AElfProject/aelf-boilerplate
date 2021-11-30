@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "AElf.Contracts.BigIntValueDemoContract";
+
+service BigIntValueDemoContract {
+    option (aelf.csharp_state) = "AElf.Contracts.BigIntValueDemoContract.BigIntValueDemoContractState";
+    rpc Add (Input) returns (aelf.BigIntValue) {
+        option (aelf.is_view) = true;
+    }
+    rpc Sub (Input) returns (aelf.BigIntValue) {
+        option (aelf.is_view) = true;
+    }
+    rpc Mul (Input) returns (aelf.BigIntValue) {
+        option (aelf.is_view) = true;
+    }
+    rpc Div (Input) returns (aelf.BigIntValue) {
+        option (aelf.is_view) = true;
+    }
+}
+
+message Input {
+    aelf.BigIntValue big_int_value1 = 1;
+    aelf.BigIntValue big_int_value2 = 2;
+}
