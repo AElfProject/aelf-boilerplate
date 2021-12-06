@@ -1,5 +1,6 @@
 using AElf.CSharp.Core;
 using AElf.Types;
+using Google.Protobuf.WellKnownTypes;
 
 namespace AElf.Contracts.BigIntValueDemoContract
 {
@@ -23,6 +24,14 @@ namespace AElf.Contracts.BigIntValueDemoContract
         public override BigIntValue Div(Input input)
         {
             return input.BigIntValue1.Div(input.BigIntValue2);
+        }
+
+        public override BoolValue IsGreaterThan(Input input)
+        {
+            return new BoolValue
+            {
+                Value = input.BigIntValue1 > input.BigIntValue2
+            };
         }
     }
 }

@@ -13,9 +13,9 @@
         <None Pack="true" PackagePath="build\" Include="*.targets;" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="AElf.CSharp.CodeOps" Version="1.1.0-18960" />
-        <PackageReference Include="AElf.Runtime.CSharp.Core" Version="1.1.0-18960" />
-        <PackageReference Include="AElf.Types" Version="1.1.0-18960" />
+        <PackageReference Include="AElf.CSharp.CodeOps" Version="1.1.1-18963" />
+        <PackageReference Include="AElf.Runtime.CSharp.Core" Version="1.1.1-18963" />
+        <PackageReference Include="AElf.Types" Version="1.1.1-18963" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.8.0" />

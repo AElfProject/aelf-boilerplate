@@ -3,6 +3,7 @@ syntax = "proto3";
 import "aelf/core.proto";
 import "aelf/options.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
 
 option csharp_namespace = "AElf.Contracts.BigIntValueDemoContract";
 
@@ -18,6 +19,9 @@ service BigIntValueDemoContract {
         option (aelf.is_view) = true;
     }
     rpc Div (Input) returns (aelf.BigIntValue) {
+        option (aelf.is_view) = true;
+    }
+    rpc IsGreaterThan (Input) returns (google.protobuf.BoolValue) {
         option (aelf.is_view) = true;
     }
 }
