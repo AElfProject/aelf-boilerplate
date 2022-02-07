@@ -14,6 +14,15 @@ namespace AElf.Contracts.BingoGameContract
     public class BingoGameGameContractTests : BingoGameContractTestBase
     {
         [Fact]
+        public void TestDecimal()
+        {
+            const string foo = "0.005";
+            decimal.TryParse(foo, out var bar).ShouldBeTrue();
+            bar.ShouldBe(0.005m);
+        }
+        
+        
+        [Fact]
         public async Task Test()
         {
             // Get a stub for testing.
