@@ -27,6 +27,12 @@ namespace AElf.Contracts.BingoGameContract
                 To = Context.Sender,
                 Memo = "Initial Bingo Cards for player."
             });
+            State.TokenContract.Issue.Send(new IssueInput
+            {
+                Symbol = BingoGameContractConstants.CardSymbol,
+                Amount = BingoGameContractConstants.InitialCards,
+                To = Context.Self
+            });
             State.TokenContract.Transfer.Send(new TransferInput
             {
                 Symbol = Context.Variables.NativeSymbol,
