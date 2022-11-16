@@ -6,14 +6,15 @@ import styles from './../styles.module.less';
 export default function Wallet() {
   const { account, activate, deactivate, connectEagerly, aelfBridges }: AElfContextType = useAElfReact();
   const [chainStatus, setChainStatus] = useState<any>({ message: '尚未初始化' });
-  // 使用activate 链接钱包, 如果钱包没有登录，会唤起钱包登录窗口
+  // It will evoke login window if logout when using activate.
   useEffect(() => {
     if (!activate && !account) {
       return;
     }
     activate();
   }, [activate, account]);
-  // 使用connectEagerly 快速链接钱包，获取钱包数据, 如果钱包没有登录，会抛出error，不会唤起登录窗口
+  // Use connectEagerly to link wallet quickly and get data.
+  // It will throw error and not evoke login window if logout.
   // useEffect(() => {
   //   if (!connectEagerly) {
   //     return;
@@ -23,34 +24,34 @@ export default function Wallet() {
   //   });
   // }, [connectEagerly]);
   return (
-    <Card title="钱包操作" bordered={false}>
-      当前钱包： {account}
+    <Card title="wallet operation" bordered={false}>
+      current wallet: {account}
       <div className={styles['wallet-operation']}>
-        <Button onClick={() => activate()}>登录</Button>
-        <Button onClick={() => deactivate()}>登出</Button>
+        <Button onClick={() => activate()}>logout</Button>
+        <Button onClick={() => deactivate()}>login</Button>
       </div>
       <div>Chain Info: {JSON.stringify(chainStatus)}</div>
       <Button
         onClick={async () => {
           if (!aelfBridges) {
-            alert('尚未初始化');
+            alert('Not yet initialized');
             return;
           }
           const chainStatus = await aelfBridges['AELF'].chain.getChainStatus();
           setChainStatus(chainStatus);
         }}>
-        链操作 - 获取主链数据
+        Chain Operation - get main chain data
       </Button>
       <Button
         onClick={async () => {
           if (!aelfBridges) {
-            alert('尚未初始化');
+            alert('Not yet initialized');
             return;
           }
           const chainStatus = await aelfBridges['tDVW'].chain.getChainStatus();
           setChainStatus(chainStatus);
         }}>
-        链操作 - 获取侧链数据
+        Chain Operation - get side chain data
       </Button>
     </Card>
   );

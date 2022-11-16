@@ -2,10 +2,10 @@
 interface Window {
   NightElf?: any;
 }
-// 声明没有ts文件的第三方SDK
+// declare SDKs without ts files
 declare module 'aelf-sdk';
 
-// 不引入TS报错
+// throw error without declaring
 declare module '*.less';
 declare module '*.module.less';
 declare module './styles.module.less';

@@ -11,8 +11,8 @@ export default function MediaQuery() {
   const isXl = useMediaQueries('xl');
   const isXxl = useMediaQueries('xxl');
   return (
-    <Card title="媒体查询 - 变动页面大小" bordered={false}>
-      媒体查询：
+    <Card title="Media Query - change page size" bordered={false}>
+      Media Query:
       {isXs && 'Is XS'}
       {isMd && 'Is Middle'}
       {isXl && 'Is XL'}

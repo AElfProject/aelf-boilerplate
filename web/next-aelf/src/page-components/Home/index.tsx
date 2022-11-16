@@ -5,15 +5,15 @@ export default function Home() {
   return (
     <div className={styles.body}>
       <Link href={`/example`}>
-        <a>框架使用 - 示例代码</a>
+        <a>Framework Usage - demo code</a>
       </Link>
       <br />
       <Link href={`/micro-app`}>
-        <a>微前端 - Micro-APP</a>
+        <a>Micro Frontends - Micro-APP</a>
       </Link>
       <br />
       <Link href={`/sentry`}>
-        <a>监控 - Sentry</a>
+        <a>Monitor - Sentry</a>
       </Link>
     </div>
   );

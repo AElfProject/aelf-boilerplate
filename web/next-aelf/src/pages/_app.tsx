@@ -16,19 +16,19 @@ import initAxios from '../utils/axios';
 const Provider = dynamic(import('hooks/Providers/ProviderBasic'), { ssr: false });
 import { QueryClientProvider, QueryClient } from 'react-query';
 
-// import '../utils/vconsole';
 initAxios();
 export default function APP({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient();
   const router = useRouter();
   useEffect(() => {
-    // 初始化micro-app
+    // init micro-app
     microApp.start();
 
     /**
      * BUG FIX
-     * 在nextjs 11下，子应用内部跳转，基座无法监听，导致点击浏览器前进、后退按钮，无法回退到正确的子应用页面
-     * 通过监听popstate事件，在地址变化时重新替换为next路由来解决这个问题
+     * When using nextjs 11, child application jumps internally, and the base cannot monitor,
+     * will failed to return to the correct child application page when clicking the forward and back buttons of the browser
+     * Solving the problem by listening to the popstate event and replacing it with the next route when the address changes
      */
     window.addEventListener('popstate', () => {
       const { href, origin } = window.location;
