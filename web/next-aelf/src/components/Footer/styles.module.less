@@ -1,0 +1,29 @@
+@import '/src/assets/theme/constants.less';
+@import '/src/assets/theme/color.less';
+@import '/src/assets/theme/font.less';
+.footer-container {
+  background: @bg-withe;
+  border-top: 1px solid @border-1;
+}
+.footer {
+  margin: auto;
+  max-width: calc(@max-width + 160px);
+  height: @header-height;
+  padding: 16px 40px 0 40px;
+  background: @bg-withe;
+}
+
+@media screen and (max-width: @xl-width) {
+  .footer {
+    padding: 0 24px;
+  }
+  .link {
+    margin: 0 3vw;
+  }
+}
+
+@media screen and (max-width: @md-width) {
+  .footer {
+    padding: 0 16px;
+  }
+}

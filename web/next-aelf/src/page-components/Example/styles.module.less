@@ -1,0 +1,28 @@
+@import '/src/assets/theme/constants.less';
+@import '/src/assets/theme/color.less';
+@import '/src/assets/theme/font.less';
+.body {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  padding-top: 72px;
+  max-width: @max-width;
+  position: relative;
+  word-break: break-all;
+}
+.title {
+  font-size: 18px;
+  margin-bottom: 16px;
+  .font-family-medium();
+}
+
+.wallet-operation {
+  width: 300px;
+}
+@media screen and (max-width: @md-width) {
+  .body {
+    margin-bottom: 60px;
+    padding-top: 24px;
+    max-width: calc(100vw - 32px);
+  }
+}

@@ -1,0 +1,36 @@
+@font-face {
+  font-family: Roboto-Bold;
+  src: url('/font/Roboto-Bold.ttf');
+}
+@font-face {
+  font-family: Roboto-Medium;
+  src: url('/font/Roboto-Medium.ttf');
+}
+@font-face {
+  font-family: Roboto-Regular;
+  src: url('/font/Roboto-Regular.ttf');
+}
+html {
+  --@{app-prefix}-primary-color: #4d6aec;
+  --@{app-prefix}-primary-color-hover: #506ef5;
+  // border-hover
+  --@{app-prefix}-primary-5: #506ef5;
+  // border-hover-shadow
+  --@{app-prefix}-primary-color-outline: #506ef514;
+  --@{app-prefix}-primary-1: #edf0fd;
+  --@{app-prefix}-error-color: #ce342a;
+  // constants
+  --@{app-prefix}-max-width: 1000px;
+  --@{app-prefix}-header-height: 72px;
+
+  @media screen and (max-width: 1160px) {
+    --@{app-prefix}-max-width: calc(100vw - 120px);
+  }
+  @media screen and (max-width: @md-width) {
+    --@{app-prefix}-header-height: 56px;
+  }
+}
+
+html[data-theme='dark'] {
+  --@{app-prefix}-primary-color: red;
+}

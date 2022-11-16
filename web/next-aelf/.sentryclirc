@@ -1,0 +1,13 @@
+[defaults]
+url=https://sentry.io/
+project=your project name
+org=your organization
+
+[auth]
+token=your toekn
+
+[log]
+level=debug
+
+[http]
+verify_ssl=false

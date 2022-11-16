@@ -1,0 +1,19 @@
+
+@xxl-width: 1160px;
+@xl-width: 942px;
+@md-width: 580px;
+@xs-width: 370px;
+
+@max-width: ~'var(--@{app-prefix}-max-width)';
+@footer-height: 70px;
+@header-height:  ~'var(--@{app-prefix}-header-height)';
+
+.text-overflow(@n) {
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  line-clamp: @n;
+  -webkit-line-clamp: @n;
+}

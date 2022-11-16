@@ -1,0 +1,10 @@
+{
+  "extends": ["stylelint-config-standard", "stylelint-config-prettier"],
+  "customSyntax": "postcss-less",
+  "rules": {
+    "font-family-name-quotes": null,
+    "rule-empty-line-before": null,
+    "selector-pseudo-class-no-unknown": null,
+    "no-descending-specificity": null
+  }
+}
