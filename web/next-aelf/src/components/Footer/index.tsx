@@ -3,11 +3,11 @@ import styles from './styles.module.less';
 import useMediaQueries from 'hooks/useMediaQueries';
 
 function FooterMD() {
-  return <div>中等Footer, 手机端, Pad端</div>;
+  return <div>Medium Footer in Phone and Pad</div>;
 }
 
 function FooterPC() {
-  return <div>PC端 Footer</div>;
+  return <div>Footer in PC</div>;
 }
 
 export default function Footer() {

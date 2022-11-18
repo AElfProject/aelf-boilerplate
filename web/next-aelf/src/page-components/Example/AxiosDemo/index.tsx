@@ -23,13 +23,13 @@ export default function AxiosDemo() {
   }
   return (
     <Card title="Axios hooks" bordered={false}>
-      自动查询的数据：{autoLoading ? 'loading' : autoData}
+      Data queried automatically : {autoLoading ? 'loading' : autoData}
       <br />
-      <Button onClick={manualExecute}>手动查询</Button>
-      手动查询的数据：{manualLoading ? 'loading' : manualData}
+      <Button onClick={manualExecute}>Query Manually</Button>
+      Data queried manually: {manualLoading ? 'loading' : manualData}
       <br />
-      <Button onClick={executeTDVW}>手动调用另一个Axios实例</Button>
-      另一个Axios实例：{loadingTDVW ? 'loading' : dataTDVW}
+      <Button onClick={executeTDVW}>Invoke another Axios instance Manually</Button>
+      Another Axios instance: {loadingTDVW ? 'loading' : dataTDVW}
     </Card>
   );
 }

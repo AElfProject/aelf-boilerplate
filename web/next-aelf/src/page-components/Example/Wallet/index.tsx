@@ -27,8 +27,8 @@ export default function Wallet() {
     <Card title="wallet operation" bordered={false}>
       current wallet: {account}
       <div className={styles['wallet-operation']}>
-        <Button onClick={() => activate()}>logout</Button>
-        <Button onClick={() => deactivate()}>login</Button>
+        <Button onClick={() => activate()}>Logout</Button>
+        <Button onClick={() => deactivate()}>Login</Button>
       </div>
       <div>Chain Info: {JSON.stringify(chainStatus)}</div>
       <Button
