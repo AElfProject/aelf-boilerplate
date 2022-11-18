@@ -1,0 +1,19 @@
+@import '/src/assets/theme/color.less';
+.common-popover {
+  padding: 5px;
+  :global {
+    .@{app-prefix}-popover-inner {
+      border-radius: 12px;
+    }
+    .@{app-prefix}-popover-inner-content {
+      max-width: 280px;
+      padding: 20px;
+      box-shadow: 0 5px 12px 4px @shadow-2;
+      border-radius: 12px;
+    }
+    .@{app-prefix}-popover-arrow {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}

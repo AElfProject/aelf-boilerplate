@@ -1,0 +1,90 @@
+.flex {
+  display: flex;
+}
+.flex-1 {
+  flex: 1;
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+.align-end {
+  align-items: flex-end;
+}
+.flex-column-center {
+  align-items: center;
+  .flex-column();
+}
+.flex-row-wrap {
+  flex-wrap: wrap;
+  .flex-row();
+}
+.flex-row-center {
+  align-items: center;
+  .flex-row();
+}
+.flex-row-content-center {
+  justify-content: center;
+  .flex-row();
+}
+.row-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flex-row-between {
+  justify-content: space-between;
+  .flex-row();
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.margin-auto {
+  margin: auto;
+}
+.margin-top-10 {
+  margin-top: 10px;
+}
+
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+
+/* set list-style */
+ul,
+ol {
+  list-style: none;
+}
+
+/* set text-decoration */
+a,
+a:hover {
+  text-decoration: none;
+}
+
+/* clear margin & padding */
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, /* structural elements */
+  dl, dt, dd, ul, ol, li, /* list elements */
+  pre, /* text formatting elements */
+  fieldset, button, input, textarea, /* form elements */
+  th, td {
+  /* table elements */
+  margin: 0;
+  padding: 0;
+}
+.pointer-events-none {
+  pointer-events: none !important;
+}

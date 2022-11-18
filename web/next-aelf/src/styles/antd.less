@@ -1,0 +1,64 @@
+@import '/src/assets/theme/color.less';
+.@{app-prefix}-btn {
+  height: 40px;
+  border-radius: 6px;
+  font-family: PingFangSC-Regular, sans-serif;
+}
+.@{app-prefix}-btn-default {
+  color: @font-1;
+  border-color: @border-2;
+  &:hover {
+    background: @bg-8;
+  }
+  &:focus {
+    background: @bg-11;
+  }
+  &:disabled {
+    background: @bg-7;
+    border-color: @border-1;
+    color: @font-3;
+  }
+}
+.@{app-prefix}-btn-primary {
+  &:disabled {
+    background: @primary-color;
+    border-color: @primary-color;
+    color: #fff;
+    opacity: 0.5;
+  }
+  &:hover {
+    background: @bg-12;
+  }
+}
+.@{app-prefix}-btn[disabled] {
+  &:hover {
+    background: @primary-color;
+    border-color: @primary-color;
+    color: #fff;
+    opacity: 0.5;
+  }
+}
+.@{app-prefix}-divider-vertical {
+  border-color: @border-1;
+}
+.@{app-prefix}-message-notice {
+  .@{app-prefix}-message-notice-content {
+    padding: 24px 18px;
+    border-radius: 12px;
+    line-height: 14px;
+    box-shadow: 0 5px 24px 4px rgb(0 0 0 / 5%), 0 3px 10px 0 rgb(0 0 0 / 8%), 0 1px 16px -2px rgb(0 0 0 / 8%);
+  }
+}
+.@{app-prefix}-message-notice:first-child {
+  padding-top: 104px;
+}
+
+.@{app-prefix}-input {
+  &::placeholder {
+    color: @font-10;
+  }
+}
+.@{app-prefix}-input,
+.@{app-prefix}-input-affix-wrapper {
+  border-color: @border-1;
+}
