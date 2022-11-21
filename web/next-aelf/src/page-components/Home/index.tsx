@@ -12,8 +12,8 @@ export default function Home() {
         <a>Micro Frontends - Micro-APP</a>
       </Link>
       <br />
-      <Link href={`/sentry`}>
-        <a>Monitor - Sentry</a>
+      <Link href={`/monitor`}>
+        <a>Monitor - Sentry & Firebase</a>
       </Link>
     </div>
   );

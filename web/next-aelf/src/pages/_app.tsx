@@ -9,7 +9,6 @@ import dynamic from 'next/dynamic';
 import PageHead from 'components/PageHead';
 import { Provider as ReduxProvider } from 'react-redux';
 import microApp from '@micro-zoe/micro-app';
-
 import { store } from '../redux/store';
 import Footer from '../components/Footer';
 import initAxios from '../utils/axios';
