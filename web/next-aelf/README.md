@@ -88,3 +88,34 @@ Initialize Firebase in your app and create a Firebase App object in `web/next-ae
 After you have initialized the Analytics service, you can begin to log events with the logEvent() method. We show a situationdemonstrates how to log a recommended event to indicate a user has click a button in your app in `web/next-aelf/src/page-components/Monitor/index.tsx`.\
 
 When uing React 18, if you want to gather PageView or UserView data through `useEffect` hook. Take care of that when project's mode is strict, `useEffect` hook is triggered twice just in development mode and only once in production mode.
+
+## Guide
+
+### Codespaces
+
+Features:
+
+- Can spin up Codespaces from any device with internet access.
+- Codespaces starts instantly from any repository on GitHub with pre-configured, secure environments.
+- Can code, develop models, and collaborate in powerful compute environments that spin up in seconds.
+- Fix bugs and secure code right from an issue.
+
+#### Creating your codespace
+
+- Creating your codespace. Navigate to the `https://github.com/AElfProject/aelf-boilerplate` repository.
+- Click `Code`, then select `Codespaces`, then click `+`button(Create a codespace on dev).
+
+#### Running the application
+
+Once your codespace is created, the repository will be automatically cloned into it. Now you can run the application and launch it in a browser.
+
+- When the terminal becomes available, enter the command `yarn & yarn dev`. This command runs the script labeled "dev" in the package.json file, which starts up the web application defined in the sample repository.
+- When your application starts, the codespace recognizes the port the application is running on and displays a prompt to let you know it has been forwarded.
+- Click Open in Browser to view your running application in a new tab.
+
+### AELF chain node
+
+We provide two chains which allow you to interact with a remote aelf node. You can load a wallet, get a system contract address, or get a contract instance by contract address etc.
+
+- MainChain Aelf: https://explorer-test.aelf.io/
+- SideChain Aelf: https://explorer-test-side02.aelf.io/
