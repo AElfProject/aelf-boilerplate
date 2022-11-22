@@ -1,4 +1,4 @@
-const { LANGUAGE, LOCAL_LANGUAGE_LIST, DEFAULT_LANGUAGE } = require('./config.js');
+import { LANGUAGE, LOCAL_LANGUAGE_LIST, DEFAULT_LANGUAGE } from './config';
 const moment = require('moment');
 // import 'moment/locale/zh-cn';
 require('moment/locale/zh-hk');
