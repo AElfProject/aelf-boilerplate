@@ -1,42 +1,18 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-
-import en from './languages/en.json';
-import zh from './languages/zh.json';
-import { LANGUAGE, LOCAL_LANGUAGE_LIST, DEFAULT_LANGUAGE } from './config';
-import moment from 'moment';
+const { LANGUAGE, LOCAL_LANGUAGE_LIST, DEFAULT_LANGUAGE } = require('./config.js');
+const moment = require('moment');
 // import 'moment/locale/zh-cn';
-import 'moment/locale/zh-hk';
-const resources = { en, zh };
+require('moment/locale/zh-hk');
 
-export function initLanguage(localStorage?: Storage) {
-  const languageCurrent = ensureLanguage() || DEFAULT_LANGUAGE;
-  // TODO: browser language
-  // //Get browser language
-  // else if (getLocalLanguage() === 'zh') {
-  //   lng = LOCAL_LANGUAGE_LIST[1];
-  // }
-
-  i18n
-    .use(initReactI18next) // passes i18n down to react-i18next
-    .init({
-      resources,
-      lng: languageCurrent,
-
-      keySeparator: false, // we do not use keys in form messages.welcome
-
-      interpolation: {
-        escapeValue: false, // react already safes from xss
-      },
-    });
+const initLanguage = (localStorage: Storage) => {
+  const languageCurrent = ensureLanguage(localStorage) || DEFAULT_LANGUAGE;
   moment.locale(languageCurrent.replace('_', '-'));
-}
-export default i18n;
+};
 
 // Sub-path rule > localStorage rule
-function ensureLanguage() {
+function ensureLanguage(localStorage: Storage) {
   let language;
   const languageStorage = localStorage?.getItem(LANGUAGE);
+
   if (languageStorage && LOCAL_LANGUAGE_LIST.includes(languageStorage)) {
     language = languageStorage;
   }
@@ -51,3 +27,4 @@ function ensureLanguage() {
   }
   return language;
 }
+export { initLanguage };

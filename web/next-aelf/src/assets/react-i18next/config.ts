@@ -1,5 +1,5 @@
-import enUS from 'antd/lib/locale/en_US';
-import zh_HK from 'antd/lib/locale/zh_HK';
+const enUS = require('antd/lib/locale/en_US');
+const zh_HK = require('antd/lib/locale/zh_HK');
 const LANGUAGE = 'I18N_LANGUAGE';
 const LOCAL_LANGUAGE = [
   { language: 'en', title: 'English' },
@@ -14,7 +14,7 @@ const getLocalLanguage = () => {
 
   return lang;
 };
-const ANTD_LOCAL: { [key: string]: any } = {
+const ANTD_LOCAL = {
   zh: zh_HK,
   en: enUS,
 };

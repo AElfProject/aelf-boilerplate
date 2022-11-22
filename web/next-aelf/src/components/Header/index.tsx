@@ -11,6 +11,7 @@ import useMediaQueries from 'hooks/useMediaQueries';
 import { useMemo, useState } from 'react';
 import CommonImage from 'components/CommonImage';
 import { useRouter } from 'next/router';
+import { LanguageSwitcher } from 'next-export-i18n';
 const navList = [
   {
     title: 'Next Demo',
@@ -29,7 +30,10 @@ function SelectLanguage({ className }: { className?: string }) {
         changeLanguage(value);
       }}>
       {LOCAL_LANGUAGE.map((item) => (
-        <Select.Option key={item.language}>{item.title}</Select.Option>
+        <Select.Option key={item.language}>
+          {/* change lang */}
+          <LanguageSwitcher lang={item.language}> {item.title}</LanguageSwitcher>
+        </Select.Option>
       ))}
     </CommonSelect>
   );

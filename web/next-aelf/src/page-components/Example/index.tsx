@@ -15,9 +15,9 @@ export default function Home() {
         <Wallet />
         <br />
         <Card title="i18n" bordered={false}>
-          i18n：{t('Connect')}
+          i18n：{t('translation.connect')}
           <br />
-          If you want to use Sub-path Routing, please change the logic in ./src/i18n/index.ts
+          If you want to change next-export-i18n config, please change the logic in ./i18n/index.ts
         </Card>
         <br />
         <MediaQuery />
