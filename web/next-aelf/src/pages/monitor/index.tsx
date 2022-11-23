@@ -1,1 +1,2 @@
-export { default } from 'page-components/Monitor';
+import { Redirect } from '../../lib/redirect';
+export default Redirect;

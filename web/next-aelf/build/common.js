@@ -5,14 +5,21 @@ module.exports = {
     return rewritesConfig;
   },
   images: {
-    domains: ['raw.githubusercontent.com'],
+    loader: 'akamai',
+    path: '',
   },
-  i18n: {
-    locales: ['en-US', 'zh'],
-    defaultLocale: 'en-US',
-  },
+  trailingSlash: true,
+  // i18n: {
+  //   locales: ['en-US', 'zh'],
+  //   defaultLocale: 'en-US',
+  // },
   productionBrowserSourceMaps: true,
-  sentry: {
-    hideSourceMaps: true,
+  // sentry: {
+  //   hideSourceMaps: true,
+  // },
+  webpack5: true,
+  webpack: (config) => {
+    config.resolve.fallback = { fs: false };
+    return config;
   },
 };

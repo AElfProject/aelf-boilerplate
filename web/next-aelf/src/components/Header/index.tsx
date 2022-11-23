@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Drawer, Select } from 'antd';
 import { LOCAL_LANGUAGE } from 'assets/react-i18next/config';
 import { useLanguage } from 'assets/react-i18next/i18n-hook';
-import Link from 'next/link';
+import Link from 'components/Link';
 import IconFont from 'components/IconFont';
 import CommonSelect from 'components/CommonSelect';
 import useMediaQueries from 'hooks/useMediaQueries';

@@ -1,1 +1,2 @@
-export { default } from 'page-components/MicroApp';
+import { Redirect } from '../../lib/redirect';
+export default Redirect;

@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "out": "next build && next export",
     "build": "next build",
+    "export": "next export",
     "start": "next start",
     "lint": "next lint",
     "dev:analyze": "PORT=4000 ANALYZE=true next dev",
@@ -35,6 +37,8 @@
     "lru-cache": "^7.14.0",
     "next": "12.2.0",
     "next-compose-plugins": "^2.2.1",
+    "next-i18next": "^13.0.0",
+    "next-language-detector": "^1.0.2",
     "next-plugin-antd-less": "^1.8.0",
     "next-with-less": "^2.0.5",
     "query-string": "^7.1.1",

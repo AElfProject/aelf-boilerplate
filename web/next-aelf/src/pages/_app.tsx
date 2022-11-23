@@ -33,7 +33,7 @@ export default function APP({ Component, pageProps }: AppProps) {
       const { href, origin } = window.location;
       router.replace(href.replace(origin, ''));
     });
-  }, []);
+  }, [router]);
 
   return (
     <QueryClientProvider client={queryClient}>

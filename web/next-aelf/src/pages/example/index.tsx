@@ -1,1 +1,2 @@
-export { default } from 'page-components/Example';
+import { Redirect } from '../../lib/redirect';
+export default Redirect;

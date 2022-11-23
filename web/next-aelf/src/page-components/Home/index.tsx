@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
+import Link from 'components/Link';
 import styles from './styles.module.less';
 export default function Home() {
   return (

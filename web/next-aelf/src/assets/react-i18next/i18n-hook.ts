@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { useCallback, useMemo } from 'react';
 import { LANGUAGE, LOCAL_LANGUAGE_LIST } from './config';
 import moment from 'moment';
-
 export function useLanguage() {
   const { i18n, t } = useTranslation();
   // https://nextjs.org/docs/advanced-features/i18n-routing#limits-for-the-i18n-config
