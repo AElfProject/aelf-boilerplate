@@ -48,6 +48,7 @@
     "react-query": "^3.39.2",
     "react-redux": "^8.0.2",
     "react-use": "^17.4.0",
+    "url-loader": "^4.1.1",
     "web3": "^1.7.4",
     "web3-core": "^1.7.4"
   },

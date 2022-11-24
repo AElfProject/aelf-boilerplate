@@ -26,7 +26,7 @@ export default function Home() {
         <br />
         <Counter />
         <br />
-        <Contract />
+        {/* <Contract /> */}
       </div>
     </>
   );

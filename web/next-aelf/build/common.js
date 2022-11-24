@@ -7,19 +7,30 @@ module.exports = {
   images: {
     loader: 'akamai',
     path: '',
+    domains: ['raw.githubusercontent.com'],
+    // Static image urls uncompatible with SSG, so replacing to url-loader
+    disableStaticImages: true,
   },
   trailingSlash: true,
-  // i18n: {
-  //   locales: ['en-US', 'zh'],
-  //   defaultLocale: 'en-US',
-  // },
   productionBrowserSourceMaps: true,
-  // sentry: {
-  //   hideSourceMaps: true,
-  // },
+  sentry: {
+    hideSourceMaps: true,
+  },
   webpack5: true,
   webpack: (config) => {
     config.resolve.fallback = { fs: false };
+    config.module.rules.push({
+      test: /\.(jpe?g|png|gif|svg|webp)$/i,
+      use: [
+        {
+          loader: 'url-loader',
+          options: {
+            name: 'static/img/[name]-[hash:5].[ext]',
+            limit: 8192,
+          },
+        },
+      ],
+    });
     return config;
   },
 };

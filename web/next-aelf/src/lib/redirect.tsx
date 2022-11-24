@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import languageDetector from './languageDetector';
+import getLanguageDetector from './languageDetector';
 import i18nextConfig from '../../next-i18next.config';
 
 export const useRedirect = (to?: string) => {
@@ -12,7 +12,9 @@ export const useRedirect = (to?: string) => {
   locales.push(defaultLocale);
   // language detection
   useEffect(() => {
+    // prevent twice redirect
     if (calledPush) return;
+    const languageDetector = getLanguageDetector();
     const detectedLng = languageDetector.detect() as string;
     for (const locale of locales) {
       // eslint-disable-next-line no-undef
