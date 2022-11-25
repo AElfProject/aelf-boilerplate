@@ -11,10 +11,11 @@ import Axios from 'axios';
 import { BASE_URL, API, API_SCAN } from '../../constants/api';
 import { useAxiosTDVW } from './multipleHookInstances';
 import { interceptorsBind } from './utils';
-
+import { create } from 'apisauce';
+let axios;
 // Please invoke axiosInit before any usages of the useAxios hook
 export default function initAxios() {
-  const axios = Axios.create({
+  axios = Axios.create({
     baseURL: BASE_URL,
     timeout: 50000,
   });
@@ -24,5 +25,18 @@ export default function initAxios() {
 
   configure({ axios, cache });
 }
+const api = create({
+  baseURL: BASE_URL,
+  // axiosInstance: axios,
+});
+// api.setHeader('Content-Type', 'application/json;charset=UTF-8');
 
-export { useAxiosTDVW, API, API_SCAN };
+const getSSR = async (url: string, params?: any, config?: any) => {
+  const res = await api.get(url);
+  console.log(res, 'xxx');
+  if (res.ok) {
+    return res.data as any;
+  }
+};
+
+export { useAxiosTDVW, API, API_SCAN, getSSR };
