@@ -31,7 +31,7 @@ export default function Home(props: ISSRDataProps) {
         <br />
         <ShowSSRData datassr={props.datassr} />
         <br />
-        <Contract />
+        {/* <Contract /> */}
       </div>
     </>
   );
