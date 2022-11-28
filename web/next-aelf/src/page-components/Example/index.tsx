@@ -7,7 +7,10 @@ import MediaQuery from './MediaQuery';
 import AxiosDemo from './AxiosDemo';
 import { Counter } from './ReduxDemo/Counter';
 import Contract from './ContractDemo';
-export default function Home() {
+import ShowSSRData from './ShowSSRData';
+import { ISSRDataProps } from './types';
+
+export default function Home(props: ISSRDataProps) {
   const { t } = useLanguage();
   return (
     <>
@@ -25,6 +28,8 @@ export default function Home() {
         <AxiosDemo />
         <br />
         <Counter />
+        <br />
+        <ShowSSRData datassr={props.datassr} />
         <br />
         <Contract />
       </div>
