@@ -297,3 +297,10 @@ Contracts.manifest
 
 # Contract patcher dlls
 chain/scripts/patcher/*
+
+.dotnet
+.store
+tools/dotnet-cake
+*.dll
+*.dll.patched
+
