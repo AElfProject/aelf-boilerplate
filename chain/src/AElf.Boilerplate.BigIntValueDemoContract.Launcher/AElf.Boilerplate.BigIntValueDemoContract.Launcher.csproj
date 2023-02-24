@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <ServerGarbageCollection>true</ServerGarbageCollection>
     </PropertyGroup>
 
@@ -10,9 +10,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.ContractDeployer" Version="1.0.0" />
-        <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="3.1.0" />
-        <PackageReference Include="Volo.Abp.Autofac" Version="1.1.2" />
+        <PackageReference Include="AElf.ContractDeployer" Version="1.2.3" />
+        <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="5.2.2" />
+        <PackageReference Include="Volo.Abp.Autofac" Version="5.2.2" />
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
@@ -25,12 +25,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.0.0">
-            <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
+        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.2.3">
+            <CopyToOutputDirectory>lib\net6.0\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.chain</PackageName>
         </PackageReference>
-        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.0.0">
-            <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
+        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.2.3">
+            <CopyToOutputDirectory>lib\net6.0\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.net</PackageName>
         </PackageReference>
     </ItemGroup>

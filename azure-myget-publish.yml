@@ -13,7 +13,7 @@
   - task: UseDotNet@2
     displayName: 'Install .NET Core SDK'
     inputs:
-      version: 3.1.102
+      version: 6.0.x
   - script: bash chain/scripts/download_binary.sh
     displayName: 'Download AElf build tools'
   - script: bash chain/scripts/install.sh
