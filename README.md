@@ -24,7 +24,7 @@ The chain folder contains four sub-folders:
 - **src**: Boilerplate's core code, some elements need changing in here for the contract to be deployed.
 
 ## Versioning
-We use Semantic Versioning (SemVer) for versioning, if you're intereted in closely following AElf's developement please check out the SemVer docs.
+We use Semantic Versioning (SemVer) for versioning, if you're interested in closely following AElf's development please check out the SemVer docs.
 
 ## License
 AElf Boilerplate is licenced under MIT
